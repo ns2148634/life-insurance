@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>經濟支柱守護計畫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════ */
+:root {
+  --ink:     #0c1520;
+  --ink-mid: #152236;
+  --ink-deep:#0a1018;
+  --gold:    #c8a84b;
+  --gold-lt: #e2c97e;
+  --gold-dim: rgba(200,168,75,0.15);
+  --gold-line: rgba(200,168,75,0.3);
+  --cream:   #f7f3eb;
+  --cream-dk:#ede8dc;
+  --text-on-dark: rgba(255,255,255,0.88);
+  --text-muted:   rgba(255,255,255,0.45);
+  --text-hint:    rgba(255,255,255,0.25);
+  --border:  rgba(255,255,255,0.08);
+  --r:       12px;
+  --r-lg:    20px;
+  --ease:    cubic-bezier(.4,0,.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--ink);
+  color: var(--text-on-dark);
+  touch-action: none;
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT SHELL
+═══════════════════════════════════════ */
+#shell {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+}
+
+/* ── step progress bar ── */
+#progress-bar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 50;
+  height: 3px; background: transparent;
+}
+#progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+  transition: width .5s var(--ease);
+}
+
+/* ── top bar ── */
+#topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 32px 16px;
+  flex-shrink: 0; position: relative; z-index: 10;
+}
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; letter-spacing: 3px;
+  color: var(--gold); text-transform: uppercase;
+}
+.step-label {
+  font-size: 11px; letter-spacing: 2px;
+  color: var(--text-muted); text-transform: uppercase;
+}
+#back-btn {
+  font-size: 12px; color: var(--gold); cursor: pointer;
+  padding: 8px 16px; border: 1px solid var(--gold-line);
+  border-radius: 20px; transition: all .2s;
+  display: none; background: transparent; font-family: inherit;
+  letter-spacing: 1px;
+}
+#back-btn.show { display: block; }
+#back-btn:active { background: var(--gold-dim); }
+
+/* ── main canvas ── */
+#canvas {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 0 32px 40px;
+}
+
+/* ── bottom nav ── */
+#bottom-nav {
+  padding: 16px 32px 28px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--ink); font-weight: 700;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px; letter-spacing: 1px;
+  padding: 14px 36px; border-radius: 40px;
+  border: none; cursor: pointer;
+  transition: all .25s var(--ease);
+  box-shadow: 0 4px 24px rgba(200,168,75,0.25);
+  white-space: nowrap;
+}
+.btn-primary:active { transform: scale(.97); box-shadow: none; }
+.btn-ghost {
+  color: var(--gold); background: transparent;
+  border: 1px solid var(--gold-line); border-radius: 40px;
+  font-size: 14px; padding: 13px 28px; cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .2s; white-space: nowrap;
+}
+.btn-ghost:active { background: var(--gold-dim); }
+
+/* ═══════════════════════════════════════
+   SCREEN TRANSITIONS
+═══════════════════════════════════════ */
+.screen { display: none; animation: fadeUp .4s var(--ease) both; }
+.screen.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════ */
+.serif { font-family: 'Noto Serif TC', serif; }
+.display { font-family: 'Cormorant Garamond', serif; }
+
+.screen-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 600; line-height: 1.2;
+  margin-bottom: 12px;
+}
+.screen-sub {
+  font-size: 15px; color: var(--text-muted);
+  line-height: 1.75; margin-bottom: 32px;
+  font-weight: 300;
+}
+
+.gold-line-deco {
+  width: 48px; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-bottom: 28px;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 0: WELCOME
+═══════════════════════════════════════ */
+#s0 { padding-top: 24px; }
+
+.welcome-hero {
+  text-align: center; padding: 20px 0 40px;
+}
+.welcome-icon {
+  width: 80px; height: 80px; margin: 0 auto 28px;
+  border: 1px solid var(--gold-line); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  background: radial-gradient(circle, var(--gold-dim) 0%, transparent 70%);
+}
+.welcome-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 52px); font-weight: 600;
+  line-height: 1.15; margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--gold-lt));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.welcome-sub {
+  font-size: 15px; color: var(--text-muted);
+  line-height: 1.8; max-width: 480px; margin: 0 auto 40px;
+  font-weight: 300;
+}
+
+.welcome-pills {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+  margin-bottom: 48px;
+}
+.wpill {
+  font-size: 12px; padding: 7px 16px;
+  border: 1px solid var(--gold-line); border-radius: 20px;
+  color: var(--gold); letter-spacing: .5px;
+}
+
+.welcome-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold); color: var(--ink);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 17px; font-weight: 700;
+  padding: 18px 48px; border-radius: 50px; border: none;
+  cursor: pointer; transition: all .3s;
+  box-shadow: 0 8px 32px rgba(200,168,75,0.3);
+  letter-spacing: 1px;
+}
+.welcome-cta:active { transform: scale(.97); }
+
+/* ═══════════════════════════════════════
+   SCREEN 1: CURVE
+═══════════════════════════════════════ */
+#s1 { padding-top: 8px; }
+
+.curve-card {
+  background: var(--ink-mid);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 24px;
+  margin-bottom: 24px;
+}
+.curve-card svg text { font-family: 'Noto Sans TC', sans-serif; }
+
+.risk-chips {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-top: 20px;
+}
+.rchip {
+  padding: 14px 16px; border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+}
+.rchip-tag {
+  font-size: 10px; letter-spacing: 1px; font-weight: 500;
+  padding: 3px 8px; border-radius: 10px; display: inline-block;
+  margin-bottom: 6px; text-transform: uppercase;
+}
+.rchip-tag.danger { background: rgba(192,57,43,0.2); color: #e74c3c; }
+.rchip-tag.warn   { background: rgba(180,130,0,0.2); color: #f39c12; }
+.rchip-tag.info   { background: rgba(41,128,185,0.2); color: #3498db; }
+.rchip-tag.neutral{ background: rgba(255,255,255,0.07); color: var(--text-muted); }
+.rchip-text { font-size: 13px; color: var(--text-on-dark); line-height: 1.55; }
+
+/* ═══════════════════════════════════════
+   SCREEN 2: INPUT
+═══════════════════════════════════════ */
+#s2 { padding-top: 8px; }
+
+.input-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-bottom: 20px;
+}
+.input-block {
+  background: var(--ink-mid); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 18px 20px;
+  transition: border-color .2s;
+}
+.input-block:focus-within { border-color: var(--gold-line); }
+.input-block.full { grid-column: 1 / -1; }
+
+.input-label {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 8px; display: block;
+}
+.input-row { display: flex; align-items: center; gap: 6px; }
+.input-row input {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-size: 22px; font-weight: 500; color: #fff;
+  font-family: 'Noto Sans TC', sans-serif;
+  min-width: 0;
+}
+.input-row input::placeholder { color: rgba(255,255,255,0.18); font-size: 18px; }
+.input-unit { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+.input-hint { font-size: 11px; color: var(--text-hint); margin-top: 5px; }
+
+.income-summary-box {
+  background: linear-gradient(135deg, var(--ink-mid), rgba(200,168,75,0.06));
+  border: 1px solid var(--gold-line); border-radius: var(--r-lg);
+  padding: 20px 24px; margin-top: 8px;
+}
+.isb-text { font-size: 14px; color: var(--text-on-dark); line-height: 1.8; }
+.isb-highlight { color: var(--gold-lt); font-weight: 500; }
+
+/* ═══════════════════════════════════════
+   SCREEN 3: RANK
+═══════════════════════════════════════ */
+#s3 { padding-top: 8px; }
+
+.rank-list {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 20px;
+}
+.rank-card {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--ink-mid); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 18px 20px;
+  cursor: grab; user-select: none;
+  transition: all .2s var(--ease);
+  -webkit-user-select: none;
+}
+.rank-card.dragging { opacity: .3; transform: scale(.98); }
+.rank-card.drag-over {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  transform: scale(1.01);
+}
+.rank-num {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 18px;
+  color: var(--text-muted); transition: all .3s;
+}
+.rank-card.ranked .rank-num {
+  background: var(--gold); color: var(--ink);
+  font-weight: 700; border-color: var(--gold);
+}
+.rank-ico { font-size: 22px; flex-shrink: 0; }
+.rank-body { flex: 1; min-width: 0; }
+.rank-name { font-size: 16px; font-weight: 500; margin-bottom: 3px; font-family: 'Noto Serif TC', serif; }
+.rank-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.drag-handle { color: var(--text-hint); font-size: 18px; flex-shrink: 0; letter-spacing: -1px; }
+
+.rank-preview {
+  background: var(--gold-dim); border: 1px solid var(--gold-line);
+  border-radius: var(--r); padding: 14px 18px;
+  font-size: 13px; color: var(--gold-lt); line-height: 1.7;
+  transition: all .3s;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 4: PLAN
+═══════════════════════════════════════ */
+#s4 { padding-top: 8px; }
+
+.plan-section { margin-bottom: 28px; }
+
+.plan-section-hd {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.psh-badge {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 20px; border: 1px solid var(--gold-line);
+  color: var(--gold); font-weight: 500; white-space: nowrap;
+}
+.psh-ico { font-size: 20px; }
+.psh-title { font-size: 17px; font-weight: 600; font-family: 'Noto Serif TC', serif; }
+
+.sub-card {
+  background: var(--ink-mid); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 18px 20px;
+  margin-bottom: 10px;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 16px; align-items: start;
+}
+.sc-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; font-family: 'Noto Serif TC', serif; }
+.sc-why {
+  font-size: 12px; color: var(--text-muted); line-height: 1.7;
+  margin-bottom: 8px;
+}
+.sc-formula { font-size: 11px; color: var(--text-hint); margin-bottom: 8px; }
+.sc-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.sc-pill {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  border: 1px solid var(--border); color: var(--text-muted);
+}
+.sc-pill.key {
+  border-color: var(--gold-line); color: var(--gold-lt);
+  background: var(--gold-dim); font-weight: 500;
+}
+.sc-amt { text-align: right; flex-shrink: 0; }
+.sc-val { font-size: 20px; font-weight: 500; font-family: 'Cormorant Garamond', serif; color: #fff; }
+.sc-unit { font-size: 10px; color: var(--text-hint); margin-top: 2px; }
+
+/* ═══════════════════════════════════════
+   SCREEN 5: SUMMARY
+═══════════════════════════════════════ */
+#s5 { padding-top: 8px; }
+
+.sum-intro {
+  background: linear-gradient(135deg, var(--ink-mid), rgba(200,168,75,0.06));
+  border: 1px solid var(--gold-line); border-radius: var(--r-lg);
+  padding: 20px 24px; margin-bottom: 20px;
+  font-size: 14px; line-height: 1.8; color: var(--text-on-dark);
+}
+.sum-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin-bottom: 20px;
+}
+.sum-card {
+  background: var(--ink-mid); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 18px;
+  transition: border-color .2s;
+}
+.sum-card:hover { border-color: var(--gold-line); }
+.sum-rank {
+  font-size: 10px; letter-spacing: 1px; color: var(--text-hint);
+  margin-bottom: 5px; text-transform: uppercase;
+}
+.sum-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.sum-val { font-size: 20px; font-weight: 500; font-family: 'Cormorant Garamond', serif; }
+.sum-sub { font-size: 11px; color: var(--text-hint); margin-top: 3px; }
+
+.dt-panel {
+  background: var(--ink-mid); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 20px 24px; margin-bottom: 20px;
+}
+.dt-title {
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 14px;
+}
+.dt-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.dt-row:last-child { border-bottom: none; }
+.dt-l { color: var(--text-muted); }
+.dt-r { font-weight: 500; color: #fff; }
+.dt-r.gold { color: var(--gold-lt); }
+
+.pdf-btn {
+  width: 100%; padding: 18px;
+  background: transparent; border: 1px solid var(--gold-line);
+  color: var(--gold); border-radius: var(--r-lg);
+  font-size: 15px; cursor: pointer; font-family: 'Noto Serif TC', serif;
+  letter-spacing: 1px; transition: all .2s; font-weight: 600;
+}
+.pdf-btn:active { background: var(--gold-dim); }
+
+/* ═══════════════════════════════════════
+   PRINT
+═══════════════════════════════════════ */
+@media print {
+  body { background: white; color: #111; overflow: auto; }
+  #topbar, #bottom-nav, #progress-bar, #back-btn,
+  .pdf-btn, .welcome-cta, .btn-primary, .btn-ghost { display: none !important; }
+  .screen { display: block !important; }
+  #shell { height: auto; overflow: visible; }
+  #canvas { overflow: visible; padding: 20px; }
+  .sub-card, .sum-card, .dt-panel, .income-summary-box,
+  .curve-card, .rank-card, .sum-intro {
+    background: #f9f9f9 !important; border-color: #ddd !important;
+    color: #111 !important; break-inside: avoid;
+  }
+  .sc-why, .sc-formula, .rank-desc, .dt-l, .sum-label, .sum-rank,
+  .sum-sub, .sc-unit, .input-label { color: #555 !important; }
+  .screen-title, .sc-name, .psh-title, .rank-name { color: #111 !important; }
+  .sc-pill.key, .psh-badge { border-color: #b8860b !important; color: #8a6a00 !important; background: #fff8e7 !important; }
+  .sc-val, .sum-val, .dt-r { color: #111 !important; }
+  .gold-line-deco { background: #b8860b !important; }
+}
+
+/* ═══════════════════════════════════════
+   TOUCH HINT ANIMATION
+═══════════════════════════════════════ */
+@keyframes swipeHint {
+  0%,100% { transform: translateX(0); opacity: .5; }
+  50% { transform: translateX(-8px); opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="progress-bar"><div id="progress-fill" style="width:0%"></div></div>
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="logo">Guardian Plan</div>
+    <div class="step-label" id="step-label"></div>
+    <button id="back-btn" onclick="goBack()">← 返回</button>
+  </div>
+
+  <!-- CANVAS -->
+  <div id="canvas">
+
+    <!-- ── S0: WELCOME ── -->
+    <div class="screen active" id="s0">
+      <div class="welcome-hero">
+        <div class="welcome-icon">🛡️</div>
+        <div class="welcome-title">經濟支柱<br>守護計畫</div>
+        <div class="welcome-sub">
+          專業保障需求分析<br>為您與家人建立完整的財務防線
+        </div>
+        <div class="welcome-pills">
+          <div class="wpill">失能長年病</div>
+          <div class="wpill">收入中斷</div>
+          <div class="wpill">活的太短</div>
+          <div class="wpill">醫療費用</div>
+        </div>
+        <button class="welcome-cta" onclick="go(1)">
+          開始規劃 →
+        </button>
+      </div>
+    </div>
+
+    <!-- ── S1: CURVE ── -->
+    <div class="screen" id="s1">
+      <div class="screen-title">人生收支曲線</div>
+      <div class="screen-sub">我們只會愈來愈老，人生是一條永不回頭的單行道。這張圖說明了為什麼奮鬥期的保障，是整個家庭最關鍵的防線。</div>
+
+      <div class="curve-card">
+        <svg viewBox="0 0 600 220" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="incomeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3498db" stop-opacity=".25"/>
+              <stop offset="100%" stop-color="#3498db" stop-opacity=".03"/>
+            </linearGradient>
+          </defs>
+
+          <!-- period backgrounds -->
+          <rect x="40" y="15" width="135" height="168" fill="rgba(200,140,0,.04)" rx="4"/>
+          <rect x="175" y="15" width="225" height="168" fill="rgba(0,150,80,.04)" rx="4"/>
+          <rect x="400" y="15" width="160" height="168" fill="rgba(30,100,180,.04)" rx="4"/>
+
+          <!-- income fill -->
+          <path d="M175,183 L175,88 L400,88 L400,183 Z" fill="url(#incomeGrad)"/>
+          <line x1="175" y1="88" x2="400" y2="88" stroke="#3498db" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- expense line -->
+          <path d="M40,158 Q90,138 130,110 Q160,88 175,84 Q230,70 300,66 Q360,63 400,76 Q435,90 470,120 Q500,145 560,165"
+            fill="none" stroke="#c8a84b" stroke-width="2"/>
+
+          <!-- axes -->
+          <line x1="40" y1="183" x2="570" y2="183" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+          <line x1="40" y1="15" x2="40" y2="183" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+
+          <!-- points -->
+          <circle cx="175" cy="183" r="4" fill="#3498db"/>
+          <circle cx="400" cy="183" r="4" fill="#3498db"/>
+
+          <!-- labels -->
+          <text x="35" y="198" font-size="11" fill="rgba(255,255,255,.4)" text-anchor="middle">出生</text>
+          <text x="175" y="198" font-size="11" fill="#3498db" text-anchor="middle">就業</text>
+          <text x="400" y="198" font-size="11" fill="#3498db" text-anchor="middle">退休</text>
+          <text x="565" y="198" font-size="11" fill="rgba(255,255,255,.4)" text-anchor="middle">離開</text>
+
+          <!-- period labels -->
+          <text x="108" y="34" font-size="12" fill="#c8a84b" text-anchor="middle" font-weight="500">撫養期</text>
+          <text x="288" y="34" font-size="12" fill="#2ecc71" text-anchor="middle" font-weight="500">奮鬥期</text>
+          <text x="480" y="34" font-size="12" fill="#3498db" text-anchor="middle" font-weight="500">養老期</text>
+
+          <!-- annotations -->
+          <text x="90" y="125" font-size="10" fill="rgba(200,168,75,.6)" text-anchor="middle">撫養缺口</text>
+          <text x="445" y="122" font-size="10" fill="rgba(200,168,75,.6)" text-anchor="middle">養老缺口</text>
+          <text x="290" y="110" font-size="11" fill="rgba(52,152,219,.8)" text-anchor="middle">奮鬥期風險最關鍵</text>
+
+          <!-- legend -->
+          <line x1="50" y1="212" x2="72" y2="212" stroke="#c8a84b" stroke-width="2"/>
+          <text x="76" y="215" font-size="10" fill="rgba(255,255,255,.5)">支出線</text>
+          <rect x="140" y="207" width="18" height="7" fill="rgba(52,152,219,.3)" rx="2"/>
+          <text x="162" y="215" font-size="10" fill="rgba(255,255,255,.5)">收入期間</text>
+        </svg>
+      </div>
+
+      <div class="risk-chips">
+        <div class="rchip">
+          <div class="rchip-tag danger">活的太短</div>
+          <div class="rchip-text">因疾病或意外提早離開，依靠我們的家人怎麼辦？</div>
+        </div>
+        <div class="rchip">
+          <div class="rchip-tag warn">活的太長</div>
+          <div class="rchip-text">錢只準備到這，卻活到那——今天聚焦保障的部分。</div>
+        </div>
+        <div class="rchip">
+          <div class="rchip-tag info">收入中斷</div>
+          <div class="rchip-text">疾病或意外造成半年甚至一年無法工作。</div>
+        </div>
+        <div class="rchip">
+          <div class="rchip-tag neutral">失能長年病</div>
+          <div class="rchip-text">永遠沒有收入，還要別人來照顧——加上龐大醫療費用。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── S2: INPUT ── -->
+    <div class="screen" id="s2">
+      <div class="screen-title">您的財務狀況</div>
+      <div class="screen-sub">這些數字將用來計算您專屬的保障需求。</div>
+
+      <div class="input-grid">
+        <div class="input-block">
+          <label class="input-label">月收入</label>
+          <div class="input-row">
+            <input type="number" id="mi" inputmode="numeric" placeholder="30000" oninput="calc()">
+            <span class="input-unit">元</span>
+          </div>
+          <div class="input-hint">稅前月薪含獎金</div>
+        </div>
+        <div class="input-block">
+          <label class="input-label">月固定支出</label>
+          <div class="input-row">
+            <input type="number" id="me" inputmode="numeric" placeholder="20000" oninput="calc()">
+            <span class="input-unit">元</span>
+          </div>
+          <div class="input-hint">房租、帳單、生活費</div>
+        </div>
+        <div class="input-block">
+          <label class="input-label">年收入（自動計算）</label>
+          <div class="input-row">
+            <input type="number" id="ai" readonly>
+            <span class="input-unit">萬元</span>
+          </div>
+        </div>
+        <div class="input-block">
+          <label class="input-label">薪資入帳日</label>
+          <div class="input-row">
+            <input type="number" id="payday" inputmode="numeric" placeholder="10" min="1" max="31">
+            <span class="input-unit">號</span>
+          </div>
+        </div>
+        <div class="input-block full">
+          <label class="input-label">姓名（選填）</label>
+          <div class="input-row">
+            <input type="text" id="cname" placeholder="方便我們稱呼您">
+          </div>
+        </div>
+      </div>
+
+      <div class="income-summary-box" id="isb">
+        <div class="isb-text">請填入月收入，系統將為您計算專屬保障需求。</div>
+      </div>
+    </div>
+
+    <!-- ── S3: RANK ── -->
+    <div class="screen" id="s3">
+      <div class="screen-title">您最擔心的是？</div>
+      <div class="screen-sub">請依照您<strong style="color:#fff;">最擔心</strong>的程度，長按拖曳排列順序。我們將依您的排序，逐一規劃保障。</div>
+
+      <div class="rank-list" id="rankList">
+        <div class="rank-card" draggable="true" data-id="interrupt">
+          <div class="rank-num">?</div>
+          <div class="rank-ico">⏸</div>
+          <div class="rank-body">
+            <div class="rank-name">收入中斷</div>
+            <div class="rank-desc">住院或意外，造成數個月收入中斷</div>
+          </div>
+          <div class="drag-handle">⋮⋮</div>
+        </div>
+        <div class="rank-card" draggable="true" data-id="death">
+          <div class="rank-num">?</div>
+          <div class="rank-ico">🕊</div>
+          <div class="rank-body">
+            <div class="rank-name">活的太短</div>
+            <div class="rank-desc">提早離開，家人失去經濟支撐</div>
+          </div>
+          <div class="drag-handle">⋮⋮</div>
+        </div>
+        <div class="rank-card" draggable="true" data-id="disability">
+          <div class="rank-num">?</div>
+          <div class="rank-ico">♿</div>
+          <div class="rank-body">
+            <div class="rank-name">失能長年病</div>
+            <div class="rank-desc">永遠沒有收入，還需要長期照護</div>
+          </div>
+          <div class="drag-handle">⋮⋮</div>
+        </div>
+        <div class="rank-card" draggable="true" data-id="medical">
+          <div class="rank-num">?</div>
+          <div class="rank-ico">🏥</div>
+          <div class="rank-body">
+            <div class="rank-name">醫療費用</div>
+            <div class="rank-desc">住院、手術、病房差額的龐大支出</div>
+          </div>
+          <div class="drag-handle">⋮⋮</div>
+        </div>
+      </div>
+
+      <div class="rank-preview" id="rankPreview">
+        拖曳上方卡片，依您最擔心的順序排列
+      </div>
+    </div>
+
+    <!-- ── S4: PLAN ── -->
+    <div class="screen" id="s4">
+      <div class="screen-title">您的保障規劃</div>
+      <div class="screen-sub" id="plan-sub">依照您的擔心順序，以下是各項風險的保障建議。</div>
+      <div id="planbox"></div>
+    </div>
+
+    <!-- ── S5: SUMMARY ── -->
+    <div class="screen" id="s5">
+      <div class="screen-title">保障需求總結</div>
+      <div class="gold-line-deco"></div>
+      <div class="sum-intro" id="sumIntro"></div>
+      <div class="sum-grid" id="sumGrid"></div>
+      <div class="dt-panel">
+        <div class="dt-title">雙十原則 檢核</div>
+        <div class="dt-row"><span class="dt-l">年收入</span><span class="dt-r gold" id="dt1">—</span></div>
+        <div class="dt-row"><span class="dt-l">年保費上限（年收入 × 10%）</span><span class="dt-r" id="dt2">—</span></div>
+        <div class="dt-row"><span class="dt-l">壽險最低保額（年收入 × 10 倍）</span><span class="dt-r" id="dt3">—</span></div>
+        <div class="dt-row"><span class="dt-l">建議失能保額</span><span class="dt-r" id="dt4">—</span></div>
+        <div class="dt-row"><span class="dt-l">建議重疾保額（3–5年）</span><span class="dt-r" id="dt5">—</span></div>
+      </div>
+      <button class="pdf-btn" onclick="exportPDF()">📄 匯出保障規劃報告</button>
+    </div>
+
+  </div><!-- /canvas -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottom-nav">
+    <button class="btn-ghost" id="ghost-btn" style="display:none" onclick="goBack()">上一步</button>
+    <button class="btn-primary" id="main-btn" onclick="handleNext()">開始了解 →</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+var step = 0;
+var mi = 0, me = 0, ai = 0;
+var rankOrder = ['interrupt','death','disability','medical'];
+
+var STEPS = [
+  { label: '', next: '開始了解 →' },
+  { label: '第一步 · 收支曲線', next: '填入我的資料 →' },
+  { label: '第二步 · 基本資料', next: '設定風險排序 →' },
+  { label: '第三步 · 風險排序', next: '查看保障規劃 →' },
+  { label: '第四步 · 保障規劃', next: '查看總結報告 →' },
+  { label: '第五步 · 總結報告', next: '重新開始' },
+];
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function go(n) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('canvas').scrollTop = 0;
+  step = n;
+
+  var pct = n === 0 ? 0 : Math.round((n/5)*100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('step-label').textContent = STEPS[n].label;
+  document.getElementById('main-btn').textContent = STEPS[n].next;
+
+  var bb = document.getElementById('back-btn');
+  var gb = document.getElementById('ghost-btn');
+  if (n > 0) { bb.classList.add('show'); gb.style.display = 'block'; }
+  else { bb.classList.remove('show'); gb.style.display = 'none'; }
+
+  if (n === 4) buildPlan();
+  if (n === 5) buildSummary();
+  calc();
+}
+
+function goBack() {
+  if (step > 0) go(step - 1);
+}
+
+function handleNext() {
+  if (step === 5) { go(0); return; }
+  go(step + 1);
+}
+
+// ═══════════════════════════════════════
+// CALC
+// ═══════════════════════════════════════
+function fmtN(n) { return Math.round(n).toLocaleString('zh-TW'); }
+function fmtW(n) { return Math.round(n/10000*10)/10; }
+
+function calc() {
+  var miEl = document.getElementById('mi');
+  var meEl = document.getElementById('me');
+  if (!miEl) return;
+  mi = parseFloat(miEl.value) || 0;
+  me = parseFloat(meEl.value) || 0;
+  ai = Math.round(mi*12/10000*10)/10;
+  var aiEl = document.getElementById('ai');
+  if (aiEl) aiEl.value = ai || '';
+
+  var name = (document.getElementById('cname')||{}).value || '';
+  var pd = (document.getElementById('payday')||{}).value || '固定';
+  var sav = mi - me;
+  var isb = document.getElementById('isb');
+  if (isb && mi) {
+    isb.innerHTML = '<div class="isb-text">' +
+      (name ? '<span class="isb-highlight">'+name+'</span>，您' : '您') +
+      '每月收入 <span class="isb-highlight">'+fmtN(mi)+'</span> 元，' +
+      '固定支出 <span class="isb-highlight">'+fmtN(me)+'</span> 元，' +
+      '可存下 <span class="isb-highlight">'+fmtN(Math.max(0,sav))+'</span> 元。' +
+      '每月 <span class="isb-highlight">'+pd+'</span> 號領薪，' +
+      '年收入合計約 <span class="isb-highlight">'+ai+'</span> 萬元。' +
+      '</div>';
+  }
+}
+
+// ═══════════════════════════════════════
+// DRAG & DROP (touch + mouse)
+// ═══════════════════════════════════════
+var dragSrc = null;
+var touchItem = null;
+var touchClone = null;
+var touchOffX = 0, touchOffY = 0;
+
+function initDrag() {
+  var list = document.getElementById('rankList');
+  var items = list.querySelectorAll('.rank-card');
+
+  items.forEach(function(el) {
+    // Mouse drag
+    el.addEventListener('dragstart', function(e) {
+      dragSrc = el; el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', function() {
+      el.classList.remove('dragging');
+      list.querySelectorAll('.rank-card').forEach(function(c){ c.classList.remove('drag-over'); });
+      updateRank();
+    });
+    el.addEventListener('dragover', function(e) { e.preventDefault(); el.classList.add('drag-over'); });
+    el.addEventListener('dragleave', function() { el.classList.remove('drag-over'); });
+    el.addEventListener('drop', function(e) {
+      e.preventDefault(); el.classList.remove('drag-over');
+      if (dragSrc && dragSrc !== el) {
+        var arr = Array.from(list.children);
+        var si = arr.indexOf(dragSrc), ti = arr.indexOf(el);
+        if (si < ti) list.insertBefore(dragSrc, el.nextSibling);
+        else list.insertBefore(dragSrc, el);
+      }
+      updateRank();
+    });
+
+    // Touch drag
+    el.addEventListener('touchstart', function(e) {
+      touchItem = el;
+      var t = e.touches[0];
+      var r = el.getBoundingClientRect();
+      touchOffX = t.clientX - r.left;
+      touchOffY = t.clientY - r.top;
+      touchClone = el.cloneNode(true);
+      touchClone.style.cssText = 'position:fixed;z-index:999;width:'+r.width+'px;opacity:.85;pointer-events:none;transition:none;';
+      touchClone.style.left = (t.clientX - touchOffX) + 'px';
+      touchClone.style.top = (t.clientY - touchOffY) + 'px';
+      document.body.appendChild(touchClone);
+      el.classList.add('dragging');
+    }, { passive: true });
+
+    el.addEventListener('touchmove', function(e) {
+      if (!touchClone) return;
+      e.preventDefault();
+      var t = e.touches[0];
+      touchClone.style.left = (t.clientX - touchOffX) + 'px';
+      touchClone.style.top = (t.clientY - touchOffY) + 'px';
+      touchClone.style.display = 'none';
+      var below = document.elementFromPoint(t.clientX, t.clientY);
+      touchClone.style.display = '';
+      var target = below ? below.closest('.rank-card') : null;
+      list.querySelectorAll('.rank-card').forEach(function(c){ c.classList.remove('drag-over'); });
+      if (target && target !== touchItem) target.classList.add('drag-over');
+    }, { passive: false });
+
+    el.addEventListener('touchend', function(e) {
+      if (touchClone) { document.body.removeChild(touchClone); touchClone = null; }
+      el.classList.remove('dragging');
+      list.querySelectorAll('.rank-card').forEach(function(c){ c.classList.remove('drag-over'); });
+      var t = e.changedTouches[0];
+      var below = document.elementFromPoint(t.clientX, t.clientY);
+      var target = below ? below.closest('.rank-card') : null;
+      if (target && target !== touchItem) {
+        var arr = Array.from(list.children);
+        var si = arr.indexOf(touchItem), ti = arr.indexOf(target);
+        if (si < ti) list.insertBefore(touchItem, target.nextSibling);
+        else list.insertBefore(touchItem, target);
+      }
+      touchItem = null;
+      updateRank();
+    });
+  });
+}
+
+function updateRank() {
+  rankOrder = [];
+  var labels = ['最擔心','第二','第三','最不擔心'];
+  var names = { interrupt:'收入中斷', death:'活的太短', disability:'失能長年病', medical:'醫療費用' };
+  document.querySelectorAll('#rankList .rank-card').forEach(function(el, i) {
+    el.querySelector('.rank-num').textContent = i+1;
+    el.classList.add('ranked');
+    rankOrder.push(el.dataset.id);
+  });
+  document.getElementById('rankPreview').textContent =
+    '您的擔心順序：' + rankOrder.map(function(r,i){ return (i+1)+'. '+names[r]; }).join('　');
+}
+
+// ═══════════════════════════════════════
+// PLAN DATA
+// ═══════════════════════════════════════
+var PLANS = {
+  interrupt: {
+    title:'收入中斷', ico:'⏸',
+    subs: [
+      { name:'一般住院',
+        why:'住院期間公司多半停薪。不論疾病或意外需要住院，每月可領補貼彌補薪資缺口，讓家庭現金流不中斷。',
+        form: function(v){ return '建議：'+fmtN(v.mi)+' 元（1 個月月收入）'; },
+        val:  function(v){ return fmtN(v.mi); }, unit:'元',
+        pills:['住院日額保險','實支實付附約'] },
+      { name:'意外無法工作',
+        why:'骨折等傷況可能只住院三天，但在家休養三個月甚至半年。在家休養期間同樣有收入補貼。',
+        form: function(v){ return '建議：'+fmtN(v.mi)+' 元（1 個月月收入）'; },
+        val:  function(v){ return fmtN(v.mi); }, unit:'元',
+        pills:['薪資補償附約','意外險附約'] },
+      { name:'意外住院（綜合）',
+        why:'意外到需要住院，同時觸發前兩項保障，合計加總——最嚴重的情況下，保障最充足。',
+        form: function(v){ return '一般住院（'+fmtN(v.mi)+'）+ 意外無法工作（'+fmtN(v.mi)+'）= '+fmtN(v.mi*2)+' 元'; },
+        val:  function(v){ return fmtN(v.mi*2); }, unit:'元',
+        pills:['意外險主約','住院附約','薪資補償附約'] },
+    ]
+  },
+  death: {
+    title:'活的太短', ico:'🕊',
+    subs: [
+      { name:'一般身故',
+        why:'依雙十原則：保障至少為年收入的 10 倍，讓家人在失去收入來源後，生活 10 年不成問題。想想，另一半要獨自照顧小孩又要工作——至少讓家人有時間重建生活。',
+        form: function(v){ return '年收入 '+v.ai+' 萬 × 10 倍 = '+Math.round(v.ai*10)+' 萬元'; },
+        val:  function(v){ return Math.round(v.ai*10)+'萬'; }, unit:'',
+        pills:['定期壽險（保費最低、槓桿最大）','終身壽險'] },
+      { name:'意外身故',
+        why:'壽險本體＋意外附約，意外時雙重給付，保障加倍，保費卻非常經濟。意外的發生毫無預警，這項保障讓家人有更充裕的緩衝。',
+        form: function(v){ return '一般身故（'+Math.round(v.ai*10)+'萬）+ 意外失能（'+Math.round(v.ai*10)+'萬）= '+Math.round(v.ai*20)+'萬元'; },
+        val:  function(v){ return Math.round(v.ai*20)+'萬'; }, unit:'',
+        pills:['壽險本體','意外身故附約'] },
+    ]
+  },
+  disability: {
+    title:'失能長年病', ico:'♿',
+    subs: [
+      { name:'意外失能',
+        why:'意外造成永久失去工作能力。依雙十原則準備 10 年收入——十年後也許能培養第二專長，家庭才有真正的喘息空間。',
+        form: function(v){ return '年收入 '+v.ai+' 萬 × 10 倍 = '+Math.round(v.ai*10)+' 萬元'; },
+        val:  function(v){ return Math.round(v.ai*10)+'萬'; }, unit:'',
+        pills:['失能險主約','失能扶助金附約'] },
+      { name:'重大疾病 ／ 癌症',
+        why:'七大重症：腦中風、心肌梗塞、冠狀動脈繞道、器官移植、癱瘓、腎衰竭、癌症。癌症 80% 復發在確診後 3 年內，少數在 5 年內——準備的是這段期間的生活費，不是醫療費。',
+        form: function(v){ return '年收入 '+v.ai+'萬 × 3年 = '+Math.round(v.ai*3)+'萬（充裕：× 5年 = '+Math.round(v.ai*5)+'萬）'; },
+        val:  function(v){ return Math.round(v.ai*3)+'–'+Math.round(v.ai*5)+'萬'; }, unit:'',
+        pills:['重大疾病險（一次給付）','癌症險'] },
+      { name:'長期照護費用',
+        why:'失能或重大疾病後，不止收入中斷——還要支出看護費。外籍看護最低薪資 25,250 元加健保、餐費、加班費，一個月平均 3–5 萬。這裡準備的是每月照護補貼。',
+        form: function(v){ return '月支出 '+fmtN(v.me)+' 元 + 看護費約 30,000 元 = '+fmtN(v.me+30000)+' 元 / 月'; },
+        val:  function(v){ return fmtN(Math.ceil((v.me+30000)/1000)*1000); }, unit:'元／月',
+        pills:['長照險','失能照護金附約'] },
+    ]
+  },
+  medical: {
+    title:'醫療費用', ico:'🏥',
+    subs: [
+      { name:'住院醫療（實支實付）',
+        why:'國人一次住院平均花費約 10 萬。自費手術材料動輒數十萬。實支實付就是在額度內花多少賠多少——解決最大的醫療費用風險。入住加護病房或燒燙傷中心，額度加倍。',
+        form: function(v){ return '建議 20 萬（一般住院），入住加護 ／ 燒燙傷病房提高至 40 萬'; },
+        val:  function(v){ return '20–40萬'; }, unit:'／次',
+        pills:['實支實付醫療險（最重要）'] },
+      { name:'病房費差額',
+        why:'健保房常沒有空床。雙人房每日差額 1,500–2,500 元，單人房 3,000–6,000 元。日額保險讓你安心選擇適合的病房，不因費用妥協。',
+        form: function(v){ return '建議 3,000 元 / 日（可住雙人房），入住加護 ／ 燒燙傷病房提高至 6,000 元'; },
+        val:  function(v){ return '3,000–6,000'; }, unit:'元／日',
+        pills:['住院日額保險'] },
+      { name:'意外門診醫療',
+        why:'因意外受傷不需住院，連門診都可實支實付。台灣人常看中醫治療受傷，一次骨骼受傷的中醫復健可能超過一萬八。建議額度 5 萬元。',
+        form: function(v){ return '建議 5 萬元 / 次（含中醫復健門診）'; },
+        val:  function(v){ return '5萬'; }, unit:'／次',
+        pills:['意外實支實付附約'] },
+    ]
+  }
+};
+
+function buildPlan() {
+  var v = { mi:mi, me:me, ai:ai };
+  var name = (document.getElementById('cname')||{}).value || '';
+  document.getElementById('plan-sub').textContent =
+    (name?name+'，根據':'根據') + '您的擔心順序，以下是各項保障建議。';
+
+  var html = '';
+  rankOrder.forEach(function(rid, idx) {
+    var pd = PLANS[rid];
+    html += '<div class="plan-section">';
+    html += '<div class="plan-section-hd">';
+    html += '<span class="psh-badge">第'+(idx+1)+'優先</span>';
+    html += '<span class="psh-ico">'+pd.ico+'</span>';
+    html += '<span class="psh-title">'+pd.title+'</span>';
+    html += '</div>';
+    pd.subs.forEach(function(sub) {
+      var v2 = val2 = sub.val(v);
+      var form = sub.form(v);
+      html += '<div class="sub-card">';
+      html += '<div>';
+      html += '<div class="sc-name">'+sub.name+'</div>';
+      html += '<div class="sc-why">'+sub.why+'</div>';
+      html += '<div class="sc-formula">'+form+'</div>';
+      html += '<div class="sc-pills">';
+      html += '<span class="sc-pill key">建議：'+v2+sub.unit+'</span>';
+      sub.pills.forEach(function(p){ html += '<span class="sc-pill">'+p+'</span>'; });
+      html += '</div></div>';
+      html += '<div class="sc-amt"><div class="sc-val">'+v2+'</div><div class="sc-unit">'+sub.unit+'</div></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('planbox').innerHTML = html;
+}
+
+function buildSummary() {
+  var name = (document.getElementById('cname')||{}).value || '';
+  var pnames = { interrupt:'收入中斷', death:'活的太短', disability:'失能長年病', medical:'醫療費用' };
+  var picons = { interrupt:'⏸', death:'🕊', disability:'♿', medical:'🏥' };
+
+  document.getElementById('sumIntro').innerHTML =
+    (name ? '<strong style="color:var(--gold-lt)">'+name+'</strong>，根據' : '根據') +
+    '您的財務狀況與擔心排序，以下是各項保障需求摘要：';
+
+  var cardMap = {
+    interrupt: [{ label:'意外住院月補貼', val: fmtN(mi*2)+'元', sub:'一般住院＋意外無法工作' }],
+    death:     [{ label:'一般身故壽險', val: Math.round(ai*10)+'萬', sub:'年收入×10倍' },
+                { label:'意外身故', val: Math.round(ai*20)+'萬', sub:'壽險＋意外附約合計' }],
+    disability:[{ label:'意外失能保障', val: Math.round(ai*10)+'萬', sub:'年收入×10倍' },
+                { label:'重大疾病', val: Math.round(ai*3)+'–'+Math.round(ai*5)+'萬', sub:'3–5年年收入' },
+                { label:'長照月補貼', val: fmtN(Math.ceil((me+30000)/1000)*1000)+'元', sub:'支出＋看護費／月' }],
+    medical:   [{ label:'住院實支實付', val:'20–40萬', sub:'一般住院／加護病房' },
+                { label:'病房費日額', val:'3,000–6,000元', sub:'每日差額補貼' },
+                { label:'意外門診', val:'5萬', sub:'含中醫復健（每次）' }]
+  };
+
+  var html = '';
+  rankOrder.forEach(function(rid, idx) {
+    (cardMap[rid]||[]).forEach(function(c) {
+      html += '<div class="sum-card">';
+      html += '<div class="sum-rank">'+picons[rid]+' '+(idx+1)+'優先 · '+pnames[rid]+'</div>';
+      html += '<div class="sum-label">'+c.label+'</div>';
+      html += '<div class="sum-val">'+c.val+'</div>';
+      html += '<div class="sum-sub">'+c.sub+'</div>';
+      html += '</div>';
+    });
+  });
+  document.getElementById('sumGrid').innerHTML = html;
+
+  document.getElementById('dt1').textContent = ai + ' 萬元';
+  document.getElementById('dt2').textContent = Math.round(ai*0.1*10)/10 + ' 萬元／年';
+  document.getElementById('dt3').textContent = Math.round(ai*10) + ' 萬元';
+  document.getElementById('dt4').textContent = Math.round(ai*10) + ' 萬元';
+  document.getElementById('dt5').textContent = Math.round(ai*3) + '–' + Math.round(ai*5) + ' 萬元';
+}
+
+// ═══════════════════════════════════════
+// PDF
+// ═══════════════════════════════════════
+function exportPDF() {
+  // Show all steps for print
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.add('active'); });
+  window.print();
+  // Restore
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s'+step).classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+initDrag();
+updateRank();
+</script>
+</body>
+</html>
