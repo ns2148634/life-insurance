@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>經濟支柱守護計畫｜南山人壽</title>
+<title>經濟支柱守護計畫｜廣宸通訊處</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -165,7 +165,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 <div id="shell">
 <div id="pbar"><div id="pfill"></div></div>
 <div id="topbar">
-  <div class="logo">Guardian &middot; 南山人壽</div>
+  <div class="logo">Guardian &middot; 廣宸通訊處</div>
   <div class="slbl" id="slbl"></div>
   <div></div>
 </div>
@@ -176,7 +176,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 <div class="hero">
   <div class="hero-ico">&#128737;&#65039;</div>
   <div class="hero-title">經濟支柱<br>守護計畫</div>
-  <div class="hero-sub">南山人壽專業保障需求分析<br>為您與家人建立完整的財務防線</div>
+  <div class="hero-sub">廣宸通訊處專業保障需求分析<br>為您與家人建立完整的財務防線</div>
   <div class="wpills">
     <div class="wpill">失能長年病</div>
     <div class="wpill">收入中斷</div>
@@ -821,7 +821,7 @@ function buildSummary() {
     (s.name ? '<span class="hl">' + s.name + '</span>，根據' : '根據') +
     '您的財務狀況（年收入 <span class="hl">' + s.ai + '</span> 萬元，' +
     s.age + ' 歲' + (s.gender === 'm' ? '男' : '女') + '性）與擔心排序，' +
-    '以下是完整保障需求總表與南山人壽建議商品。';
+    '以下是完整保障需求總表與建議商品。';
 
   var rows = [
     {cat:'interrupt', name:'一般住院補貼',    need: fmtN(s.mi) + ' 元/月',             prod:'1HIR 住院日額'},
@@ -1078,7 +1078,7 @@ function exportPDF() {
 
   html += '<div class="header">' +
     '<div class="header-left">' +
-      '<div class="brand">Guardian &middot; 南山人壽</div>' +
+      '<div class="brand">Guardian &middot; 廣宸通訊處</div>' +
       '<div class="doctitle">保障規劃需求總表</div>' +
     '</div>' +
     '<div class="header-right">' +
@@ -1099,7 +1099,7 @@ function exportPDF() {
 
   html += '<div class="footer">' +
     '<span>本表格為保障需求分析，實際保費依投保時年齡、健康狀況及商品費率為準。</span>' +
-    '<span>南山人壽　Guardian Plan　' + dateStr + '</span>' +
+    '<span>廣宸通訊處　Guardian Plan　' + dateStr + '</span>' +
   '</div>';
 
   html += '</body></html>';
