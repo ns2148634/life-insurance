@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>經濟支柱守護計畫｜南山人壽</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0c1520;--ink-mid:#152236;--gold:#c8a84b;--gold-lt:#e2c97e;
+  --gold-dim:rgba(200,168,75,0.12);--gold-line:rgba(200,168,75,0.3);
+  --text:rgba(255,255,255,0.88);--muted:rgba(255,255,255,0.45);
+  --hint:rgba(255,255,255,0.22);--border:rgba(255,255,255,0.08);
+  --r:12px;--r-lg:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+#shell{width:100vw;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+#pbar{height:3px;flex-shrink:0;}
+#pfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));transition:width .5s ease;width:0%;}
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px 14px;flex-shrink:0;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;}
+.slbl{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+#backbtn{font-size:12px;color:var(--gold);cursor:pointer;padding:8px 16px;border:1px solid var(--gold-line);border-radius:20px;display:none;background:transparent;font-family:inherit;letter-spacing:1px;}
+#backbtn.show{display:block;}
+#canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 28px 40px;}
+#botnav{padding:14px 28px 26px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;gap:12px;border-top:1px solid var(--border);}
+.btnp{background:var(--gold);color:var(--ink);font-weight:700;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:1px;padding:14px 36px;border-radius:40px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,168,75,0.25);}
+.btnp:active{transform:scale(.97);}
+.btng{color:var(--gold);background:transparent;border:1px solid var(--gold-line);border-radius:40px;font-size:14px;padding:13px 24px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
+.screen{display:none;}
+.screen.on{display:block;animation:fup .35s ease both;}
+@keyframes fup{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+.stitle{font-family:'Noto Serif TC',serif;font-size:clamp(22px,4vw,32px);font-weight:600;line-height:1.2;margin-bottom:10px;}
+.ssub{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:24px;font-weight:300;}
+.gdeco{width:40px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:20px;}
+.card{background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;margin-bottom:14px;}
+.ibox{background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--gold-lt);line-height:1.75;margin-bottom:14px;}
+
+/* welcome */
+.hero{text-align:center;padding:16px 0 28px;}
+.hero-ico{width:72px;height:72px;margin:0 auto 22px;border:1px solid var(--gold-line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,46px);font-weight:600;line-height:1.15;margin-bottom:14px;background:linear-gradient(135deg,#fff 30%,var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.8;max-width:440px;margin:0 auto 28px;font-weight:300;}
+.wpills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:36px;}
+.wpill{font-size:11px;padding:6px 14px;border:1px solid var(--gold-line);border-radius:20px;color:var(--gold);}
+.cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--ink);font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;padding:16px 44px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 6px 28px rgba(200,168,75,0.3);letter-spacing:1px;}
+.cta:active{transform:scale(.97);}
+
+/* curve chips */
+.rchips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.rchip{padding:12px 14px;border-radius:var(--r);border:1px solid var(--border);background:rgba(255,255,255,0.02);}
+.rctag{font-size:10px;letter-spacing:1px;font-weight:500;padding:2px 7px;border-radius:10px;display:inline-block;margin-bottom:5px;text-transform:uppercase;}
+.rctag.d{background:rgba(192,57,43,.2);color:#e74c3c;}
+.rctag.w{background:rgba(180,130,0,.2);color:#f39c12;}
+.rctag.i{background:rgba(41,128,185,.2);color:#3498db;}
+.rctag.n{background:rgba(255,255,255,.07);color:var(--muted);}
+.rctext{font-size:12px;line-height:1.55;}
+
+/* inputs */
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.iblk{background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;transition:border-color .2s;}
+.iblk:focus-within{border-color:var(--gold-line);}
+.iblk.full{grid-column:1/-1;}
+.ilbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block;}
+.irow{display:flex;align-items:center;gap:5px;}
+.irow input[type="number"],.irow input[type="text"]{flex:1;background:transparent;border:none;outline:none;font-size:20px;font-weight:500;color:#fff;font-family:'Noto Sans TC',sans-serif;min-width:0;}
+.irow input::placeholder{color:rgba(255,255,255,.15);font-size:16px;}
+.iunit{font-size:12px;color:var(--muted);white-space:nowrap;}
+.ihint{font-size:10px;color:var(--hint);margin-top:4px;}
+.radrow{display:flex;gap:16px;margin-top:6px;}
+.radrow label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;color:var(--text);}
+.radrow input[type="radio"]{width:18px;height:18px;accent-color:var(--gold);}
+.isb{background:linear-gradient(135deg,var(--ink-mid),rgba(200,168,75,.05));border:1px solid var(--gold-line);border-radius:var(--r-lg);padding:16px 20px;margin-top:4px;}
+.isb-t{font-size:13px;line-height:1.85;}
+.hl{color:var(--gold-lt);font-weight:500;}
+
+/* rank */
+.rlist{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.rcard{display:flex;align-items:center;gap:14px;background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;cursor:grab;user-select:none;-webkit-user-select:none;transition:all .2s;}
+.rcard.dragging{opacity:.3;}
+.rcard.dover{border-color:var(--gold);background:var(--gold-dim);transform:scale(1.01);}
+.rnum{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--muted);transition:all .3s;}
+.rcard.ranked .rnum{background:var(--gold);color:var(--ink);font-weight:700;border-color:var(--gold);}
+.rico{font-size:20px;flex-shrink:0;}
+.rbody{flex:1;min-width:0;}
+.rname{font-size:15px;font-weight:500;margin-bottom:2px;font-family:'Noto Serif TC',serif;}
+.rdesc{font-size:12px;color:var(--muted);line-height:1.5;}
+.dh{color:var(--hint);font-size:16px;flex-shrink:0;letter-spacing:-1px;}
+.rprev{background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:var(--r);padding:12px 16px;font-size:12px;color:var(--gold-lt);line-height:1.7;}
+
+/* plan */
+.nsec{margin-bottom:22px;}
+.nshd{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.nsbadge{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid var(--gold-line);color:var(--gold);font-weight:500;white-space:nowrap;}
+.nsico{font-size:18px;}
+.nstit{font-size:16px;font-weight:600;font-family:'Noto Serif TC',serif;}
+.scard{background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start;}
+.scn{font-size:13px;font-weight:500;margin-bottom:5px;font-family:'Noto Serif TC',serif;}
+.scw{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:5px;}
+.scf{font-size:11px;color:var(--hint);margin-bottom:6px;}
+.scpills{display:flex;flex-wrap:wrap;gap:5px;}
+.scpill{font-size:11px;padding:2px 9px;border-radius:20px;border:1px solid var(--border);color:var(--muted);}
+.scpillk{font-size:11px;padding:2px 9px;border-radius:20px;border:1px solid var(--gold-line);color:var(--gold-lt);background:var(--gold-dim);font-weight:500;}
+.scamt{text-align:right;flex-shrink:0;}
+.scval{font-size:18px;font-weight:500;font-family:'Cormorant Garamond',serif;}
+.scunit{font-size:10px;color:var(--hint);margin-top:2px;}
+
+/* summary */
+.sintro{background:linear-gradient(135deg,var(--ink-mid),rgba(200,168,75,.06));border:1px solid var(--gold-line);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:16px;font-size:13px;line-height:1.85;}
+.ntbl{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:13px;}
+.ntbl th{background:rgba(200,168,75,.15);color:var(--gold-lt);font-weight:500;padding:10px 12px;text-align:left;font-size:11px;letter-spacing:1px;}
+.ntbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.ntbl tr:last-child td{border-bottom:none;}
+.pri{font-size:10px;color:var(--gold);background:var(--gold-dim);padding:2px 7px;border-radius:10px;border:1px solid var(--gold-line);white-space:nowrap;}
+.nv{color:#fff;font-weight:500;}
+.nprod{color:var(--muted);font-size:11px;}
+
+/* premium */
+.ptotbox{background:linear-gradient(135deg,rgba(200,168,75,.15),rgba(200,168,75,.05));border:1px solid var(--gold-line);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.ptlbl{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.ptval{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--gold-lt);font-weight:600;}
+.ptunit{font-size:11px;color:var(--muted);margin-top:3px;}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;}
+.prl{flex:1;}
+.prn{font-size:13px;font-weight:500;margin-bottom:2px;}
+.prd{font-size:11px;color:var(--muted);}
+.pramt{font-size:16px;font-weight:500;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);text-align:right;flex-shrink:0;}
+.prunit{font-size:10px;color:var(--hint);}
+
+/* doubletens */
+.dtpanel{background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:16px;}
+.dttitle{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.dtrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.dtrow:last-child{border-bottom:none;}
+.dtl{color:var(--muted);}
+.dtr{font-weight:500;}
+.dtrg{color:var(--gold-lt);}
+
+.calcbtn{width:100%;padding:15px;background:linear-gradient(135deg,rgba(200,168,75,.2),rgba(200,168,75,.08));border:1px solid var(--gold-line);color:var(--gold-lt);border-radius:var(--r-lg);font-size:15px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:600;margin-bottom:14px;}
+.calcbtn:active{background:var(--gold-dim);}
+.pdfbtn{width:100%;padding:15px;background:transparent;border:1px solid var(--gold-line);color:var(--gold);border-radius:var(--r-lg);font-size:15px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:600;}
+.pdfbtn:active{background:var(--gold-dim);}
+
+.warn{background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);border-radius:var(--r);padding:12px 16px;font-size:13px;color:#e74c3c;margin-bottom:14px;display:none;}
+
+@media print{
+  body{background:#fff;color:#111;overflow:auto;}
+  #topbar,#botnav,#pbar,#backbtn,.pdfbtn,.calcbtn,.cta,.btnp,.btng{display:none!important;}
+  .screen{display:block!important;}
+  #shell{height:auto;overflow:visible;}
+  #canvas{overflow:visible;padding:20px;}
+  .card,.iblk,.rcard,.scard,.prow,.dtpanel,.ptotbox,.sintro,.isb{background:#f8f8f8!important;border-color:#ddd!important;color:#111!important;break-inside:avoid;}
+  .stitle,.scn,.nstit,.rname,.prn{color:#111!important;}
+  .ssub,.scw,.scf,.rdesc,.dtl,.prd,.rctext{color:#555!important;}
+  .scpillk,.nsbadge,.pri{border-color:#b8860b!important;color:#8a6a00!important;background:#fff8e7!important;}
+  .scval,.pramt,.ptval,.dtr{color:#111!important;}
+  .ntbl th{background:#f0e8d0!important;color:#8a6a00!important;}
+  .ntbl td{border-color:#ddd!important;color:#111!important;}
+  .nprod{color:#555!important;}
+}
+</style>
+</head>
+<body>
+<div id="shell">
+<div id="pbar"><div id="pfill"></div></div>
+<div id="topbar">
+  <div class="logo">Guardian &middot; 南山人壽</div>
+  <div class="slbl" id="slbl"></div>
+  <button id="backbtn" onclick="goBack()">&#8592; 返回</button>
+</div>
+<div id="canvas">
+
+<!-- S0 Welcome -->
+<div class="screen on" id="s0">
+<div class="hero">
+  <div class="hero-ico">&#128737;&#65039;</div>
+  <div class="hero-title">經濟支柱<br>守護計畫</div>
+  <div class="hero-sub">南山人壽專業保障需求分析<br>為您與家人建立完整的財務防線</div>
+  <div class="wpills">
+    <div class="wpill">失能長年病</div>
+    <div class="wpill">收入中斷</div>
+    <div class="wpill">活的太短</div>
+    <div class="wpill">醫療費用</div>
+  </div>
+  <button class="cta" onclick="go(1)">開始規劃 &#8594;</button>
+</div>
+</div>
+
+<!-- S1 Curve -->
+<div class="screen" id="s1">
+<div class="stitle">人生收支曲線</div>
+<div class="ssub">我們只會愈來愈老，人生是永不回頭的單行道。這張圖說明為什麼奮鬥期的保障，是整個家庭最關鍵的防線。</div>
+<div class="card">
+<svg viewBox="0 0 560 200" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3498db" stop-opacity=".2"/>
+      <stop offset="100%" stop-color="#3498db" stop-opacity=".02"/>
+    </linearGradient>
+  </defs>
+  <rect x="38" y="12" width="128" height="158" fill="rgba(200,140,0,.04)" rx="3"/>
+  <rect x="166" y="12" width="208" height="158" fill="rgba(0,150,80,.04)" rx="3"/>
+  <rect x="374" y="12" width="148" height="158" fill="rgba(30,100,180,.04)" rx="3"/>
+  <path d="M166,170 L166,84 L374,84 L374,170 Z" fill="url(#ig)"/>
+  <line x1="166" y1="84" x2="374" y2="84" stroke="#3498db" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <path d="M38,150 Q85,132 124,106 Q155,84 166,80 Q218,66 288,62 Q348,59 374,72 Q408,86 444,114 Q475,138 522,154" fill="none" stroke="#c8a84b" stroke-width="2"/>
+  <line x1="38" y1="170" x2="535" y2="170" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+  <circle cx="166" cy="170" r="3.5" fill="#3498db"/>
+  <circle cx="374" cy="170" r="3.5" fill="#3498db"/>
+  <text x="38" y="185" font-size="10" fill="rgba(255,255,255,.35)" text-anchor="middle" font-family="sans-serif">出生</text>
+  <text x="166" y="185" font-size="10" fill="#3498db" text-anchor="middle" font-family="sans-serif">就業</text>
+  <text x="374" y="185" font-size="10" fill="#3498db" text-anchor="middle" font-family="sans-serif">退休</text>
+  <text x="530" y="185" font-size="10" fill="rgba(255,255,255,.35)" text-anchor="middle" font-family="sans-serif">離開</text>
+  <text x="102" y="28" font-size="11" fill="#c8a84b" text-anchor="middle" font-family="sans-serif" font-weight="bold">撫養期</text>
+  <text x="270" y="28" font-size="11" fill="#2ecc71" text-anchor="middle" font-family="sans-serif" font-weight="bold">奮鬥期</text>
+  <text x="448" y="28" font-size="11" fill="#3498db" text-anchor="middle" font-family="sans-serif" font-weight="bold">養老期</text>
+  <text x="86" y="116" font-size="10" fill="rgba(200,168,75,.5)" text-anchor="middle" font-family="sans-serif">撫養缺口</text>
+  <text x="420" y="112" font-size="10" fill="rgba(200,168,75,.5)" text-anchor="middle" font-family="sans-serif">養老缺口</text>
+  <text x="270" y="102" font-size="10" fill="rgba(52,152,219,.8)" text-anchor="middle" font-family="sans-serif">奮鬥期風險最關鍵</text>
+</svg>
+</div>
+<div class="rchips">
+  <div class="rchip"><div class="rctag d">活的太短</div><div class="rctext">因疾病或意外提早離開，依靠我們的家人怎麼辦？</div></div>
+  <div class="rchip"><div class="rctag w">活的太長</div><div class="rctext">錢只準備到這，卻活到那——今天聚焦保障的部分。</div></div>
+  <div class="rchip"><div class="rctag i">收入中斷</div><div class="rctext">疾病或意外造成半年甚至一年無法工作。</div></div>
+  <div class="rchip"><div class="rctag n">失能長年病</div><div class="rctext">永遠沒有收入，還要別人來照顧——加上龐大醫療費用。</div></div>
+</div>
+</div>
+
+<!-- S2 Input -->
+<div class="screen" id="s2">
+<div class="stitle">您的基本資料</div>
+<div class="ssub">這些資料將用於計算您的專屬保障需求與保費試算。</div>
+<div class="igrid">
+  <div class="iblk">
+    <label class="ilbl">姓名（選填）</label>
+    <div class="irow"><input type="text" id="cname" placeholder="方便稱呼您" oninput="syncCalc()"></div>
+  </div>
+  <div class="iblk">
+    <label class="ilbl">薪資入帳日</label>
+    <div class="irow"><input type="number" id="payday" inputmode="numeric" placeholder="10" min="1" max="31"><span class="iunit">號</span></div>
+  </div>
+  <div class="iblk">
+    <label class="ilbl">月收入</label>
+    <div class="irow"><input type="number" id="mi" inputmode="numeric" placeholder="30000" oninput="syncCalc()"><span class="iunit">元</span></div>
+    <div class="ihint">稅前月薪含獎金</div>
+  </div>
+  <div class="iblk">
+    <label class="ilbl">月固定支出</label>
+    <div class="irow"><input type="number" id="me" inputmode="numeric" placeholder="20000" oninput="syncCalc()"><span class="iunit">元</span></div>
+    <div class="ihint">房租、帳單、生活費</div>
+  </div>
+  <div class="iblk">
+    <label class="ilbl">年齡</label>
+    <div class="irow"><input type="number" id="age" inputmode="numeric" placeholder="35" min="15" max="70" oninput="syncCalc()"><span class="iunit">歲</span></div>
+  </div>
+  <div class="iblk">
+    <label class="ilbl">年收入（自動計算）</label>
+    <div class="irow"><input type="number" id="ai" readonly style="color:var(--gold-lt);"><span class="iunit">萬元</span></div>
+  </div>
+  <div class="iblk">
+    <label class="ilbl">性別</label>
+    <div class="radrow">
+      <label><input type="radio" name="gender" value="m" checked onchange="syncCalc()"> 男</label>
+      <label><input type="radio" name="gender" value="f" onchange="syncCalc()"> 女</label>
+    </div>
+  </div>
+  <div class="iblk">
+    <label class="ilbl">繳費年期</label>
+    <div class="radrow">
+      <label><input type="radio" name="pyear" value="10" checked> 10年</label>
+      <label><input type="radio" name="pyear" value="20"> 20年</label>
+    </div>
+  </div>
+</div>
+<div class="isb" id="isb"><div class="isb-t" id="isbt">請填入月收入、年齡與性別，系統將為您計算專屬保障。</div></div>
+</div>
+
+<!-- S3 Rank -->
+<div class="screen" id="s3">
+<div class="stitle">您最擔心的是？</div>
+<div class="ssub">請依照您<strong style="color:#fff;">最擔心</strong>的程度，長按拖曳排列順序。我們將依您的順序逐一說明保障規劃。</div>
+<div class="rlist" id="rlist">
+  <div class="rcard" draggable="true" data-id="interrupt">
+    <div class="rnum">?</div><div class="rico">&#9208;</div>
+    <div class="rbody"><div class="rname">收入中斷</div><div class="rdesc">住院或意外，造成數個月收入中斷</div></div>
+    <div class="dh">&#8942;&#8942;</div>
+  </div>
+  <div class="rcard" draggable="true" data-id="death">
+    <div class="rnum">?</div><div class="rico">&#128330;</div>
+    <div class="rbody"><div class="rname">活的太短</div><div class="rdesc">提早離開，家人失去經濟支撐</div></div>
+    <div class="dh">&#8942;&#8942;</div>
+  </div>
+  <div class="rcard" draggable="true" data-id="disability">
+    <div class="rnum">?</div><div class="rico">&#9855;</div>
+    <div class="rbody"><div class="rname">失能長年病</div><div class="rdesc">永遠沒有收入，還需要長期照護</div></div>
+    <div class="dh">&#8942;&#8942;</div>
+  </div>
+  <div class="rcard" draggable="true" data-id="medical">
+    <div class="rnum">?</div><div class="rico">&#127973;</div>
+    <div class="rbody"><div class="rname">醫療費用</div><div class="rdesc">住院、手術、病房差額的龐大支出</div></div>
+    <div class="dh">&#8942;&#8942;</div>
+  </div>
+</div>
+<div class="rprev" id="rprev">拖曳上方卡片，依您最擔心的順序排列</div>
+</div>
+
+<!-- S4 Plan -->
+<div class="screen" id="s4">
+<div class="stitle">您的保障需求</div>
+<div class="ssub" id="s4sub">依照您的擔心順序，以下是各項風險的保障建議。</div>
+<div id="planbox"></div>
+</div>
+
+<!-- S5 Summary -->
+<div class="screen" id="s5">
+<div class="stitle">需求總表與保費試算</div>
+<div class="gdeco"></div>
+<div class="warn" id="warn">請先在「基本資料」填入年齡與性別，才能計算保費。</div>
+<div class="sintro" id="sintro"></div>
+
+<div style="font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;">保障需求總覽</div>
+<table class="ntbl" id="ntbl"></table>
+
+<button class="calcbtn" id="calcbtn" onclick="calcPremium()">計算年繳保費 &#8594;</button>
+
+<div id="premsec" style="display:none;">
+  <div class="ptotbox">
+    <div>
+      <div class="ptlbl">預估年繳保費合計</div>
+      <div class="ptval" id="totalp">0</div>
+      <div class="ptunit">元 / 年</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:11px;color:var(--muted);">月均保費</div>
+      <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);" id="monthp">0</div>
+      <div style="font-size:10px;color:var(--hint);">元 / 月</div>
+    </div>
+  </div>
+  <div id="premrows"></div>
+</div>
+
+<div class="dtpanel">
+  <div class="dttitle">雙十原則 檢核</div>
+  <div class="dtrow"><span class="dtl">年收入</span><span class="dtr dtrg" id="dt1">—</span></div>
+  <div class="dtrow"><span class="dtl">年保費上限（年收入 &times; 10%）</span><span class="dtr" id="dt2">—</span></div>
+  <div class="dtrow"><span class="dtl">壽險最低保額（年收入 &times; 10 倍）</span><span class="dtr" id="dt3">—</span></div>
+  <div class="dtrow"><span class="dtl">建議失能保額</span><span class="dtr" id="dt4">—</span></div>
+  <div class="dtrow"><span class="dtl">建議重疾保額（3–5年）</span><span class="dtr" id="dt5">—</span></div>
+</div>
+<button class="pdfbtn" onclick="exportPDF()">&#128196; 匯出保障規劃報告</button>
+</div>
+
+</div><!-- /canvas -->
+
+<div id="botnav">
+  <button class="btng" id="gbtn" style="display:none" onclick="goBack()">上一步</button>
+  <button class="btnp" id="mbtn" onclick="handleNext()">開始了解 &#8594;</button>
+</div>
+</div><!-- /shell -->
+
+<script>
+// ============================================================
+// RATE TABLES
+// ============================================================
+
+// 10TLTC: age -> [male_rate, female_rate] per 1-wan unit
+var TLTC = {
+  15:[50,40],16:[51,41],17:[52,42],18:[53,43],19:[54,44],
+  20:[55,45],21:[57,46],22:[58,46],23:[60,47],24:[61,47],
+  25:[63,48],26:[64,48],27:[66,49],28:[67,49],29:[69,50],
+  30:[70,50],31:[73,52],32:[76,53],33:[79,55],34:[82,56],
+  35:[85,58],36:[88,59],37:[91,61],38:[94,62],39:[97,64],
+  40:[100,65],41:[112,73],42:[119,81],43:[126,86],44:[136,89],
+  45:[148,94],46:[164,102],47:[182,113],48:[196,126],49:[208,137],
+  50:[220,145],51:[250,181],52:[280,210],53:[310,242],54:[340,277],
+  55:[370,319],56:[400,358],57:[430,394],58:[460,429],59:[490,465],
+  60:[520,500]
+};
+
+// 10TSDD: age -> [male_rate, female_rate] per 10-wan unit
+var TSDD = {
+  20:[370,400],21:[419,444],22:[468,488],23:[517,532],24:[566,576],
+  25:[615,620],26:[664,664],27:[713,708],28:[762,752],29:[811,796],
+  30:[860,840],31:[974,931],32:[1088,1022],33:[1202,1113],34:[1316,1204],
+  35:[1430,1295],36:[1544,1386],37:[1658,1477],38:[1772,1568],39:[1886,1659],
+  40:[2000,1750],41:[2190,1880],42:[2380,2010],43:[2570,2140],44:[2760,2270],
+  45:[2950,2400],46:[3140,2530],47:[3330,2660],48:[3520,2790],49:[3710,2920],
+  50:[3900,3050],51:[4337,3354],52:[4774,3658],53:[5211,3962],54:[5648,4266],
+  55:[6085,4570],56:[6522,4874],57:[6959,5178],58:[7396,5482],59:[7833,5786],
+  60:[8270,6090],61:[8807,6480],62:[9344,6870],63:[9881,7260],64:[10418,7650],
+  65:[10955,8040],66:[11492,8430],67:[12029,8820],68:[12566,9210],69:[13103,9600],
+  70:[13640,9990]
+};
+
+// 1HIR: age -> [male_rate, female_rate] per day per 1000-yuan unit (annual)
+var HIR = {
+  0:[176,154],1:[176,154],2:[176,154],3:[176,154],4:[176,154],
+  5:[122,108],6:[113,99],7:[104,88],8:[92,78],9:[84,69],
+  10:[75,58],11:[72,56],12:[72,55],13:[67,54],14:[65,52],
+  15:[63,49],16:[66,52],17:[66,53],18:[71,54],19:[73,56],
+  20:[75,59],21:[79,63],22:[82,67],23:[85,72],24:[87,78],
+  25:[92,83],26:[93,93],27:[97,101],28:[100,114],29:[104,122],
+  30:[107,133],31:[112,134],32:[116,136],33:[122,138],34:[127,137],
+  35:[131,139],36:[138,142],37:[144,143],38:[152,144],39:[157,145],
+  40:[164,148],41:[176,150],42:[186,151],43:[199,156],44:[209,157],
+  45:[221,160],46:[225,166],47:[227,172],48:[231,177],49:[234,182],
+  50:[238,189],51:[252,193],52:[268,200],53:[283,207],54:[297,211],
+  55:[312,218],56:[328,227],57:[344,236],58:[361,244],59:[376,253],
+  60:[394,262],61:[414,284],62:[436,305],63:[458,328],64:[480,349],
+  65:[500,370],66:[537,397],67:[573,422],68:[609,449],69:[644,476],
+  70:[681,501],71:[716,537],72:[749,573],73:[785,610],74:[818,645],75:[853,682]
+};
+
+// 1HS A-type: age range -> {m, f} annual premium
+var HSA = [
+  {max:25, m:3750, f:3750},
+  {max:30, m:3750, f:5600},
+  {max:35, m:3750, f:7200},
+  {max:40, m:4910, f:7250},
+  {max:45, m:7170, f:7400},
+  {max:50, m:9300, f:8500},
+  {max:55, m:11900,f:9800},
+  {max:60, m:15300,f:12000},
+  {max:65, m:21500,f:16400}
+];
+
+// N1TR: age -> [male_rate, female_rate] per 1-wan unit
+var N1TR = {
+  15:[6.6,3.1],16:[8.9,3.5],17:[11.0,3.8],18:[11.2,4.2],19:[11.3,4.3],
+  20:[11.3,4.3],21:[11.4,4.4],22:[11.6,4.4],23:[11.8,4.6],24:[11.9,4.8],
+  25:[13.3,4.9],26:[12.1,5.1],27:[12.3,5.4],28:[12.3,5.4],29:[13.4,5.5],
+  30:[12.6,5.7],31:[13.1,5.8],32:[14.0,5.9],33:[14.1,6.6],34:[15.0,7.1],
+  35:[31.4,7.6],36:[33.3,8.1],37:[36.1,8.6],38:[39.0,9.4],39:[20.8,10.4],
+  40:[22.5,11.1],41:[23.9,11.6],42:[26.3,12.5],43:[28.7,13.3],44:[31.4,14.6],
+  45:[34.2,16.1],46:[37.2,17.7],47:[40.3,19.3],48:[43.8,21.3],49:[47.7,23.5],
+  50:[51.4,26.9],51:[55.3,28.4],52:[59.4,31.4],53:[63.5,33.6],54:[67.6,35.6],
+  55:[71.1,35.4],56:[76.0,40.9],57:[82.3,42.2],58:[89.9,46.9],59:[99.4,51.8],
+  60:[108.3,57.7],61:[115.6,59.2],62:[124.6,61.7],63:[135.5,67.7],64:[148.2,74.6],
+  65:[162.3,80.7],66:[177.1,89.9],67:[192.9,100.5],68:[211.0,112.8],69:[231.1,126.7],
+  70:[252.9,142.3]
+};
+
+function getHSA(age) {
+  for (var i = 0; i < HSA.length; i++) {
+    if (age <= HSA[i].max) return HSA[i];
+  }
+  return null;
+}
+
+// ============================================================
+// STATE  (single source of truth - always read from DOM)
+// ============================================================
+var step = 0;
+var rankOrder = ['interrupt','death','disability','medical'];
+
+var STEPS = [
+  {lbl:'', next:'開始了解 \u2192'},
+  {lbl:'\u7b2c\u4e00\u6b65 \u00b7 \u6536\u652f\u66f2\u7dda', next:'\u586b\u5165\u6211\u7684\u8cc7\u6599 \u2192'},
+  {lbl:'\u7b2c\u4e8c\u6b65 \u00b7 \u57fa\u672c\u8cc7\u6599', next:'\u8a2d\u5b9a\u98a8\u96aa\u6392\u5e8f \u2192'},
+  {lbl:'\u7b2c\u4e09\u6b65 \u00b7 \u98a8\u96aa\u6392\u5e8f', next:'\u67e5\u770b\u4fdd\u969c\u9700\u6c42 \u2192'},
+  {lbl:'\u7b2c\u56db\u6b65 \u00b7 \u4fdd\u969c\u9700\u6c42', next:'\u67e5\u770b\u7e3d\u8868\u8207\u4fdd\u8cbb \u2192'},
+  {lbl:'\u7b2c\u4e94\u6b65 \u00b7 \u7e3d\u8868\u8207\u4fdd\u8cbb', next:'\u91cd\u65b0\u958b\u59cb'}
+];
+
+// ============================================================
+// HELPER
+// ============================================================
+function fmtN(n) {
+  return Math.round(n).toLocaleString('zh-TW');
+}
+
+function getState() {
+  var mi   = parseFloat(document.getElementById('mi').value)   || 0;
+  var me   = parseFloat(document.getElementById('me').value)   || 0;
+  var age  = parseInt(document.getElementById('age').value)    || 0;
+  var gel  = document.querySelector('input[name="gender"]:checked');
+  var gender = gel ? gel.value : 'm';
+  var gi   = (gender === 'm') ? 0 : 1;
+  var ai   = Math.round(mi * 12 / 10000 * 10) / 10;
+  var name = document.getElementById('cname').value.trim();
+  var pd   = document.getElementById('payday').value || '固定';
+  return {mi:mi, me:me, age:age, gender:gender, gi:gi, ai:ai, name:name, pd:pd};
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function go(n) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('on'); });
+  document.getElementById('s'+n).classList.add('on');
+  document.getElementById('canvas').scrollTop = 0;
+  step = n;
+
+  var pct = (n === 0) ? 0 : Math.round(n / 5 * 100);
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('slbl').textContent = STEPS[n].lbl;
+  document.getElementById('mbtn').textContent = STEPS[n].next;
+
+  var bb = document.getElementById('backbtn');
+  var gb = document.getElementById('gbtn');
+  if (n > 0) { bb.classList.add('show'); gb.style.display = 'block'; }
+  else        { bb.classList.remove('show'); gb.style.display = 'none'; }
+
+  if (n === 4) buildPlan();
+  if (n === 5) buildSummary();
+}
+
+function goBack() { if (step > 0) go(step - 1); }
+
+function handleNext() {
+  if (step === 5) { go(0); return; }
+  go(step + 1);
+}
+
+// ============================================================
+// SYNC CALC (called on every input change)
+// ============================================================
+function syncCalc() {
+  var s = getState();
+
+  // update auto field
+  document.getElementById('ai').value = s.ai || '';
+
+  // update summary box
+  var isbt = document.getElementById('isbt');
+  if (s.mi && s.age && s.gender) {
+    var gLabel = (s.gender === 'm') ? '男性' : '女性';
+    var sav = s.mi - s.me;
+    isbt.innerHTML =
+      (s.name ? '<span class="hl">' + s.name + '</span>，' : '') +
+      s.age + ' 歲' + gLabel + '，月收入 <span class="hl">' + fmtN(s.mi) + '</span> 元，' +
+      '支出 <span class="hl">' + fmtN(s.me) + '</span> 元，' +
+      '每月可存 <span class="hl">' + fmtN(Math.max(0, sav)) + '</span> 元。' +
+      '年收入約 <span class="hl">' + s.ai + '</span> 萬元，' +
+      '每月 <span class="hl">' + s.pd + '</span> 號領薪。';
+  } else {
+    isbt.textContent = '請填入月收入、年齡與性別，系統將為您計算專屬保障。';
+  }
+}
+
+// ============================================================
+// DRAG & DROP
+// ============================================================
+var dragSrc = null;
+var touchItem = null, touchClone = null, touchOffX = 0, touchOffY = 0;
+
+function initDrag() {
+  var list = document.getElementById('rlist');
+  list.querySelectorAll('.rcard').forEach(function(el) {
+
+    // --- mouse drag ---
+    el.addEventListener('dragstart', function() {
+      dragSrc = el;
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', function() {
+      el.classList.remove('dragging');
+      list.querySelectorAll('.rcard').forEach(function(c){ c.classList.remove('dover'); });
+      updateRank();
+    });
+    el.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      el.classList.add('dover');
+    });
+    el.addEventListener('dragleave', function() {
+      el.classList.remove('dover');
+    });
+    el.addEventListener('drop', function(e) {
+      e.preventDefault();
+      el.classList.remove('dover');
+      if (dragSrc && dragSrc !== el) {
+        var arr = Array.from(list.children);
+        var si = arr.indexOf(dragSrc), ti = arr.indexOf(el);
+        if (si < ti) list.insertBefore(dragSrc, el.nextSibling);
+        else          list.insertBefore(dragSrc, el);
+      }
+      updateRank();
+    });
+
+    // --- touch drag ---
+    el.addEventListener('touchstart', function(e) {
+      touchItem = el;
+      var t = e.touches[0];
+      var r = el.getBoundingClientRect();
+      touchOffX = t.clientX - r.left;
+      touchOffY = t.clientY - r.top;
+      touchClone = el.cloneNode(true);
+      touchClone.style.cssText =
+        'position:fixed;z-index:999;width:' + r.width + 'px;' +
+        'opacity:.8;pointer-events:none;transition:none;' +
+        'left:' + (t.clientX - touchOffX) + 'px;' +
+        'top:'  + (t.clientY - touchOffY) + 'px;';
+      document.body.appendChild(touchClone);
+      el.classList.add('dragging');
+    }, {passive: true});
+
+    el.addEventListener('touchmove', function(e) {
+      if (!touchClone) return;
+      e.preventDefault();
+      var t = e.touches[0];
+      touchClone.style.left = (t.clientX - touchOffX) + 'px';
+      touchClone.style.top  = (t.clientY - touchOffY) + 'px';
+      touchClone.style.display = 'none';
+      var below = document.elementFromPoint(t.clientX, t.clientY);
+      touchClone.style.display = '';
+      var target = below ? below.closest('.rcard') : null;
+      list.querySelectorAll('.rcard').forEach(function(c){ c.classList.remove('dover'); });
+      if (target && target !== touchItem) target.classList.add('dover');
+    }, {passive: false});
+
+    el.addEventListener('touchend', function(e) {
+      if (touchClone) { document.body.removeChild(touchClone); touchClone = null; }
+      el.classList.remove('dragging');
+      list.querySelectorAll('.rcard').forEach(function(c){ c.classList.remove('dover'); });
+      var t = e.changedTouches[0];
+      var below = document.elementFromPoint(t.clientX, t.clientY);
+      var target = below ? below.closest('.rcard') : null;
+      if (target && target !== touchItem) {
+        var arr = Array.from(list.children);
+        var si = arr.indexOf(touchItem), ti = arr.indexOf(target);
+        if (si < ti) list.insertBefore(touchItem, target.nextSibling);
+        else          list.insertBefore(touchItem, target);
+      }
+      touchItem = null;
+      updateRank();
+    });
+  });
+}
+
+function updateRank() {
+  rankOrder = [];
+  var names = {interrupt:'收入中斷', death:'活的太短', disability:'失能長年病', medical:'醫療費用'};
+  document.querySelectorAll('#rlist .rcard').forEach(function(el, i) {
+    el.querySelector('.rnum').textContent = i + 1;
+    el.classList.add('ranked');
+    rankOrder.push(el.dataset.id);
+  });
+  document.getElementById('rprev').textContent =
+    '您的擔心順序：' + rankOrder.map(function(r, i){ return (i+1) + '. ' + names[r]; }).join('　');
+}
+
+// ============================================================
+// PLAN DEFINITIONS
+// ============================================================
+var PLANS = {
+  interrupt: {
+    title: '收入中斷', ico: '&#9208;',
+    subs: [
+      {
+        name: '一般住院',
+        why:  '住院期間公司多半停薪。不論疾病或意外需要住院，每月可領補貼彌補薪資缺口，讓家庭現金流不中斷。',
+        fmFn: function(s){ return '建議：' + fmtN(s.mi) + ' 元（1 個月月收入）'; },
+        valFn:function(s){ return fmtN(s.mi); },
+        unit: '元', pills:['南山 1HIR 住院日額']
+      },
+      {
+        name: '意外無法工作',
+        why:  '骨折等傷況可能只住院三天，但在家休養三個月甚至半年。在家休養期間同樣有收入補貼，每月約 3 萬元。',
+        fmFn: function(s){ return 'NAI 100 萬保額，每月理賠約 30,000 元'; },
+        valFn:function(s){ return '30,000'; },
+        unit: '元/月', pills:['南山 NAI 意外附約']
+      },
+      {
+        name: '意外住院（綜合）',
+        why:  '意外到需要住院，同時觸發前兩項，保障加總。最嚴重情況下，保障最充足。',
+        fmFn: function(s){ return '一般住院 ' + fmtN(s.mi) + ' + 意外無法工作 30,000 = ' + fmtN(s.mi + 30000) + ' 元/月'; },
+        valFn:function(s){ return fmtN(s.mi + 30000); },
+        unit: '元/月', pills:['南山 1HIR + NAI']
+      }
+    ]
+  },
+  death: {
+    title: '活的太短', ico: '&#128330;',
+    subs: [
+      {
+        name: '一般身故',
+        why:  '依雙十原則，保障至少為年收入的 10 倍，讓家人在失去收入來源後，生活 10 年不成問題。',
+        fmFn: function(s){ return '年收入 ' + s.ai + ' 萬 × 10 倍 = ' + Math.round(s.ai * 10) + ' 萬元'; },
+        valFn:function(s){ return Math.round(s.ai * 10) + '萬'; },
+        unit: '', pills:['南山 N1TR 定期壽險']
+      },
+      {
+        name: '意外身故',
+        why:  '壽險本體＋意外失能附約雙重給付，意外時保障加倍，保費卻非常經濟。',
+        fmFn: function(s){ return '一般身故 ' + Math.round(s.ai*10) + '萬 + 意外失能 ' + Math.round(s.ai*10) + '萬 = ' + Math.round(s.ai*20) + '萬元'; },
+        valFn:function(s){ return Math.round(s.ai * 20) + '萬'; },
+        unit: '', pills:['南山 N1TR + NAI']
+      }
+    ]
+  },
+  disability: {
+    title: '失能長年病', ico: '&#9855;',
+    subs: [
+      {
+        name: '意外失能',
+        why:  '意外造成永久失去工作能力。依雙十原則準備 10 年收入，十年後也許能培養第二專長，家庭才有喘息空間。',
+        fmFn: function(s){ return 'NAI 100萬 + PAMR 200萬 + YPAR ' + Math.max(0, Math.round(s.ai*10)-300) + '萬 = ' + Math.round(s.ai*10) + '萬元'; },
+        valFn:function(s){ return Math.round(s.ai * 10) + '萬'; },
+        unit: '', pills:['南山 NAI + PAMR + YPAR']
+      },
+      {
+        name: '重大疾病 / 癌症',
+        why:  '七大重症＋癌症。癌症 80% 復發在確診後 3 年內，少數在 5 年內。準備的是這段期間的生活費，不是醫療費。',
+        fmFn: function(s){ return '需求 ' + Math.round(s.ai*3) + '萬 ÷ 400% = 投保 ' + Math.round(s.ai*3/4*10)/10 + '萬（給付 400%）'; },
+        valFn:function(s){ return Math.round(s.ai*3) + '–' + Math.round(s.ai*5) + '萬'; },
+        unit: '', pills:['南山 10TSDD 重大疾病定期險']
+      },
+      {
+        name: '長期照護',
+        why:  '失能或重大疾病後，不止收入中斷，還需支出看護費。外籍看護含各項費用每月平均 3–5 萬，建議每月補貼 3 萬元。',
+        fmFn: function(s){ return '月補貼 3 萬 × 12 = 36 萬保額'; },
+        valFn:function(s){ return '3萬'; },
+        unit: '元/月', pills:['南山 10TLTC 長期照顧定期險']
+      }
+    ]
+  },
+  medical: {
+    title: '醫療費用', ico: '&#127973;',
+    subs: [
+      {
+        name: '住院醫療（實支實付）',
+        why:  '國人一次住院平均約 10 萬。自費手術材料動輒數十萬。花多少賠多少，解決最大的醫療費用風險。入住加護病房額度加倍。',
+        fmFn: function(s){ return '建議 20 萬/次，加護病房加倍至 40 萬'; },
+        valFn:function(s){ return '20–40萬'; },
+        unit: '/次', pills:['南山 1HS A型']
+      },
+      {
+        name: '病房費差額',
+        why:  '健保房常沒空床。雙人房每日 1,500–2,500 元，單人房 3,000–6,000 元。包含在 1HS A型 中，讓你安心選擇適合的病房。',
+        fmFn: function(s){ return '包含於 1HS A型，3,000 元/日（加護病房 6,000 元/日）'; },
+        valFn:function(s){ return '3,000–6,000'; },
+        unit: '元/日', pills:['包含於南山 1HS A型']
+      },
+      {
+        name: '意外門診醫療',
+        why:  '因意外受傷不需住院，連門診都可實支實付。含中醫復健，一次意外最高理賠 3 萬元。',
+        fmFn: function(s){ return 'PAMR 計劃 3，保費 3,260 元/年，理賠 3 萬/次'; },
+        valFn:function(s){ return '3萬'; },
+        unit: '/次', pills:['南山 PAMR 計劃3']
+      }
+    ]
+  }
+};
+
+// ============================================================
+// BUILD PLAN (S4)
+// ============================================================
+function buildPlan() {
+  var s = getState();
+  var name = s.name;
+  document.getElementById('s4sub').textContent =
+    (name ? name + '，根據' : '根據') + '您的擔心順序，以下是各項保障建議。';
+
+  var html = '';
+  rankOrder.forEach(function(rid, idx) {
+    var pd = PLANS[rid];
+    html += '<div class="nsec"><div class="nshd">' +
+      '<span class="nsbadge">第' + (idx+1) + '優先</span>' +
+      '<span class="nsico">' + pd.ico + '</span>' +
+      '<span class="nstit">' + pd.title + '</span>' +
+      '</div>';
+    pd.subs.forEach(function(sub) {
+      var val = sub.valFn(s);
+      var fm  = sub.fmFn(s);
+      html += '<div class="scard"><div>' +
+        '<div class="scn">' + sub.name + '</div>' +
+        '<div class="scw">' + sub.why + '</div>' +
+        '<div class="scf">' + fm + '</div>' +
+        '<div class="scpills">' +
+        '<span class="scpillk">' + val + sub.unit + '</span>' +
+        sub.pills.map(function(p){ return '<span class="scpill">' + p + '</span>'; }).join('') +
+        '</div></div>' +
+        '<div class="scamt"><div class="scval">' + val + '</div><div class="scunit">' + sub.unit + '</div></div>' +
+        '</div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('planbox').innerHTML = html;
+}
+
+// ============================================================
+// BUILD SUMMARY (S5)
+// ============================================================
+function buildSummary() {
+  var s = getState();
+  var pnames = {interrupt:'收入中斷', death:'活的太短', disability:'失能長年病', medical:'醫療費用'};
+  var picos  = {interrupt:'&#9208;', death:'&#128330;', disability:'&#9855;', medical:'&#127973;'};
+
+  // warning
+  var warn = document.getElementById('warn');
+  warn.style.display = (s.age && s.gender) ? 'none' : 'block';
+
+  document.getElementById('sintro').innerHTML =
+    (s.name ? '<span class="hl">' + s.name + '</span>，根據' : '根據') +
+    '您的財務狀況（年收入 <span class="hl">' + s.ai + '</span> 萬元，' +
+    s.age + ' 歲' + (s.gender === 'm' ? '男' : '女') + '性）與擔心排序，' +
+    '以下是完整保障需求總表與南山人壽建議商品。';
+
+  var rows = [
+    {cat:'interrupt', name:'一般住院補貼',    need: fmtN(s.mi) + ' 元/月',             prod:'1HIR 住院日額'},
+    {cat:'interrupt', name:'意外無法工作',    need: '30,000 元/月',                      prod:'NAI 100萬'},
+    {cat:'interrupt', name:'意外住院（綜合）',need: fmtN(s.mi + 30000) + ' 元/月',      prod:'1HIR + NAI'},
+    {cat:'disability',name:'意外失能',        need: Math.round(s.ai*10) + ' 萬元',       prod:'NAI + PAMR + YPAR'},
+    {cat:'disability',name:'重大疾病/癌症',   need: Math.round(s.ai*3) + '–' + Math.round(s.ai*5) + ' 萬元', prod:'10TSDD'},
+    {cat:'disability',name:'長期照護',        need: '3 萬元/月',                          prod:'10TLTC'},
+    {cat:'death',     name:'一般身故',        need: Math.round(s.ai*10) + ' 萬元',       prod:'N1TR 定期壽險'},
+    {cat:'death',     name:'意外身故',        need: Math.round(s.ai*20) + ' 萬元',       prod:'N1TR + NAI'},
+    {cat:'medical',   name:'住院醫療',        need: '20–40 萬/次',                        prod:'1HS A型'},
+    {cat:'medical',   name:'病房費差額',      need: '3,000–6,000 元/日',                  prod:'含於1HS A型'},
+    {cat:'medical',   name:'意外門診',        need: '3 萬/次',                             prod:'PAMR 計劃3'}
+  ];
+
+  var ordMap = {};
+  rankOrder.forEach(function(r, i){ ordMap[r] = i + 1; });
+  rows.sort(function(a, b){ return (ordMap[a.cat] || 9) - (ordMap[b.cat] || 9); });
+
+  var html = '<tr><th>優先</th><th>保障項目</th><th>建議需求</th><th>建議商品</th></tr>';
+  rows.forEach(function(r) {
+    html += '<tr>' +
+      '<td><span class="pri">' + picos[r.cat] + ' ' + ordMap[r.cat] + '</span></td>' +
+      '<td class="nv">' + r.name + '</td>' +
+      '<td class="nv">' + r.need + '</td>' +
+      '<td class="nprod">' + r.prod + '</td>' +
+      '</tr>';
+  });
+  document.getElementById('ntbl').innerHTML = html;
+
+  // doubletens
+  document.getElementById('dt1').textContent = s.ai + ' 萬元';
+  document.getElementById('dt2').textContent = Math.round(s.ai * 0.1 * 10) / 10 + ' 萬元/年';
+  document.getElementById('dt3').textContent = Math.round(s.ai * 10) + ' 萬元';
+  document.getElementById('dt4').textContent = Math.round(s.ai * 10) + ' 萬元';
+  document.getElementById('dt5').textContent = Math.round(s.ai * 3) + '–' + Math.round(s.ai * 5) + ' 萬元';
+
+  // reset premium section
+  document.getElementById('premsec').style.display = 'none';
+  document.getElementById('calcbtn').style.display = 'block';
+}
+
+// ============================================================
+// CALC PREMIUM (S5 button)
+// ============================================================
+function calcPremium() {
+  var s = getState();
+
+  if (!s.age || s.age < 15) {
+    document.getElementById('warn').style.display = 'block';
+    document.getElementById('canvas').scrollTop = 0;
+    return;
+  }
+
+  var gi    = s.gi;
+  var age   = s.age;
+  var items = [];
+  var total = 0;
+
+  function addItem(name, detail, prem) {
+    items.push({name:name, detail:detail, prem:Math.round(prem)});
+    total += Math.round(prem);
+  }
+
+  // --- 1HIR: monthly income -> daily unit (per 1000 yuan) ---
+  var hirRate = HIR[Math.min(age, 75)];
+  if (hirRate && s.mi) {
+    var hirUnits = Math.ceil(s.mi / 30 / 1000);
+    if (hirUnits < 1) hirUnits = 1;
+    var hirPrem = hirRate[gi] * hirUnits * 365;
+    addItem('1HIR 住院日額',
+      '日額 ' + fmtN(hirUnits * 1000) + ' 元，' + age + ' 歲' + (gi===0?'男':'女'),
+      hirPrem);
+  }
+
+  // --- NAI fixed ---
+  addItem('NAI 意外附約', '100 萬保額，固定費率', 2900);
+
+  // --- PAMR plan 3 fixed ---
+  addItem('PAMR 計劃3 意外醫療', '意外門診實支實付 3 萬/次', 3260);
+
+  // --- YPAR: need = ai*10 wan - NAI 100wan - PAMR 200wan ---
+  if (s.ai > 0) {
+    var yparNeed = Math.max(0, Math.round(s.ai * 10) - 300);
+    if (yparNeed > 0) {
+      var yparPrem = yparNeed * 11.8;
+      addItem('YPAR 意外傷害附約', yparNeed + ' 萬保額', yparPrem);
+    }
+  }
+
+  // --- 10TLTC: 36-wan coverage (3wan/month x 12) ---
+  var tltcRate = TLTC[Math.min(age, 60)];
+  if (tltcRate) {
+    var tltcPrem = tltcRate[gi] * 36;
+    addItem('10TLTC 長期照顧定期險',
+      '保額 36 萬，月補 3 萬，' + age + ' 歲' + (gi===0?'男':'女'),
+      tltcPrem);
+  }
+
+  // --- 10TSDD: cover = need/4, per 10-wan ---
+  if (s.ai > 0) {
+    var tsddRate = TSDD[Math.min(age, 70)];
+    if (tsddRate) {
+      var tsddNeed  = Math.round(s.ai * 3);
+      var tsddCover = Math.round(tsddNeed / 4 * 10) / 10;
+      var tsddUnits = tsddCover / 10;
+      var tsddPrem  = tsddRate[gi] * tsddUnits;
+      addItem('10TSDD 重大疾病定期險',
+        '投保 ' + tsddCover + ' 萬，給付 ' + tsddNeed + ' 萬，' + age + ' 歲' + (gi===0?'男':'女'),
+        tsddPrem);
+    }
+  }
+
+  // --- N1TR: per 1-wan ---
+  if (s.ai > 0) {
+    var n1Rate = N1TR[Math.min(age, 70)];
+    if (n1Rate) {
+      var n1Need = Math.round(s.ai * 10);
+      var n1Prem = n1Rate[gi] * n1Need;
+      addItem('N1TR 定期壽險',
+        n1Need + ' 萬保額，' + age + ' 歲' + (gi===0?'男':'女'),
+        n1Prem);
+    }
+  }
+
+  // --- 1HS A-type ---
+  var hsaRow = getHSA(age);
+  if (hsaRow) {
+    var hsPrem = (gi === 0) ? hsaRow.m : hsaRow.f;
+    addItem('1HS A型 實支實付醫療',
+      '20 萬/次，加護病房 40 萬，' + age + ' 歲' + (gi===0?'男':'女'),
+      hsPrem);
+  }
+
+  // --- render ---
+  document.getElementById('totalp').textContent = fmtN(total);
+  document.getElementById('monthp').textContent = fmtN(Math.round(total / 12));
+
+  var html = '';
+  items.forEach(function(it) {
+    html += '<div class="prow">' +
+      '<div class="prl"><div class="prn">' + it.name + '</div><div class="prd">' + it.detail + '</div></div>' +
+      '<div class="pramt">' + fmtN(it.prem) + '<div class="prunit">元/年</div></div>' +
+      '</div>';
+  });
+  document.getElementById('premrows').innerHTML = html;
+  document.getElementById('premsec').style.display = 'block';
+  document.getElementById('calcbtn').style.display = 'none';
+  document.getElementById('canvas').scrollTop = 200;
+}
+
+// ============================================================
+// PDF
+// ============================================================
+function exportPDF() {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.add('on'); });
+  window.print();
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('on'); });
+  document.getElementById('s' + step).classList.add('on');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+initDrag();
+updateRank();
+</script>
+</body>
+</html>
