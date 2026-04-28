@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0c1520">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>經濟支柱守護計畫｜南山人壽</title>
+<title>經濟支柱守護計畫｜廣宸通訊處</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════
@@ -439,7 +439,7 @@ html, body {
 <div id="pbar"><div id="pfill"></div></div>
 
 <div id="topbar">
-  <div class="logo">Guardian · 南山人壽</div>
+  <div class="logo">Guardian · 廣宸通訊處</div>
   <div class="slbl" id="slbl"></div>
 </div>
 
@@ -450,7 +450,7 @@ html, body {
   <div class="hero-brand">Professional Insurance Planning</div>
   <div class="hero-ico">🛡️</div>
   <div class="hero-title">經濟支柱<br>守護計畫</div>
-  <div class="hero-sub">南山人壽專業保障需求分析<br>為您與家人建立完整的財務防線</div>
+  <div class="hero-sub">廣宸通訊處專業保障需求分析<br>為您與家人建立完整的財務防線</div>
   <div class="hero-pills">
     <div class="hero-pill">失能長年病</div>
     <div class="hero-pill">收入中斷</div>
@@ -895,10 +895,10 @@ function exportPDF(){
   var today=new Date();
   var dateStr=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
   var html='<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>保障規劃總表</title><style>body{font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#1a1a2e;margin:0;padding:28px 32px;font-size:14px;}.header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #c8a84b;padding-bottom:14px;margin-bottom:20px;}.brand{font-size:11px;letter-spacing:3px;color:#c8a84b;text-transform:uppercase;margin-bottom:4px;}.doctitle{font-size:22px;font-weight:700;color:#0c1520;letter-spacing:1px;}.meta{text-align:right;font-size:13px;color:#666;line-height:1.8;}.meta strong{color:#0c1520;font-size:14px;}.principle{background:#f9f5ea;border-left:3px solid #c8a84b;padding:10px 14px;margin-bottom:20px;font-size:13px;color:#5a4a1a;line-height:1.7;border-radius:0 6px 6px 0;}.principle strong{color:#8a6200;}.sec{margin-bottom:20px;break-inside:avoid;}.sec-hd{display:flex;align-items:center;gap:8px;background:#0c1520;color:#fff;padding:10px 16px;border-radius:6px 6px 0 0;}.badge{font-size:11px;padding:2px 8px;border:1px solid #c8a84b;border-radius:10px;color:#c8a84b;letter-spacing:1px;}.sec-ico{font-size:18px;}.sec-name{font-size:16px;font-weight:700;letter-spacing:1px;}table{width:100%;border-collapse:collapse;}thead tr{background:#f0e8d0;}th{padding:10px 13px;text-align:left;font-size:12px;letter-spacing:1px;color:#5a4010;font-weight:700;border-bottom:1px solid #d4c080;}td{padding:10px 13px;border-bottom:1px solid #e8e0d0;vertical-align:top;line-height:1.7;}tr:last-child td{border-bottom:2px solid #0c1520;}.rn{font-weight:700;color:#0c1520;width:18%;}.rneed{color:#c8410b;font-weight:600;width:28%;}.rplan{color:#0a4a2a;width:54%;}.footer{margin-top:24px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;color:#999;}@media print{body{padding:16px 20px;}@page{margin:1cm;}}</style></head><body>';
-  html+='<div class="header"><div><div class="brand">Guardian &middot; 南山人壽</div><div class="doctitle">保障規劃需求總表</div></div><div class="meta">'+(s.name?'<strong>'+s.name+'</strong><br>':'')+'年齡：'+(s.age||'—')+'歲　性別：'+gLabel+'<br>年收入：'+s.ai+'萬元　月收入：'+fmtN(s.mi)+'元<br>製表日期：'+dateStr+'</div></div>';
+  html+='<div class="header"><div><div class="brand">Guardian &middot; 廣宸通訊處</div><div class="doctitle">保障規劃需求總表</div></div><div class="meta">'+(s.name?'<strong>'+s.name+'</strong><br>':'')+'年齡：'+(s.age||'—')+'歲　性別：'+gLabel+'<br>年收入：'+s.ai+'萬元　月收入：'+fmtN(s.mi)+'元<br>製表日期：'+dateStr+'</div></div>';
   html+='<div class="principle"><strong>雙十原則：</strong>年保費上限 <strong>'+Math.round(s.ai*0.1*10)/10+'萬元/年</strong>（年收入×10%）；壽險最低保額 <strong>'+Math.round(s.ai*10)+'萬元</strong>（年收入×10倍）</div>';
   html+=sectHTML;
-  html+='<div class="footer"><span>本表格為保障需求分析，實際保費依投保時年齡、健康狀況及商品費率為準。</span><span>南山人壽 Guardian Plan　'+dateStr+'</span></div></body></html>';
+  html+='<div class="footer"><span>本表格為保障需求分析，實際保費依投保時年齡、健康狀況及商品費率為準。</span><span>廣宸通訊處 Guardian Plan　'+dateStr+'</span></div></body></html>';
   var win=window.open('','_blank','width=860,height=900');
   win.document.write(html);win.document.close();
   setTimeout(function(){win.print();},600);
