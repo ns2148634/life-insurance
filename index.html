@@ -2,9 +2,15 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>經濟支柱守護計畫｜廣宸通訊處</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="守護計畫">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0c1520">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>經濟支柱守護計畫｜南山人壽</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -15,17 +21,17 @@
   --r:12px;--r-lg:20px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
-#shell{width:100vw;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+#shell{width:100vw;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
 #pbar{height:3px;flex-shrink:0;}
 #pfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));transition:width .5s ease;width:0%;}
 #topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px 14px;flex-shrink:0;}
 .logo{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;}
 .slbl{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
 
-#canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 28px 40px;}
-#botnav{padding:14px 28px 26px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;gap:12px;border-top:1px solid var(--border);}
-.btnp{background:var(--gold);color:var(--ink);font-weight:700;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:1px;padding:14px 36px;border-radius:40px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,168,75,0.25);}
+#canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 36px 48px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+#botnav{padding:14px 28px calc(26px + env(safe-area-inset-bottom));flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;gap:12px;border-top:1px solid var(--border);}
+.btnp{background:var(--gold);color:var(--ink);font-weight:700;font-family:'Noto Serif TC',serif;font-size:16px;letter-spacing:1px;padding:16px 44px;border-radius:40px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,168,75,0.25);}
 .btnp:active{transform:scale(.97);}
 .btng{color:var(--gold);background:transparent;border:1px solid var(--gold-line);border-radius:40px;font-size:14px;padding:13px 24px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
 .screen{display:none;}
@@ -59,12 +65,12 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 
 /* inputs */
 .igrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.iblk{background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;transition:border-color .2s;}
+.iblk{background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;transition:border-color .2s;}
 .iblk:focus-within{border-color:var(--gold-line);}
 .iblk.full{grid-column:1/-1;}
 .ilbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block;}
 .irow{display:flex;align-items:center;gap:5px;}
-.irow input[type="number"],.irow input[type="text"]{flex:1;background:transparent;border:none;outline:none;font-size:20px;font-weight:500;color:#fff;font-family:'Noto Sans TC',sans-serif;min-width:0;}
+.irow input[type="number"],.irow input[type="text"]{flex:1;background:transparent;border:none;outline:none;font-size:22px;font-weight:500;color:#fff;font-family:'Noto Sans TC',sans-serif;min-width:0;}
 .irow input::placeholder{color:rgba(255,255,255,.15);font-size:16px;}
 .iunit{font-size:12px;color:var(--muted);white-space:nowrap;}
 .ihint{font-size:10px;color:var(--hint);margin-top:4px;}
@@ -77,7 +83,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 
 /* rank */
 .rlist{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
-.rcard{display:flex;align-items:center;gap:14px;background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;cursor:grab;user-select:none;-webkit-user-select:none;transition:all .2s;}
+.rcard{display:flex;align-items:center;gap:16px;background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;cursor:grab;user-select:none;-webkit-user-select:none;transition:all .2s;}
 .rcard.dragging{opacity:.3;}
 .rcard.dover{border-color:var(--gold);background:var(--gold-dim);transform:scale(1.01);}
 .rnum{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--muted);transition:all .3s;}
@@ -165,7 +171,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 <div id="shell">
 <div id="pbar"><div id="pfill"></div></div>
 <div id="topbar">
-  <div class="logo">Guardian &middot; 廣宸通訊處</div>
+  <div class="logo">Guardian &middot; 南山人壽</div>
   <div class="slbl" id="slbl"></div>
   <div></div>
 </div>
@@ -176,7 +182,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 <div class="hero">
   <div class="hero-ico">&#128737;&#65039;</div>
   <div class="hero-title">經濟支柱<br>守護計畫</div>
-  <div class="hero-sub">廣宸通訊處專業保障需求分析<br>為您與家人建立完整的財務防線</div>
+  <div class="hero-sub">南山人壽專業保障需求分析<br>為您與家人建立完整的財務防線</div>
   <div class="wpills">
     <div class="wpill">失能長年病</div>
     <div class="wpill">收入中斷</div>
@@ -821,7 +827,7 @@ function buildSummary() {
     (s.name ? '<span class="hl">' + s.name + '</span>，根據' : '根據') +
     '您的財務狀況（年收入 <span class="hl">' + s.ai + '</span> 萬元，' +
     s.age + ' 歲' + (s.gender === 'm' ? '男' : '女') + '性）與擔心排序，' +
-    '以下是完整保障需求總表與建議商品。';
+    '以下是完整保障需求總表與南山人壽建議商品。';
 
   var rows = [
     {cat:'interrupt', name:'一般住院補貼',    need: fmtN(s.mi) + ' 元/月',             prod:'1HIR 住院日額'},
@@ -1078,7 +1084,7 @@ function exportPDF() {
 
   html += '<div class="header">' +
     '<div class="header-left">' +
-      '<div class="brand">Guardian &middot; 廣宸通訊處</div>' +
+      '<div class="brand">Guardian &middot; 南山人壽</div>' +
       '<div class="doctitle">保障規劃需求總表</div>' +
     '</div>' +
     '<div class="header-right">' +
@@ -1099,7 +1105,7 @@ function exportPDF() {
 
   html += '<div class="footer">' +
     '<span>本表格為保障需求分析，實際保費依投保時年齡、健康狀況及商品費率為準。</span>' +
-    '<span>廣宸通訊處　Guardian Plan　' + dateStr + '</span>' +
+    '<span>南山人壽　Guardian Plan　' + dateStr + '</span>' +
   '</div>';
 
   html += '</body></html>';
@@ -1115,6 +1121,15 @@ function exportPDF() {
 // ============================================================
 initDrag();
 updateRank();
+
+// ── PWA Service Worker ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(reg){ console.log('SW registered:', reg.scope); })
+      .catch(function(e){ console.log('SW error:', e); });
+  });
+}
 </script>
 </body>
 </html>
