@@ -146,13 +146,15 @@ html, body {
    S0 WELCOME — full screen hero
 ═══════════════════════════════ */
 #s0 {
-  height: calc(100dvh - 4px - 58px - 80px); /* pbar + topbar + botnav approx */
-  display: flex !important;
+  height: calc(100dvh - 4px - 58px - 80px);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 24px 40px;
+}
+#s0.on {
+  display: flex;
 }
 .hero-ico {
   width: 100px; height: 100px;
