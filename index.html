@@ -597,7 +597,7 @@ function exportPDF(){
 
   // 需求對照
   var needRows=[
-    {cat:'interrupt',name:'一般住院補貼',need:fmtN(pf(uv.hospMonth))+' 元/月',plan:fmtN(Math.ceil((pf(uv.hospMonth)||s.mi)/30/100)*100)+' 元/日'},
+    {cat:'interrupt',name:'一般住院補貼',need:fmtN(pf(uv.hospMonth))+' 元/月',plan:fmtN(pf(uv.hospMonth))+' 元/月'},
     {cat:'interrupt',name:'意外無法工作',need:fmtN(pf(uv.accWork))+' 元/月',plan:'30,000 元/月'},
     {cat:'interrupt',name:'意外住院（綜合）',need:fmtN(pf(uv.accHosp))+' 元/月',plan:fmtN(pf(uv.accHosp))+' 元/月'},
     {cat:'death',name:'一般身故',need:uv.deathGen+' 萬元',plan:uv.deathGen+' 萬元'},
