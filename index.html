@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0c1520">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>經濟支柱守護計畫｜廣宸通訊處</title>
+<title>經濟支柱守護計畫｜南山人壽</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════
@@ -70,6 +70,11 @@ html, body {
   font-family: 'Cormorant Garamond', serif;
   font-size: 16px; letter-spacing: 4px;
   color: var(--gold); text-transform: uppercase;
+}
+.page-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px; font-weight: 700;
+  color: #fff; letter-spacing: 1px;
 }
 .slbl {
   font-size: 13px; letter-spacing: 2px;
@@ -439,7 +444,7 @@ html, body {
 <div id="pbar"><div id="pfill"></div></div>
 
 <div id="topbar">
-  <div class="logo">Guardian · 廣宸通訊處</div>
+  <div class="logo" id="toplogo">Guardian · 南山人壽</div>
   <div class="slbl" id="slbl"></div>
 </div>
 
@@ -450,7 +455,7 @@ html, body {
   <div class="hero-brand">Professional Insurance Planning</div>
   <div class="hero-ico">🛡️</div>
   <div class="hero-title">經濟支柱<br>守護計畫</div>
-  <div class="hero-sub">廣宸通訊處專業保障需求分析<br>為您與家人建立完整的財務防線</div>
+  <div class="hero-sub">南山人壽專業保障需求分析<br>為您與家人建立完整的財務防線</div>
   <div class="hero-pills">
     <div class="hero-pill">失能長年病</div>
     <div class="hero-pill">收入中斷</div>
@@ -599,9 +604,12 @@ html, body {
         <div class="ptunit">元 / 年</div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:14px;color:var(--muted);">月均保費</div>
-        <div style="font-size:32px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="monthp">0</div>
-        <div style="font-size:13px;color:var(--hint);">元 / 月</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">月均保費</div>
+        <div style="font-size:26px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="monthp">0</div>
+        <div style="font-size:12px;color:var(--hint);margin-bottom:8px;">元 / 月</div>
+        <div style="font-size:13px;color:var(--muted);">每日保費</div>
+        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="dayp">0</div>
+        <div style="font-size:12px;color:var(--hint);">元 / 日</div>
       </div>
     </div>
     <div id="premrows"></div>
@@ -642,12 +650,12 @@ function getHSA(a){for(var i=0;i<HSA.length;i++){if(a<=HSA[i].max)return HSA[i];
 var step=0;
 var rankOrder=['interrupt','death','disability','medical'];
 var STEPS=[
-  {lbl:'',                   next:'開始規劃 →'},
-  {lbl:'第一步 · 收支曲線',  next:'填入基本資料 →'},
-  {lbl:'第二步 · 基本資料',  next:'設定風險排序 →'},
-  {lbl:'第三步 · 風險排序',  next:'查看保障需求 →'},
-  {lbl:'第四步 · 保障需求',  next:'查看總表與保費 →'},
-  {lbl:'第五步 · 總表與保費',next:'重新開始'}
+  {lbl:'', title:'',           next:'開始規劃 →'},
+  {lbl:'01 / 05', title:'人生收支曲線', next:'填入基本資料 →'},
+  {lbl:'02 / 05', title:'基本資料',    next:'設定風險排序 →'},
+  {lbl:'03 / 05', title:'風險排序',    next:'查看保障需求 →'},
+  {lbl:'04 / 05', title:'保障需求',    next:'查看總表與保費 →'},
+  {lbl:'05 / 05', title:'總表與保費',  next:'重新開始'}
 ];
 
 function fmtN(n){return Math.round(n).toLocaleString('zh-TW');}
@@ -696,6 +704,15 @@ function go(n){
   document.getElementById('pfill').style.width=pct+'%';
   document.getElementById('slbl').textContent=STEPS[n].lbl;
   document.getElementById('mbtn').textContent=STEPS[n].next;
+  // 首頁顯示品牌，其他頁顯示頁面標題
+  var logoEl=document.getElementById('toplogo');
+  if(n===0){
+    logoEl.textContent='Guardian · 南山人壽';
+    logoEl.className='logo';
+  } else {
+    logoEl.textContent=STEPS[n].title;
+    logoEl.className='page-title';
+  }
   var gb=document.getElementById('gbtn');
   gb.classList.toggle('show',n>0);
   if(n===4)buildPlan();
@@ -850,6 +867,7 @@ function calcPremium(){
   if(hsaRow){addItem('1HS A型 實支實付醫療','20萬/次，加護病房40萬，'+age+'歲'+(gi===0?'男':'女'),(gi===0)?hsaRow.m:hsaRow.f);}
   document.getElementById('totalp').textContent=fmtN(total);
   document.getElementById('monthp').textContent=fmtN(Math.round(total/12));
+  document.getElementById('dayp').textContent=fmtN(Math.round(total/365));
   var html='';
   items.forEach(function(it){html+='<div class="prow"><div class="prl"><div class="prn">'+it.name+'</div><div class="prd">'+it.detail+'</div></div><div class="pramt">'+fmtN(it.prem)+'<div class="prunit">元/年</div></div></div>';});
   document.getElementById('premrows').innerHTML=html;
@@ -863,25 +881,68 @@ function exportPDF(){
   var ordMap={};rankOrder.forEach(function(r,i){ordMap[r]=i+1;});
   var catName={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
   var catIco={interrupt:'⏸',death:'🕊',disability:'♿',medical:'🏥'};
+
+  // 收集保費資料（重新計算一次）
+  var gi=s.gi; var age=s.age;
+  var premItems=[]; var premTotal=0;
+  function addP(name,detail,prem){premItems.push({name:name,detail:detail,prem:Math.round(prem)});premTotal+=Math.round(prem);}
+  var hirRate=HIR[Math.min(age,75)];
+  if(hirRate&&s.mi){var hirDailyAmt=Math.ceil(s.mi/30/100)*100;if(hirDailyAmt<100)hirDailyAmt=100;addP('1HIR 住院日額','日額 '+fmtN(hirDailyAmt)+' 元/日，'+age+'歲'+(gi===0?'男':'女'),hirRate[gi]*(hirDailyAmt/100));}
+  addP('NAI 意外附約','100萬保額',2900);
+  addP('PAMR 計劃3 意外醫療','意外門診實支實付 3萬/次',3260);
+  if(s.ai>0){var yparNeed=Math.max(0,Math.round(s.ai*10)-300);if(yparNeed>0)addP('YPAR 意外傷害附約',yparNeed+'萬保額',yparNeed*11.8);}
+  var tltcRate=TLTC[Math.min(age,60)];
+  if(tltcRate)addP('10TLTC 長期照顧定期險','保額36萬（月補3萬），'+age+'歲'+(gi===0?'男':'女'),tltcRate[gi]*36);
+  if(s.ai>0){var tsddRate=TSDD[Math.min(age,70)];if(tsddRate){var tsddNeed=Math.round(s.ai*3);var tsddCover=Math.round(tsddNeed/4*10)/10;addP('10TSDD 重大疾病定期險','投保 '+tsddCover+'萬，給付 '+tsddNeed+'萬，'+age+'歲'+(gi===0?'男':'女'),tsddRate[gi]*(tsddCover/10));}}
+  if(s.ai>0){var n1Rate=N1TR[Math.min(age,70)];if(n1Rate){var n1Need=Math.round(s.ai*10);addP('N1TR 定期壽險',n1Need+'萬保額，'+age+'歲'+(gi===0?'男':'女'),n1Rate[gi]*n1Need);}}
+  var hsaRow=getHSA(age);
+  if(hsaRow)addP('1HS A型 實支實付醫療','20萬/次，加護病房40萬，'+age+'歲'+(gi===0?'男':'女'),(gi===0)?hsaRow.m:hsaRow.f);
+
+  // 保費列
+  var premRowsHTML='';
+  premItems.forEach(function(it){
+    premRowsHTML+='<tr><td class="prname">'+it.name+'</td><td class="prdetail">'+it.detail+'</td><td class="pramt">'+fmtN(it.prem)+' 元</td></tr>';
+  });
+  var premHTML=age?('<div class="prem-section">'+
+    '<div class="prem-summary">'+
+      '<div class="ps-item"><div class="ps-lbl">年繳保費</div><div class="ps-val">'+fmtN(premTotal)+'</div><div class="ps-unit">元 / 年</div></div>'+
+      '<div class="ps-item"><div class="ps-lbl">月均保費</div><div class="ps-val">'+fmtN(Math.round(premTotal/12))+'</div><div class="ps-unit">元 / 月</div></div>'+
+      '<div class="ps-item"><div class="ps-lbl">每日保費</div><div class="ps-val">'+fmtN(Math.round(premTotal/365))+'</div><div class="ps-unit">元 / 日</div></div>'+
+    '</div>'+
+    '<table class="prem-table"><thead><tr><th>商品名稱</th><th>規格說明</th><th>年繳保費</th></tr></thead><tbody>'+premRowsHTML+'</tbody></table>'+
+    '</div>'):'';
+
+  // 需求對照區
   var sections={
     interrupt:{rows:[
-      {name:'一般住院',need:'月收入 '+fmtN(s.mi)+' 元',plan:'南山 1HIR 住院日額\n日額 '+fmtN(Math.ceil(s.mi/30/100)*100)+' 元/日'},
-      {name:'意外無法工作',need:'月收入 '+fmtN(s.mi)+' 元',plan:'南山 NAI 意外附約\n100萬保額，每月理賠約 30,000 元'},
-      {name:'意外住院（綜合）',need:'月補貼 '+fmtN(s.mi+30000)+' 元',plan:'南山 1HIR + NAI\n兩項合計給付'}
+      {name:'一般住院',need:'月收入 '+fmtN(s.mi)+' 元',plan:'南山 1HIR 住院日額
+日額 '+fmtN(Math.ceil(s.mi/30/100)*100)+' 元/日'},
+      {name:'意外無法工作',need:'月收入 '+fmtN(s.mi)+' 元',plan:'南山 NAI 意外附約
+100萬保額，月理賠約 30,000 元'},
+      {name:'意外住院（綜合）',need:'月補貼 '+fmtN(s.mi+30000)+' 元',plan:'南山 1HIR + NAI
+兩項合計給付'}
     ]},
     death:{rows:[
-      {name:'一般身故',need:'年收入10倍\n'+Math.round(s.ai*10)+' 萬元',plan:'南山 N1TR 定期壽險\n保額 '+Math.round(s.ai*10)+' 萬元'},
-      {name:'意外身故',need:'年收入20倍\n'+Math.round(s.ai*20)+' 萬元',plan:'南山 N1TR + NAI\n壽險＋意外附約雙重給付'}
+      {name:'一般身故',need:'年收入10倍
+'+Math.round(s.ai*10)+' 萬元',plan:'南山 N1TR 定期壽險
+保額 '+Math.round(s.ai*10)+' 萬元'},
+      {name:'意外身故',need:'年收入20倍
+'+Math.round(s.ai*20)+' 萬元',plan:'南山 N1TR + NAI
+壽險＋意外附約雙重給付'}
     ]},
     disability:{rows:[
-      {name:'意外失能',need:'年收入10倍\n'+Math.round(s.ai*10)+' 萬元',plan:'南山 NAI + PAMR + YPAR\nNAI 100萬 + PAMR 200萬 + YPAR '+Math.max(0,Math.round(s.ai*10)-300)+'萬'},
-      {name:'重大疾病/癌症',need:'3–5年年收入\n'+Math.round(s.ai*3)+'–'+Math.round(s.ai*5)+' 萬元',plan:'南山 10TSDD 重大疾病定期險\n投保 '+Math.round(Math.round(s.ai*3)/4*10)/10+'萬，給付400%'},
-      {name:'長期照護',need:'每月補貼\n3 萬元/月',plan:'南山 10TLTC 長期照顧定期險\n保額36萬（月補3萬）'}
+      {name:'意外失能',need:'年收入10倍
+'+Math.round(s.ai*10)+' 萬元',plan:'南山 NAI+PAMR+YPAR
+NAI 100萬+PAMR 200萬+YPAR '+Math.max(0,Math.round(s.ai*10)-300)+'萬'},
+      {name:'重大疾病/癌症',need:'3–5年年收入
+'+Math.round(s.ai*3)+'–'+Math.round(s.ai*5)+' 萬元',plan:'南山 10TSDD 投保 '+Math.round(Math.round(s.ai*3)/4*10)/10+'萬，給付400%'},
+      {name:'長期照護',need:'每月補貼 3萬元/月',plan:'南山 10TLTC 保額36萬（月補3萬）'}
     ]},
     medical:{rows:[
-      {name:'住院醫療',need:'20–40 萬元/次',plan:'南山 1HS A型 實支實付\n20萬/次，加護病房40萬'},
-      {name:'病房費差額',need:'3,000–6,000 元/日',plan:'包含於 1HS A型\n雙人房到單人房差額全覆蓋'},
-      {name:'意外門診',need:'3 萬元/次',plan:'南山 PAMR 計劃3\n含中醫復健，3萬/次'}
+      {name:'住院醫療',need:'20–40 萬/次',plan:'南山 1HS A型 20萬/次，加護病房40萬'},
+      {name:'病房費差額',need:'3,000–6,000 元/日',plan:'包含於 1HS A型'},
+      {name:'意外門診',need:'3 萬/次',plan:'南山 PAMR 計劃3
+含中醫復健'}
     ]}
   };
   var sectHTML='';
@@ -891,32 +952,74 @@ function exportPDF(){
     sec.rows.forEach(function(r){rowsHTML+='<tr><td class="rn">'+r.name+'</td><td class="rneed">'+r.need.replace(/\n/g,'<br>')+'</td><td class="rplan">'+r.plan.replace(/\n/g,'<br>')+'</td></tr>';});
     sectHTML+='<div class="sec"><div class="sec-hd"><span class="badge">第'+(idx+1)+'優先</span><span class="sec-ico">'+catIco[cat]+'</span><span class="sec-name">'+catName[cat]+'</span></div><table><thead><tr><th>保障項目</th><th>需求金額</th><th>建議規劃</th></tr></thead><tbody>'+rowsHTML+'</tbody></table></div>';
   });
+
   var gLabel=s.gender==='m'?'男':'女';
   var today=new Date();
   var dateStr=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
-  var html='<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>保障規劃總表</title><style>body{font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#1a1a2e;margin:0;padding:28px 32px;font-size:14px;}.header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #c8a84b;padding-bottom:14px;margin-bottom:20px;}.brand{font-size:11px;letter-spacing:3px;color:#c8a84b;text-transform:uppercase;margin-bottom:4px;}.doctitle{font-size:22px;font-weight:700;color:#0c1520;letter-spacing:1px;}.meta{text-align:right;font-size:13px;color:#666;line-height:1.8;}.meta strong{color:#0c1520;font-size:14px;}.principle{background:#f9f5ea;border-left:3px solid #c8a84b;padding:10px 14px;margin-bottom:20px;font-size:13px;color:#5a4a1a;line-height:1.7;border-radius:0 6px 6px 0;}.principle strong{color:#8a6200;}.sec{margin-bottom:20px;break-inside:avoid;}.sec-hd{display:flex;align-items:center;gap:8px;background:#0c1520;color:#fff;padding:10px 16px;border-radius:6px 6px 0 0;}.badge{font-size:11px;padding:2px 8px;border:1px solid #c8a84b;border-radius:10px;color:#c8a84b;letter-spacing:1px;}.sec-ico{font-size:18px;}.sec-name{font-size:16px;font-weight:700;letter-spacing:1px;}table{width:100%;border-collapse:collapse;}thead tr{background:#f0e8d0;}th{padding:10px 13px;text-align:left;font-size:12px;letter-spacing:1px;color:#5a4010;font-weight:700;border-bottom:1px solid #d4c080;}td{padding:10px 13px;border-bottom:1px solid #e8e0d0;vertical-align:top;line-height:1.7;}tr:last-child td{border-bottom:2px solid #0c1520;}.rn{font-weight:700;color:#0c1520;width:18%;}.rneed{color:#c8410b;font-weight:600;width:28%;}.rplan{color:#0a4a2a;width:54%;}.footer{margin-top:24px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;color:#999;}@media print{body{padding:16px 20px;}@page{margin:1cm;}}</style></head><body>';
-  html+='<div class="header"><div><div class="brand">Guardian &middot; 廣宸通訊處</div><div class="doctitle">保障規劃需求總表</div></div><div class="meta">'+(s.name?'<strong>'+s.name+'</strong><br>':'')+'年齡：'+(s.age||'—')+'歲　性別：'+gLabel+'<br>年收入：'+s.ai+'萬元　月收入：'+fmtN(s.mi)+'元<br>製表日期：'+dateStr+'</div></div>';
-  html+='<div class="principle"><strong>雙十原則：</strong>年保費上限 <strong>'+Math.round(s.ai*0.1*10)/10+'萬元/年</strong>（年收入×10%）；壽險最低保額 <strong>'+Math.round(s.ai*10)+'萬元</strong>（年收入×10倍）</div>';
-  html+=sectHTML;
-  html+='<div class="footer"><span>本表格為保障需求分析，實際保費依投保時年齡、健康狀況及商品費率為準。</span><span>廣宸通訊處 Guardian Plan　'+dateStr+'</span></div></body></html>';
-  var win=window.open('','_blank','width=860,height=900');
-  win.document.write(html);win.document.close();
-  setTimeout(function(){win.print();},600);
+
+  var html='<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>保障規劃報告</title>'
+  +'<style>'
+  +'*{box-sizing:border-box;margin:0;padding:0;}'
+  +'body{font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#1a1a2e;background:#fff;}'
+  +'.report-wrap{max-width:800px;margin:0 auto;padding:32px 28px;}'
+  +'.header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #c8a84b;padding-bottom:16px;margin-bottom:22px;}'
+  +'.brand{font-size:11px;letter-spacing:3px;color:#c8a84b;text-transform:uppercase;margin-bottom:5px;}'
+  +'.doctitle{font-size:24px;font-weight:700;color:#0c1520;letter-spacing:1px;}'
+  +'.meta{text-align:right;font-size:13px;color:#666;line-height:1.9;}'
+  +'.meta strong{color:#0c1520;font-size:15px;}'
+  +'.principle{background:#f9f5ea;border-left:4px solid #c8a84b;padding:12px 16px;margin-bottom:22px;font-size:13px;color:#5a4a1a;line-height:1.7;border-radius:0 6px 6px 0;}'
+  +'.principle strong{color:#8a6200;}'
+  +'/* 保費摘要 */'
+  +'.prem-section{margin-bottom:24px;}'
+  +'.prem-section h2{font-size:15px;font-weight:700;color:#0c1520;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;letter-spacing:1px;}'
+  +'.prem-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}'
+  +'.ps-item{background:#f9f5ea;border:1px solid #d4c080;border-radius:8px;padding:14px 16px;text-align:center;}'
+  +'.ps-lbl{font-size:12px;color:#888;margin-bottom:6px;letter-spacing:1px;}'
+  +'.ps-val{font-size:26px;font-weight:700;color:#8a6200;}'
+  +'.ps-unit{font-size:11px;color:#aaa;margin-top:3px;}'
+  +'.prem-table{width:100%;border-collapse:collapse;font-size:13px;}'
+  +'.prem-table thead tr{background:#0c1520;}'
+  +'.prem-table th{padding:10px 13px;text-align:left;color:rgba(255,255,255,0.85);font-weight:600;font-size:12px;letter-spacing:1px;}'
+  +'.prem-table td{padding:10px 13px;border-bottom:1px solid #eee;vertical-align:top;}'
+  +'.prem-table tr:last-child td{border-bottom:2px solid #c8a84b;}'
+  +'.prname{font-weight:600;color:#0c1520;width:30%;}'
+  +'.prdetail{color:#555;width:48%;font-size:12px;}'
+  +'.pramt{font-weight:700;color:#8a6200;width:22%;text-align:right;}'
+  +'/* 需求對照 */'
+  +'.needs-title{font-size:15px;font-weight:700;color:#0c1520;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;letter-spacing:1px;}'
+  +'.sec{margin-bottom:18px;break-inside:avoid;}'
+  +'.sec-hd{display:flex;align-items:center;gap:8px;background:#0c1520;color:#fff;padding:10px 14px;border-radius:6px 6px 0 0;}'
+  +'.badge{font-size:11px;padding:2px 8px;border:1px solid #c8a84b;border-radius:10px;color:#c8a84b;}'
+  +'.sec-ico{font-size:18px;}'
+  +'.sec-name{font-size:15px;font-weight:700;letter-spacing:1px;}'
+  +'table{width:100%;border-collapse:collapse;}'
+  +'thead tr{background:#f0e8d0;}'
+  +'th{padding:9px 12px;text-align:left;font-size:12px;color:#5a4010;font-weight:700;border-bottom:1px solid #d4c080;letter-spacing:.5px;}'
+  +'td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;line-height:1.7;font-size:13px;}'
+  +'tr:last-child td{border-bottom:2px solid #0c1520;}'
+  +'.rn{font-weight:700;color:#0c1520;width:18%;}'
+  +'.rneed{color:#c8410b;font-weight:600;width:28%;}'
+  +'.rplan{color:#0a4a2a;width:54%;}'
+  +'.footer{margin-top:28px;padding-top:14px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;color:#999;}'
+  +'@media print{.no-print{display:none!important;}body{background:#fff;}@page{margin:1.2cm;}}'
+  +'</style></head><body>'
+  +'<div class="report-wrap">'
+  +'<div class="header">'
+    +'<div><div class="brand">Guardian &middot; 南山人壽</div><div class="doctitle">保障規劃報告</div></div>'
+    +'<div class="meta">'+(s.name?'<strong>'+s.name+'</strong><br>':'')+'年齡：'+(s.age||'—')+'歲　性別：'+gLabel+'<br>年收入：'+s.ai+'萬元　月收入：'+fmtN(s.mi)+'元<br>製表日期：'+dateStr+'</div>'
+  +'</div>'
+  +'<div class="principle"><strong>雙十原則：</strong>年保費上限 <strong>'+Math.round(s.ai*0.1*10)/10+'萬元/年</strong>（年收入×10%）；壽險最低保額 <strong>'+Math.round(s.ai*10)+'萬元</strong>（年收入×10倍）</div>'
+  +(age?'<div class="prem-section"><h2>保費試算</h2>'+premHTML+'</div>':'')
+  +'<div class="needs-title">保障需求與規劃對照</div>'
+  +sectHTML
+  +'<div class="footer"><span>本報告為保障需求分析，實際保費依投保時年齡、健康狀況及商品費率為準。</span><span>南山人壽　'+dateStr+'</span></div>'
+  +'</div>'
+  +'</body></html>';
+
+  // 在新 tab 顯示，不自動觸發列印
+  var win=window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
 }
 
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-initDrag();
-updateRank();
 
-if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('sw.js')
-      .then(function(r){console.log('SW:',r.scope);})
-      .catch(function(e){console.log('SW err:',e);});
-  });
-}
-</script>
-</body>
-</html>
