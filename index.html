@@ -22,8 +22,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 #topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px 14px;flex-shrink:0;}
 .logo{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;}
 .slbl{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-#backbtn{font-size:12px;color:var(--gold);cursor:pointer;padding:8px 16px;border:1px solid var(--gold-line);border-radius:20px;display:none;background:transparent;font-family:inherit;letter-spacing:1px;}
-#backbtn.show{display:block;}
+
 #canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 28px 40px;}
 #botnav{padding:14px 28px 26px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;gap:12px;border-top:1px solid var(--border);}
 .btnp{background:var(--gold);color:var(--ink);font-weight:700;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:1px;padding:14px 36px;border-radius:40px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(200,168,75,0.25);}
@@ -168,7 +167,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 <div id="topbar">
   <div class="logo">Guardian &middot; 南山人壽</div>
   <div class="slbl" id="slbl"></div>
-  <button id="backbtn" onclick="goBack()">&#8592; 返回</button>
+  <div></div>
 </div>
 <div id="canvas">
 
@@ -184,7 +183,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
     <div class="wpill">活的太短</div>
     <div class="wpill">醫療費用</div>
   </div>
-  <button class="cta" onclick="go(1)">開始規劃 &#8594;</button>
+
 </div>
 </div>
 
@@ -232,33 +231,27 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
 <!-- S2 Input -->
 <div class="screen" id="s2">
 <div class="stitle">您的基本資料</div>
-<div class="ssub">這些資料將用於計算您的專屬保障需求與保費試算。</div>
+<div class="ssub">填入後系統將自動計算保險年齡與專屬保障需求。</div>
 <div class="igrid">
-  <div class="iblk">
+  <div class="iblk full">
     <label class="ilbl">姓名（選填）</label>
     <div class="irow"><input type="text" id="cname" placeholder="方便稱呼您" oninput="syncCalc()"></div>
   </div>
-  <div class="iblk">
-    <label class="ilbl">薪資入帳日</label>
-    <div class="irow"><input type="number" id="payday" inputmode="numeric" placeholder="10" min="1" max="31"><span class="iunit">號</span></div>
-  </div>
-  <div class="iblk">
+  <div class="iblk full">
     <label class="ilbl">月收入</label>
     <div class="irow"><input type="number" id="mi" inputmode="numeric" placeholder="30000" oninput="syncCalc()"><span class="iunit">元</span></div>
     <div class="ihint">稅前月薪含獎金</div>
   </div>
-  <div class="iblk">
-    <label class="ilbl">月固定支出</label>
-    <div class="irow"><input type="number" id="me" inputmode="numeric" placeholder="20000" oninput="syncCalc()"><span class="iunit">元</span></div>
-    <div class="ihint">房租、帳單、生活費</div>
-  </div>
-  <div class="iblk">
-    <label class="ilbl">年齡</label>
-    <div class="irow"><input type="number" id="age" inputmode="numeric" placeholder="35" min="15" max="70" oninput="syncCalc()"><span class="iunit">歲</span></div>
-  </div>
-  <div class="iblk">
-    <label class="ilbl">年收入（自動計算）</label>
-    <div class="irow"><input type="number" id="ai" readonly style="color:var(--gold-lt);"><span class="iunit">萬元</span></div>
+  <div class="iblk full">
+    <label class="ilbl">出生年月日（民國）</label>
+    <div class="irow" style="gap:8px;">
+      <input type="number" id="byear" inputmode="numeric" placeholder="75" min="20" max="99" style="flex:2;" oninput="syncCalc()">
+      <span class="iunit">年</span>
+      <input type="number" id="bmonth" inputmode="numeric" placeholder="6" min="1" max="12" style="flex:1.5;" oninput="syncCalc()">
+      <span class="iunit">月</span>
+      <input type="number" id="bday" inputmode="numeric" placeholder="15" min="1" max="31" style="flex:1.5;" oninput="syncCalc()">
+      <span class="iunit">日</span>
+    </div>
   </div>
   <div class="iblk">
     <label class="ilbl">性別</label>
@@ -268,14 +261,16 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans TC',sans
     </div>
   </div>
   <div class="iblk">
-    <label class="ilbl">繳費年期</label>
-    <div class="radrow">
-      <label><input type="radio" name="pyear" value="10" checked> 10年</label>
-      <label><input type="radio" name="pyear" value="20"> 20年</label>
-    </div>
+    <label class="ilbl">保險年齡（自動計算）</label>
+    <div class="irow"><input type="text" id="insage" readonly style="color:var(--gold-lt);font-size:20px;font-weight:500;"><span class="iunit">歲</span></div>
+    <div class="ihint">生日前後六個月同一保齡</div>
+  </div>
+  <div class="iblk full">
+    <label class="ilbl">年收入（自動計算）</label>
+    <div class="irow"><input type="number" id="ai" readonly style="color:var(--gold-lt);"><span class="iunit">萬元</span></div>
   </div>
 </div>
-<div class="isb" id="isb"><div class="isb-t" id="isbt">請填入月收入、年齡與性別，系統將為您計算專屬保障。</div></div>
+<div class="isb" id="isb"><div class="isb-t" id="isbt">請填入月收入與出生年月日，系統將為您計算保障需求。</div></div>
 </div>
 
 <!-- S3 Rank -->
@@ -457,12 +452,12 @@ var step = 0;
 var rankOrder = ['interrupt','death','disability','medical'];
 
 var STEPS = [
-  {lbl:'', next:'開始了解 \u2192'},
-  {lbl:'\u7b2c\u4e00\u6b65 \u00b7 \u6536\u652f\u66f2\u7dda', next:'\u586b\u5165\u6211\u7684\u8cc7\u6599 \u2192'},
-  {lbl:'\u7b2c\u4e8c\u6b65 \u00b7 \u57fa\u672c\u8cc7\u6599', next:'\u8a2d\u5b9a\u98a8\u96aa\u6392\u5e8f \u2192'},
-  {lbl:'\u7b2c\u4e09\u6b65 \u00b7 \u98a8\u96aa\u6392\u5e8f', next:'\u67e5\u770b\u4fdd\u969c\u9700\u6c42 \u2192'},
-  {lbl:'\u7b2c\u56db\u6b65 \u00b7 \u4fdd\u969c\u9700\u6c42', next:'\u67e5\u770b\u7e3d\u8868\u8207\u4fdd\u8cbb \u2192'},
-  {lbl:'\u7b2c\u4e94\u6b65 \u00b7 \u7e3d\u8868\u8207\u4fdd\u8cbb', next:'\u91cd\u65b0\u958b\u59cb'}
+  {lbl:'', next:'開始規劃 →'},
+  {lbl:'第一步 · 收支曲線', next:'填入基本資料 →'},
+  {lbl:'第二步 · 基本資料', next:'設定風險排序 →'},
+  {lbl:'第三步 · 風險排序', next:'查看保障需求 →'},
+  {lbl:'第四步 · 保障需求', next:'查看總表與保費 →'},
+  {lbl:'第五步 · 總表與保費', next:'重新開始'}
 ];
 
 // ============================================================
@@ -472,17 +467,47 @@ function fmtN(n) {
   return Math.round(n).toLocaleString('zh-TW');
 }
 
+// 計算保險年齡：生日前後六個月同一保齡
+function calcInsAge(byear, bmonth, bday) {
+  if (!byear || !bmonth || !bday) return 0;
+  // 民國轉西元
+  var adYear = byear + 1911;
+  var today = new Date();
+  var birthDate = new Date(adYear, bmonth - 1, bday);
+  if (isNaN(birthDate.getTime())) return 0;
+  // 實際年齡（年）
+  var realAge = today.getFullYear() - adYear;
+  if (today.getMonth() < bmonth - 1 ||
+     (today.getMonth() === bmonth - 1 && today.getDate() < bday)) {
+    realAge--;
+  }
+  // 距下一個生日的天數
+  var nextBirthday = new Date(today.getFullYear(), bmonth - 1, bday);
+  if (nextBirthday <= today) {
+    nextBirthday = new Date(today.getFullYear() + 1, bmonth - 1, bday);
+  }
+  var daysToNext = Math.round((nextBirthday - today) / 86400000);
+  // 距上一個生日的天數
+  var lastBirthday = new Date(nextBirthday.getFullYear() - 1, bmonth - 1, bday);
+  var totalDays = Math.round((nextBirthday - lastBirthday) / 86400000);
+  // 若距下一個生日 < 半年（總天數/2），保齡 = realAge+1；否則 = realAge
+  var insAge = (daysToNext < totalDays / 2) ? realAge + 1 : realAge;
+  return insAge;
+}
+
 function getState() {
-  var mi   = parseFloat(document.getElementById('mi').value)   || 0;
-  var me   = parseFloat(document.getElementById('me').value)   || 0;
-  var age  = parseInt(document.getElementById('age').value)    || 0;
-  var gel  = document.querySelector('input[name="gender"]:checked');
+  var mi     = parseFloat(document.getElementById('mi').value) || 0;
+  var byear  = parseInt(document.getElementById('byear').value)  || 0;
+  var bmonth = parseInt(document.getElementById('bmonth').value) || 0;
+  var bday   = parseInt(document.getElementById('bday').value)   || 0;
+  var age    = calcInsAge(byear, bmonth, bday);
+  var gel    = document.querySelector('input[name="gender"]:checked');
   var gender = gel ? gel.value : 'm';
-  var gi   = (gender === 'm') ? 0 : 1;
-  var ai   = Math.round(mi * 12 / 10000 * 10) / 10;
-  var name = document.getElementById('cname').value.trim();
-  var pd   = document.getElementById('payday').value || '固定';
-  return {mi:mi, me:me, age:age, gender:gender, gi:gi, ai:ai, name:name, pd:pd};
+  var gi     = (gender === 'm') ? 0 : 1;
+  var ai     = Math.round(mi * 12 / 10000 * 10) / 10;
+  var name   = document.getElementById('cname').value.trim();
+  return {mi:mi, age:age, gender:gender, gi:gi, ai:ai, name:name,
+          byear:byear, bmonth:bmonth, bday:bday};
 }
 
 // ============================================================
@@ -499,10 +524,9 @@ function go(n) {
   document.getElementById('slbl').textContent = STEPS[n].lbl;
   document.getElementById('mbtn').textContent = STEPS[n].next;
 
-  var bb = document.getElementById('backbtn');
   var gb = document.getElementById('gbtn');
-  if (n > 0) { bb.classList.add('show'); gb.style.display = 'block'; }
-  else        { bb.classList.remove('show'); gb.style.display = 'none'; }
+  if (n > 0) { gb.style.display = 'block'; }
+  else        { gb.style.display = 'none'; }
 
   if (n === 4) buildPlan();
   if (n === 5) buildSummary();
@@ -521,23 +545,23 @@ function handleNext() {
 function syncCalc() {
   var s = getState();
 
-  // update auto field
+  // update auto fields
   document.getElementById('ai').value = s.ai || '';
+  var insageEl = document.getElementById('insage');
+  if (insageEl) insageEl.value = s.age || '';
 
   // update summary box
   var isbt = document.getElementById('isbt');
   if (s.mi && s.age && s.gender) {
     var gLabel = (s.gender === 'm') ? '男性' : '女性';
-    var sav = s.mi - s.me;
+    var rocStr = s.byear ? ('民國' + s.byear + '年' + s.bmonth + '月' + s.bday + '日') : '';
     isbt.innerHTML =
       (s.name ? '<span class="hl">' + s.name + '</span>，' : '') +
-      s.age + ' 歲' + gLabel + '，月收入 <span class="hl">' + fmtN(s.mi) + '</span> 元，' +
-      '支出 <span class="hl">' + fmtN(s.me) + '</span> 元，' +
-      '每月可存 <span class="hl">' + fmtN(Math.max(0, sav)) + '</span> 元。' +
-      '年收入約 <span class="hl">' + s.ai + '</span> 萬元，' +
-      '每月 <span class="hl">' + s.pd + '</span> 號領薪。';
+      rocStr + '，保險年齡 <span class="hl">' + s.age + '</span> 歲' + gLabel + '，' +
+      '月收入 <span class="hl">' + fmtN(s.mi) + '</span> 元，' +
+      '年收入約 <span class="hl">' + s.ai + '</span> 萬元。';
   } else {
-    isbt.textContent = '請填入月收入、年齡與性別，系統將為您計算專屬保障。';
+    isbt.textContent = '請填入月收入與出生年月日，系統將為您計算保障需求。';
   }
 }
 
