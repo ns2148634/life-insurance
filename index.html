@@ -383,12 +383,19 @@ function getInputVal(rid,si){
 }
 
 // 取得使用者確認的保障金額
+function updateAccHosp(){
+  var h=pf((document.getElementById('inp-interrupt-0')||{}).value)||0;
+  var w=pf((document.getElementById('inp-interrupt-1')||{}).value)||0;
+  var el=document.getElementById('inp-interrupt-2');
+  if(el)el.value=fmtN(h+w);
+}
+
 function getUserVals(s){
   function v(rid,si,def){var r=getInputVal(rid,si);return r!==null?r:def;}
   return{
     hospMonth: v('interrupt',0,s.mi),
     accWork:   v('interrupt',1,s.mi),
-    accHosp:   v('interrupt',2,s.mi+30000),
+    accHosp:   (pf(getInputVal('interrupt',0))||s.mi)+(pf(getInputVal('interrupt',1))||s.mi),
     deathGen:  v('death',0,Math.round(s.ai*10)),
     deathAcc:  v('death',1,Math.round(s.ai*20)),
     disability:v('disability',0,Math.round(s.ai*10)),
@@ -463,7 +470,7 @@ var PLANS={
   interrupt:{title:'收入中斷',ico:'⏸',subs:[
     {name:'一般住院',         why:'住院期間公司多半停薪。不論疾病或意外需要住院，每月可領補貼彌補薪資缺口，讓家庭現金流不中斷。',    defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
     {name:'意外無法工作',     why:'骨折等傷況可能只住院三天，但在家休養三個月甚至半年。在家休養期間同樣有補貼，每月約 3 萬元。', defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
-    {name:'意外住院（綜合）', why:'意外到需要住院，同時觸發前兩項保障，合計給付，最嚴重情況下保障最充足。',                    defFn:function(s){return fmtN(s.mi+30000);},  unit:'元/月'}
+    {name:'意外住院（綜合）', why:'意外到需要住院，同時觸發前兩項保障，合計給付，最嚴重情況下保障最充足。',                    defFn:function(s){var h=pf(getInputVal('interrupt',0))||s.mi;var w=pf(getInputVal('interrupt',1))||s.mi;return fmtN(h+w);},  unit:'元/月'}
   ]},
   death:{title:'活的太短',ico:'🕊',subs:[
     {name:'一般身故', why:'依雙十原則，保障至少為年收入的 10 倍，讓家人在失去收入來源後，生活 10 年不成問題。', defFn:function(s){return Math.round(s.ai*10)+'';},  unit:'萬元'},
@@ -490,13 +497,15 @@ function buildPlan(){
     html+='<div class="nsec"><div class="nshd"><span class="nsbadge">第'+(idx+1)+'優先</span><span class="nsico">'+pd.ico+'</span><span class="nstit">'+pd.title+'</span></div>';
     pd.subs.forEach(function(sub,si){
       var defVal=sub.defFn(s);
-      // 保留之前輸入的值
+      // 保留之前輸入的值（意外住院自動加總，不可手動）
+      var isAutoSum=(rid==='interrupt'&&si===2);
       var el=document.getElementById('inp-'+rid+'-'+si);
-      var curVal=(el&&el.value!=='')?el.value:defVal;
+      var curVal=isAutoSum?defVal:((el&&el.value!=='')?el.value:defVal);
+      var inputStyle=isAutoSum?'class="scval-input" readonly style="opacity:.6;cursor:default;"':'class="scval-input" onclick="this.select()" inputmode="numeric"';
       html+='<div class="scard">'
         +'<div><div class="scn">'+sub.name+'</div><div class="scw">'+sub.why+'</div></div>'
         +'<div class="scamt">'
-        +'<input class="scval-input" id="inp-'+rid+'-'+si+'" value="'+curVal+'" onclick="this.select()" inputmode="numeric">'
+        +'<input '+inputStyle+' id="inp-'+rid+'-'+si+'" value="'+curVal+'">'
         +'<div class="scunit">'+sub.unit+'</div>'
         +'</div></div>';
     });
