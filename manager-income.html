@@ -82,7 +82,10 @@
   .bkHero{background:var(--ink);color:#fff;padding:18px 18px 16px;}
   .bkHero .who{font-size:12.5px;color:#9FB2C6;font-weight:700;letter-spacing:.5px;}
   .bkHero .who b{color:#fff;font-size:15px;}
-  .bkHero .amt{font-size:34px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;margin-top:4px;}
+  .bkHero .amtlabel{font-size:11px;color:#9FB2C6;font-weight:700;letter-spacing:1px;margin-top:8px;}
+  .bkHero .amt{font-size:34px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;margin-top:2px;}
+  .bkHero .annual{margin-top:9px;font-size:13px;color:#C7D3DF;border-top:1px solid rgba(255,255,255,.14);padding-top:10px;display:flex;justify-content:space-between;align-items:baseline;}
+  .bkHero .annual b{color:#E6C57A;font-variant-numeric:tabular-nums;font-size:19px;}
   .bkHero .unit{margin-top:11px;font-size:12px;color:#C7D3DF;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.14);padding-top:10px;}
   .bkHero .unit b{color:#fff;font-variant-numeric:tabular-nums;}
   .bkWarn{margin-top:9px;background:rgba(184,134,47,.18);border:1px solid rgba(184,134,47,.5);color:#F3E2BC;font-size:11.5px;border-radius:9px;padding:7px 9px;}
@@ -130,8 +133,10 @@
   <div class="grid">
     <div class="card" style="margin-top:16px;">
       <div class="bkHero">
-        <div class="who"><b id="bkTitle">區經理</b> 的每月收入</div>
+        <div class="who"><b id="bkTitle">區經理</b></div>
+        <div class="amtlabel">每月收入</div>
         <div class="amt">NT$ <span id="bkTotal">0</span></div>
+        <div class="annual"><span>年收入預估（含半年加給）</span><b>NT$ <span id="bkAnnual">0</span></b></div>
         <div class="unit"><span>直轄單位 FYC（本人＋直屬業務員）</span><b id="bkUnit">NT$ 0</b></div>
         <div class="bkWarn" id="bkWarn" style="display:none;"></div>
       </div>
@@ -146,8 +151,8 @@
           <li><b>特別獎金</b>（區經理：直屬主任 7.875%、直屬襄理 6.3%、襄理下主任 3.15%；襄理：直屬主任 6.3%、下層襄/主任 2.1%；主任：第三代主任 3.15%）。</li>
           <li><b>升級獎金</b>（主任→主任 5.25%、襄理→襄理 5.25%、區→區 6.3%，以下線全組 FYC 計）。<b>輔導獎金</b>（區經理對第二代區之襄/主單位 1.575%、第三代區 1.05%）。</li>
           <li>區經理之特別／升級／輔導獎金，依本人直轄單位達成月責任額 40,000 之比例發給（已內含）。</li>
-          <li><b>業務主管每月獎金(二)</b>＝款項一(單位+業績)×年資比例 ＋ 款項二(升級+特別+輔導)×6%，上限 主任9,000／襄理12,000／區20,000。<b>報酬一</b>＝各項獎金×6%(上限3,000)、<b>報酬二</b>累進(上限10,300)。</li>
-          <li>下方<b>半年加給</b>以「月×6」估算（超額業績、半年特別、半年升級）。<b>未納入：</b>增員／增員培育獎金、加權保費成效獎金、團隊成效獎金（需另提供加權保費或新人資料）。結果為估算，實際以公司核發為準。</li>
+          <li><b>業務主管每月獎金(二)</b>＝款項一(單位+業績)×6% ＋ 款項二(升級+特別+輔導)×6%，上限 主任9,000／襄理12,000／區20,000。<b>報酬一</b>＝各項獎金×6%(上限3,000)、<b>報酬二</b>累進(上限10,300)。</li>
+          <li><b>年收入預估</b>＝每月收入 × 12 ＋ 半年加給(超額／半年特別／半年升級) × 2，半年加給以「半年直轄單位＝月×6」估算。<b>未納入：</b>增員／增員培育獎金、加權保費成效獎金、團隊成效獎金（需另提供加權保費或新人資料）。結果為估算，實際以公司核發為準。</li>
         </ul>
       </div>
     </div>
@@ -240,8 +245,7 @@ function calcNode(n){const R=n.role,du=directUnit(n);
   if(R==="DM"){const r=Math.min(du/40000,1);sp*=r;up*=r;me*=r;}
   sp=Math.round(sp);up=Math.round(up);me=Math.round(me);
   const od=orgDevB(n);
-  const p1=SEN[n.sen||'lt5'];
-  const b2=Math.min(Math.round((ub+perf)*p1+(up+sp+me)*0.06),CAP2[R]);
+  const b2=Math.min(Math.round((ub+perf)*0.06+(up+sp+me)*0.06),CAP2[R]);
   const base=own(n)+ub+perf+extra+sp+up+me+od+b2;
   const bao1=Math.min(Math.round(base*0.06),3000),bao2v=bao2(base);
   return {du,ub,perf,pct,extra,sp,up,me,od,b2,bao1,bao2v,total:base+bao1+bao2v,own:own(n)};
@@ -292,9 +296,6 @@ function nodeCard(node,parentRole,mgen){
     sel.onchange=function(e){e.stopPropagation();node.role=sel.value;clampTree();renderTree();};
     pad.appendChild(sel);
   }
-  const name=document.createElement("input");name.className="name";name.type="text";name.placeholder="姓名";name.value=node.name||"";
-  name.onclick=function(e){e.stopPropagation();};name.oninput=function(){node.name=name.value;};pad.appendChild(name);
-
   const fld=document.createElement("div");fld.className="fld";
   const fl=document.createElement("span");fl.textContent="月FYC";fld.appendChild(fl);
   const fyc=document.createElement("input");fyc.className="fyc";fyc.type="number";fyc.inputMode="numeric";fyc.min="0";fyc.step="100";
@@ -303,12 +304,6 @@ function nodeCard(node,parentRole,mgen){
   fld.appendChild(fyc);pad.appendChild(fld);
 
   if(sup){
-    const senSel=document.createElement("select");senSel.className="sen";
-    [["lt5","年資未滿5年"],["5to10","年資5~10年"],["gte10","年資滿10年"]].forEach(function(p){const o=document.createElement("option");o.value=p[0];o.textContent=p[1];senSel.appendChild(o);});
-    senSel.value=node.sen||'lt5';senSel.onclick=function(e){e.stopPropagation();};
-    senSel.onchange=function(e){e.stopPropagation();node.sen=senSel.value;recompute();};
-    pad.appendChild(senSel);
-
     if(node.role==="AMA"||node.role==="AMB"||node.role==="DM"){
       const odl=document.createElement("label");odl.className="od";
       const odc=document.createElement("input");odc.type="checkbox";odc.checked=!!node.orgDev;
@@ -355,8 +350,10 @@ function secRow(t){return '<li class="sec"><span class="nm">'+t+'</span><span cl
 function renderBreakdown(){
   let node=findNode(selectedId);if(!node||!isMgr(node)){node=tree;selectedId=tree.id;}
   const r=calcNode(node),hy=halfYear(node),R=node.role;
-  document.getElementById("bkTitle").textContent=(node.name?node.name+"・":"")+RANK_LABEL[R];
+  const annual=r.total*12+hy.sum*2;
+  document.getElementById("bkTitle").textContent=RANK_LABEL[R];
   document.getElementById("bkTotal").textContent=nf(r.total);
+  document.getElementById("bkAnnual").textContent=nf(annual);
   document.getElementById("bkUnit").textContent="NT$ "+nf(r.du);
   const w=document.getElementById("bkWarn");
   if(r.du<UNIT_MIN[R]){w.style.display="block";w.textContent="直轄單位 FYC 未達 "+nf(UNIT_MIN[R])+" 門檻，尚無單位獎金 / 業績獎金。";}else w.style.display="none";
@@ -370,16 +367,17 @@ function renderBreakdown(){
   if(R==="DM")L.push(row("輔導獎金","第二/三代區之單位比例",r.me,r.me===0));
   if(R==="AMA"||R==="AMB"||R==="DM")L.push(row("組織發展獎金","新晉升襄/區 ×10%",r.od,r.od===0));
   if(R==="DM")L.push(row("每月額外單位獎金","FYC ≥ 12,000 給 2,000",r.extra,r.extra===0));
-  L.push(row("業務主管每月獎金(二)",SEN_LABEL[node.sen||'lt5']+"・上限"+nf(CAP2[R]),r.b2,r.b2===0));
+  L.push(row("業務主管每月獎金(二)","款項一×6%＋款項二×6%・上限"+nf(CAP2[R]),r.b2,r.b2===0));
   L.push(row("每月業務報酬一","各項獎金 × 6%（上限3,000）",r.bao1,r.bao1===0));
   L.push(row("每月業務報酬二","累進（上限10,300）",r.bao2v,r.bao2v===0));
   L.push(row("每月總收入","",r.total,false,"total"));
 
-  L.push(secRow("半年加給（以月×6估算）"));
-  L.push(row("超額業績獎金","半年直轄單位 ≥ "+nf(EX_TH[R])+"・"+(EX_PCT[R]*100)+"%",hy.excess,hy.excess===0));
-  if(R==="DM"||R==="AMA"||R==="AMB")L.push(row("半年特別獎金","下屬主任/襄理單位 ≥ 180,000",hy.hySp,hy.hySp===0));
-  if(R==="AS"||R==="AMA"||R==="AMB")L.push(row("半年升級獎金","下屬同階全組 ≥ 180,000",hy.hyUp,hy.hyUp===0));
-  L.push(row("半年加給小計","",hy.sum,hy.sum===0,"subtotal"));
+  L.push(secRow("年收入預估（個人全年所有收入）"));
+  L.push(row("每月收入 × 12 個月","經常性月收入年化",r.total*12,false));
+  L.push(row("超額業績獎金（全年）","半年期 × 2",hy.excess*2,hy.excess===0));
+  if(R==="DM"||R==="AMA"||R==="AMB")L.push(row("半年特別獎金（全年）","半年期 × 2",hy.hySp*2,hy.hySp===0));
+  if(R==="AS"||R==="AMA"||R==="AMB")L.push(row("半年升級獎金（全年）","半年期 × 2",hy.hyUp*2,hy.hyUp===0));
+  L.push(row("年收入預估","",annual,false,"total"));
 
   document.getElementById("bkItems").innerHTML=L.join("");
 }
