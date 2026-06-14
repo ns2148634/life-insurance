@@ -26,17 +26,15 @@
   .card .head h2{margin:0;font-size:14.5px;font-weight:800;letter-spacing:.5px;}
   .card .head .hint{font-size:12px;color:var(--ink-soft);}
 
-  /* toolbar */
   .unify{display:inline-flex;align-items:center;gap:9px;background:#F7F4EC;border:1px solid var(--gold-soft);border-radius:10px;padding:8px 11px;cursor:pointer;}
-  .unify input{width:19px;height:19px;accent-color:var(--gold);}
+  .unify input[type=checkbox]{width:19px;height:19px;accent-color:var(--gold);}
   .unify span{font-size:13px;font-weight:700;}
-  .unify input.amt{width:110px;height:auto;accent-color:auto;font:inherit;font-size:15px;text-align:right;padding:6px 9px;border:1.5px solid var(--line);border-radius:9px;background:#fff;display:none;}
+  .unify input.amt{width:110px;font:inherit;font-size:15px;text-align:right;padding:6px 9px;border:1.5px solid var(--line);border-radius:9px;background:#fff;display:none;}
 
-  /* org chart */
   .chartScroll{overflow:auto;-webkit-overflow-scrolling:touch;padding:14px 6px 18px;}
   .tree{display:inline-block;min-width:100%;}
   .tree ul{position:relative;padding-top:24px;display:flex;justify-content:center;margin:0;list-style:none;}
-  .tree li{list-style:none;position:relative;padding:24px 12px 0;text-align:center;}
+  .tree li{list-style:none;position:relative;padding:24px 11px 0;text-align:center;}
   .tree li::before,.tree li::after{content:'';position:absolute;top:0;right:50%;border-top:2px solid var(--line);width:50%;height:24px;}
   .tree li::after{right:auto;left:50%;border-left:2px solid var(--line);}
   .tree li:only-child::before,.tree li:only-child::after{display:none;}
@@ -48,37 +46,39 @@
   .tree>ul>li{padding-top:0;}
   .tree ul ul::before{content:'';position:absolute;top:0;left:50%;border-left:2px solid var(--line);width:0;height:24px;}
 
-  .node{display:inline-block;vertical-align:top;text-align:left;width:178px;background:#fff;border:1.6px solid var(--line);border-radius:13px;padding:0 0 9px;box-shadow:var(--shadow);position:relative;cursor:pointer;transition:border-color .12s,box-shadow .12s;}
-  .node .stripe{height:5px;border-radius:11px 11px 0 0;}
+  .node{display:inline-block;vertical-align:top;text-align:left;width:194px;background:#fff;border:1.6px solid var(--line);border-radius:13px;padding:0 0 9px;box-shadow:var(--shadow);position:relative;cursor:pointer;transition:border-color .12s,box-shadow .12s;}
+  .node .stripe{height:5px;border-radius:11px 11px 0 0;background:var(--gold);}
   .node.role-REP .stripe{background:var(--rep);}
-  .node.role-AS .stripe,.node.role-AMA .stripe,.node.role-AMB .stripe,.node.role-DM .stripe,.node.role-BC .stripe{background:var(--gold);}
   .node .pad{padding:8px 10px 0;}
   .node .nhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-  .node .tag{font-size:10.5px;font-weight:800;color:#fff;border-radius:6px;padding:3px 7px;}
+  .node .tag{font-size:10.5px;font-weight:800;color:#fff;border-radius:6px;padding:3px 7px;background:var(--gold);}
   .node.role-REP .tag{background:var(--rep);}
-  .node:not(.role-REP) .tag{background:var(--gold);}
+  .node .gen{font-size:10px;color:var(--ink-soft);font-weight:700;}
   .node .rm{border:none;background:#F1E3E3;color:#A23B3B;border-radius:7px;width:24px;height:24px;font-size:16px;line-height:1;cursor:pointer;}
-  .node select.role{width:100%;font:inherit;font-size:13px;font-weight:700;padding:6px 24px 6px 8px;border:1.5px solid var(--line);border-radius:9px;background:#fff;-webkit-appearance:none;appearance:none;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='7'><path d='M1 1l4.5 4.5L10 1' fill='none' stroke='%234A5A6E' stroke-width='1.5'/></svg>");background-repeat:no-repeat;background-position:right 9px center;margin-bottom:6px;}
-  .node input.name{width:100%;font:inherit;font-size:13px;padding:6px 8px;border:1.5px solid var(--line);border-radius:9px;margin-bottom:6px;}
-  .node .fld{display:flex;align-items:center;gap:6px;}
+  .node select,.node input{font:inherit;}
+  .node select.role,.node select.sen{width:100%;font-size:12.5px;font-weight:700;padding:6px 22px 6px 8px;border:1.5px solid var(--line);border-radius:9px;background:#fff;-webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='7'><path d='M1 1l4.5 4.5L10 1' fill='none' stroke='%234A5A6E' stroke-width='1.5'/></svg>");background-repeat:no-repeat;background-position:right 8px center;margin-bottom:6px;}
+  .node select.sen{font-weight:600;color:var(--ink-soft);}
+  .node input.name{width:100%;font-size:13px;padding:6px 8px;border:1.5px solid var(--line);border-radius:9px;margin-bottom:6px;}
+  .node .fld{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
   .node .fld span{font-size:11px;color:var(--ink-soft);font-weight:700;white-space:nowrap;}
-  .node input.fyc{flex:1;width:100%;font:inherit;font-size:14px;text-align:right;padding:6px 8px;border:1.5px solid var(--line);border-radius:9px;}
+  .node input.fyc{flex:1;width:100%;font-size:14px;text-align:right;padding:6px 8px;border:1.5px solid var(--line);border-radius:9px;}
   .node input.fyc:disabled{background:#EEF1F5;color:var(--ink-soft);}
   .node input:focus,.node select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft);}
-  .node .inc{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:baseline;}
+  .node .od{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-soft);margin-bottom:4px;cursor:pointer;}
+  .node .od input{width:15px;height:15px;accent-color:var(--gold);}
+  .node .inc{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:baseline;}
   .node .inc b{font-size:14px;color:var(--green);font-variant-numeric:tabular-nums;}
   .node.below .inc b{color:#B8862F;}
   .node .addbtns{display:flex;gap:6px;margin-top:8px;}
-  .node .addbtns button{flex:1;font:inherit;font-size:11px;font-weight:700;padding:7px 2px;border-radius:8px;border:1.4px dashed;cursor:pointer;background:#fff;}
+  .node .addbtns button{flex:1;font-size:11px;font-weight:700;padding:7px 2px;border-radius:8px;border:1.4px dashed;cursor:pointer;background:#fff;}
   .node .addbtns .addRep{color:var(--rep);border-color:#BFD2E6;}
   .node .addbtns .addMgr{color:var(--gold);border-color:#E4D2A6;}
+  .node .addbtns button:disabled{opacity:.32;cursor:not-allowed;}
   .node.selected{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft),var(--shadow);}
 
-  /* bottom grid */
   .grid{display:grid;grid-template-columns:1fr;gap:16px;}
   @media(min-width:840px){.grid{grid-template-columns:1.05fr .95fr;align-items:start;}}
-
   .bkHero{background:var(--ink);color:#fff;padding:18px 18px 16px;}
   .bkHero .who{font-size:12.5px;color:#9FB2C6;font-weight:700;letter-spacing:.5px;}
   .bkHero .who b{color:#fff;font-size:15px;}
@@ -87,15 +87,18 @@
   .bkHero .unit b{color:#fff;font-variant-numeric:tabular-nums;}
   .bkWarn{margin-top:9px;background:rgba(184,134,47,.18);border:1px solid rgba(184,134,47,.5);color:#F3E2BC;font-size:11.5px;border-radius:9px;padding:7px 9px;}
   .items{list-style:none;margin:0;padding:4px 0;}
-  .items li{display:flex;justify-content:space-between;align-items:baseline;padding:10px 18px;border-bottom:1px solid var(--line);}
+  .items li{display:flex;justify-content:space-between;align-items:baseline;padding:9px 18px;border-bottom:1px solid var(--line);}
   .items li:last-child{border-bottom:none;}
   .items .nm{font-size:13px;font-weight:600;}
   .items .nm small{display:block;color:var(--ink-soft);font-weight:500;font-size:11px;margin-top:1px;}
-  .items .val{font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums;}
-  .items li.zero .val{color:#A9B4C0;font-weight:600;}
+  .items .val{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .items li.zero .val{color:#B3BCC7;font-weight:600;}
+  .items li.sec{background:#F3F5F8;}
+  .items li.sec .nm{font-size:11.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.5px;}
   .items li.total{background:#F7F4EC;}
   .items li.total .nm{font-weight:800;}
   .items li.total .val{color:var(--green);font-size:17px;font-weight:800;}
+  .items li.subtotal .val{color:var(--ink);font-weight:800;}
 
   .note{font-size:12px;color:var(--ink-soft);line-height:1.75;padding:14px 16px;}
   .note b{color:var(--ink);}
@@ -106,7 +109,7 @@
 <div class="wrap">
   <header>
     <h1>業務組織收入試算</h1>
-    <div class="sub">115 年上半年標準・南壽業單字第 1150000341 號（每月給付項目）</div>
+    <div class="sub">115 年上半年・各職級各項獎金辦法（單位／業績／特別／升級／輔導／報酬／獎金二）</div>
   </header>
 
   <div class="card">
@@ -119,7 +122,7 @@
       </label>
     </div>
     <div class="head" style="border-top:0;">
-      <span class="hint">點主管卡片可在下方看完整收入明細・新增下屬主管時，職級不會超過其上層主管。</span>
+      <span class="hint">點主管卡片看完整收入明細・下屬主管職級不超過上層・組織最多到第三代主管（本人為第一代）。</span>
     </div>
     <div class="chartScroll"><div class="tree" id="treeRoot"></div></div>
   </div>
@@ -129,7 +132,7 @@
       <div class="bkHero">
         <div class="who"><b id="bkTitle">區經理</b> 的每月收入</div>
         <div class="amt">NT$ <span id="bkTotal">0</span></div>
-        <div class="unit"><span>單位總 FYC（本人＋全部下線）</span><b id="bkUnit">NT$ 0</b></div>
+        <div class="unit"><span>直轄單位 FYC（本人＋直屬業務員）</span><b id="bkUnit">NT$ 0</b></div>
         <div class="bkWarn" id="bkWarn" style="display:none;"></div>
       </div>
       <ul class="items" id="bkItems"></ul>
@@ -139,10 +142,12 @@
       <div class="head"><h2>計算說明</h2></div>
       <div class="note">
         <ul>
-          <li>每位主管的<b>單位總 FYC</b> ＝ 本人 ＋ 其下線所有人（含下屬主管及業務員）之月 FYC，逐層計算（上層主管可重複計入下層業績）。</li>
-          <li>單位獎金、每月業績獎金依該主管職級對照級距；區經理另計每月額外單位獎金（FYC ≥ 12,000 給 2,000）。</li>
-          <li>業務報酬一＝各項獎金收入 × 6%（上限 3,000）；報酬二依累進級距（上限 10,300）。<b>展業顧問不適用</b>報酬一、二。</li>
-          <li>僅試算<b>每月</b>項目；半年超額業績獎金、增員 / 增員培育獎金、通訊處 / 分處主管項目未納入。結果為估算，實際以公司核發為準。</li>
+          <li><b>單位獎金／業績獎金／超額獎金</b>以「本人＋<b>直屬</b>業務員」之 FYC（直轄單位）為基礎。下屬主管單位另以特別／升級／輔導獎金給付。</li>
+          <li><b>特別獎金</b>（區經理：直屬主任 7.875%、直屬襄理 6.3%、襄理下主任 3.15%；襄理：直屬主任 6.3%、下層襄/主任 2.1%；主任：第三代主任 3.15%）。</li>
+          <li><b>升級獎金</b>（主任→主任 5.25%、襄理→襄理 5.25%、區→區 6.3%，以下線全組 FYC 計）。<b>輔導獎金</b>（區經理對第二代區之襄/主單位 1.575%、第三代區 1.05%）。</li>
+          <li>區經理之特別／升級／輔導獎金，依本人直轄單位達成月責任額 40,000 之比例發給（已內含）。</li>
+          <li><b>業務主管每月獎金(二)</b>＝款項一(單位+業績)×年資比例 ＋ 款項二(升級+特別+輔導)×6%，上限 主任9,000／襄理12,000／區20,000。<b>報酬一</b>＝各項獎金×6%(上限3,000)、<b>報酬二</b>累進(上限10,300)。</li>
+          <li>下方<b>半年加給</b>以「月×6」估算（超額業績、半年特別、半年升級）。<b>未納入：</b>增員／增員培育獎金、加權保費成效獎金、團隊成效獎金（需另提供加權保費或新人資料）。結果為估算，實際以公司核發為準。</li>
         </ul>
       </div>
     </div>
@@ -152,212 +157,237 @@
 <script>
 "use strict";
 
-/* ---------- 級距資料（附件一～七） ---------- */
+/* ===== 級距資料 ===== */
 const UNIT = {
-  AS:  [[15300,2200],[25000,4000],[36000,7800],[57000,9000],[82000,11200],[110000,13800]],
-  AMA: [[18000,3200],[25000,4200],[36000,8200],[57000,10000],[82000,11700],[110000,14500],[140000,16000],[170000,18000]],
-  AMB: [[18000,3200],[25000,4200],[36000,8200],[57000,10000],[82000,11700],[110000,14500],[140000,16000],[170000,18000]],
-  DM:  [[28000,5100],[46000,8800],[57000,11000],[82000,12700],[110000,15500],[140000,18700],[170000,20700],[200000,23000]],
-  BC:  [[28000,5100],[46000,8800],[57000,11000],[82000,12700],[110000,15500],[140000,18700],[170000,20700],[200000,23000]]
+  AS:[[15300,2200],[25000,4000],[36000,7800],[57000,9000],[82000,11200],[110000,13800]],
+  AMA:[[18000,3200],[25000,4200],[36000,8200],[57000,10000],[82000,11700],[110000,14500],[140000,16000],[170000,18000]],
+  AMB:[[18000,3200],[25000,4200],[36000,8200],[57000,10000],[82000,11700],[110000,14500],[140000,16000],[170000,18000]],
+  DM:[[28000,5100],[46000,8800],[57000,11000],[82000,12700],[110000,15500],[140000,18700],[170000,20700],[200000,23000]]
 };
 const PERF = {
-  AS:  [[15300,0.09],[23800,0.12],[31450,0.15],[39100,0.17],[54400,0.20]],
-  AMA: [[18000,0.09],[28000,0.12],[37000,0.16],[46000,0.20],[64000,0.22]],
-  AMB: [[18000,0.09],[28000,0.12],[37000,0.15],[46000,0.17],[64000,0.20]],
-  DM:  [[28000,0.13],[37000,0.20],[46000,0.22],[55000,0.24],[73000,0.26]],
-  BC:  [[18000,0.09],[28000,0.12],[37000,0.16],[46000,0.20],[64000,0.22]]
+  AS:[[15300,0.09],[23800,0.12],[31450,0.15],[39100,0.17],[54400,0.20]],
+  AMA:[[18000,0.09],[28000,0.12],[37000,0.16],[46000,0.20],[64000,0.22]],
+  AMB:[[18000,0.09],[28000,0.12],[37000,0.15],[46000,0.17],[64000,0.20]],
+  DM:[[28000,0.13],[37000,0.20],[46000,0.22],[55000,0.24],[73000,0.26]]
 };
-const RANK_LABEL = {AS:"業務主任",AMA:"業務襄理A",AMB:"業務襄理B",DM:"區經理",BC:"展業顧問"};
-const UNIT_MIN   = {AS:15300,AMA:18000,AMB:18000,DM:28000,BC:28000};
-const HAS_BAO    = {AS:true,AMA:true,AMB:true,DM:true,BC:false};
-const ORDER      = {REP:0,AS:1,AMA:2,AMB:2,DM:3,BC:3};
-const SUP_ROLES  = ["AS","AMA","AMB","DM","BC"];   // 升序排列
-const REP_AT_ORD = {1:"AS",2:"AMA",3:"DM"};
+const RANK_LABEL={AS:"業務主任",AMA:"業務襄理A",AMB:"業務襄理B",DM:"區經理"};
+const UNIT_MIN={AS:15300,AMA:18000,AMB:18000,DM:28000};
+const ORDER={REP:0,AS:1,AMA:2,AMB:2,DM:3};
+const SUP_ROLES=["AS","AMA","AMB","DM"];
+const REP_AT_ORD={1:"AS",2:"AMA",3:"DM"};
+const SEN={lt5:0.06,'5to10':0.08,gte10:0.10};
+const SEN_LABEL={lt5:"年資未滿5年",'5to10':"年資5~10年",gte10:"年資滿10年"};
+const CAP2={AS:9000,AMA:12000,AMB:12000,DM:20000};
+const EX_TH={AS:160000,AMA:220000,AMB:160000,DM:250000};
+const EX_PCT={AS:0.0225,AMA:0.025,AMB:0.0225,DM:0.0275};
+const MAX_GEN=3;
 
-function isSup(role){ return role!=="REP"; }
-function lookup(v,tiers){ let r=0; for(const t of tiers){ if(v>=t[0]) r=t[1]; } return r; }
-function bao2(base){ let b=Math.min(base,40000)*0.12; if(base>40000)b+=Math.min(base-40000,60000)*0.05; if(base>100000)b+=(base-100000)*0.03; return Math.min(Math.round(b),10300); }
-function num(x){ const n=parseFloat(x); return isNaN(n)||n<0?0:n; }
-function nf(n){ return Math.round(n).toLocaleString("en-US"); }
+function isSup(r){return r!=="REP";}
+function lookup(v,t){let r=0;for(const x of t)if(v>=x[0])r=x[1];return r;}
+function bao2(b){let v=Math.min(b,40000)*0.12;if(b>40000)v+=Math.min(b-40000,60000)*0.05;if(b>100000)v+=(b-100000)*0.03;return Math.min(Math.round(v),10300);}
+function num(x){const n=parseFloat(x);return isNaN(n)||n<0?0:n;}
+function nf(n){return Math.round(n).toLocaleString("en-US");}
+function allowedSupRoles(p){return p==null?SUP_ROLES.slice():SUP_ROLES.filter(r=>ORDER[r]<=ORDER[p]);}
+function defaultSubRole(p){const po=ORDER[p];const below=SUP_ROLES.filter(r=>ORDER[r]<po);if(below.length){const m=Math.max.apply(null,below.map(r=>ORDER[r]));return below.filter(r=>ORDER[r]===m)[0];}return REP_AT_ORD[po]||"AS";}
 
-/* 允許的下屬主管職級：order 不超過上層 */
-function allowedSupRoles(parentRole){
-  if(parentRole==null) return SUP_ROLES.slice();
-  return SUP_ROLES.filter(r=>ORDER[r]<=ORDER[parentRole]);
-}
-function defaultSubRole(parentRole){
-  const po=ORDER[parentRole];
-  const below=SUP_ROLES.filter(r=>ORDER[r]<po);
-  if(below.length){ const m=Math.max.apply(null,below.map(r=>ORDER[r])); return below.filter(r=>ORDER[r]===m)[0]; }
-  return REP_AT_ORD[po]||"AS";
-}
-
-/* ---------- 狀態 ---------- */
-let unify=false, unifyAmt=20000, idSeq=10, selectedId=1;
-let tree = {id:1,role:"DM",name:"我",fyc:25000,children:[
-  {id:2,role:"AMA",name:"",fyc:20000,children:[
-    {id:3,role:"REP",name:"",fyc:18000,children:[]}
-  ]},
-  {id:4,role:"REP",name:"",fyc:15000,children:[]}
+/* ===== 狀態 ===== */
+let unify=false,unifyAmt=20000,idSeq=10,selectedId=1;
+let tree={id:1,role:"DM",sen:'lt5',orgDev:false,name:"我",fyc:25000,children:[
+  {id:2,role:"AS",sen:'lt5',orgDev:false,name:"",fyc:20000,children:[{id:3,role:"REP",fyc:18000,children:[]}]},
+  {id:4,role:"AMA",sen:'lt5',orgDev:false,name:"",fyc:20000,children:[{id:5,role:"REP",fyc:18000,children:[]}]},
+  {id:6,role:"REP",name:"",fyc:15000,children:[]}
 ]};
+function findNode(id,n){n=n||tree;if(n.id===id)return n;for(const c of n.children){const f=findNode(id,c);if(f)return f;}return null;}
+function findParent(id,n){n=n||tree;for(const c of n.children){if(c.id===id)return n;const f=findParent(id,c);if(f)return f;}return null;}
 
-function findNode(id,n){ n=n||tree; if(n.id===id) return n; for(const c of n.children){ const f=findNode(id,c); if(f) return f; } return null; }
-function findParent(id,n){ n=n||tree; for(const c of n.children){ if(c.id===id) return n; const f=findParent(id,c); if(f) return f; } return null; }
+/* ===== 計算 ===== */
+function own(n){return unify?num(unifyAmt):num(n.fyc);}
+function isRep(n){return n.role==="REP";}
+function isMgr(n){return n.role!=="REP";}
+function directReps(n){let s=0;for(const c of n.children)if(isRep(c))s+=own(c);return s;}
+function directUnit(n){return own(n)+directReps(n);}
+function subtree(n){let s=own(n);for(const c of n.children)s+=subtree(c);return s;}
+function mgrCh(n){return n.children.filter(isMgr);}
 
-/* ---------- 計算 ---------- */
-function fycVal(node){ return unify? num(unifyAmt) : num(node.fyc); }
-function subtreeFyc(node){ let s=fycVal(node); for(const c of node.children) s+=subtreeFyc(c); return s; }
-function calcNode(node){
-  const own=fycVal(node), unitFyc=subtreeFyc(node);
-  const unitBonus=lookup(unitFyc,UNIT[node.role]);
-  const perfPct=lookup(unitFyc,PERF[node.role]);
-  const perfBonus=Math.round(unitFyc*perfPct);
-  const extraUnit=(node.role==="DM"&&unitFyc>=12000)?2000:0;
-  const base=own+unitBonus+perfBonus+extraUnit;
-  const bao1=HAS_BAO[node.role]?Math.min(Math.round(base*0.06),3000):0;
-  const bao2v=HAS_BAO[node.role]?bao2(base):0;
-  return {own,unitFyc,unitBonus,perfPct,perfBonus,extraUnit,bao1,bao2v,total:base+bao1+bao2v};
+function special(n){let s=0;const R=n.role;
+  if(R==="DM"){for(const c of mgrCh(n)){
+    if(c.role==="AS")s+=0.07875*directUnit(c);
+    else if(c.role==="AMA"||c.role==="AMB"){s+=0.063*directUnit(c);for(const g of mgrCh(c))if(g.role==="AS")s+=0.0315*directUnit(g);}
+  }}
+  else if(R==="AMA"||R==="AMB"){for(const c of mgrCh(n)){
+    if(c.role==="AS")s+=0.063*directUnit(c);
+    else if(c.role==="AMA"||c.role==="AMB"){for(const g of mgrCh(c))if(isSup(g.role))s+=0.021*directUnit(g);}
+  }}
+  else if(R==="AS"){for(const c of mgrCh(n))if(c.role==="AS"){for(const g of mgrCh(c))if(g.role==="AS")s+=0.0315*subtree(g);}}
+  return s;}
+function upgrade(n){let s=0;const R=n.role;for(const c of mgrCh(n)){
+  if(R==="AS"&&c.role==="AS")s+=0.0525*subtree(c);
+  else if((R==="AMA"||R==="AMB")&&(c.role==="AMA"||c.role==="AMB"))s+=0.0525*subtree(c);
+  else if(R==="DM"&&c.role==="DM")s+=0.063*subtree(c);}
+  return s;}
+function mentor(n){if(n.role!=="DM")return 0;let s=0;for(const c of mgrCh(n))if(c.role==="DM"){
+  for(const u of mgrCh(c)){if(u.role==="AS"||u.role==="AMA"||u.role==="AMB")s+=0.01575*subtree(u);else if(u.role==="DM")s+=0.0105*subtree(u);}}
+  return s;}
+function orgDevB(n){let s=0;for(const c of n.children)if(isMgr(c)&&c.orgDev){
+  if((c.role==="AMA"||c.role==="AMB")&&directUnit(c)>=22000)s+=0.10*directUnit(c);
+  else if(c.role==="DM"&&directUnit(c)>=28000)s+=0.10*directUnit(c);}
+  return Math.round(s);}
+
+function calcNode(n){const R=n.role,du=directUnit(n);
+  const ub=lookup(du,UNIT[R]),pct=lookup(du,PERF[R]),perf=Math.round(du*pct);
+  const extra=(R==="DM"&&du>=12000)?2000:0;
+  let sp=special(n),up=upgrade(n),me=mentor(n);
+  if(R==="DM"){const r=Math.min(du/40000,1);sp*=r;up*=r;me*=r;}
+  sp=Math.round(sp);up=Math.round(up);me=Math.round(me);
+  const od=orgDevB(n);
+  const p1=SEN[n.sen||'lt5'];
+  const b2=Math.min(Math.round((ub+perf)*p1+(up+sp+me)*0.06),CAP2[R]);
+  const base=own(n)+ub+perf+extra+sp+up+me+od+b2;
+  const bao1=Math.min(Math.round(base*0.06),3000),bao2v=bao2(base);
+  return {du,ub,perf,pct,extra,sp,up,me,od,b2,bao1,bao2v,total:base+bao1+bao2v,own:own(n)};
+}
+function halfYear(n){const R=n.role,du=directUnit(n),HY=du*6;
+  const excess=HY>=EX_TH[R]?Math.round(EX_PCT[R]*HY):0;
+  let hySp=0,hyUp=0;
+  if(R==="DM"){for(const c of mgrCh(n)){const cHY=directUnit(c)*6;
+    if(c.role==="AS"&&cHY>=180000)hySp+=0.0525*cHY;
+    if((c.role==="AMA"||c.role==="AMB")&&cHY>=180000)hySp+=0.02625*cHY;}}
+  else if(R==="AMA"||R==="AMB"){for(const c of mgrCh(n)){const cHY=directUnit(c)*6;
+    if(c.role==="AS"&&cHY>=180000)hySp+=0.02625*cHY;
+    if((c.role==="AMA"||c.role==="AMB")){const sHY=subtree(c)*6;if(sHY>=180000)hyUp+=0.02625*sHY;}}}
+  else if(R==="AS"){for(const c of mgrCh(n))if(c.role==="AS"){const sHY=subtree(c)*6;if(sHY>=180000)hyUp+=0.02625*sHY;}}
+  hySp=Math.round(hySp);hyUp=Math.round(hyUp);
+  return {excess,hySp,hyUp,sum:excess+hySp+hyUp};
 }
 
-/* ---------- 樹的維護 ---------- */
-function clampTree(n){ n=n||tree; for(const c of n.children){ if(isSup(c.role)&&ORDER[c.role]>ORDER[n.role]) c.role=REP_AT_ORD[ORDER[n.role]]; clampTree(c); } }
+/* ===== 樹維護 ===== */
+function clampTree(n){n=n||tree;for(const c of n.children){if(isSup(c.role)&&ORDER[c.role]>ORDER[n.role])c.role=REP_AT_ORD[ORDER[n.role]];clampTree(c);}}
 function addChild(parent,kind){
-  const role = kind==="REP" ? "REP" : defaultSubRole(parent.role);
-  parent.children.push({id:idSeq++,role:role,name:"",fyc:kind==="REP"?15000:20000,children:[]});
+  if(kind==="REP")parent.children.push({id:idSeq++,role:"REP",name:"",fyc:15000,children:[]});
+  else parent.children.push({id:idSeq++,role:defaultSubRole(parent.role),sen:'lt5',orgDev:false,name:"",fyc:20000,children:[]});
   renderTree();
 }
-function removeNode(id){
-  const p=findParent(id); if(!p) return;
-  p.children=p.children.filter(c=>c.id!==id);
-  if(!findNode(selectedId)) selectedId=tree.id;
-  renderTree();
-}
+function removeNode(id){const p=findParent(id);if(!p)return;p.children=p.children.filter(c=>c.id!==id);if(!findNode(selectedId))selectedId=tree.id;renderTree();}
 
-/* ---------- 畫面 ---------- */
-function nodeCard(node,parentRole){
+/* ===== 畫面 ===== */
+function nodeCard(node,parentRole,mgen){
   const sup=isSup(node.role);
   const card=document.createElement("div");
   card.className="node role-"+node.role+(node.id===selectedId?" selected":"");
   card.dataset.id=node.id;
+  const stripe=document.createElement("div");stripe.className="stripe";card.appendChild(stripe);
+  const pad=document.createElement("div");pad.className="pad";card.appendChild(pad);
 
-  const stripe=document.createElement("div"); stripe.className="stripe"; card.appendChild(stripe);
-  const pad=document.createElement("div"); pad.className="pad"; card.appendChild(pad);
-
-  const head=document.createElement("div"); head.className="nhead";
-  const tag=document.createElement("span"); tag.className="tag"; tag.textContent=sup?RANK_LABEL[node.role]:"業務員"; head.appendChild(tag);
-  if(node.id!==tree.id){
-    const rm=document.createElement("button"); rm.className="rm"; rm.textContent="×";
-    rm.onclick=function(e){ e.stopPropagation(); removeNode(node.id); };
-    head.appendChild(rm);
-  }
-  pad.appendChild(head);
+  const head=document.createElement("div");head.className="nhead";
+  const tag=document.createElement("span");tag.className="tag";tag.textContent=sup?RANK_LABEL[node.role]:"業務員";head.appendChild(tag);
+  const right=document.createElement("div");right.style.display="flex";right.style.alignItems="center";right.style.gap="6px";
+  if(sup){const gen=document.createElement("span");gen.className="gen";gen.textContent="第"+mgen+"代";right.appendChild(gen);}
+  if(node.id!==tree.id){const rm=document.createElement("button");rm.className="rm";rm.textContent="×";rm.onclick=function(e){e.stopPropagation();removeNode(node.id);};right.appendChild(rm);}
+  head.appendChild(right);pad.appendChild(head);
 
   if(sup){
-    const sel=document.createElement("select"); sel.className="role";
-    allowedSupRoles(parentRole).forEach(function(r){ const o=document.createElement("option"); o.value=r; o.textContent=RANK_LABEL[r]; sel.appendChild(o); });
-    sel.value=node.role;
-    sel.onclick=function(e){ e.stopPropagation(); };
-    sel.onchange=function(e){ e.stopPropagation(); node.role=sel.value; clampTree(); renderTree(); };
+    const sel=document.createElement("select");sel.className="role";
+    allowedSupRoles(parentRole).forEach(function(r){const o=document.createElement("option");o.value=r;o.textContent=RANK_LABEL[r];sel.appendChild(o);});
+    sel.value=node.role;sel.onclick=function(e){e.stopPropagation();};
+    sel.onchange=function(e){e.stopPropagation();node.role=sel.value;clampTree();renderTree();};
     pad.appendChild(sel);
   }
+  const name=document.createElement("input");name.className="name";name.type="text";name.placeholder="姓名";name.value=node.name||"";
+  name.onclick=function(e){e.stopPropagation();};name.oninput=function(){node.name=name.value;};pad.appendChild(name);
 
-  const name=document.createElement("input"); name.className="name"; name.type="text"; name.placeholder="姓名"; name.value=node.name;
-  name.onclick=function(e){ e.stopPropagation(); };
-  name.oninput=function(){ node.name=name.value; };
-  pad.appendChild(name);
-
-  const fld=document.createElement("div"); fld.className="fld";
-  const fl=document.createElement("span"); fl.textContent="月FYC"; fld.appendChild(fl);
-  const fyc=document.createElement("input"); fyc.className="fyc"; fyc.type="number"; fyc.inputMode="numeric"; fyc.min="0"; fyc.step="100";
-  fyc.value=unify?num(unifyAmt):node.fyc; fyc.disabled=unify;
-  fyc.onclick=function(e){ e.stopPropagation(); };
-  fyc.oninput=function(){ node.fyc=fyc.value; recompute(); };
-  fld.appendChild(fyc); pad.appendChild(fld);
+  const fld=document.createElement("div");fld.className="fld";
+  const fl=document.createElement("span");fl.textContent="月FYC";fld.appendChild(fl);
+  const fyc=document.createElement("input");fyc.className="fyc";fyc.type="number";fyc.inputMode="numeric";fyc.min="0";fyc.step="100";
+  fyc.value=unify?num(unifyAmt):node.fyc;fyc.disabled=unify;
+  fyc.onclick=function(e){e.stopPropagation();};fyc.oninput=function(){node.fyc=fyc.value;recompute();};
+  fld.appendChild(fyc);pad.appendChild(fld);
 
   if(sup){
-    const inc=document.createElement("div"); inc.className="inc"; inc.innerHTML="月收入 <b>NT$ 0</b>"; pad.appendChild(inc);
-    const ab=document.createElement("div"); ab.className="addbtns";
-    const br=document.createElement("button"); br.className="addRep"; br.textContent="＋業務員";
-    br.onclick=function(e){ e.stopPropagation(); addChild(node,"REP"); };
-    const bm=document.createElement("button"); bm.className="addMgr"; bm.textContent="＋主管";
-    bm.onclick=function(e){ e.stopPropagation(); addChild(node,"MGR"); };
-    ab.appendChild(br); ab.appendChild(bm); pad.appendChild(ab);
-  }
+    const senSel=document.createElement("select");senSel.className="sen";
+    [["lt5","年資未滿5年"],["5to10","年資5~10年"],["gte10","年資滿10年"]].forEach(function(p){const o=document.createElement("option");o.value=p[0];o.textContent=p[1];senSel.appendChild(o);});
+    senSel.value=node.sen||'lt5';senSel.onclick=function(e){e.stopPropagation();};
+    senSel.onchange=function(e){e.stopPropagation();node.sen=senSel.value;recompute();};
+    pad.appendChild(senSel);
 
-  card.onclick=function(){ if(sup) selectNode(node.id); };
+    if(node.role==="AMA"||node.role==="AMB"||node.role==="DM"){
+      const odl=document.createElement("label");odl.className="od";
+      const odc=document.createElement("input");odc.type="checkbox";odc.checked=!!node.orgDev;
+      odc.onclick=function(e){e.stopPropagation();};odc.onchange=function(e){e.stopPropagation();node.orgDev=odc.checked;recompute();};
+      const ods=document.createElement("span");ods.textContent="12個月內新晉升";
+      odl.appendChild(odc);odl.appendChild(ods);odl.onclick=function(e){e.stopPropagation();};pad.appendChild(odl);
+    }
+
+    const inc=document.createElement("div");inc.className="inc";inc.innerHTML="月收入 <b>NT$ 0</b>";pad.appendChild(inc);
+    const ab=document.createElement("div");ab.className="addbtns";
+    const br=document.createElement("button");br.className="addRep";br.textContent="＋業務員";br.onclick=function(e){e.stopPropagation();addChild(node,"REP");};
+    const bm=document.createElement("button");bm.className="addMgr";bm.textContent="＋主管";
+    if(mgen>=MAX_GEN){bm.disabled=true;bm.title="已達第三代上限";}
+    bm.onclick=function(e){e.stopPropagation();if(mgen<MAX_GEN)addChild(node,"MGR");};
+    ab.appendChild(br);ab.appendChild(bm);pad.appendChild(ab);
+  }
+  card.onclick=function(){if(sup)selectNode(node.id);};
   return card;
 }
-
-function buildLi(node,parentRole){
+function buildLi(node,parentRole,mgen){
   const li=document.createElement("li");
-  li.appendChild(nodeCard(node,parentRole));
+  li.appendChild(nodeCard(node,parentRole,mgen));
   if(node.children.length){
     const ul=document.createElement("ul");
-    node.children.forEach(function(c){ ul.appendChild(buildLi(c,node.role)); });
+    node.children.forEach(function(c){ul.appendChild(buildLi(c,node.role,isSup(c.role)?mgen+1:mgen));});
     li.appendChild(ul);
   }
   return li;
 }
 function renderTree(){
-  const root=document.getElementById("treeRoot");
-  root.innerHTML="";
-  const ul=document.createElement("ul");
-  ul.appendChild(buildLi(tree,null));
-  root.appendChild(ul);
+  const root=document.getElementById("treeRoot");root.innerHTML="";
+  const ul=document.createElement("ul");ul.appendChild(buildLi(tree,null,1));root.appendChild(ul);
   recompute();
 }
-
-function selectNode(id){
-  selectedId=id;
-  const nodes=document.querySelectorAll(".node");
-  for(let i=0;i<nodes.length;i++) nodes[i].classList.toggle("selected", parseInt(nodes[i].dataset.id,10)===id);
-  renderBreakdown();
-}
-
+function selectNode(id){selectedId=id;const ns=document.querySelectorAll(".node");for(let i=0;i<ns.length;i++)ns[i].classList.toggle("selected",parseInt(ns[i].dataset.id,10)===id);renderBreakdown();}
 function recompute(){
-  const nodes=document.querySelectorAll(".node");
-  for(let i=0;i<nodes.length;i++){
-    const node=findNode(parseInt(nodes[i].dataset.id,10));
-    if(node&&isSup(node.role)){
-      const r=calcNode(node);
-      const b=nodes[i].querySelector(".inc b"); if(b) b.textContent="NT$ "+nf(r.total);
-      nodes[i].classList.toggle("below", subtreeFyc(node)<UNIT_MIN[node.role]);
-    }
-  }
+  const ns=document.querySelectorAll(".node");
+  for(let i=0;i<ns.length;i++){const node=findNode(parseInt(ns[i].dataset.id,10));
+    if(node&&isMgr(node)){const r=calcNode(node);const b=ns[i].querySelector(".inc b");if(b)b.textContent="NT$ "+nf(r.total);ns[i].classList.toggle("below",directUnit(node)<UNIT_MIN[node.role]);}}
   renderBreakdown();
 }
-
-function itemRow(name,sub,val,zero){
-  return '<li class="'+(zero?"zero":"")+'"><span class="nm">'+name+'<small>'+sub+'</small></span><span class="val">NT$ '+nf(val)+'</span></li>';
-}
+function row(name,sub,val,zero,cls){return '<li class="'+(cls||"")+(zero?" zero":"")+'"><span class="nm">'+name+(sub?'<small>'+sub+'</small>':'')+'</span><span class="val">NT$ '+nf(val)+'</span></li>';}
+function secRow(t){return '<li class="sec"><span class="nm">'+t+'</span><span class="val"></span></li>';}
 function renderBreakdown(){
-  let node=findNode(selectedId);
-  if(!node||!isSup(node.role)){ node=tree; selectedId=tree.id; }
-  const r=calcNode(node);
-  document.getElementById("bkTitle").textContent=(node.name?node.name+"・":"")+RANK_LABEL[node.role];
+  let node=findNode(selectedId);if(!node||!isMgr(node)){node=tree;selectedId=tree.id;}
+  const r=calcNode(node),hy=halfYear(node),R=node.role;
+  document.getElementById("bkTitle").textContent=(node.name?node.name+"・":"")+RANK_LABEL[R];
   document.getElementById("bkTotal").textContent=nf(r.total);
-  document.getElementById("bkUnit").textContent="NT$ "+nf(r.unitFyc);
+  document.getElementById("bkUnit").textContent="NT$ "+nf(r.du);
   const w=document.getElementById("bkWarn");
-  if(r.unitFyc<UNIT_MIN[node.role]){ w.style.display="block"; w.textContent="單位總 FYC 未達 "+nf(UNIT_MIN[node.role])+" 元門檻，尚無單位獎金 / 業績獎金。"; }
-  else w.style.display="none";
-  const rows=[];
-  rows.push(itemRow("本人 FYC 收入","個人承保佣金",r.own,false));
-  rows.push(itemRow("單位獎金","依單位總 FYC 級距",r.unitBonus,r.unitBonus===0));
-  rows.push(itemRow("每月業績獎金","單位總 FYC × "+Math.round(r.perfPct*100)+"%",r.perfBonus,r.perfBonus===0));
-  if(node.role==="DM") rows.push(itemRow("每月額外單位獎金","FYC ≥ 12,000 給 2,000",r.extraUnit,r.extraUnit===0));
-  if(HAS_BAO[node.role]){
-    rows.push(itemRow("每月業務報酬一","各項獎金收入 × 6%（上限 3,000）",r.bao1,r.bao1===0));
-    rows.push(itemRow("每月業務報酬二","累進級距（上限 10,300）",r.bao2v,r.bao2v===0));
-  }
-  rows.push('<li class="total"><span class="nm">主管每月總收入</span><span class="val">NT$ '+nf(r.total)+'</span></li>');
-  document.getElementById("bkItems").innerHTML=rows.join("");
+  if(r.du<UNIT_MIN[R]){w.style.display="block";w.textContent="直轄單位 FYC 未達 "+nf(UNIT_MIN[R])+" 門檻，尚無單位獎金 / 業績獎金。";}else w.style.display="none";
+
+  const L=[];
+  L.push(row("本人 FYC 收入","個人承保佣金",r.own,false));
+  L.push(row("單位獎金","直轄單位 FYC 級距",r.ub,r.ub===0));
+  L.push(row("每月業績獎金","直轄單位 × "+Math.round(r.pct*100)+"%",r.perf,r.perf===0));
+  L.push(row("每月特別獎金","下屬主管單位分層比例",r.sp,r.sp===0));
+  L.push(row("升級獎金","下屬同階主管全組比例",r.up,r.up===0));
+  if(R==="DM")L.push(row("輔導獎金","第二/三代區之單位比例",r.me,r.me===0));
+  if(R==="AMA"||R==="AMB"||R==="DM")L.push(row("組織發展獎金","新晉升襄/區 ×10%",r.od,r.od===0));
+  if(R==="DM")L.push(row("每月額外單位獎金","FYC ≥ 12,000 給 2,000",r.extra,r.extra===0));
+  L.push(row("業務主管每月獎金(二)",SEN_LABEL[node.sen||'lt5']+"・上限"+nf(CAP2[R]),r.b2,r.b2===0));
+  L.push(row("每月業務報酬一","各項獎金 × 6%（上限3,000）",r.bao1,r.bao1===0));
+  L.push(row("每月業務報酬二","累進（上限10,300）",r.bao2v,r.bao2v===0));
+  L.push(row("每月總收入","",r.total,false,"total"));
+
+  L.push(secRow("半年加給（以月×6估算）"));
+  L.push(row("超額業績獎金","半年直轄單位 ≥ "+nf(EX_TH[R])+"・"+(EX_PCT[R]*100)+"%",hy.excess,hy.excess===0));
+  if(R==="DM"||R==="AMA"||R==="AMB")L.push(row("半年特別獎金","下屬主任/襄理單位 ≥ 180,000",hy.hySp,hy.hySp===0));
+  if(R==="AS"||R==="AMA"||R==="AMB")L.push(row("半年升級獎金","下屬同階全組 ≥ 180,000",hy.hyUp,hy.hyUp===0));
+  L.push(row("半年加給小計","",hy.sum,hy.sum===0,"subtotal"));
+
+  document.getElementById("bkItems").innerHTML=L.join("");
 }
 
-/* ---------- 事件 ---------- */
-const unifyCb=document.getElementById("unify"), unifyAmtI=document.getElementById("unifyAmt");
-unifyCb.onchange=function(e){ unify=e.target.checked; unifyAmtI.style.display=unify?"inline-block":"none"; renderTree(); };
-unifyAmtI.oninput=function(){ unifyAmt=unifyAmtI.value; renderTree(); };
-
+/* ===== 事件 ===== */
+const unifyCb=document.getElementById("unify"),unifyAmtI=document.getElementById("unifyAmt");
+unifyCb.onchange=function(e){unify=e.target.checked;unifyAmtI.style.display=unify?"inline-block":"none";renderTree();};
+unifyAmtI.oninput=function(){unifyAmt=unifyAmtI.value;renderTree();};
 renderTree();
 </script>
 </body>
