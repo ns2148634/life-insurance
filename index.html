@@ -7,32 +7,33 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="守護計畫">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0c1520">
+<meta name="theme-color" content="#0d1a26">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>經濟支柱守護計畫｜宸功保險</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0c1520;--ink-mid:#152236;--ink-card:#1a2d45;
-  --gold:#c8a84b;--gold-lt:#e2c97e;
-  --gold-dim:rgba(200,168,75,0.13);--gold-line:rgba(200,168,75,0.32);
-  --text:rgba(255,255,255,0.92);--muted:rgba(255,255,255,0.52);
-  --hint:rgba(255,255,255,0.28);--border:rgba(255,255,255,0.09);
-  --danger:#e05a4e;--r:14px;--rl:22px;
+  --ink:#0d1a26;--ink-mid:#142331;--ink-card:#1a2c3d;
+  --gold:#c2974f;--gold-lt:#dcb877;--gold-deep:#8a6a30;
+  --gold-dim:rgba(194,151,79,0.12);--gold-line:rgba(194,151,79,0.34);
+  --text:rgba(255,255,255,0.93);--muted:rgba(255,255,255,0.54);
+  --hint:rgba(255,255,255,0.3);--border:rgba(255,255,255,0.1);
+  --danger:#d6645a;--blue:#5b9bd1;--r:14px;--rl:22px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);font-size:17px;}
-#shell{width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+#shell{width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  background:radial-gradient(ellipse at top right,rgba(194,151,79,0.06),transparent 55%),var(--ink);}
 #pbar{height:4px;flex-shrink:0;background:rgba(255,255,255,0.06);}
-#pfill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));transition:width .5s ease;}
+#pfill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-lt));transition:width .5s ease;}
 #topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px 16px;flex-shrink:0;}
 .logo{font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;}
-.page-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;}
+.page-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600;color:#fff;letter-spacing:1px;}
 .slbl{font-size:13px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
 #canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 32px 32px;scroll-behavior:smooth;}
 #botnav{padding:16px 32px calc(20px + env(safe-area-inset-bottom));flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid var(--border);background:var(--ink);}
-.btn-next{flex:1;background:var(--gold);color:var(--ink);font-weight:700;font-family:'Noto Serif TC',serif;font-size:18px;letter-spacing:1px;padding:18px 32px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(200,168,75,0.3);transition:all .2s;}
+.btn-next{flex:1;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#1a1208;font-weight:700;font-family:'Noto Serif TC',serif;font-size:18px;letter-spacing:1px;padding:18px 32px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(194,151,79,0.28);transition:all .2s;}
 .btn-next:active{transform:scale(.97);box-shadow:none;}
 .btn-back{flex:0 0 auto;color:var(--gold);background:transparent;border:1.5px solid var(--gold-line);border-radius:50px;font-size:16px;padding:17px 28px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;display:none;transition:all .2s;white-space:nowrap;}
 .btn-back.show{display:block;}
@@ -40,124 +41,115 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 .screen{display:none;}
 .screen.on{display:block;animation:fup .35s ease both;}
 @keyframes fup{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
-.stitle{font-family:'Noto Serif TC',serif;font-size:30px;font-weight:700;line-height:1.2;margin-bottom:12px;}
-.ssub{font-size:17px;color:var(--muted);line-height:1.75;margin-bottom:28px;font-weight:300;}
-.gdeco{width:48px;height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:24px;}
+.stitle{font-family:'Noto Serif TC',serif;font-size:29px;font-weight:600;line-height:1.25;margin-bottom:10px;}
+.ssub{font-size:16px;color:var(--muted);line-height:1.75;margin-bottom:26px;font-weight:300;}
+.gdeco{width:44px;height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:22px;}
 
-/* S0 */
-#s0{height:calc(100dvh - 4px - 58px - 80px);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 40px;}
-#s0.on{display:flex;}
-.hero-ico{width:100px;height:100px;margin:0 auto 32px;border:1.5px solid var(--gold-line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;background:radial-gradient(circle at center,rgba(200,168,75,0.18) 0%,transparent 70%);}
-.hero-brand{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;}
-.hero-title{font-family:'Noto Serif TC',serif;font-size:clamp(36px,6vw,56px);font-weight:700;line-height:1.15;margin-bottom:20px;background:linear-gradient(150deg,#fff 20%,var(--gold-lt) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-sub{font-size:18px;color:var(--muted);line-height:1.8;margin-bottom:0;font-weight:300;max-width:480px;}
-
-/* S1 curve */
-.curve-wrap{background:var(--ink-mid);border:1px solid var(--border);border-radius:var(--rl);padding:24px 20px;margin-bottom:24px;}
-.risk-chips{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.rchip{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
-.rctag{font-size:12px;letter-spacing:1px;font-weight:600;padding:4px 10px;border-radius:12px;display:inline-block;margin-bottom:8px;text-transform:uppercase;}
-.rctag.d{background:rgba(224,90,78,.2);color:#e05a4e;}
-.rctag.w{background:rgba(200,140,0,.2);color:#d4a020;}
-.rctag.i{background:rgba(74,159,212,.2);color:#4a9fd4;}
-.rctag.n{background:rgba(255,255,255,.07);color:var(--muted);}
-.rctext{font-size:15px;line-height:1.6;}
-
-/* S2 input */
-.ilist{display:flex;flex-direction:column;gap:14px;margin-bottom:16px;}
-.iblk{background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--r);padding:20px 24px;transition:border-color .2s;}
-.iblk:focus-within{border-color:var(--gold-line);}
-.ilbl{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:block;font-weight:500;}
-.irow{display:flex;align-items:center;gap:8px;}
-.irow input{flex:1;background:transparent;border:none;outline:none;font-size:26px;font-weight:500;color:#fff;font-family:'Noto Sans TC',sans-serif;min-width:0;}
-.irow input::placeholder{color:rgba(255,255,255,.18);font-size:22px;}
-.iunit{font-size:16px;color:var(--muted);white-space:nowrap;}
-.ihint{font-size:13px;color:var(--hint);margin-top:6px;}
-.irow-date{display:flex;align-items:center;gap:8px;}
-.irow-date input{background:transparent;border:none;outline:none;font-size:26px;font-weight:500;color:#fff;font-family:'Noto Sans TC',sans-serif;}
-.irow-date .yw{flex:2.5;}.irow-date .mw{flex:1.5;}.irow-date .dw{flex:1.5;}
-.radrow{display:flex;gap:24px;margin-top:8px;}
-.radrow label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:20px;color:var(--text);padding:8px 0;}
-.radrow input[type="radio"]{width:22px;height:22px;accent-color:var(--gold);}
-.iresult{font-size:28px;font-weight:600;color:var(--gold-lt);}
-.isb{background:linear-gradient(135deg,var(--ink-mid),rgba(200,168,75,.06));border:1.5px solid var(--gold-line);border-radius:var(--rl);padding:20px 24px;}
-.isb-t{font-size:16px;line-height:1.85;}
+/* ── S0 基本資料（問句式） ── */
+.intro-mark{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
+.qlist{display:flex;flex-direction:column;gap:16px;margin-bottom:18px;}
+.qcard{background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--rl);padding:22px 24px;transition:border-color .2s;}
+.qcard:focus-within{border-color:var(--gold-line);}
+.qtext{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:500;color:var(--text);margin-bottom:12px;}
+.qtext .req{color:var(--gold);}
+.qrow{display:flex;align-items:center;gap:8px;}
+.qrow input[type="text"],.qrow input[type="number"]{flex:1;background:transparent;border:none;outline:none;font-size:25px;font-weight:500;color:#fff;font-family:'Noto Sans TC',sans-serif;min-width:0;border-bottom:1.5px solid var(--border);padding-bottom:8px;transition:border-color .2s;}
+.qrow input:focus{border-color:var(--gold);}
+.qrow input::placeholder{color:rgba(255,255,255,.16);font-size:20px;}
+.qunit{font-size:15px;color:var(--muted);white-space:nowrap;}
+.qhint{font-size:13px;color:var(--hint);margin-top:8px;}
+.qdate{display:flex;align-items:center;gap:8px;}
+.qdate input{background:transparent;border:none;outline:none;font-size:25px;font-weight:500;color:#fff;font-family:'Noto Sans TC',sans-serif;border-bottom:1.5px solid var(--border);padding-bottom:8px;text-align:center;}
+.qdate input:focus{border-color:var(--gold);}
+.qdate .yw{flex:2.2;}.qdate .mw{flex:1.3;}.qdate .dw{flex:1.3;}
+.qchoice{display:flex;gap:12px;margin-top:4px;}
+.qchoice label{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:18px;color:var(--text);padding:14px;border:1.5px solid var(--border);border-radius:14px;transition:all .2s;}
+.qchoice input{display:none;}
+.qchoice input:checked + span{color:var(--gold-lt);}
+.qchoice label:has(input:checked){border-color:var(--gold-line);background:var(--gold-dim);}
+.qresult-row{display:flex;justify-content:space-between;align-items:baseline;}
+.qresult{font-size:28px;font-weight:600;color:var(--gold-lt);font-family:'Cormorant Garamond',serif;}
+.isb{background:linear-gradient(135deg,var(--ink-mid),rgba(194,151,79,.06));border:1.5px solid var(--gold-line);border-radius:var(--rl);padding:20px 24px;}
+.isb-t{font-size:15px;line-height:1.85;}
 .hl{color:var(--gold-lt);font-weight:600;}
 
-/* S3 rank */
+/* ── S1 風險確認（互動圖） ── */
+.diagram-shell{background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--rl);padding:18px 14px 8px;margin-bottom:18px;cursor:pointer;position:relative;transition:border-color .2s;}
+.diagram-shell:active{border-color:var(--gold-line);}
+.diagram-shell svg text{font-family:'Noto Sans TC',sans-serif;}
+.tap-hint{position:absolute;bottom:10px;right:16px;font-size:12px;color:var(--hint);display:flex;align-items:center;gap:6px;}
+.tap-hint .pulse{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+.stage-dots{display:flex;gap:6px;justify-content:center;margin-bottom:16px;}
+.sdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.14);transition:all .3s;}
+.sdot.done{background:var(--gold);}
+.sdot.cur{background:var(--gold-lt);transform:scale(1.4);}
+.caption-box{background:linear-gradient(135deg,var(--ink-mid),rgba(194,151,79,.05));border:1.5px solid var(--gold-line);border-radius:var(--rl);padding:20px 24px;min-height:64px;display:flex;align-items:center;}
+.caption-text{font-size:16px;line-height:1.8;color:var(--text);}
+.caption-text strong{color:var(--gold-lt);}
+.rstage{opacity:0;transition:opacity .5s ease;}
+.rstage.show{opacity:1;}
+
+/* ── S2 風險衡量 ── */
 .rlist{display:flex;flex-direction:column;gap:14px;margin-bottom:18px;}
 .rcard{display:flex;align-items:center;gap:18px;background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--rl);padding:22px 24px;cursor:grab;user-select:none;-webkit-user-select:none;transition:all .2s;}
 .rcard.dragging{opacity:.3;}
-.rcard.dover{border-color:var(--gold);background:rgba(200,168,75,.1);transform:scale(1.015);}
-.rnum{width:44px;height:44px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.06);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--muted);transition:all .3s;}
-.rcard.ranked .rnum{background:var(--gold);color:var(--ink);font-weight:700;border-color:var(--gold);}
-.rico{font-size:28px;flex-shrink:0;}
+.rcard.dover{border-color:var(--gold);background:rgba(194,151,79,.1);transform:scale(1.015);}
+.rnum{width:42px;height:42px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.06);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--muted);transition:all .3s;}
+.rcard.ranked .rnum{background:var(--gold);color:#1a1208;font-weight:700;border-color:var(--gold);}
+.rico{font-size:27px;flex-shrink:0;}
 .rbody{flex:1;min-width:0;}
-.rname{font-size:20px;font-weight:600;margin-bottom:4px;font-family:'Noto Serif TC',serif;}
-.rdesc{font-size:15px;color:var(--muted);line-height:1.5;}
-.dh{color:var(--hint);font-size:22px;flex-shrink:0;letter-spacing:-2px;}
-.rprev{background:var(--gold-dim);border:1.5px solid var(--gold-line);border-radius:var(--r);padding:16px 20px;font-size:16px;color:var(--gold-lt);line-height:1.7;}
+.rname{font-size:19px;font-weight:600;margin-bottom:4px;font-family:'Noto Serif TC',serif;}
+.rdesc{font-size:14px;color:var(--muted);line-height:1.5;}
+.dh{color:var(--hint);font-size:21px;flex-shrink:0;letter-spacing:-2px;}
+.rprev{background:var(--gold-dim);border:1.5px solid var(--gold-line);border-radius:var(--r);padding:16px 20px;font-size:15px;color:var(--gold-lt);line-height:1.7;}
 
-/* S4 plan */
-.nsec{margin-bottom:28px;}
-.nshd{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+/* ── S3 方法與選擇 ── */
+.nsec{margin-bottom:26px;}
+.nshd{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:13px;border-bottom:1px solid var(--border);}
 .nsbadge{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1.5px solid var(--gold-line);color:var(--gold);font-weight:600;white-space:nowrap;}
-.nsico{font-size:24px;}
-.nstit{font-size:22px;font-weight:700;font-family:'Noto Serif TC',serif;}
-.scard{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;}
-.scn{font-size:18px;font-weight:600;margin-bottom:6px;font-family:'Noto Serif TC',serif;}
-.scw{font-size:15px;color:var(--muted);line-height:1.7;}
-.scamt{text-align:right;flex-shrink:0;min-width:130px;}
-.scval-input{
-  font-size:26px;font-weight:600;
-  font-family:'Cormorant Garamond',serif;
-  color:var(--gold-lt);
-  background:rgba(200,168,75,0.1);
-  border:1.5px solid var(--gold-line);
-  border-radius:10px;
-  padding:8px 12px;
-  text-align:right;
-  width:130px;
-  outline:none;
-  transition:all .2s;
-  -webkit-appearance:none;
-  display:block;
-}
-.scval-input:focus{background:rgba(200,168,75,0.18);border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,168,75,0.15);}
+.nsico{font-size:23px;}
+.nstit{font-size:21px;font-weight:600;font-family:'Noto Serif TC',serif;}
+.scard{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--r);padding:19px 21px;margin-bottom:11px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;}
+.scn{font-size:17px;font-weight:600;margin-bottom:5px;font-family:'Noto Serif TC',serif;}
+.scw{font-size:14px;color:var(--muted);line-height:1.65;}
+.scamt{text-align:right;flex-shrink:0;min-width:128px;}
+.scval-input{font-size:25px;font-weight:600;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);background:rgba(194,151,79,0.1);border:1.5px solid var(--gold-line);border-radius:10px;padding:8px 12px;text-align:right;width:128px;outline:none;transition:all .2s;-webkit-appearance:none;display:block;}
+.scval-input:focus{background:rgba(194,151,79,0.18);border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,151,79,0.15);}
 .scunit{font-size:13px;color:var(--muted);margin-top:5px;text-align:right;}
-.edit-hint{display:none;align-items:center;gap:10px;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:15px;color:var(--gold-lt);}
+.edit-hint{display:none;align-items:center;gap:10px;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:14px;color:var(--gold-lt);}
 
-/* S5 summary */
-.sintro{background:linear-gradient(135deg,var(--ink-mid),rgba(200,168,75,.06));border:1.5px solid var(--gold-line);border-radius:var(--rl);padding:22px 26px;margin-bottom:20px;font-size:17px;line-height:1.85;}
-.ntbl{width:100%;border-collapse:collapse;margin-bottom:22px;font-size:15px;}
-.ntbl th{background:rgba(200,168,75,.15);color:var(--gold-lt);font-weight:600;padding:13px 14px;text-align:left;font-size:13px;letter-spacing:1px;}
-.ntbl td{padding:13px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+/* ── S4 總表與保費 ── */
+.sintro{background:linear-gradient(135deg,var(--ink-mid),rgba(194,151,79,.06));border:1.5px solid var(--gold-line);border-radius:var(--rl);padding:21px 25px;margin-bottom:18px;font-size:16px;line-height:1.85;}
+.ntbl{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:14px;}
+.ntbl th{background:rgba(194,151,79,.15);color:var(--gold-lt);font-weight:600;padding:12px 13px;text-align:left;font-size:12px;letter-spacing:1px;}
+.ntbl td{padding:12px 13px;border-bottom:1px solid var(--border);vertical-align:middle;}
 .ntbl tr:last-child td{border-bottom:none;}
-.pri{font-size:12px;color:var(--gold);background:var(--gold-dim);padding:3px 9px;border-radius:12px;border:1px solid var(--gold-line);white-space:nowrap;}
-.nv{color:#fff;font-weight:600;font-size:15px;}
-.nprod{color:var(--muted);font-size:13px;}
-.ptotbox{background:linear-gradient(135deg,rgba(200,168,75,.18),rgba(200,168,75,.06));border:1.5px solid var(--gold-line);border-radius:var(--rl);padding:22px 26px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
-.ptlbl{font-size:15px;color:var(--muted);margin-bottom:8px;}
-.ptval{font-family:'Cormorant Garamond',serif;font-size:40px;color:var(--gold-lt);font-weight:600;}
-.ptunit{font-size:14px;color:var(--muted);margin-top:4px;}
-.prow{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--ink-card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;}
+.pri{font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 9px;border-radius:12px;border:1px solid var(--gold-line);white-space:nowrap;}
+.nv{color:#fff;font-weight:600;font-size:14px;}
+.nprod{color:var(--muted);font-size:12px;}
+.ptotbox{background:linear-gradient(135deg,rgba(194,151,79,.18),rgba(194,151,79,.06));border:1.5px solid var(--gold-line);border-radius:var(--rl);padding:21px 25px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;}
+.ptlbl{font-size:14px;color:var(--muted);margin-bottom:7px;}
+.ptval{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--gold-lt);font-weight:600;}
+.ptunit{font-size:13px;color:var(--muted);margin-top:4px;}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:15px 19px;background:var(--ink-card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:9px;}
 .prl{flex:1;}
-.prn{font-size:17px;font-weight:600;margin-bottom:4px;}
-.prd{font-size:14px;color:var(--muted);}
-.pramt{font-size:22px;font-weight:600;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);text-align:right;flex-shrink:0;}
-.prunit{font-size:13px;color:var(--hint);}
-.dtpanel{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--rl);padding:22px 26px;margin-bottom:20px;}
-.dttitle{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
-.dtrow{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);}
+.prn{font-size:16px;font-weight:600;margin-bottom:3px;}
+.prd{font-size:13px;color:var(--muted);}
+.pramt{font-size:21px;font-weight:600;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);text-align:right;flex-shrink:0;}
+.prunit{font-size:12px;color:var(--hint);}
+.dtpanel{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--rl);padding:21px 25px;margin-bottom:18px;}
+.dttitle{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:13px;}
+.dtrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);}
 .dtrow:last-child{border-bottom:none;}
-.dtl{font-size:16px;color:var(--muted);}
-.dtr{font-size:17px;font-weight:600;}
+.dtl{font-size:15px;color:var(--muted);}
+.dtr{font-size:16px;font-weight:600;}
 .dtrg{color:var(--gold-lt);}
-.calcbtn{width:100%;padding:18px;background:linear-gradient(135deg,rgba(200,168,75,.2),rgba(200,168,75,.08));border:1.5px solid var(--gold-line);color:var(--gold-lt);border-radius:var(--rl);font-size:18px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:700;margin-bottom:16px;transition:all .2s;}
+.calcbtn{width:100%;padding:17px;background:linear-gradient(135deg,rgba(194,151,79,.2),rgba(194,151,79,.08));border:1.5px solid var(--gold-line);color:var(--gold-lt);border-radius:var(--rl);font-size:17px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:700;margin-bottom:15px;transition:all .2s;}
 .calcbtn:active{background:var(--gold-dim);}
-.pdfbtn{width:100%;padding:18px;background:transparent;border:1.5px solid var(--gold-line);color:var(--gold);border-radius:var(--rl);font-size:18px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:700;}
+.pdfbtn{width:100%;padding:17px;background:transparent;border:1.5px solid var(--gold-line);color:var(--gold);border-radius:var(--rl);font-size:17px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:700;}
 .pdfbtn:active{background:var(--gold-dim);}
-.warn{background:rgba(224,90,78,.12);border:1px solid rgba(224,90,78,.3);border-radius:var(--r);padding:14px 18px;font-size:16px;color:var(--danger);margin-bottom:16px;display:none;}
+.warn{background:rgba(214,100,90,.12);border:1px solid rgba(214,100,90,.3);border-radius:var(--r);padding:14px 18px;font-size:15px;color:var(--danger);margin-bottom:16px;display:none;}
 </style>
 </head>
 <body>
@@ -169,91 +161,135 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 </div>
 <div id="canvas">
 
-<!-- S0 -->
+<!-- ══ S0 基本資料 ══ -->
 <div class="screen on" id="s0">
-  <div class="hero-brand">Professional Insurance Planning</div>
-  <div class="hero-ico">🛡️</div>
-  <div class="hero-title">經濟支柱<br>守護計畫</div>
-  <div class="hero-sub">宸功保險專業保障需求分析<br>為您與家人建立完整的財務防線</div>
-</div>
+  <div class="intro-mark">Professional Insurance Planning</div>
+  <div class="stitle">在規劃之前<br>先簡單認識您一下</div>
+  <div class="ssub">幾個簡單的問題，幫助我們為您量身規劃保障。</div>
 
-<!-- S1 -->
-<div class="screen" id="s1">
-  <div class="stitle">人生收支曲線</div>
-  <div class="ssub">人生只有奮鬥期有收入，但支出從出生延續到離開。這段時間的保障，是整個家庭最關鍵的防線。</div>
-  <div class="curve-wrap">
-    <svg viewBox="0 0 560 200" width="100%" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="ig" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a9fd4" stop-opacity=".22"/><stop offset="100%" stop-color="#4a9fd4" stop-opacity=".02"/></linearGradient></defs>
-      <rect x="38" y="12" width="128" height="158" fill="rgba(200,140,0,.05)" rx="3"/>
-      <rect x="166" y="12" width="208" height="158" fill="rgba(0,150,80,.05)" rx="3"/>
-      <rect x="374" y="12" width="148" height="158" fill="rgba(30,100,180,.05)" rx="3"/>
-      <path d="M166,170 L166,84 L374,84 L374,170 Z" fill="url(#ig)"/>
-      <line x1="166" y1="84" x2="374" y2="84" stroke="#4a9fd4" stroke-width="1.5" stroke-dasharray="5,3"/>
-      <path d="M38,150 Q85,132 124,106 Q155,84 166,80 Q218,66 288,62 Q348,59 374,72 Q408,86 444,114 Q475,138 522,154" fill="none" stroke="#c8a84b" stroke-width="2.5"/>
-      <line x1="38" y1="170" x2="535" y2="170" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
-      <circle cx="166" cy="170" r="4" fill="#4a9fd4"/><circle cx="374" cy="170" r="4" fill="#4a9fd4"/>
-      <text x="38" y="186" font-size="11" fill="rgba(255,255,255,.35)" text-anchor="middle" font-family="sans-serif">出生</text>
-      <text x="166" y="186" font-size="11" fill="#4a9fd4" text-anchor="middle" font-family="sans-serif">就業</text>
-      <text x="374" y="186" font-size="11" fill="#4a9fd4" text-anchor="middle" font-family="sans-serif">退休</text>
-      <text x="530" y="186" font-size="11" fill="rgba(255,255,255,.35)" text-anchor="middle" font-family="sans-serif">離開</text>
-      <text x="102" y="28" font-size="12" fill="#c8a84b" text-anchor="middle" font-family="sans-serif" font-weight="bold">撫養期</text>
-      <text x="270" y="28" font-size="12" fill="#3aaf7a" text-anchor="middle" font-family="sans-serif" font-weight="bold">奮鬥期</text>
-      <text x="448" y="28" font-size="12" fill="#4a9fd4" text-anchor="middle" font-family="sans-serif" font-weight="bold">養老期</text>
-      <text x="270" y="106" font-size="11" fill="rgba(74,159,212,.85)" text-anchor="middle" font-family="sans-serif">奮鬥期風險最關鍵</text>
-    </svg>
-  </div>
-  <div class="risk-chips">
-    <div class="rchip"><div class="rctag d">活的太短</div><div class="rctext">因疾病或意外提早離開，依靠我們的家人怎麼辦？</div></div>
-    <div class="rchip"><div class="rctag w">活的太長</div><div class="rctext">錢只準備到這，卻活到那——今天聚焦保障。</div></div>
-    <div class="rchip"><div class="rctag i">收入中斷</div><div class="rctext">疾病或意外造成半年甚至一年無法工作。</div></div>
-    <div class="rchip"><div class="rctag n">失能長年病</div><div class="rctext">永遠沒有收入，還要別人來照顧，加上龐大醫療費用。</div></div>
-  </div>
-</div>
+  <div class="qlist">
+    <div class="qcard">
+      <div class="qtext">請問怎麼稱呼您？</div>
+      <div class="qrow"><input type="text" id="cname" placeholder="您的姓名（選填）" oninput="syncCalc()"></div>
+    </div>
 
-<!-- S2 -->
-<div class="screen" id="s2">
-  <div class="stitle">您的基本資料</div>
-  <div class="ssub">填入後系統將自動計算保險年齡與保障需求。</div>
-  <div class="ilist">
-    <div class="iblk">
-      <label class="ilbl">姓名（選填）</label>
-      <div class="irow"><input type="text" id="cname" placeholder="方便稱呼您" oninput="syncCalc()"></div>
+    <div class="qcard">
+      <div class="qtext">請問您是<span class="req">先生</span>還是<span class="req">小姐</span>？</div>
+      <div class="qchoice">
+        <label><input type="radio" name="gender" value="m" checked onchange="syncCalc()"><span>先生</span></label>
+        <label><input type="radio" name="gender" value="f" onchange="syncCalc()"><span>小姐</span></label>
+      </div>
     </div>
-    <div class="iblk">
-      <label class="ilbl">月收入</label>
-      <div class="irow"><input type="number" id="mi" inputmode="numeric" placeholder="30000" oninput="syncCalc()"><span class="iunit">元</span></div>
-      <div class="ihint">稅前月薪含獎金，年收入將自動換算</div>
-    </div>
-    <div class="iblk">
-      <label class="ilbl">出生年月日（民國）</label>
-      <div class="irow-date">
+
+    <div class="qcard">
+      <div class="qtext">請問您的<span class="req">出生年月日</span>？</div>
+      <div class="qdate">
         <input class="yw" type="number" id="byear" inputmode="numeric" placeholder="75" min="20" max="99" oninput="syncCalc()">
-        <span class="iunit">年</span>
+        <span class="qunit">年</span>
         <input class="mw" type="number" id="bmonth" inputmode="numeric" placeholder="6" min="1" max="12" oninput="syncCalc()">
-        <span class="iunit">月</span>
+        <span class="qunit">月</span>
         <input class="dw" type="number" id="bday" inputmode="numeric" placeholder="15" min="1" max="31" oninput="syncCalc()">
-        <span class="iunit">日</span>
+        <span class="qunit">日</span>
       </div>
-      <div class="ihint">生日前後六個月同一保齡</div>
+      <div class="qhint">民國年份，用於計算保險年齡（生日前後六個月同一保齡）</div>
     </div>
-    <div class="iblk">
-      <label class="ilbl">性別</label>
-      <div class="radrow">
-        <label><input type="radio" name="gender" value="m" checked onchange="syncCalc()"> 男性</label>
-        <label><input type="radio" name="gender" value="f" onchange="syncCalc()"> 女性</label>
+
+    <div class="qcard">
+      <div class="qtext">請問您目前的<span class="req">月收入</span>大概是多少？</div>
+      <div class="qrow"><input type="number" id="mi" inputmode="numeric" placeholder="30000" oninput="syncCalc()"><span class="qunit">元</span></div>
+      <div class="qhint">稅前月薪含獎金，年收入將自動換算</div>
+    </div>
+
+    <div class="qcard">
+      <div class="qresult-row">
+        <div class="qtext" style="margin-bottom:0;">您的保險年齡</div>
+        <div class="qresult"><span id="insage">—</span> 歲</div>
       </div>
-    </div>
-    <div class="iblk">
-      <label class="ilbl">保險年齡（自動計算）</label>
-      <div class="irow"><span class="iresult" id="insage">—</span><span class="iunit" style="margin-left:8px;">歲</span></div>
-      <div class="ihint">年收入：<span id="ai-disp" style="color:var(--gold-lt);font-weight:600;">—</span> 萬元</div>
+      <div class="qhint" style="margin-top:14px;">年收入約 <span id="ai-disp" style="color:var(--gold-lt);font-weight:600;">—</span> 萬元</div>
     </div>
   </div>
+
   <div class="isb"><div class="isb-t" id="isbt">請填入月收入與出生年月日。</div></div>
 </div>
 
-<!-- S3 -->
-<div class="screen" id="s3">
+<!-- ══ S1 風險確認 ══ -->
+<div class="screen" id="s1">
+  <div class="stitle">人生收支曲線</div>
+  <div class="ssub">點一下圖表，跟著我們一起看見人生中潛藏的四大風險。</div>
+
+  <div class="stage-dots" id="stageDots"></div>
+
+  <div class="diagram-shell" id="diagramShell" onclick="advanceRisk()">
+    <svg viewBox="0 0 600 230" width="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#5b9bd1"/>
+        </marker>
+      </defs>
+
+      <!-- stage1: 出生點/身故點/單向箭頭 -->
+      <g class="rstage" id="rstage1">
+        <line x1="55" y1="188" x2="568" y2="188" stroke="#5b9bd1" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <circle cx="55" cy="188" r="5" fill="#fff"/>
+        <circle cx="515" cy="188" r="5" fill="#fff"/>
+        <text x="55" y="208" font-size="12" fill="rgba(255,255,255,.55)" text-anchor="middle">出生</text>
+        <text x="515" y="208" font-size="12" fill="rgba(255,255,255,.55)" text-anchor="middle">身故</text>
+      </g>
+
+      <!-- stage2: 支出弧線 -->
+      <g class="rstage" id="rstage2">
+        <path d="M55,188 Q285,30 515,188" fill="none" stroke="#c2974f" stroke-width="2.5"/>
+        <text id="expenseLabel" x="285" y="118" font-size="13" fill="#dcb877" text-anchor="middle" font-weight="600">支出線</text>
+      </g>
+
+      <!-- stage3: 就業點/退休點/收入線 -->
+      <g class="rstage" id="rstage3">
+        <path d="M165,188 Q292,-104 420,188" fill="rgba(91,155,209,0.14)" stroke="#5b9bd1" stroke-width="2.5"/>
+        <circle cx="165" cy="188" r="5" fill="#5b9bd1"/>
+        <circle cx="420" cy="188" r="5" fill="#5b9bd1"/>
+        <text x="165" y="208" font-size="12" fill="#5b9bd1" text-anchor="middle">就業</text>
+        <text x="420" y="208" font-size="12" fill="#5b9bd1" text-anchor="middle">退休</text>
+        <text id="incomeLabel" x="292" y="35" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="600">收入線</text>
+      </g>
+
+      <!-- stage4: 活的太短 -->
+      <g class="rstage" id="rstage4">
+        <line x1="252" y1="180" x2="268" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="268" y1="180" x2="252" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="260" y="165" font-size="13" fill="#d6645a" text-anchor="middle" font-weight="700">活的太短</text>
+      </g>
+
+      <!-- stage5: 活的太長 -->
+      <g class="rstage" id="rstage5">
+        <line x1="538" y1="180" x2="554" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="554" y1="180" x2="538" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="546" y="165" font-size="13" fill="#e0a838" text-anchor="middle" font-weight="700">活的太長</text>
+      </g>
+
+      <!-- stage6: 收入中斷 -->
+      <g class="rstage" id="rstage6">
+        <line x1="217" y1="75" x2="233" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="233" y1="75" x2="217" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="225" y1="75" x2="225" y2="50" stroke="#5b9bd1" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="225" y="40" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="700">收入中斷</text>
+      </g>
+
+      <!-- stage7: 失能長年病 -->
+      <g class="rstage" id="rstage7">
+        <line x1="347" y1="69" x2="363" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="363" y1="69" x2="347" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="355" y1="69" x2="355" y2="44" stroke="#9b7bc4" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="355" y="34" font-size="13" fill="#b89cda" text-anchor="middle" font-weight="700">失能長年病</text>
+      </g>
+    </svg>
+    <div class="tap-hint" id="tapHint"><span class="pulse"></span><span>點一下繼續</span></div>
+  </div>
+
+  <div class="caption-box"><div class="caption-text" id="captionText">點一下圖表，開始了解人生的風險。</div></div>
+</div>
+
+<!-- ══ S2 風險衡量 ══ -->
+<div class="screen" id="s2">
   <div class="stitle">您最擔心的是？</div>
   <div class="ssub">請依照您<strong style="color:#fff;font-weight:700;">最擔心</strong>的程度，長按拖曳排列順序。我們將依您的順序逐一規劃保障。</div>
   <div class="rlist" id="rlist">
@@ -265,24 +301,24 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
   <div class="rprev" id="rprev">拖曳上方卡片，依您最擔心的順序排列</div>
 </div>
 
-<!-- S4 -->
-<div class="screen" id="s4">
-  <div class="stitle">您的保障需求</div>
-  <div class="ssub" id="s4sub">依照您的擔心順序，以下是各項風險的保障建議。</div>
+<!-- ══ S3 方法與選擇 ══ -->
+<div class="screen" id="s3">
+  <div class="stitle">方法與選擇</div>
+  <div class="ssub" id="s3sub">依照您的擔心順序，以下是各項風險的保障建議。</div>
   <div class="edit-hint" id="edit-hint">
-    <span style="font-size:22px;">✏️</span>
+    <span style="font-size:21px;">✏️</span>
     <span>金額已自動計算，可直接點擊<strong style="color:var(--gold);">金色數字</strong>修改。</span>
   </div>
   <div id="planbox"></div>
 </div>
 
-<!-- S5 -->
-<div class="screen" id="s5">
+<!-- ══ S4 總表與保費 ══ -->
+<div class="screen" id="s4">
   <div class="stitle">需求總表與保費試算</div>
   <div class="gdeco"></div>
   <div class="warn" id="warn">請先在「基本資料」填入出生年月日，才能計算保費。</div>
   <div class="sintro" id="sintro"></div>
-  <div style="font-size:13px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">保障需求總覽</div>
+  <div style="font-size:12px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">保障需求總覽</div>
   <table class="ntbl" id="ntbl"></table>
   <button class="calcbtn" id="calcbtn" onclick="calcPremium()">計算年繳保費 →</button>
   <div id="premsec" style="display:none;">
@@ -294,10 +330,10 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
       </div>
       <div style="text-align:right;">
         <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">月均保費</div>
-        <div style="font-size:26px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="monthp">0</div>
+        <div style="font-size:25px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="monthp">0</div>
         <div style="font-size:12px;color:var(--hint);margin-bottom:8px;">元 / 月</div>
         <div style="font-size:13px;color:var(--muted);">每日保費</div>
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="dayp">0</div>
+        <div style="font-size:21px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="dayp">0</div>
         <div style="font-size:12px;color:var(--hint);">元 / 日</div>
       </div>
     </div>
@@ -317,7 +353,7 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 </div>
 <div id="botnav">
   <button class="btn-back" id="gbtn" onclick="goBack()">← 上一步</button>
-  <button class="btn-next" id="mbtn" onclick="handleNext()">開始規劃 →</button>
+  <button class="btn-next" id="mbtn" onclick="handleNext()">了解人生風險 →</button>
 </div>
 </div>
 
@@ -333,18 +369,30 @@ function getHSA(a){for(var i=0;i<HSA.length;i++){if(a<=HSA[i].max)return HSA[i];
 // ── 狀態 ──
 var step=0;
 var rankOrder=['interrupt','death','disability','medical'];
+var riskStage=0;
+var TOTAL_RISK_STAGES=7;
 var STEPS=[
-  {lbl:'',next:'開始規劃 →',title:''},
-  {lbl:'01 / 05',next:'填入基本資料 →',title:'人生收支曲線'},
-  {lbl:'02 / 05',next:'設定風險排序 →',title:'基本資料'},
-  {lbl:'03 / 05',next:'查看保障需求 →',title:'風險排序'},
-  {lbl:'04 / 05',next:'查看總表與保費 →',title:'保障需求'},
-  {lbl:'05 / 05',next:'重新開始',title:'總表與保費'}
+  {lbl:'',next:'了解人生風險 →',title:''},
+  {lbl:'01 / 04',next:'下一步 →',title:'風險確認'},
+  {lbl:'02 / 04',next:'查看方法與選擇 →',title:'風險衡量'},
+  {lbl:'03 / 04',next:'查看總表與保費 →',title:'方法與選擇'},
+  {lbl:'04 / 04',next:'重新開始',title:'總表與保費'}
 ];
+
+var CAPTIONS=[
+  '點一下圖表，開始了解人生的風險。',
+  '人生是一條<strong>永不回頭的單行道</strong>——我們只會愈來愈老，不會愈來愈年輕。',
+  '<strong>支出</strong>，從出生那一刻起就已經開始，直到離開的那一天，從未停止。',
+  '但<strong>收入</strong>，只存在於就業到退休這段期間。',
+  '如果在這段期間因疾病或意外提早離開——這就是<strong>「活的太短」</strong>，收入瞬間歸零，家人怎麼辦？',
+  '如果很幸運活得比預期更久，卻沒有準備足夠的退休金——這就是<strong>「活的太長」</strong>，錢卻不夠用。',
+  '在收入線上，疾病或意外可能讓收入暫時中斷數個月——這是<strong>「收入中斷」</strong>。',
+  '更嚴重的情況，是永遠失去工作能力，還需要長期照顧——這是<strong>「失能長年病」</strong>。'
+];
+
 function fmtN(n){return Math.round(n).toLocaleString('zh-TW');}
 function pf(v){var n=parseFloat(String(v).replace(/,/g,''));return isNaN(n)?0:n;}
 
-// 保險年齡
 function calcInsAge(y,m,d){
   if(!y||!m||!d)return 0;
   var ad=y+1911;
@@ -375,14 +423,12 @@ function getState(){
   return{mi:mi,age:age,gender:g,gi:gi,ai:ai,name:name,by:by,bm:bm,bd:bd};
 }
 
-// 讀取輸入框的值（手動修改優先，否則用預設）
 function getInputVal(rid,si){
   var el=document.getElementById('inp-'+rid+'-'+si);
   if(el&&el.value!=='')return pf(el.value)||el.value;
   return null;
 }
 
-// 取得使用者確認的保障金額
 function updateAccHosp(){
   var h=pf((document.getElementById('inp-interrupt-0')||{}).value)||0;
   var w=pf((document.getElementById('inp-interrupt-1')||{}).value)||0;
@@ -413,18 +459,61 @@ function go(n){
   document.getElementById('s'+n).classList.add('on');
   document.getElementById('canvas').scrollTop=0;
   step=n;
-  document.getElementById('pfill').style.width=(n===0?0:Math.round(n/5*100))+'%';
+  document.getElementById('pfill').style.width=(n===0?0:Math.round(n/4*100))+'%';
   document.getElementById('slbl').textContent=STEPS[n].lbl;
-  document.getElementById('mbtn').textContent=STEPS[n].next;
   var logo=document.getElementById('toplogo');
   if(n===0){logo.textContent='Guardian · 宸功保險';logo.className='logo';}
   else{logo.textContent=STEPS[n].title;logo.className='page-title';}
   document.getElementById('gbtn').classList.toggle('show',n>0);
-  if(n===4)buildPlan();
-  if(n===5)buildSummary();
+  if(n===1){riskStage=0;renderRiskStage();}
+  if(n===2)updateRank();
+  if(n===3)buildPlan();
+  if(n===4)buildSummary();
+  updateMainBtn();
 }
 function goBack(){if(step>0)go(step-1);}
-function handleNext(){if(step===5){go(0);return;}go(step+1);}
+
+function updateMainBtn(){
+  var btn=document.getElementById('mbtn');
+  if(step===1){
+    btn.textContent=riskStage<TOTAL_RISK_STAGES?('下一步（'+riskStage+'/'+TOTAL_RISK_STAGES+'）→'):'前往風險衡量 →';
+  } else {
+    btn.textContent=STEPS[step].next;
+  }
+}
+
+function handleNext(){
+  if(step===1&&riskStage<TOTAL_RISK_STAGES){advanceRisk();return;}
+  if(step===4){go(0);return;}
+  go(step+1);
+}
+
+// ── S1 互動圖 ──
+function renderRiskStage(){
+  for(var i=1;i<=TOTAL_RISK_STAGES;i++){
+    var g=document.getElementById('rstage'+i);
+    if(g)g.classList.toggle('show',i<=riskStage);
+  }
+  // 支出線／收入線文字只在剛出現的那一階段顯示，進入下一動作就消失
+  var expLbl=document.getElementById('expenseLabel');
+  if(expLbl)expLbl.style.display=(riskStage===2)?'block':'none';
+  var incLbl=document.getElementById('incomeLabel');
+  if(incLbl)incLbl.style.display=(riskStage===3)?'block':'none';
+  document.getElementById('captionText').innerHTML=CAPTIONS[riskStage];
+  var dotsWrap=document.getElementById('stageDots');
+  var dotsHtml='';
+  for(var d=1;d<=TOTAL_RISK_STAGES;d++){
+    var cls=d<riskStage?'sdot done':(d===riskStage?'sdot cur done':'sdot');
+    dotsHtml+='<div class="'+cls+'"></div>';
+  }
+  dotsWrap.innerHTML=dotsHtml;
+  var hint=document.getElementById('tapHint');
+  if(hint)hint.style.display=riskStage<TOTAL_RISK_STAGES?'flex':'none';
+  updateMainBtn();
+}
+function advanceRisk(){
+  if(riskStage<TOTAL_RISK_STAGES){riskStage++;renderRiskStage();}
+}
 
 // ── syncCalc ──
 function syncCalc(){
@@ -435,17 +524,19 @@ function syncCalc(){
   if(aiEl)aiEl.textContent=s.ai||'—';
   var isbt=document.getElementById('isbt');
   if(s.mi&&s.age){
-    var gl=s.gender==='m'?'男性':'女性';
-    var roc=s.by?('民國'+s.by+'年'+s.bm+'月'+s.bd+'日'):'';
-    isbt.innerHTML=(s.name?'<span class="hl">'+s.name+'</span>，':'')+roc+'，保險年齡 <span class="hl">'+s.age+'</span> 歲'+gl+'。月收入 <span class="hl">'+fmtN(s.mi)+'</span> 元，年收入約 <span class="hl">'+s.ai+'</span> 萬元。';
+    var gl=s.gender==='m'?'先生':'小姐';
+    var roc=s.by?('民國'+s.by+'年'+s.bm+'月'+s.bd+'日出生'):'';
+    isbt.innerHTML=(s.name?'<span class="hl">'+s.name+'</span> '+gl+'，':'')+roc+'，保險年齡 <span class="hl">'+s.age+'</span> 歲。月收入 <span class="hl">'+fmtN(s.mi)+'</span> 元，年收入約 <span class="hl">'+s.ai+'</span> 萬元。';
   }else{
     isbt.textContent='請填入月收入與出生年月日，系統將為您計算保障需求。';
   }
 }
 
 // ── 拖曳 ──
-var dragSrc=null,touchItem=null,touchClone=null,touchOffX=0,touchOffY=0;
+var dragSrc=null,touchItem=null,touchClone=null,touchOffX=0,touchOffY=0,dragInit=false;
 function initDrag(){
+  if(dragInit)return;
+  dragInit=true;
   var list=document.getElementById('rlist');
   list.querySelectorAll('.rcard').forEach(function(el){
     el.addEventListener('dragstart',function(){dragSrc=el;el.classList.add('dragging');});
@@ -465,7 +556,7 @@ function updateRank(){
   document.getElementById('rprev').textContent='您的擔心順序：'+rankOrder.map(function(r,i){return(i+1)+'. '+names[r];}).join('　');
 }
 
-// ── PLAN 定義（只有名稱和說明，沒有建議金額和商品）──
+// ── PLAN 定義 ──
 var PLANS={
   interrupt:{title:'收入中斷',ico:'⏸',subs:[
     {name:'一般住院',         why:'住院期間公司多半停薪。不論疾病或意外需要住院，每月可領補貼彌補薪資缺口，讓家庭現金流不中斷。',    defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
@@ -490,22 +581,22 @@ var PLANS={
 
 function buildPlan(){
   var s=getState();
-  document.getElementById('s4sub').textContent=(s.name?s.name+'，根據':'根據')+'您的擔心順序，以下是各項風險的保障建議。';
+  document.getElementById('s3sub').textContent=(s.name?s.name+'，根據':'根據')+'您的擔心順序，以下是各項風險的保障建議。';
   var html='';
   rankOrder.forEach(function(rid,idx){
     var pd=PLANS[rid];
     html+='<div class="nsec"><div class="nshd"><span class="nsbadge">第'+(idx+1)+'優先</span><span class="nsico">'+pd.ico+'</span><span class="nstit">'+pd.title+'</span></div>';
     pd.subs.forEach(function(sub,si){
       var defVal=sub.defFn(s);
-      // 保留之前輸入的值（意外住院自動加總，不可手動）
       var isAutoSum=(rid==='interrupt'&&si===2);
       var el=document.getElementById('inp-'+rid+'-'+si);
       var curVal=isAutoSum?defVal:((el&&el.value!=='')?el.value:defVal);
-      var inputStyle=isAutoSum?'class="scval-input" readonly style="opacity:.6;cursor:default;"':'class="scval-input" onclick="this.select()" inputmode="numeric"';
+      var inputAttrs=isAutoSum?'readonly style="opacity:.6;cursor:default;"':'onclick="this.select()" inputmode="numeric"';
+      var inputEvt=isAutoSum?'':' oninput="updateAccHosp()"';
       html+='<div class="scard">'
         +'<div><div class="scn">'+sub.name+'</div><div class="scw">'+sub.why+'</div></div>'
         +'<div class="scamt">'
-        +'<input '+inputStyle+' id="inp-'+rid+'-'+si+'" value="'+curVal+'">'
+        +'<input class="scval-input" id="inp-'+rid+'-'+si+'" value="'+curVal+'" '+inputAttrs+inputEvt+'>'
         +'<div class="scunit">'+sub.unit+'</div>'
         +'</div></div>';
     });
@@ -519,7 +610,7 @@ function buildSummary(){
   var s=getState();
   var picons={interrupt:'⏸',death:'🕊',disability:'♿',medical:'🏥'};
   document.getElementById('warn').style.display=s.age?'none':'block';
-  document.getElementById('sintro').innerHTML=(s.name?'<span class="hl">'+s.name+'</span>，根據':'根據')+'您的財務狀況（年收入 <span class="hl">'+s.ai+'</span> 萬元，保險年齡 <span class="hl">'+s.age+'</span> 歲'+(s.gender==='m'?'男':'女')+'性）與擔心排序，以下是完整保障需求總表。';
+  document.getElementById('sintro').innerHTML=(s.name?'<span class="hl">'+s.name+'</span>，根據':'根據')+'您的財務狀況（年收入 <span class="hl">'+s.ai+'</span> 萬元，保險年齡 <span class="hl">'+s.age+'</span> 歲）與擔心排序，以下是完整保障需求總表。';
   var uv=getUserVals(s);
   var rows=[
     {cat:'interrupt',name:'一般住院補貼',     need:fmtN(pf(uv.hospMonth))+' 元/月', prod:'1HIR 住院日額'},
@@ -588,7 +679,6 @@ function exportPDF(){
   var catName={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
   var catIco={interrupt:'⏸',death:'🕊',disability:'♿',medical:'🏥'};
 
-  // 重新計算保費
   var gi=s.gi,age=s.age,premItems=[],premTotal=0;
   function addP(name,detail,prem){premItems.push({name:name,detail:detail,prem:Math.round(prem)});premTotal+=Math.round(prem);}
   var hirRate=HIR[Math.min(age||30,75)];
@@ -604,7 +694,6 @@ function exportPDF(){
   var premRowsHTML='';
   premItems.forEach(function(it){premRowsHTML+='<tr><td class="prname">'+it.name+'</td><td class="prdetail">'+it.detail+'</td><td class="pramt">'+fmtN(it.prem)+' 元</td></tr>';});
 
-  // 需求對照
   var needRows=[
     {cat:'interrupt',name:'一般住院補貼',need:fmtN(pf(uv.hospMonth))+' 元/月',plan:fmtN(pf(uv.hospMonth))+' 元/月'},
     {cat:'interrupt',name:'意外無法工作',need:fmtN(pf(uv.accWork))+' 元/月',plan:'30,000 元/月'},
@@ -627,16 +716,16 @@ function exportPDF(){
     sectHTML+='<div class="sec"><div class="sec-hd"><span class="badge">第'+(g.idx+1)+'優先</span> <span class="sec-ico">'+catIco[cat]+'</span> <span class="sec-name">'+catName[cat]+'</span></div><table><thead><tr><th>保障項目</th><th>需求金額</th><th>建議保額</th></tr></thead><tbody>'+rowsHTML+'</tbody></table></div>';
   });
 
-  var gLabel=s.gender==='m'?'男':'女';
+  var gLabel=s.gender==='m'?'先生':'小姐';
   var today=new Date();
   var ds=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
   var premSec=age?('<div class="prem-sec"><h2>保費試算</h2><div class="ps-grid"><div class="ps-box"><div class="ps-l">年繳保費</div><div class="ps-v">'+fmtN(premTotal)+'</div><div class="ps-u">元/年</div></div><div class="ps-box"><div class="ps-l">月均保費</div><div class="ps-v">'+fmtN(Math.round(premTotal/12))+'</div><div class="ps-u">元/月</div></div><div class="ps-box"><div class="ps-l">每日保費</div><div class="ps-v">'+fmtN(Math.round(premTotal/365))+'</div><div class="ps-u">元/日</div></div></div><table class="pt"><thead><tr><th>商品</th><th>說明</th><th>年繳</th></tr></thead><tbody>'+premRowsHTML+'</tbody></table></div>'):'';
 
-  var css='*{box-sizing:border-box;margin:0;padding:0;}body{font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#1a1a2e;background:#fff;padding:28px 32px;max-width:820px;margin:0 auto;}.hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #c8a84b;padding-bottom:14px;margin-bottom:18px;}.brand{font-size:11px;letter-spacing:3px;color:#c8a84b;text-transform:uppercase;margin-bottom:4px;}.dtitle{font-size:22px;font-weight:700;color:#0c1520;}.meta{text-align:right;font-size:13px;color:#666;line-height:1.9;}.meta strong{color:#0c1520;font-size:15px;}.principle{background:#f9f5ea;border-left:4px solid #c8a84b;padding:10px 14px;margin-bottom:18px;font-size:13px;color:#5a4a1a;line-height:1.7;border-radius:0 6px 6px 0;}.principle strong{color:#8a6200;}.prem-sec{margin-bottom:22px;}.prem-sec h2{font-size:15px;font-weight:700;color:#0c1520;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;}.ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}.ps-box{background:#f9f5ea;border:1px solid #d4c080;border-radius:8px;padding:12px;text-align:center;}.ps-l{font-size:11px;color:#888;margin-bottom:5px;letter-spacing:1px;}.ps-v{font-size:24px;font-weight:700;color:#8a6200;}.ps-u{font-size:11px;color:#aaa;margin-top:2px;}.pt{width:100%;border-collapse:collapse;font-size:13px;}.pt thead tr{background:#0c1520;}.pt th{padding:9px 12px;text-align:left;color:rgba(255,255,255,.85);font-weight:600;font-size:12px;}.pt td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;}.pt tr:last-child td{border-bottom:2px solid #c8a84b;}.prname{font-weight:600;color:#0c1520;width:28%;}.prdetail{color:#555;width:50%;font-size:12px;}.pramt{font-weight:700;color:#8a6200;width:22%;text-align:right;}.needs-t{font-size:15px;font-weight:700;color:#0c1520;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;}.sec{margin-bottom:16px;page-break-inside:avoid;}.sec-hd{display:flex;align-items:center;gap:8px;background:#0c1520;color:#fff;padding:9px 14px;border-radius:6px 6px 0 0;}.badge{font-size:11px;padding:2px 8px;border:1px solid #c8a84b;border-radius:10px;color:#c8a84b;}.sec-ico{font-size:16px;}.sec-name{font-size:15px;font-weight:700;}table{width:100%;border-collapse:collapse;}thead tr{background:#f0e8d0;}th{padding:9px 12px;text-align:left;font-size:12px;color:#5a4010;font-weight:700;border-bottom:1px solid #d4c080;}td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;line-height:1.6;font-size:13px;}tr:last-child td{border-bottom:2px solid #0c1520;}.rn{font-weight:700;color:#0c1520;width:20%;}.rneed{color:#c8410b;font-weight:600;width:40%;}.rplan{color:#0a4a2a;font-weight:600;width:40%;}.footer{margin-top:24px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;color:#999;}@media print{@page{margin:1.2cm;}}';
+  var css='*{box-sizing:border-box;margin:0;padding:0;}body{font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#1a1a2e;background:#fff;padding:28px 32px;max-width:820px;margin:0 auto;}.hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #c2974f;padding-bottom:14px;margin-bottom:18px;}.brand{font-size:11px;letter-spacing:3px;color:#c2974f;text-transform:uppercase;margin-bottom:4px;}.dtitle{font-size:22px;font-weight:700;color:#0d1a26;}.meta{text-align:right;font-size:13px;color:#666;line-height:1.9;}.meta strong{color:#0d1a26;font-size:15px;}.principle{background:#f8f3e8;border-left:4px solid #c2974f;padding:10px 14px;margin-bottom:18px;font-size:13px;color:#5a4a1a;line-height:1.7;border-radius:0 6px 6px 0;}.principle strong{color:#8a6a30;}.prem-sec{margin-bottom:22px;}.prem-sec h2{font-size:15px;font-weight:700;color:#0d1a26;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;}.ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}.ps-box{background:#f8f3e8;border:1px solid #d4c080;border-radius:8px;padding:12px;text-align:center;}.ps-l{font-size:11px;color:#888;margin-bottom:5px;letter-spacing:1px;}.ps-v{font-size:24px;font-weight:700;color:#8a6a30;}.ps-u{font-size:11px;color:#aaa;margin-top:2px;}.pt{width:100%;border-collapse:collapse;font-size:13px;}.pt thead tr{background:#0d1a26;}.pt th{padding:9px 12px;text-align:left;color:rgba(255,255,255,.85);font-weight:600;font-size:12px;}.pt td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;}.pt tr:last-child td{border-bottom:2px solid #c2974f;}.prname{font-weight:600;color:#0d1a26;width:28%;}.prdetail{color:#555;width:50%;font-size:12px;}.pramt{font-weight:700;color:#8a6a30;width:22%;text-align:right;}.needs-t{font-size:15px;font-weight:700;color:#0d1a26;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;}.sec{margin-bottom:16px;page-break-inside:avoid;}.sec-hd{display:flex;align-items:center;gap:8px;background:#0d1a26;color:#fff;padding:9px 14px;border-radius:6px 6px 0 0;}.badge{font-size:11px;padding:2px 8px;border:1px solid #c2974f;border-radius:10px;color:#c2974f;}.sec-ico{font-size:16px;}.sec-name{font-size:15px;font-weight:700;}table{width:100%;border-collapse:collapse;}thead tr{background:#f0e8d0;}th{padding:9px 12px;text-align:left;font-size:12px;color:#5a4010;font-weight:700;border-bottom:1px solid #d4c080;}td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;line-height:1.6;font-size:13px;}tr:last-child td{border-bottom:2px solid #0d1a26;}.rn{font-weight:700;color:#0d1a26;width:20%;}.rneed{color:#c8410b;font-weight:600;width:40%;}.rplan{color:#0a4a2a;font-weight:600;width:40%;}.footer{margin-top:24px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;color:#999;}@media print{@page{margin:1.2cm;}}';
 
   var html='<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>保障規劃報告</title><style>'+css+'<\/style><\/head><body>'
     +'<div class="hd"><div><div class="brand">Guardian · 宸功保險</div><div class="dtitle">保障規劃報告</div></div>'
-    +'<div class="meta">'+(s.name?'<strong>'+s.name+'</strong><br>':'')+'年齡：'+(s.age||'—')+'歲 '+gLabel+'性<br>年收入：'+s.ai+'萬 月收入：'+fmtN(s.mi)+'元<br>製表：'+ds+'</div></div>'
+    +'<div class="meta">'+(s.name?'<strong>'+s.name+' '+gLabel+'</strong><br>':'')+'保險年齡：'+(s.age||'—')+'歲<br>年收入：'+s.ai+'萬 月收入：'+fmtN(s.mi)+'元<br>製表：'+ds+'</div></div>'
     +'<div class="principle"><strong>雙十原則：</strong>年保費上限 <strong>'+Math.round(s.ai*0.1*10)/10+'萬元/年</strong>；壽險最低保額 <strong>'+Math.round(s.ai*10)+'萬元</strong></div>'
     +premSec
     +'<div class="needs-t">保障需求與規劃對照</div>'
@@ -651,7 +740,7 @@ function exportPDF(){
 
 // ── INIT ──
 initDrag();
-updateRank();
+renderRiskStage();
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
     navigator.serviceWorker.register('./sw.js',{scope:'./'})
