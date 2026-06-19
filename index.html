@@ -150,6 +150,46 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 .pdfbtn{width:100%;padding:17px;background:transparent;border:1.5px solid var(--gold-line);color:var(--gold);border-radius:var(--rl);font-size:17px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:700;}
 .pdfbtn:active{background:var(--gold-dim);}
 .warn{background:rgba(214,100,90,.12);border:1px solid rgba(214,100,90,.3);border-radius:var(--r);padding:14px 18px;font-size:15px;color:var(--danger);margin-bottom:16px;display:none;}
+#printArea{display:none;}
+@media print{
+  @page{size:A4 landscape;margin:12mm;}
+  body *{visibility:hidden;}
+  #printArea,#printArea *{visibility:visible;}
+  #printArea{display:block;position:absolute;top:0;left:0;width:100%;}
+}
+.pp-wrap{font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#1a1a2e;background:#fff;padding:14px 20px;}
+.pp-hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid #c2974f;padding-bottom:10px;margin-bottom:12px;}
+.pp-brand{font-size:10px;letter-spacing:2.5px;color:#c2974f;text-transform:uppercase;margin-bottom:3px;}
+.pp-title{font-size:18px;font-weight:700;color:#0d1a26;}
+.pp-meta{text-align:right;font-size:11px;color:#666;line-height:1.7;}
+.pp-meta strong{color:#0d1a26;font-size:12px;}
+.pp-principle{background:#f8f3e8;border-left:3px solid #c2974f;padding:7px 11px;margin-bottom:12px;font-size:11px;color:#5a4a1a;line-height:1.5;}
+.pp-principle strong{color:#8a6a30;}
+.pp-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.pp-prem h2,.pp-needs h2{font-size:12px;font-weight:700;color:#0d1a26;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid #e0d8c8;letter-spacing:.5px;}
+.pp-ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:9px;}
+.pp-ps-box{background:#f8f3e8;border:1px solid #d4c080;border-radius:5px;padding:6px;text-align:center;}
+.pp-ps-l{font-size:8.5px;color:#888;}
+.pp-ps-v{font-size:15px;font-weight:700;color:#8a6a30;}
+.pp-ps-u{font-size:8px;color:#aaa;}
+.pp-pt{width:100%;border-collapse:collapse;font-size:9.5px;}
+.pp-pt thead tr{background:#0d1a26;}
+.pp-pt th{padding:4px 6px;text-align:left;color:#fff;font-weight:600;font-size:9px;}
+.pp-pt td{padding:4px 6px;border-bottom:1px solid #eee;}
+.pp-prname{font-weight:600;color:#0d1a26;}
+.pp-pramt{font-weight:700;color:#8a6a30;text-align:right;white-space:nowrap;}
+.pp-sec{margin-bottom:8px;break-inside:avoid;}
+.pp-sec-hd{display:flex;align-items:center;gap:6px;background:#0d1a26;color:#fff;padding:4px 9px;border-radius:4px 4px 0 0;}
+.pp-badge{font-size:8.5px;padding:1px 6px;border:1px solid #c2974f;border-radius:8px;color:#c2974f;}
+.pp-sec-name{font-size:10.5px;font-weight:700;}
+.pp-tbl{width:100%;border-collapse:collapse;font-size:9.5px;}
+.pp-tbl thead tr{background:#f0e8d0;}
+.pp-tbl th{padding:3px 6px;text-align:left;color:#5a4010;font-weight:700;border-bottom:1px solid #d4c080;font-size:8.5px;}
+.pp-tbl td{padding:3px 6px;border-bottom:1px solid #eee;}
+.pp-rn{font-weight:700;color:#0d1a26;width:32%;}
+.pp-rneed{color:#c8410b;font-weight:600;width:34%;}
+.pp-rplan{color:#0a4a2a;font-weight:600;width:34%;}
+.pp-footer{margin-top:10px;padding-top:6px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:8.5px;color:#999;}
 </style>
 </head>
 <body>
@@ -347,8 +387,10 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
     <div class="dtrow"><span class="dtl">建議失能保額</span><span class="dtr" id="dt4">—</span></div>
     <div class="dtrow"><span class="dtl">建議重疾保額（3–5年）</span><span class="dtr" id="dt5">—</span></div>
   </div>
-  <button class="pdfbtn" onclick="exportPDF()">📄 匯出保障規劃報告</button>
+  <button class="pdfbtn" onclick="exportPDF()">📄 匯出保障規劃報告（PDF）</button>
 </div>
+
+<div id="printArea"></div>
 
 </div>
 <div id="botnav">
@@ -686,13 +728,13 @@ function exportPDF(){
   addP('NAI 意外附約','100萬保額',2900);
   addP('PAMR 計劃3','意外門診實支實付',3260);
   var disN=pf(uv.disability)||Math.round(s.ai*10);var yN=Math.max(0,disN-300);if(yN>0)addP('YPAR 意外傷害附約',yN+'萬保額',yN*11.8);
-  var tltcR=TLTC[Math.min(age||30,60)];if(tltcR){var lm=pf(uv.ltc)||3;addP('10TLTC 長期照顧定期險','保額'+(lm*12)+'萬月補'+lm+'萬，'+age+'歲'+(gi===0?'男':'女'),tltcR[gi]*(lm*12));}
-  var tsddR=TSDD[Math.min(age||30,70)];if(tsddR){var cn=pf(uv.critical)||Math.round(s.ai*3);var tc=Math.round(cn/4*10)/10;addP('10TSDD 重大疾病定期險','投保'+tc+'萬給付'+cn+'萬，'+age+'歲'+(gi===0?'男':'女'),tsddR[gi]*(tc/10));}
-  var n1R=N1TR[Math.min(age||30,70)];if(n1R){var dn=pf(uv.deathGen)||Math.round(s.ai*10);addP('N1TR 定期壽險',dn+'萬保額，'+age+'歲'+(gi===0?'男':'女'),n1R[gi]*dn);}
-  var hsR=getHSA(age||30);if(hsR)addP('1HS A型 實支實付','20萬/次加護病房40萬，'+age+'歲'+(gi===0?'男':'女'),(gi===0)?hsR.m:hsR.f);
+  var tltcR=TLTC[Math.min(age||30,60)];if(tltcR){var lm=pf(uv.ltc)||3;addP('10TLTC 長期照顧定期險','保額'+(lm*12)+'萬月補'+lm+'萬',tltcR[gi]*(lm*12));}
+  var tsddR=TSDD[Math.min(age||30,70)];if(tsddR){var cn=pf(uv.critical)||Math.round(s.ai*3);var tc=Math.round(cn/4*10)/10;addP('10TSDD 重大疾病定期險','投保'+tc+'萬給付'+cn+'萬',tsddR[gi]*(tc/10));}
+  var n1R=N1TR[Math.min(age||30,70)];if(n1R){var dn=pf(uv.deathGen)||Math.round(s.ai*10);addP('N1TR 定期壽險',dn+'萬保額',n1R[gi]*dn);}
+  var hsR=getHSA(age||30);if(hsR)addP('1HS A型 實支實付','20萬/次加護病房40萬',(gi===0)?hsR.m:hsR.f);
 
   var premRowsHTML='';
-  premItems.forEach(function(it){premRowsHTML+='<tr><td class="prname">'+it.name+'</td><td class="prdetail">'+it.detail+'</td><td class="pramt">'+fmtN(it.prem)+' 元</td></tr>';});
+  premItems.forEach(function(it){premRowsHTML+='<tr><td class="pp-prname">'+it.name+'</td><td>'+it.detail+'</td><td class="pp-pramt">'+fmtN(it.prem)+' 元</td></tr>';});
 
   var needRows=[
     {cat:'interrupt',name:'一般住院補貼',need:fmtN(pf(uv.hospMonth))+' 元/月',plan:fmtN(pf(uv.hospMonth))+' 元/月'},
@@ -711,48 +753,33 @@ function exportPDF(){
   needRows.forEach(function(r){if(grouped[r.cat])grouped[r.cat].rows.push(r);});
   var sectHTML='';
   rankOrder.forEach(function(cat){
-    var g=grouped[cat];var rowsHTML='';
-    g.rows.forEach(function(r){rowsHTML+='<tr><td class="rn">'+r.name+'</td><td class="rneed">'+r.need+'</td><td class="rplan">'+r.plan+'</td></tr>';});
-    sectHTML+='<div class="sec"><div class="sec-hd"><span class="badge">第'+(g.idx+1)+'優先</span> <span class="sec-ico">'+catIco[cat]+'</span> <span class="sec-name">'+catName[cat]+'</span></div><table><thead><tr><th>保障項目</th><th>需求金額</th><th>建議保額</th></tr></thead><tbody>'+rowsHTML+'</tbody></table></div>';
+    var grp=grouped[cat];var rowsHTML='';
+    grp.rows.forEach(function(r){rowsHTML+='<tr><td class="pp-rn">'+r.name+'</td><td class="pp-rneed">'+r.need+'</td><td class="pp-rplan">'+r.plan+'</td></tr>';});
+    sectHTML+='<div class="pp-sec"><div class="pp-sec-hd"><span class="pp-badge">第'+(grp.idx+1)+'優先</span><span class="pp-sec-name">'+catIco[cat]+' '+catName[cat]+'</span></div><table class="pp-tbl"><thead><tr><th>保障項目</th><th>需求金額</th><th>建議保額</th></tr></thead><tbody>'+rowsHTML+'</tbody></table></div>';
   });
 
   var gLabel=s.gender==='m'?'先生':'小姐';
   var today=new Date();
   var ds=today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
-  var dsFile=today.getFullYear()+''+(today.getMonth()+1)+''+today.getDate();
-  var premSec=age?('<div class="prem-sec"><h2>保費試算</h2><div class="ps-grid"><div class="ps-box"><div class="ps-l">年繳保費</div><div class="ps-v">'+fmtN(premTotal)+'</div><div class="ps-u">元/年</div></div><div class="ps-box"><div class="ps-l">月均保費</div><div class="ps-v">'+fmtN(Math.round(premTotal/12))+'</div><div class="ps-u">元/月</div></div><div class="ps-box"><div class="ps-l">每日保費</div><div class="ps-v">'+fmtN(Math.round(premTotal/365))+'</div><div class="ps-u">元/日</div></div></div><table class="pt"><thead><tr><th>商品</th><th>說明</th><th>年繳</th></tr></thead><tbody>'+premRowsHTML+'</tbody></table></div>'):'';
 
-  var css='*{box-sizing:border-box;margin:0;padding:0;}body{font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#1a1a2e;background:#fff;padding:28px 32px;max-width:820px;margin:0 auto;}.hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #c2974f;padding-bottom:14px;margin-bottom:18px;}.brand{font-size:11px;letter-spacing:3px;color:#c2974f;text-transform:uppercase;margin-bottom:4px;}.dtitle{font-size:22px;font-weight:700;color:#0d1a26;}.meta{text-align:right;font-size:13px;color:#666;line-height:1.9;}.meta strong{color:#0d1a26;font-size:15px;}.principle{background:#f8f3e8;border-left:4px solid #c2974f;padding:10px 14px;margin-bottom:18px;font-size:13px;color:#5a4a1a;line-height:1.7;border-radius:0 6px 6px 0;}.principle strong{color:#8a6a30;}.prem-sec{margin-bottom:22px;}.prem-sec h2{font-size:15px;font-weight:700;color:#0d1a26;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;}.ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}.ps-box{background:#f8f3e8;border:1px solid #d4c080;border-radius:8px;padding:12px;text-align:center;}.ps-l{font-size:11px;color:#888;margin-bottom:5px;letter-spacing:1px;}.ps-v{font-size:24px;font-weight:700;color:#8a6a30;}.ps-u{font-size:11px;color:#aaa;margin-top:2px;}.pt{width:100%;border-collapse:collapse;font-size:13px;}.pt thead tr{background:#0d1a26;}.pt th{padding:9px 12px;text-align:left;color:rgba(255,255,255,.85);font-weight:600;font-size:12px;}.pt td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;}.pt tr:last-child td{border-bottom:2px solid #c2974f;}.prname{font-weight:600;color:#0d1a26;width:28%;}.prdetail{color:#555;width:50%;font-size:12px;}.pramt{font-weight:700;color:#8a6a30;width:22%;text-align:right;}.needs-t{font-size:15px;font-weight:700;color:#0d1a26;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e0d8c8;}.sec{margin-bottom:16px;page-break-inside:avoid;}.sec-hd{display:flex;align-items:center;gap:8px;background:#0d1a26;color:#fff;padding:9px 14px;border-radius:6px 6px 0 0;}.badge{font-size:11px;padding:2px 8px;border:1px solid #c2974f;border-radius:10px;color:#c2974f;}.sec-ico{font-size:16px;}.sec-name{font-size:15px;font-weight:700;}table{width:100%;border-collapse:collapse;}thead tr{background:#f0e8d0;}th{padding:9px 12px;text-align:left;font-size:12px;color:#5a4010;font-weight:700;border-bottom:1px solid #d4c080;}td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top;line-height:1.6;font-size:13px;}tr:last-child td{border-bottom:2px solid #0d1a26;}.rn{font-weight:700;color:#0d1a26;width:20%;}.rneed{color:#c8410b;font-weight:600;width:40%;}.rplan{color:#0a4a2a;font-weight:600;width:40%;}.footer{margin-top:24px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;color:#999;}.pbar2{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}.pbtn{background:#c2974f;color:#fff;border:none;padding:11px 26px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;font-family:"Noto Sans TC",sans-serif;}.pbtn.outline{background:transparent;color:#c2974f;border:1.5px solid #c2974f;}@media print{.pbar2{display:none!important;}@page{margin:1.2cm;}}';
+  var premSec=age?('<div class="pp-prem"><h2>保費試算</h2><div class="pp-ps-grid"><div class="pp-ps-box"><div class="pp-ps-l">年繳保費</div><div class="pp-ps-v">'+fmtN(premTotal)+'</div><div class="pp-ps-u">元/年</div></div><div class="pp-ps-box"><div class="pp-ps-l">月均保費</div><div class="pp-ps-v">'+fmtN(Math.round(premTotal/12))+'</div><div class="pp-ps-u">元/月</div></div><div class="pp-ps-box"><div class="pp-ps-l">每日保費</div><div class="pp-ps-v">'+fmtN(Math.round(premTotal/365))+'</div><div class="pp-ps-u">元/日</div></div></div><table class="pp-pt"><thead><tr><th>商品</th><th>說明</th><th>年繳</th></tr></thead><tbody>'+premRowsHTML+'</tbody></table></div>'):'<div class="pp-prem"><h2>保費試算</h2><div style="font-size:11px;color:#999;">尚未計算保費，請先在第四步點擊「計算年繳保費」。</div></div>';
 
-  var fullHtml='<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>保障規劃報告</title><style>'+css+'</style></head><body>'
-    +'<div class="pbar2"><button class="pbtn" onclick="window.print()">列印 / 另存為 PDF</button></div>'
-    +'<div class="hd"><div><div class="brand">Guardian · 宸功保險</div><div class="dtitle">保障規劃報告</div></div>'
-    +'<div class="meta">'+(s.name?'<strong>'+s.name+' '+gLabel+'</strong><br>':'')+'保險年齡：'+(s.age||'—')+'歲<br>年收入：'+s.ai+'萬 月收入：'+fmtN(s.mi)+'元<br>製表：'+ds+'</div></div>'
-    +'<div class="principle"><strong>雙十原則：</strong>年保費上限 <strong>'+Math.round(s.ai*0.1*10)/10+'萬元/年</strong>；壽險最低保額 <strong>'+Math.round(s.ai*10)+'萬元</strong></div>'
-    +premSec
-    +'<div class="needs-t">保障需求與規劃對照</div>'
+  var html='<div class="pp-wrap">'
+    +'<div class="pp-hd"><div><div class="pp-brand">Guardian · 宸功保險</div><div class="pp-title">保障規劃報告</div></div>'
+    +'<div class="pp-meta">'+(s.name?'<strong>'+s.name+' '+gLabel+'</strong><br>':'')+'保險年齡：'+(s.age||'—')+'歲　年收入：'+s.ai+'萬　月收入：'+fmtN(s.mi)+'元<br>製表：'+ds+'</div></div>'
+    +'<div class="pp-principle"><strong>雙十原則：</strong>年保費上限 <strong>'+Math.round(s.ai*0.1*10)/10+'萬元/年</strong>（年收入×10%）；壽險最低保額 <strong>'+Math.round(s.ai*10)+'萬元</strong>（年收入×10倍）</div>'
+    +'<div class="pp-2col">'
+    +'<div class="pp-needs">'
+    +'<h2>保障需求與規劃對照</h2>'
     +sectHTML
-    +'<div class="footer"><span>本報告為保障需求分析，實際保費依投保時年齡健康狀況及費率為準。</span><span>宸功保險 '+ds+'</span></div>'
-    +'</body></html>';
+    +'</div>'
+    +premSec
+    +'</div>'
+    +'<div class="pp-footer"><span>本報告為保障需求分析，實際保費依投保時年齡健康狀況及費率為準。</span><span>宸功保險　'+ds+'</span></div>'
+    +'</div>';
 
-  // 直接在本頁觸發下載，不開新分頁，不受彈出視窗封鎖影響
-  var blob=new Blob([fullHtml],{type:'text/html;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;
-  a.download=(s.name?s.name+'_':'')+'保障規劃報告_'+dsFile+'.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function(){URL.revokeObjectURL(url);},1000);
-
-  // 給予使用者明確的下載完成提示
-  var btn=document.querySelector('.pdfbtn');
-  if(btn){
-    var orig=btn.textContent;
-    btn.textContent='✓ 已下載到您的裝置';
-    setTimeout(function(){btn.textContent=orig;},2500);
-  }
+  document.getElementById('printArea').innerHTML=html;
+  window.print();
 }
 // ── INIT ──
 initDrag();
