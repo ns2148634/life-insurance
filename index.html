@@ -32,6 +32,7 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 .page-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600;color:#fff;letter-spacing:1px;}
 .slbl{font-size:13px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
 #canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 32px 32px;scroll-behavior:smooth;}
+.screen{max-width:920px;margin-left:auto;margin-right:auto;}
 #botnav{padding:16px 32px calc(20px + env(safe-area-inset-bottom));flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid var(--border);background:var(--ink);}
 .btn-next{flex:1;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#1a1208;font-weight:700;font-family:'Noto Serif TC',serif;font-size:18px;letter-spacing:1px;padding:18px 32px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(194,151,79,0.28);transition:all .2s;}
 .btn-next:active{transform:scale(.97);box-shadow:none;}
@@ -190,6 +191,47 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 .pp-rneed{color:#c8410b;font-weight:600;width:34%;}
 .pp-rplan{color:#0a4a2a;font-weight:600;width:34%;}
 .pp-footer{margin-top:10px;padding-top:6px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:8.5px;color:#999;}
+
+/* ═══════════════════════════════
+   橫向 iPad／寬螢幕優化
+═══════════════════════════════ */
+@media (min-width:900px) and (orientation:landscape){
+  /* 基本資料：兩欄排列，避免單欄在寬螢幕被拉得很開 */
+  .qlist{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;}
+  .qcard:nth-child(1),.qcard:nth-child(3){grid-column:1;}
+  .qcard:nth-child(2),.qcard:nth-child(4){grid-column:2;}
+  .qcard:last-child{grid-column:1/-1;}
+
+  /* 整體說明文字放大，符合橫向 iPad 閱讀距離 */
+  .ssub{font-size:18px;}
+  .qtext{font-size:18px;}
+  .qhint{font-size:14px;}
+
+  /* 方法與選擇（S3）：每項說明文字放大 */
+  .scn{font-size:19px;}
+  .scw{font-size:16px;line-height:1.75;}
+  .nstit{font-size:23px;}
+
+  /* 總表與保費（S4）：說明與表格文字放大 */
+  .sintro{font-size:18px;}
+  .ntbl{font-size:16px;}
+  .ntbl th{font-size:13px;}
+  .nv{font-size:16px;}
+  .nprod{font-size:13.5px;}
+  .dtl{font-size:16px;}
+  .dtr{font-size:17px;}
+
+  /* 風險衡量（S2）卡片文字放大 */
+  .rname{font-size:21px;}
+  .rdesc{font-size:15.5px;}
+
+  /* 風險確認（S1）說明文字放大 */
+  .caption-text{font-size:18px;}
+}
+
+@media (min-width:1100px) and (orientation:landscape){
+  .screen{max-width:1040px;}
+}
 </style>
 </head>
 <body>
