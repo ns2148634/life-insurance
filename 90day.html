@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>宸功出擊90天｜業務員啟動手冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17343a;
+  --ink-dark:#0d2124;
+  --ink-soft:#274d54;
+  --ivory:#f6f2e7;
+  --paper:#fffdf8;
+  --vermilion:#c1442d;
+  --vermilion-dark:#9c351f;
+  --bronze:#a9803f;
+  --bronze-light:#e7d5ab;
+  --mist:#6c7570;
+  --line:#e3ddc9;
+  --line-dark:#2c4c52;
+  --shadow: 0 10px 30px -12px rgba(13,33,36,0.25);
+  --radius: 4px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--ivory);
+  color:var(--ink-dark);
+  font-family:'Noto Sans TC',sans-serif;
+  font-weight:400;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.serif{font-family:'Noto Serif TC',serif;}
+::selection{background:var(--bronze-light);}
+a{color:inherit;}
+
+/* ---------- layout shell ---------- */
+.shell{display:flex;min-height:100vh;}
+
+.sidebar{
+  width:250px;
+  flex-shrink:0;
+  background:var(--ink-dark);
+  color:var(--ivory);
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  padding:28px 0 40px;
+  z-index:40;
+}
+.sidebar::-webkit-scrollbar{width:6px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-dark);border-radius:4px;}
+
+.brand{
+  padding:0 24px 22px;
+  border-bottom:1px solid var(--line-dark);
+  margin-bottom:10px;
+}
+.brand .mark{
+  font-family:'Noto Serif TC',serif;
+  font-weight:900;
+  font-size:13px;
+  letter-spacing:.28em;
+  color:var(--bronze-light);
+  margin-bottom:6px;
+}
+.brand h1{
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 4px;
+  line-height:1.3;
+}
+.brand p{
+  margin:0;
+  font-size:12px;
+  color:#9fb3b3;
+  letter-spacing:.05em;
+}
+
+nav.toc{padding:6px 0;}
+nav.toc .grp-label{
+  font-size:11px;
+  letter-spacing:.2em;
+  color:#7d9494;
+  padding:16px 24px 6px;
+  font-weight:700;
+}
+nav.toc a{
+  display:flex;
+  gap:10px;
+  align-items:baseline;
+  padding:9px 24px;
+  font-size:14px;
+  color:#d9e2df;
+  text-decoration:none;
+  border-left:3px solid transparent;
+  transition:.15s;
+}
+nav.toc a .n{
+  font-family:'Noto Serif TC',serif;
+  font-size:11px;
+  color:var(--bronze-light);
+  min-width:20px;
+}
+nav.toc a:hover{background:rgba(255,255,255,.05);color:#fff;}
+nav.toc a.active{
+  border-left-color:var(--vermilion);
+  background:rgba(193,68,45,.14);
+  color:#fff;
+}
+
+.menu-toggle{
+  display:none;
+  position:fixed;
+  top:14px; left:14px;
+  z-index:60;
+  width:42px;height:42px;
+  border-radius:50%;
+  background:var(--ink-dark);
+  color:#fff;
+  border:none;
+  align-items:center;justify-content:center;
+  font-size:18px;
+  box-shadow:var(--shadow);
+}
+
+.main{flex:1;min-width:0;}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  background:
+    radial-gradient(1100px 480px at 85% -10%, rgba(193,68,45,.16), transparent 60%),
+    linear-gradient(160deg,var(--ink-dark) 0%, var(--ink) 55%, var(--ink-soft) 100%);
+  color:var(--ivory);
+  padding:64px 48px 46px;
+  overflow:hidden;
+}
+.hero::after{
+  content:"出擊";
+  position:absolute;
+  right:-20px; top:-40px;
+  font-family:'Noto Serif TC',serif;
+  font-weight:900;
+  font-size:260px;
+  color:rgba(255,255,255,.035);
+  letter-spacing:-.05em;
+  pointer-events:none;
+  line-height:1;
+}
+.hero .eyebrow{
+  font-size:12px;
+  letter-spacing:.35em;
+  color:var(--bronze-light);
+  font-weight:700;
+  margin-bottom:16px;
+}
+.hero h2{
+  font-size:44px;
+  font-weight:900;
+  margin:0 0 14px;
+  letter-spacing:.03em;
+}
+.hero h2 em{
+  font-style:normal;
+  color:var(--vermilion);
+  border-bottom:3px solid var(--vermilion);
+  padding-bottom:2px;
+}
+.hero .lede{
+  max-width:640px;
+  color:#cfe0dd;
+  font-size:15.5px;
+  margin:0 0 34px;
+}
+.hero .credit{
+  font-size:12px;
+  color:#8fa6a3;
+  margin-top:8px;
+  letter-spacing:.04em;
+}
+
+/* profile / save bar */
+.profile-bar{
+  background:var(--bronze-light);
+  border-bottom:1px solid var(--bronze);
+}
+.pb-inner{
+  max-width:1400px;
+  padding:9px 48px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-size:12.5px;color:#5a4623;
+}
+.pb-inner .pb-icon{font-size:14px;}
+.pb-inner b{color:#3d3013;}
+.pb-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap;}
+.pb-actions select,.pb-actions input{
+  font-family:'Noto Sans TC',sans-serif;
+  border:1px solid var(--bronze);border-radius:3px;
+  padding:5px 9px;font-size:12.5px;background:#fffdf6;color:#3d3013;
+}
+.pb-actions button{
+  font-family:'Noto Sans TC',sans-serif;
+  border:1px solid var(--ink-dark);background:var(--ink-dark);color:var(--ivory);
+  padding:6px 14px;border-radius:3px;font-size:12.5px;cursor:pointer;
+}
+.pb-actions button.ghost{background:transparent;color:#5a4623;border-color:var(--bronze);}
+#pbStatus{color:#7a6633;font-size:11.5px;}
+@media (max-width:900px){
+  .pb-inner{padding:9px 22px;}
+}
+
+/* campaign ribbon — signature element */
+.ribbon-wrap{
+  position:relative;
+  z-index:2;
+  background:rgba(255,253,248,.06);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:6px;
+  padding:20px 22px 16px;
+  backdrop-filter:blur(2px);
+}
+.ribbon-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:14px;flex-wrap:wrap;gap:8px;
+}
+.ribbon-head .t{font-size:13px;letter-spacing:.18em;color:var(--bronze-light);font-weight:700;}
+.ribbon-head .h{font-size:12px;color:#9fb3b3;}
+.ribbon{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:6px;
+}
+.ribbon .wk{
+  position:relative;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:3px;
+  padding:10px 4px 8px;
+  text-align:center;
+  cursor:pointer;
+  transition:.15s;
+}
+.ribbon .wk:hover{background:rgba(255,255,255,.12);}
+.ribbon .wk .num{
+  font-family:'Noto Serif TC',serif;
+  font-weight:900;
+  font-size:16px;
+  display:block;
+  color:#fff;
+}
+.ribbon .wk .lab{
+  display:block;
+  font-size:9.5px;
+  color:#9fb3b3;
+  margin-top:3px;
+  letter-spacing:.03em;
+}
+.ribbon .wk .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--mist);
+  margin:6px auto 0;
+}
+.ribbon .wk.done{background:rgba(193,68,45,.22);border-color:var(--vermilion);}
+.ribbon .wk.done .dot{background:var(--vermilion);}
+
+/* ---------- generic content sections ---------- */
+section.block{
+  padding:52px 48px;
+  border-bottom:1px solid var(--line);
+  scroll-margin-top:20px;
+}
+section.block:nth-child(even){background:var(--paper);}
+.kicker{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:22px;
+}
+.kicker .idx{
+  font-family:'Noto Serif TC',serif;
+  font-weight:900;
+  font-size:15px;
+  color:var(--vermilion);
+  border:1.5px solid var(--vermilion);
+  border-radius:50%;
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.kicker h3{font-size:24px;font-weight:700;margin:0;color:var(--ink-dark);}
+.kicker .sub{font-size:12.5px;color:var(--mist);margin-top:2px;}
+.section-intro{max-width:760px;color:var(--ink-soft);font-size:14.5px;margin-bottom:26px;}
+
+p.body-text{max-width:760px;color:#3a4744;font-size:15px;}
+blockquote{
+  margin:18px 0;
+  padding:14px 20px;
+  border-left:3px solid var(--bronze);
+  background:var(--ivory);
+  font-family:'Noto Serif TC',serif;
+  font-weight:500;
+  font-size:15.5px;
+  color:var(--ink);
+  max-width:720px;
+}
+
+.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;}
+.pill{
+  font-size:12.5px;
+  padding:6px 13px;
+  border:1px solid var(--line);
+  border-radius:99px;
+  background:var(--paper);
+  color:var(--ink-soft);
+}
+
+/* preface / letter styling */
+.letter{
+  max-width:720px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:34px 38px;
+  box-shadow:var(--shadow);
+  position:relative;
+}
+.letter::before{
+  content:"序";
+  position:absolute;
+  top:-18px;left:34px;
+  background:var(--vermilion);
+  color:#fff;
+  font-family:'Noto Serif TC',serif;
+  font-weight:700;
+  font-size:13px;
+  padding:5px 14px;
+  border-radius:2px;
+  letter-spacing:.3em;
+}
+.letter p{font-size:14.5px;color:#3a4744;margin:0 0 14px;}
+.letter p:last-child{margin-bottom:0;}
+
+/* step list for supervisor guide */
+.step-list{max-width:760px;counter-reset:step;}
+.step{
+  display:flex;gap:16px;
+  padding:16px 0;
+  border-bottom:1px dashed var(--line);
+}
+.step:last-child{border-bottom:none;}
+.step .num{
+  counter-increment:step;
+  font-family:'Noto Serif TC',serif;
+  font-weight:900;
+  font-size:20px;
+  color:var(--bronze);
+  flex-shrink:0;
+  width:32px;
+}
+.step .num::before{content:counter(step,decimal-leading-zero);}
+.step .txt{font-size:14.5px;color:#3a4744;}
+.step .txt b{color:var(--ink-dark);}
+
+.note-card{
+  max-width:760px;
+  margin-top:18px;
+  background:#fbf3e9;
+  border:1px solid var(--bronze-light);
+  border-radius:var(--radius);
+  padding:16px 20px;
+  font-size:13.5px;
+  color:#6b5427;
+}
+
+/* vision / mission */
+.vm-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;}
+.vm-card{
+  background:var(--ink-dark);
+  color:var(--ivory);
+  border-radius:6px;
+  padding:28px 26px;
+  position:relative;
+  overflow:hidden;
+}
+.vm-card.alt{background:var(--paper);color:var(--ink-dark);border:1px solid var(--line);}
+.vm-card .tag{font-size:11px;letter-spacing:.25em;color:var(--bronze-light);font-weight:700;margin-bottom:10px;}
+.vm-card.alt .tag{color:var(--vermilion);}
+.vm-card h4{font-size:19px;margin:0 0 12px;font-weight:700;}
+.vm-card ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.8;}
+.vm-card.alt ul{color:#4a5551;}
+.vm-card:not(.alt) ul{color:#c9d8d5;}
+.philo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;}
+.philo-list li{padding-left:16px;border-left:2px solid var(--bronze);}
+.philo-list b{
+  display:block;font-family:'Noto Serif TC',serif;font-size:15px;color:#f0e6cc;
+  margin-bottom:3px;letter-spacing:.04em;
+}
+.philo-list span{display:block;font-size:12.5px;color:#b9c9c6;line-height:1.7;}
+.philo-sub{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:3px;}
+.philo-sub li{
+  padding-left:0;border-left:none;
+  font-size:12.5px;color:#b9c9c6;line-height:1.6;
+  position:relative;padding-left:14px;
+}
+.philo-sub li::before{
+  content:"";position:absolute;left:0;top:8px;
+  width:5px;height:5px;border-radius:50%;background:var(--bronze-light);
+}
+
+/* goal cards (第一部) */
+.goal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:980px;}
+.goal-card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px 20px 22px;
+  box-shadow:var(--shadow);
+}
+.goal-card .m{
+  font-family:'Noto Serif TC',serif;
+  font-weight:900;
+  color:var(--vermilion);
+  font-size:14px;
+  letter-spacing:.1em;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--line);
+}
+.goal-field{margin-bottom:10px;}
+.goal-field label{display:block;font-size:11.5px;color:var(--mist);margin-bottom:4px;}
+.goal-field .inp{
+  display:flex;align-items:center;
+  border:1px solid var(--line);
+  border-radius:3px;
+  overflow:hidden;
+}
+.goal-field .inp span{
+  background:var(--ivory);font-size:12px;color:var(--mist);padding:8px 8px;
+  border-right:1px solid var(--line);
+}
+.goal-field input{
+  border:none;outline:none;padding:8px 10px;font-size:13.5px;width:100%;
+  font-family:'Noto Sans TC',sans-serif;background:transparent;
+}
+.goal-field .inp.readonly{background:var(--ivory);}
+.goal-field input[readonly]{color:var(--vermilion);font-weight:700;cursor:default;}
+.goal-field .hint{font-size:10.5px;color:var(--mist);margin-top:3px;}
+.goal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
+.goal-stats .gs{
+  background:var(--ivory);border:1px solid var(--line);border-radius:3px;
+  padding:8px 4px;text-align:center;
+}
+.goal-stats .gs b{
+  display:block;font-family:'Noto Serif TC',serif;font-size:17px;color:var(--ink-dark);
+}
+.goal-stats .gs span{font-size:10.5px;color:var(--mist);}
+
+/* mandala grid (第二部) */
+.mandala{
+  display:grid;grid-template-columns:repeat(3,120px);grid-template-rows:repeat(3,120px);
+  gap:8px;
+}
+.mandala .cell{
+  border:1px solid var(--line);
+  background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:13.5px;color:var(--ink-soft);border-radius:3px;
+  font-family:'Noto Serif TC',serif;font-weight:500;
+  gap:4px;
+}
+.mandala .cell small{font-size:10px;color:var(--mist);font-family:'Noto Sans TC',sans-serif;}
+.mandala .cell.center{
+  background:var(--vermilion);color:#fff;font-weight:900;font-size:16px;
+  border-color:var(--vermilion);
+}
+.mandala-note{max-width:600px;color:var(--mist);font-size:13px;margin-top:16px;}
+
+/* week cards (第三部) */
+.week-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.week-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;scroll-margin-top:90px;
+}
+.week-card .wc-head{
+  background:var(--ink-dark);color:var(--ivory);
+  padding:12px 16px;display:flex;justify-content:space-between;align-items:center;
+}
+.week-card .wc-head .wname{font-family:'Noto Serif TC',serif;font-weight:700;font-size:15px;}
+.week-card .wc-head .wprog{font-size:11px;color:var(--bronze-light);}
+.week-card table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.week-card td{padding:9px 12px;vertical-align:top;border-bottom:1px solid var(--line);}
+.week-card tr:last-child td{border-bottom:none;}
+.week-card td.day{width:52px;color:var(--vermilion);font-weight:700;white-space:nowrap;}
+.week-card td.goal{color:var(--mist);font-size:11px;width:96px;}
+.week-card td.chk{width:26px;text-align:center;}
+.week-card input[type=checkbox]{
+  width:17px;height:17px;accent-color:var(--vermilion);cursor:pointer;
+}
+.week-card tr.checked td{color:var(--mist);text-decoration:line-through;text-decoration-color:var(--line-dark);}
+.week-card tr.checked td.goal{text-decoration:none;}
+
+/* script accordion (話術) */
+.script-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+.script-tabs button{
+  font-family:'Noto Sans TC',sans-serif;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);
+  padding:8px 16px;border-radius:99px;font-size:13px;cursor:pointer;transition:.15s;
+}
+.script-tabs button:hover{border-color:var(--vermilion);}
+.script-tabs button.active{background:var(--vermilion);border-color:var(--vermilion);color:#fff;}
+
+.script-panel{display:none;}
+.script-panel.active{display:block;animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+.talk-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  margin-bottom:14px;overflow:hidden;
+}
+.talk-card .th{
+  background:var(--ivory);padding:10px 18px;font-family:'Noto Serif TC',serif;font-weight:700;
+  font-size:14px;color:var(--ink-dark);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:8px;
+}
+.talk-card .th .dot{width:7px;height:7px;border-radius:50%;background:var(--vermilion);}
+.talk-card .tb{padding:14px 20px;}
+.talk-card .tb ul{margin:0;padding-left:18px;font-size:13.5px;color:#3a4744;line-height:1.85;}
+.talk-card .tb ul li{margin-bottom:4px;}
+.talk-card .tb .say{
+  font-family:'Noto Serif TC',serif;
+  color:var(--ink);font-size:13.5px;line-height:1.85;
+  background:var(--ivory);border-radius:3px;padding:10px 14px;margin-bottom:8px;
+}
+.talk-card .tb .say:last-child{margin-bottom:0;}
+
+.mini-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;}
+.mini-table td{padding:6px 10px;border-bottom:1px solid var(--line);color:#3a4744;}
+.mini-table td:first-child{color:var(--vermilion);font-weight:700;width:34px;text-align:center;}
+
+/* daily checklist grid (時間管理) */
+.tm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.tm-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;}
+.tm-card h5{margin:0 0 8px;font-family:'Noto Serif TC',serif;font-size:14px;color:var(--vermilion);}
+.tm-card ul{margin:0;padding-left:16px;font-size:13px;color:#3a4744;line-height:1.8;}
+
+/* training module (第四部) */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.mod-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.mod-card .mh{
+  background:var(--ink);color:#fff;padding:11px 16px;
+  font-family:'Noto Serif TC',serif;font-weight:700;font-size:14.5px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.mod-card .mh .cnt{font-size:11px;color:var(--bronze-light);font-family:'Noto Sans TC',sans-serif;}
+.mod-card .row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 16px;border-bottom:1px solid var(--line);
+}
+.mod-card .row:last-child{border-bottom:none;}
+.mod-card .row input{margin-top:3px;width:16px;height:16px;accent-color:var(--vermilion);flex-shrink:0;}
+.mod-card .row .rt b{display:block;font-size:13px;color:var(--ink-dark);}
+.mod-card .row .rt span{font-size:12px;color:var(--mist);}
+.mod-card .row.checked .rt b, .mod-card .row.checked .rt span{text-decoration:line-through;color:var(--mist);}
+
+/* principle cards (經營心法) */
+.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.pr-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+.pr-card h5{margin:0 0 10px;font-family:'Noto Serif TC',serif;font-size:15px;color:var(--ink-dark);border-bottom:2px solid var(--bronze);display:inline-block;padding-bottom:4px;}
+.pr-card ul{margin:0;padding-left:16px;font-size:13px;color:#3a4744;line-height:1.85;}
+.pr-card .man{display:flex;gap:14px;flex-wrap:wrap;}
+.pr-card .man div{text-align:center;}
+.pr-card .man b{
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;background:var(--vermilion);color:#fff;
+  font-family:'Noto Serif TC',serif;margin:0 auto 4px;
+}
+.pr-card .man span{font-size:11px;color:var(--mist);}
+
+/* badges (競賽) */
+.badge-row{display:flex;flex-wrap:wrap;gap:12px;}
+.badge{
+  background:linear-gradient(160deg,var(--ink-dark),var(--ink));
+  color:var(--bronze-light);
+  border:1px solid var(--line-dark);
+  padding:14px 20px;border-radius:6px;
+  font-family:'Noto Serif TC',serif;font-weight:700;font-size:14px;
+  min-width:120px;text-align:center;
+  box-shadow:var(--shadow);
+}
+.badge span{display:block;font-size:10px;color:#8fa6a3;font-family:'Noto Sans TC',sans-serif;letter-spacing:.1em;margin-top:4px;}
+
+footer{
+  padding:34px 48px 60px;text-align:center;color:var(--mist);font-size:12px;
+  background:var(--ink-dark);color:#8fa6a3;
+}
+footer b{color:var(--bronze-light);}
+
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .goal-grid{grid-template-columns:1fr;}
+  .vm-grid{grid-template-columns:1fr;}
+  .pr-grid{grid-template-columns:1fr;}
+}
+@media (max-width:900px){
+  .sidebar{
+    position:fixed;left:0;top:0;height:100vh;
+    transform:translateX(-100%);
+    transition:transform .25s ease;
+    width:78%;max-width:300px;
+  }
+  .sidebar.open{transform:translateX(0);box-shadow:20px 0 40px rgba(0,0,0,.3);}
+  .menu-toggle{display:flex;}
+  .hero{padding:80px 24px 34px;}
+  .hero h2{font-size:30px;}
+  section.block{padding:40px 22px;}
+  .ribbon{grid-template-columns:repeat(6,1fr);}
+  .ribbon .wk:nth-child(n+7){margin-top:2px;}
+}
+@media (max-width:560px){
+  .mandala{grid-template-columns:repeat(3,88px);grid-template-rows:repeat(3,88px);}
+  .mandala .cell{font-size:11.5px;}
+}
+.overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:39;
+}
+.overlay.show{display:block;}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle" aria-label="開啟目錄">☰</button>
+<div class="overlay" id="overlay"></div>
+
+<div class="shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="mark">宸功保險 CHENGGONG</div>
+      <h1>宸功出擊<br>90天</h1>
+      <p>業務員啟動手冊・線上版</p>
+    </div>
+    <nav class="toc" id="toc">
+      <div class="grp-label">開場</div>
+      <a href="#preface"><span class="n">序</span>序言</a>
+      <a href="#guide"><span class="n">導</span>主管指導指南</a>
+      <a href="#vision"><span class="n">念</span>理念與願景</a>
+      <a href="#philosophy"><span class="n">思</span>推銷人生而非保險</a>
+      <div class="grp-label">四大部</div>
+      <a href="#part1"><span class="n">01</span>目標設定與評估</a>
+      <a href="#part2"><span class="n">02</span>建立準客戶名冊</a>
+      <a href="#part3"><span class="n">03</span>90天工作計劃</a>
+      <a href="#scripts"><span class="n">・</span>話術手冊</a>
+      <a href="#timemgmt"><span class="n">08</span>時間管理</a>
+      <a href="#part4"><span class="n">04</span>業務員訓練模組</a>
+      <div class="grp-label">心法</div>
+      <a href="#principles"><span class="n">法</span>經營心法</a>
+      <a href="#attitude"><span class="n">賽</span>從業態度與競賽</a>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="eyebrow">CHENGGONG INSURANCE ・ 新人培育教材</div>
+      <h2>宸功出擊<em>90天</em></h2>
+      <p class="lede">
+        一套現學現用的90天啟動計劃 —— 從建立人脈、話術演練，到目標設定與訓練模組，
+        引導新進業務員在最關鍵的前三個月，養成良好工作習慣，走向壽險事業的成功範例。
+      </p>
+
+      <div class="ribbon-wrap">
+        <div class="ribbon-head">
+          <div class="t">戰情總覽 ・ 12週作戰進度</div>
+          <div class="h">點選週次可直接前往當週工作計劃，勾選代表本週已完成</div>
+        </div>
+        <div class="ribbon" id="ribbon"></div>
+      </div>
+      <p class="credit">南山人壽 業務主管指導教材・依「宸功出擊90天」原始手冊整理製作</p>
+    </header>
+
+    <!-- profile / progress save bar -->
+    <div class="profile-bar">
+      <div class="pb-inner">
+        <span class="pb-icon">👤</span>
+        <span>學員：<b id="pbName">尚未設定</b></span>
+        <span id="pbStatus">進度僅儲存在此裝置瀏覽器中</span>
+        <div class="pb-actions">
+          <select id="pbSelect"><option value="">＋ 新增／切換學員</option></select>
+          <button class="ghost" id="pbClearBtn" type="button">清除此學員進度</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 序 -->
+    <section class="block" id="preface">
+      <div class="kicker"><div class="idx">序</div><div><h3>序言</h3><div class="sub">寫給每一位即將出擊的新進夥伴</div></div></div>
+      <div class="letter">
+        <p>對一位新進的業務員而言，初期的培養工作是非常的重要，尤其是壽險推銷工作，本身即是一項不受限制的事業，要如何發揮自我管理，建立良好的工作習慣，是初期最重要的課題。</p>
+        <p>根據LIMRA的一項調查分析，新進業務員若能夠在前三個月產生較高的F.Y.P.及件數，那麼他在壽險推銷行業的留存率也會比較高；所以，前三個月良好的指導才是邁向成功的最好途徑。</p>
+        <p>推銷是一系列的活動，不是單一的成交事件。如果我們能夠使新人瞭解這是一個必然遭遇的現象，並幫他重新評估這一事業的價值，或許可以幫助更多人在此一事業獲致較大的成功。</p>
+        <p>成功的前提是「良好的工作規劃」，然而效率與成功之間並不全然相等，還需要「努力的工作」來實現這個計劃。我們希望透過這份教材，指導新進人員如何作完善的工作規劃，並激勵其努力工作的信心，成為壽險推銷事業裡的成功範例。</p>
+      </div>
+    </section>
+
+    <!-- 主管指導指南 -->
+    <section class="block" id="guide">
+      <div class="kicker"><div class="idx">導</div><div><h3>業務主管指導指南</h3><div class="sub">概論・指導步驟・訓練記錄表</div></div></div>
+
+      <p class="section-intro">
+        宸功出擊90天的課程，是為了因應主管的要求而設計 —— 一套簡單且有效的銷售課程，引導新進而缺乏保險經驗的業務員及早起步。
+        課程強調現學現用，學習者能將所學立即套用在真實的行銷活動中；業務員須熟記背誦每一項既定話術，並適當應用每一項推銷工具，
+        待獲得一定成效後，再發揮創造力，擴展原有的知識領域。
+      </p>
+
+      <div class="step-list">
+        <div class="step"><div class="num"></div><div class="txt">請學員在上課之前，<b>先行瀏覽課程資料</b>，作好準備。</div></div>
+        <div class="step"><div class="num"></div><div class="txt">主管解說課程，<b>切勿照本宣科</b>。靈活運用小故事和實際例子，說明課程的重要性及它在推銷過程中所扮演的角色，藉此激發學員的想像力，提昇訓練、輔導的效果。</div></div>
+        <div class="step"><div class="num"></div><div class="txt">以積極的態度將推銷工具及話術提示學員，並以敏銳的幽默感疏導新概念可能產生的排斥；但對業務員的要求上，須<b>嚴格遵循教材指示、如期完成</b>，太過姑息寬容並不是一件好事。</div></div>
+        <div class="step"><div class="num"></div><div class="txt"><b>指定作業與繳交期限</b>及應達成的水準，繳交期限通常訂在下一堂課程開始時；下一堂課開始前，應先複習前一堂課程並要求角色演練，以驗收學習成績。</div></div>
+      </div>
+
+      <div class="note-card">
+        <b>訓練記錄表｜</b>每一項課程授課完畢後，應立即記載於業務員訓練記錄表上；若作業未能如期繳交，或成績未能使指導主管滿意，須予以注意並加強講解該課題，直到成績令人滿意為止。
+      </div>
+    </section>
+
+    <!-- 理念與願景 -->
+    <section class="block" id="vision">
+      <div class="kicker"><div class="idx">念</div><div><h3>理念與願景</h3></div></div>
+      <div class="vm-grid">
+        <div class="vm-card">
+          <div class="tag">OUR PHILOSOPHY</div>
+          <h4>我們的理念</h4>
+          <ul class="philo-list">
+            <li><b>創造價值</b><ul class="philo-sub">
+              <li>為客戶創造利他價值</li>
+              <li>為自己創造利己價值</li>
+              <li>為家人創造生活價值</li>
+              <li>為團隊創造非凡價值</li>
+            </ul></li>
+            <li><b>追求卓越</b><ul class="philo-sub">
+              <li>追求個人的成長</li>
+              <li>追求公司的競賽</li>
+              <li>追求團隊的榮耀</li>
+            </ul></li>
+            <li><b>樂在生活</b><ul class="philo-sub">
+              <li>時間自由</li>
+              <li>財富自由</li>
+              <li>享受生活</li>
+            </ul></li>
+          </ul>
+        </div>
+        <div class="vm-card alt">
+          <div class="tag">OUR VISION</div>
+          <h4>我們的願景 —— 用保險改變世界</h4>
+          <ul>
+            <li>賣出良質的保單（改變的起點）</li>
+            <li>每年為50位客戶做足10倍保障，平均保額500萬，每年賣出2.5億的保障</li>
+            <li>不斷培育優秀人才（每年培育3位優秀人才，把愛傳出去）</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 推銷人生而不是人壽保險 -->
+    <section class="block" id="philosophy">
+      <div class="kicker"><div class="idx">思</div><div><h3>推銷人生而不是人壽保險</h3></div></div>
+      <p class="body-text">推銷員常常用錯誤的方法去推銷產品，盡力推銷保單而不是推銷保險的功用。實際上，人們對壽險有什麼看法並不重要——人壽保險是一種機械化的途徑；在還未解決生活上的經濟問題前，不要去談論保險。</p>
+      <p class="body-text">你必須談及人生，讓對方同意生活所帶來的種種經濟難題，而不要針對壽險而爭論。</p>
+      <blockquote>沒有人可以否認人會衰老，沒有人可以否認在某個時候賺錢能力會中斷——而當它發生時，我們需要一個新的收入來源。</blockquote>
+      <p class="body-text">一個普通的推銷員之所以會敗下陣來，是因為他們一開始便推銷壽險，而不是著手去推銷壽險所帶來的好處。你將來能領取多少錢，完全依賴於你所擁有的時間與精力——你能控制精力，但你無法控制自己擁有多少歲月。</p>
+      <p class="body-text">當壽命停頓時，你本來可賺取到的錢也化為烏有，沒有一個人可以取得它。繼續與對方談到合宜的時候，將壽險計劃推銷給他，去解決<b>「時間未知數」</b>的難題。</p>
+      <blockquote>人壽保險是你世界上唯一可利用尚未賺取到手的錢的計劃。只有通過人壽保險，即使時間因素對他們不利，家庭成員仍將得到那筆未來的錢財。</blockquote>
+      <p class="body-text">推銷人壽保險不是靠講述人壽保險本身，而是講及難題對客戶自己又將有什麼意義。你的客戶希望購買壽險，不是因為它是人壽保險，而是<b>人壽保險能為他作些什麼</b>。</p>
+    </section>
+
+    <!-- 第一部：目標設定與評估 -->
+    <section class="block" id="part1">
+      <div class="kicker"><div class="idx">01</div><div><h3>第一部｜目標設定與評估</h3><div class="sub">填入每月目標，做為90天作戰的基準</div></div></div>
+      <div class="goal-grid" id="goalGrid"></div>
+    </section>
+
+    <!-- 第二部：建立準客戶名冊 -->
+    <section class="block" id="part2">
+      <div class="kicker"><div class="idx">02</div><div><h3>第二部｜建立準客戶名冊</h3><div class="sub">曼陀羅思考法 —— 列出100位準客戶名單</div></div></div>
+      <div class="mandala" id="mandala"></div>
+      <p class="mandala-note">以「自己」為中心，向外延伸八個人脈圈：親戚、朋友、同事、同好、同學、同袍、鄰居、消費對象，每一圈試著列出10 ～ 15位名單，合計建立100位準客戶名冊。</p>
+    </section>
+
+    <!-- 第三部：90天工作計劃 -->
+    <section class="block" id="part3">
+      <div class="kicker"><div class="idx">03</div><div><h3>第三部｜90天工作計劃</h3><div class="sub">12週逐日行動清單，完成即打勾</div></div></div>
+      <div class="week-grid" id="weekGrid"></div>
+      <div class="note-card" style="margin-top:22px;">
+        <b>業務員最重要的兩件事｜</b>開發客戶：持續每日做，便可擁有源源不絕的客戶。時間管理：每週固定2～4小時，安排下週所有行程。
+      </div>
+    </section>
+
+    <!-- 話術手冊 -->
+    <section class="block" id="scripts">
+      <div class="kicker"><div class="idx">・</div><div><h3>話術手冊</h3><div class="sub">一至七，拜訪現場隨查隨用</div></div></div>
+      <div class="script-tabs" id="scriptTabs"></div>
+      <div id="scriptPanels"></div>
+    </section>
+
+    <!-- 時間管理 -->
+    <section class="block" id="timemgmt">
+      <div class="kicker"><div class="idx">08</div><div><h3>時間管理</div><div class="sub"></div></div></div>
+      <div class="tm-grid">
+        <div class="tm-card"><h5>推銷</h5><ul><li>新增準客戶</li><li>拜訪客戶</li><li>遞送建議書</li><li>售後服務</li></ul></div>
+        <div class="tm-card"><h5>增員</h5><ul><li>新增準增對象</li><li>增員面談</li></ul></div>
+        <div class="tm-card"><h5>進修</h5><ul><li>閱讀書籍</li><li>進修課程</li><li>健康運動</li></ul></div>
+        <div class="tm-card"><h5>生活</h5><ul><li>社團活動</li><li>家庭</li><li>娛樂</li></ul></div>
+      </div>
+    </section>
+
+    <!-- 第四部：業務員訓練模組 -->
+    <section class="block" id="part4">
+      <div class="kicker"><div class="idx">04</div><div><h3>第四部｜業務員訓練模組</h3><div class="sub">依主管授課進度勾選已完訓課程</div></div></div>
+      <div class="mod-grid" id="modGrid"></div>
+    </section>
+
+    <!-- 經營心法 -->
+    <section class="block" id="principles">
+      <div class="kicker"><div class="idx">法</div><div><h3>經營心法</h3></div></div>
+      <div class="pr-grid">
+        <div class="pr-card">
+          <h5>經營關鍵</h5>
+          <ul>
+            <li>頻率：A-每週／B-二週／C-每月／D-有空</li>
+            <li>價值：服務／資源／解決問題</li>
+            <li>專業：簡單明瞭／表達清楚／不斷學習</li>
+          </ul>
+        </div>
+        <div class="pr-card">
+          <h5>經營要領</h5>
+          <ul>
+            <li>頻率相同</li>
+            <li>取得信任 —— 外：服儀／內：專業知識（是否有準備）</li>
+            <li>賣出需求 —— 適當的難題／適當的保障／適當的保費</li>
+          </ul>
+        </div>
+        <div class="pr-card">
+          <h5>經營原則</h5>
+          <div class="man">
+            <div><b>M</b><span>繳費能力</span></div>
+            <div><b>A</b><span>誰掌權</span></div>
+            <div><b>N</b><span>有需求者</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 從業態度 -->
+    <section class="block" id="attitude">
+      <div class="kicker"><div class="idx">賽</div><div><h3>從業態度與競賽</h3><div class="sub">上競賽是必要的</div></div></div>
+      <div class="badge-row">
+        <div class="badge">高峰<span>PEAK</span></div>
+        <div class="badge">新高峰<span>NEW PEAK</span></div>
+        <div class="badge">四星會<span>4-STAR CLUB</span></div>
+        <div class="badge">董事長盃<span>CHAIRMAN'S CUP</span></div>
+        <div class="badge">MDRT<span>百萬圓桌</span></div>
+        <div class="badge">人力超級盃<span>RECRUITING BOWL</span></div>
+      </div>
+    </section>
+
+    <footer>
+      本手冊依「宸功出擊90天」業務主管指導教材整理製作，僅供 <b>宸功保險 Chenggong Insurance</b> 內部訓練使用。
+    </footer>
+  </main>
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+const weeks = [
+  {n:1, label:"人脈建立週", days:[
+    ["第一天","工作態度建立＆目標設定","建立正確的壽險事業觀"],
+    ["第二天","組織準客戶","六大推銷步驟第一步"],
+    ["第三天","建立人脈網（10人）","初次接觸"],
+    ["第四天","建立人脈網（10人）","初次接觸"],
+    ["第五天","建立人脈網（10人）","初次接觸"],
+  ]},
+  {n:2, label:"陪同示範週", days:[
+    ["第一天","約訪行程（最佳客戶3選2）","出師先捷"],
+    ["第二天","建立人脈網（10人）","初次接觸"],
+    ["第三天","建立人脈網（10人）","初次接觸"],
+    ["第四天","主管陪同3選2之1","示範推銷"],
+    ["第五天","主管陪同3選2之1","示範推銷"],
+  ]},
+  {n:3, label:"好感建立週", days:[
+    ["第一天","順道約訪（打廣告）","建立好感度"],
+    ["第二天","順道約訪（打廣告）","建立好感度"],
+    ["第三天","順道約訪（打廣告）","建立好感度"],
+    ["第四天","順道約訪（打廣告）","建立好感度"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:4, label:"陌生開發週", days:[
+    ["第一天","電話開發（1位）","開發公司行號"],
+    ["第二天","客戶開發活動（長輩）","開發陌生客戶"],
+    ["第三天","電話開發（1位）","開發公司行號"],
+    ["第四天","客戶開發活動（平輩）","開發陌生客戶"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:5, label:"人生圖演練週", days:[
+    ["第一天","分享人生圖（1位）","熟練到能應用"],
+    ["第二天","分享人生圖（1位）","熟練到能應用"],
+    ["第三天","分享人生圖（1位）","熟練到能應用"],
+    ["第四天","分享人生圖（1位）","熟練到能應用"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:6, label:"陌生開發週", days:[
+    ["第一天","電話開發（1位）","開發公司行號"],
+    ["第二天","客戶開發活動（長輩）","開發陌生客戶"],
+    ["第三天","電話開發（1位）","開發公司行號"],
+    ["第四天","客戶開發活動（平輩）","開發陌生客戶"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:7, label:"理財矩陣週", days:[
+    ["第一天","理財矩陣面談（1位）","學習透過理財矩陣面談"],
+    ["第二天","理財矩陣面談（1位）","學習透過理財矩陣面談"],
+    ["第三天","理財矩陣面談（1位）","學習透過理財矩陣面談"],
+    ["第四天","理財矩陣面談（1位）","學習透過理財矩陣面談"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:8, label:"產險商機週", days:[
+    ["第一天","建立汽機車險商機（5位）","用產險開啟服務"],
+    ["第二天","建立汽機車險商機（5位）","用產險開啟服務"],
+    ["第三天","建立汽機車險商機（5位）","用產險開啟服務"],
+    ["第四天","建立汽機車險商機（5位）","用產險開啟服務"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:9, label:"儲蓄險週", days:[
+    ["第一天","一桶金面談（1位）","學習銷售儲蓄險"],
+    ["第二天","一桶金面談（1位）","學習銷售儲蓄險"],
+    ["第三天","一桶金面談（1位）","學習銷售儲蓄險"],
+    ["第四天","一桶金面談（1位）","學習銷售儲蓄險"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:10, label:"退休規劃週", days:[
+    ["第一天","退休金試算（1位）","學習規劃退休"],
+    ["第二天","退休金試算（1位）","學習規劃退休"],
+    ["第三天","退休金試算（1位）","學習規劃退休"],
+    ["第四天","退休金試算（1位）","學習規劃退休"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:11, label:"升級規劃週", days:[
+    ["第一天","升級主任規劃","設立升級目標及檢視"],
+    ["第二天","客戶開發活動（長輩）","開發陌生客戶"],
+    ["第三天","電話開發（1位）","開發公司行號"],
+    ["第四天","客戶開發活動（平輩）","開發陌生客戶"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+  {n:12, label:"長照推廣週", days:[
+    ["第一天","長照分享（1位）","推廣長照險"],
+    ["第二天","長照分享（1位）","推廣長照險"],
+    ["第三天","長照分享（1位）","推廣長照險"],
+    ["第四天","長照分享（1位）","推廣長照險"],
+    ["第五天","行程安排（安排下週行程）","養成提早安排習慣"],
+  ]},
+];
+
+const scripts = [
+  {title:"一、建立人脈網", cards:[
+    {h:"打招呼", say:["（準客戶姓名），好久不見！我們（多久時間）不見了"]},
+    {h:"切入主題", list:["你現在有在工作嗎？","可以問一下你公司是在做哪方面的嗎？","那你所負責的是什麼職務？","可以跟你要張你的名片嗎？（沒有個人就公司名片）"]},
+    {h:"說明來意", say:["因為我現在南山人壽接受業務培訓，會接觸很多客戶朋友，常常他們都會有很多資源上的需求（例：找廠商、買車、買房、醫師...），也有很多是做生意的可以提供給我的客戶朋友優惠，所以我想說了解一下大家現在的工作，有機會可以幫客戶朋友互相介紹。"]},
+    {h:"關心對方", list:["關心對方現在如何：家庭、工作、生活、感情..."]},
+  ]},
+  {title:"二、宸功三寶", cards:[
+    {h:"為何投入保險業？（分享保險觀念）", say:["因為我的主管和我分享了一個觀念，他說我們不一定要買保險，而是要知道自己需不需要保險。保險是我們在風險發生時幫助自己最好的方式，但台灣80%的人在規劃保險時都沒有做到這點。"], list:["分享自己原先對保險的看法"]},
+    {h:"為何選擇南山？（建立品牌形象）", say:["你知道南山在業界有哪三項最優嗎？"], list:["業務員最優（南山有業界最好的教育訓練制度）","理賠服務最好（申訴率最低，找理由賠給客戶）","最值得推薦（台灣前三大保險公司唯一純保險）"]},
+    {h:"這行業很難做？（引發興趣）", say:["是挺不容易的，因為很多業務員都是用人情推銷、商品推銷的方式在做這個行業，而我們單位用的是一套從國外引進的『需求分析』系統做規劃，這套系統會透過我們的「人生階段」及「財務收支狀況」進行評估，透過這套系統可以了解到自己在規劃上的方向是否正確，並告訴我們如何用最有效益的規劃達到最大效益。"], list:["你自己有買保險嗎？（5W）那你用的是什麼規劃方式？"]},
+  ]},
+  {title:"三、接觸－約訪", cards:[
+    {h:"整理地址", list:["將準客戶地址用地區及路線來整理，以便後續行程安排"]},
+    {h:"約訪", say:["（準客戶姓名），你（時間）有空嗎？我剛好會去你公司附近拜訪客戶，有空中午一起吃個飯／喝個咖啡／下班吃飯？"]},
+    {h:"打廣告", say:["這是我的名片，我現在在南山人壽參加人才培訓計劃，如果有保險、車險等相關的服務，都可以找我。"]},
+  ]},
+  {title:"四、面談", cards:[
+    {h:"要求面談", say:["（稱讚）我覺得你人很好，而且有機會你一定會很願意給我支持，不過支持我不用花錢的，只要給我30分鐘的時間，聽我分享我所學的，對我就是最好的支持了。","我也會承諾，過程中我不會推銷你，除非你有需要，我們才討論保險，你今天還是明天可以？"]},
+  ]},
+  {title:"五、每日工作清單", cards:[
+    {h:"每日3訪 —— 七大工作項目", mini:["南山聯名信用卡","產險商機建立","印鈔再保人生圖","儲蓄／退休","理財矩陣","長照險","保單健診"]},
+    {h:"新增準客戶", list:["每日認識3位準客戶，留下聯繫方式"]},
+    {h:"進修1小時", list:["參與晨會／進修專業／業外讀物"]},
+    {h:"Case study", list:["每日與主管PEP"]},
+    {h:"定聯", list:["每日與10位客戶聯繫，活動邀約，資訊分享"]},
+    {h:"① 南山聯名信用卡", say:["你是南山的保戶嗎？你有辦南山聯名卡嗎？"], list:["保費折扣1%，連汽機車強制險都有喔！","保費可以無息分期12期，年繳變月繳不用貴到！","保費外的消費捐0.1%給南山慈善基金醫療關懷計畫做公益！"]},
+    {h:"② 產險商機建立", say:["你有機車或汽車嗎？你的強制險是幾月投保的？","我記錄下來，到期的前一個月公司會提醒你也有報價服務"]},
+    {h:"③ 印鈔再保人生圖", list:["你有買保險嗎？","你為什麼會買保險？","你買保險最希望的效果是什麼？","如果有一套系統可以讓你用最有效率的方式規劃保險你有興趣嗎？"]},
+    {h:"④ 儲蓄／退休", list:["你有在做儲蓄／退休的計劃嗎？","如果有一個儲蓄／退休的計劃，可以讓你達到你儲蓄／退休的目標，你要不要聽聽看？"]},
+    {h:"⑤ 理財矩陣", list:["你有聽過理財矩陣嗎？","如果透過理財矩陣即使月薪3萬我們也能存下百萬存款，我分享給你聽"]},
+    {h:"⑥ 長照險", list:["我想跟你分享一個不可不知的保險","我們不一定要準備，但不可以不知道這個保險"]},
+    {h:"⑦ 保單健診", list:["你有做過保單健診嗎？","你知道為什麼要做保單健診嗎？","我和你分享一下為什麼需要保單健診（人生圖）"]},
+  ]},
+  {title:"六、活動開發", cards:[
+    {h:"長輩邀約", say:["○○，我這個○月○日時要舉辦一個講座（○○○○），很適合長輩的課程，想邀約你的父母來參加，分享一些小知識，我發一下講座資訊給你。"]},
+    {h:"平輩邀約", say:["○○，這個○月○日我們有一場○○○○的活動，想約你一起來參加，我發活動資訊給你先。"]},
+  ]},
+  {title:"七、講座", cards:[
+    {h:"講座主題一覽", mini:["LINE教學：教學綁定帳號，加好友／封鎖好友，備份訊息","防詐騙：分享現今的詐騙方式，如何防範","圖片製作：早/晚安圖製作，年節圖片製作","退休金試算：勞保老年給付、勞退、個人提撥","資產傳承：資產傳承應注意事項","保險理賠：保險怎麼賠，理賠前應注意事項","職災法勞基法：告訴僱主如何保障自己的事業"]},
+  ]},
+];
+
+const modules = [
+  {cat:"專業知識", items:[
+    ["南山壽險事業","南山壽險事業的未來與發展"],
+    ["從業態度","達成競賽／工作習慣／具備形象"],
+    ["統一教材","研讀統一教材1～5章"],
+    ["保險商品","商品分類／商品主要用途／商品內容"],
+  ]},
+  {cat:"保障需求", items:[
+    ["印鈔機","說明面臨的風險是什麼"],
+    ["再保原理","了解保險真正的運作原理"],
+    ["人生圖","適當的難題／適當的保額／適當的保費"],
+    ["保單規劃","為自己設計一份「有感覺」的保單"],
+  ]},
+  {cat:"理財規劃", items:[
+    ["理財矩陣","學會運用理財矩陣給客戶觀念"],
+    ["儲蓄型","一桶金／儲蓄觀念／理財商品分享／儲蓄險介紹"],
+    ["投資型","投資觀念及投資型商品介紹"],
+  ]},
+  {cat:"退休需求", items:[
+    ["收銀機","退休觀念建立，及早準備觀念引導"],
+    ["退休金試算","社會保險退休金，勞工退休金試算"],
+    ["退休三件事","退休帳戶／醫療帳戶／長照帳戶"],
+    ["FPP","退休需求分析"],
+  ]},
+  {cat:"推銷實務", items:[
+    ["推銷準備","推銷前應準備事項、心態"],
+    ["推銷工具","建議書系統／保單健診系統"],
+    ["感動行銷","愛與承諾／佐證資料／案例分享"],
+    ["說明成交","熟練建議書說明／異議問題處理"],
+  ]},
+  {cat:"資產傳承", items:[
+    ["富過三代","中國爺爺VS外國爺爺，觀念不同帶來的結果"],
+    ["民法繼承篇","法定繼承順序、比例"],
+    ["遺贈稅","如何課稅？影響的結果"],
+    ["運用商品","了解如何用商品達到資產傳承"],
+  ]},
+  {cat:"長照需求", items:[
+    ["長照趨勢","未來長期照護的重要"],
+    ["時間軸","長照時間軸用法"],
+    ["解決方案","長照商品說明及運用"],
+    ["何謂長照險","了解市場上類長照險與長照險分別"],
+  ]},
+  {cat:"產物保險", items:[
+    ["車險","汽機車第三人／強制險／車體險..."],
+    ["住宅火險","地震險／火險／颱風..."],
+    ["公共商火險","商家強制與應規劃的原因"],
+    ["僱主責任險","何謂僱主責任？僱主責任險與團險的差異"],
+  ]},
+  {cat:"職域行銷", items:[
+    ["進入要點","員工福利／僱主責任／留才計劃／股東互保"],
+    ["僱主責任","勞基法59條／職災保險法"],
+    ["勞保","勞保給付"],
+    ["產壽合一","產險和壽險如何搭配應用解決客戶問題"],
+  ]},
+  {cat:"增員面談", items:[
+    ["公司制度","深度了解南山制度"],
+    ["初步面談","引發興趣／了解準增"],
+    ["深度面談","公司介紹／制度說明／願景、成長、收入"],
+    ["新人制度","新人培訓制度說明"],
+  ]},
+];
+
+const goals = ["第一個月","第二個月","第三個月"];
+const mandalaLayout = [
+  ["親戚",""],["朋友",""],["同事",""],
+  ["同好",""],["自己","center"],["同學",""],
+  ["同袍",""],["鄰居",""],["消費對象",""],
+];
+
+/* ---------------- render: ribbon ---------------- */
+const ribbon = document.getElementById('ribbon');
+weeks.forEach(w=>{
+  const el = document.createElement('div');
+  el.className = 'wk';
+  el.dataset.week = w.n;
+  el.innerHTML = `<span class="num">${String(w.n).padStart(2,'0')}</span><span class="lab">${w.label}</span><span class="dot"></span>`;
+  el.addEventListener('click', ()=>{
+    document.getElementById('week-'+w.n).scrollIntoView({behavior:'smooth', block:'center'});
+  });
+  ribbon.appendChild(el);
+});
+
+/* ---------------- render: goal cards ---------------- */
+const goalGrid = document.getElementById('goalGrid');
+goals.forEach((g,i)=>{
+  const c = document.createElement('div');
+  c.className = 'goal-card';
+  c.dataset.month = i;
+  c.innerHTML = `
+    <div class="m">${g}｜MONTH 0${i+1}</div>
+    <div class="goal-field">
+      <label>收入目標</label>
+      <div class="inp"><span>NT$</span><input class="f-income" type="number" placeholder="0" inputmode="numeric" min="0"></div>
+    </div>
+    <div class="goal-field">
+      <label>保費目標</label>
+      <div class="inp readonly"><span>NT$</span><input class="f-premium" type="text" readonly placeholder="0"></div>
+      <div class="hint">＝ 收入 ÷ 30%，自動帶入</div>
+    </div>
+    <div class="goal-field">
+      <label>件數計劃</label>
+      <div class="inp"><span>件</span><input class="f-count" type="number" placeholder="0" inputmode="numeric" min="0"></div>
+    </div>
+    <div class="goal-stats">
+      <div class="gs"><b class="f-contact">0</b><span>接觸（×5）</span></div>
+      <div class="gs"><b class="f-interview">0</b><span>面談（×3）</span></div>
+      <div class="gs"><b class="f-visit">0</b><span>約訪（×10）</span></div>
+    </div>`;
+  goalGrid.appendChild(c);
+});
+
+function fmtNT(n){
+  if(!isFinite(n) || n<=0) return '';
+  return Math.round(n).toLocaleString('zh-TW');
+}
+function recalcGoalCard(card){
+  const income = parseFloat(card.querySelector('.f-income').value) || 0;
+  const count = parseFloat(card.querySelector('.f-count').value) || 0;
+  card.querySelector('.f-premium').value = income>0 ? fmtNT(income/0.3) : '';
+  card.querySelector('.f-contact').textContent = count>0 ? Math.round(count*5) : 0;
+  card.querySelector('.f-interview').textContent = count>0 ? Math.round(count*3) : 0;
+  card.querySelector('.f-visit').textContent = count>0 ? Math.round(count*10) : 0;
+}
+goalGrid.querySelectorAll('.goal-card').forEach(recalcGoalCard);
+goalGrid.addEventListener('input', e=>{
+  const card = e.target.closest('.goal-card');
+  if(!card) return;
+  recalcGoalCard(card);
+  scheduleSave();
+});
+
+/* ---------------- render: mandala ---------------- */
+const mandala = document.getElementById('mandala');
+mandalaLayout.forEach(([label, cls])=>{
+  const c = document.createElement('div');
+  c.className = 'cell' + (cls ? ' '+cls : '');
+  c.innerHTML = cls ? label : `${label}<small>准客戶</small>`;
+  mandala.appendChild(c);
+});
+
+/* ---------------- render: weeks ---------------- */
+const weekGrid = document.getElementById('weekGrid');
+weeks.forEach(w=>{
+  const card = document.createElement('div');
+  card.className = 'week-card';
+  card.id = 'week-'+w.n;
+  const rows = w.days.map((d,i)=>`
+    <tr data-w="${w.n}" data-d="${i}">
+      <td class="chk"><input type="checkbox"></td>
+      <td class="day">${d[0]}</td>
+      <td>${d[1]}</td>
+      <td class="goal">${d[2]}</td>
+    </tr>`).join('');
+  card.innerHTML = `
+    <div class="wc-head">
+      <div class="wname">第${["","一","二","三","四","五","六","七","八","九","十","十一","十二"][w.n]}週 ・ ${w.label}</div>
+      <div class="wprog" data-progress-for="${w.n}">0 / ${w.days.length}</div>
+    </div>
+    <table><tbody>${rows}</tbody></table>`;
+  weekGrid.appendChild(card);
+});
+
+function updateWeekProgress(w){
+  const boxes = document.querySelectorAll(`tr[data-w="${w}"] input[type=checkbox]`);
+  let done = 0;
+  boxes.forEach(b=>{ if(b.checked) done++; });
+  const label = document.querySelector(`[data-progress-for="${w}"]`);
+  if(label) label.textContent = `${done} / ${boxes.length}`;
+  const ribbonWk = document.querySelector(`.ribbon .wk[data-week="${w}"]`);
+  if(ribbonWk) ribbonWk.classList.toggle('done', done === boxes.length);
+}
+weekGrid.addEventListener('change', e=>{
+  if(e.target.type !== 'checkbox') return;
+  const tr = e.target.closest('tr');
+  tr.classList.toggle('checked', e.target.checked);
+  updateWeekProgress(tr.dataset.w);
+  scheduleSave();
+});
+weeks.forEach(w=>updateWeekProgress(w.n));
+
+/* ---------------- render: scripts ---------------- */
+const scriptTabs = document.getElementById('scriptTabs');
+const scriptPanels = document.getElementById('scriptPanels');
+scripts.forEach((s,i)=>{
+  const btn = document.createElement('button');
+  btn.textContent = s.title;
+  btn.className = i===0 ? 'active' : '';
+  btn.addEventListener('click', ()=>{
+    scriptTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    scriptPanels.querySelectorAll('.script-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+i).classList.add('active');
+  });
+  scriptTabs.appendChild(btn);
+
+  const panel = document.createElement('div');
+  panel.className = 'script-panel' + (i===0 ? ' active' : '');
+  panel.id = 'panel-'+i;
+  panel.innerHTML = s.cards.map(c=>{
+    let body = '';
+    if(c.say) body += c.say.map(t=>`<div class="say">${t}</div>`).join('');
+    if(c.list) body += `<ul>${c.list.map(t=>`<li>${t}</li>`).join('')}</ul>`;
+    if(c.mini) body += `<table class="mini-table"><tbody>${c.mini.map((t,idx)=>{
+      const parts = t.split('：');
+      return parts.length>1
+        ? `<tr><td>${idx+1}</td><td><b>${parts[0]}</b>：${parts.slice(1).join('：')}</td></tr>`
+        : `<tr><td>${idx+1}</td><td>${t}</td></tr>`;
+    }).join('')}</tbody></table>`;
+    return `<div class="talk-card"><div class="th"><span class="dot"></span>${c.h}</div><div class="tb">${body}</div></div>`;
+  }).join('');
+  scriptPanels.appendChild(panel);
+});
+
+/* ---------------- render: modules ---------------- */
+const modGrid = document.getElementById('modGrid');
+modules.forEach((m,mi)=>{
+  const card = document.createElement('div');
+  card.className = 'mod-card';
+  const rows = m.items.map(([name, desc],ii)=>`
+    <label class="row" data-cat="${mi}" data-item="${ii}">
+      <input type="checkbox">
+      <div class="rt"><b>${name}</b><span>${desc}</span></div>
+    </label>`).join('');
+  card.innerHTML = `<div class="mh"><span>${m.cat}</span><span class="cnt">${m.items.length} 堂</span></div>${rows}`;
+  modGrid.appendChild(card);
+});
+modGrid.addEventListener('change', e=>{
+  if(e.target.type !== 'checkbox') return;
+  e.target.closest('.row').classList.toggle('checked', e.target.checked);
+  scheduleSave();
+});
+
+/* ---------------- nav active state + mobile toggle ---------------- */
+const tocLinks = document.querySelectorAll('#toc a');
+const sections = [...tocLinks].map(a=>document.querySelector(a.getAttribute('href')));
+function onScroll(){
+  let idx = 0;
+  sections.forEach((s,i)=>{ if(s && s.getBoundingClientRect().top - 100 <= 0) idx = i; });
+  tocLinks.forEach(a=>a.classList.remove('active'));
+  tocLinks[idx].classList.add('active');
+}
+document.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const menuToggle = document.getElementById('menuToggle');
+function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+menuToggle.addEventListener('click', ()=>{ sidebar.classList.toggle('open'); overlay.classList.toggle('show'); });
+overlay.addEventListener('click', closeSidebar);
+tocLinks.forEach(a=>a.addEventListener('click', closeSidebar));
+
+/* ---------------- per-student local progress saving ---------------- */
+const LS_OK = (()=>{ try{ const k='__cg90_test__'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; } })();
+
+const pbName = document.getElementById('pbName');
+const pbStatus = document.getElementById('pbStatus');
+const pbSelect = document.getElementById('pbSelect');
+const pbClearBtn = document.getElementById('pbClearBtn');
+let activeUser = '';
+let saveTimer = null;
+
+function progressKey(name){ return 'cg90_progress_' + name; }
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatTime(ts){
+  const d = new Date(ts);
+  return d.toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function updateStatus(text){ if(pbStatus) pbStatus.textContent = text; }
+function defaultState(){
+  return { goals:[{income:'',count:''},{income:'',count:''},{income:'',count:''}], weeks:{}, modules:{}, savedAt:null };
+}
+function getUsers(){
+  if(!LS_OK) return [];
+  try{ return JSON.parse(localStorage.getItem('cg90_users')||'[]'); }catch(e){ return []; }
+}
+function addUser(name){
+  const users = getUsers();
+  if(!users.includes(name)){ users.push(name); if(LS_OK) localStorage.setItem('cg90_users', JSON.stringify(users)); }
+  populateSelect();
+}
+function populateSelect(){
+  const users = getUsers();
+  pbSelect.innerHTML = '<option value="__new__">＋ 新增／切換學員</option>' +
+    users.map(u=>`<option value="${escapeHtml(u)}">${escapeHtml(u)}</option>`).join('');
+  pbSelect.value = activeUser || '__new__';
+}
+function collectState(){
+  const goalsState = [...goalGrid.querySelectorAll('.goal-card')].map(c=>({
+    income: c.querySelector('.f-income').value,
+    count: c.querySelector('.f-count').value,
+  }));
+  const weeksState = {};
+  weekGrid.querySelectorAll('tr[data-w]').forEach(tr=>{
+    const cb = tr.querySelector('input[type=checkbox]');
+    if(cb.checked) weeksState[`${tr.dataset.w}-${tr.dataset.d}`] = true;
+  });
+  const modulesState = {};
+  modGrid.querySelectorAll('.row').forEach(row=>{
+    const cb = row.querySelector('input[type=checkbox]');
+    if(cb.checked) modulesState[`${row.dataset.cat}-${row.dataset.item}`] = true;
+  });
+  return { goals: goalsState, weeks: weeksState, modules: modulesState, savedAt: Date.now() };
+}
+function applyState(state){
+  state = state || defaultState();
+  goalGrid.querySelectorAll('.goal-card').forEach((c,i)=>{
+    const g = (state.goals && state.goals[i]) || {income:'',count:''};
+    c.querySelector('.f-income').value = g.income || '';
+    c.querySelector('.f-count').value = g.count || '';
+    recalcGoalCard(c);
+  });
+  weekGrid.querySelectorAll('tr[data-w]').forEach(tr=>{
+    const checked = !!(state.weeks && state.weeks[`${tr.dataset.w}-${tr.dataset.d}`]);
+    tr.querySelector('input[type=checkbox]').checked = checked;
+    tr.classList.toggle('checked', checked);
+  });
+  weeks.forEach(w=>updateWeekProgress(w.n));
+  modGrid.querySelectorAll('.row').forEach(row=>{
+    const checked = !!(state.modules && state.modules[`${row.dataset.cat}-${row.dataset.item}`]);
+    row.querySelector('input[type=checkbox]').checked = checked;
+    row.classList.toggle('checked', checked);
+  });
+  updateStatus(state.savedAt ? ('上次儲存：'+formatTime(state.savedAt)) : (activeUser ? '尚未儲存任何進度' : '進度僅儲存在此裝置瀏覽器中'));
+}
+function scheduleSave(){
+  if(!activeUser){ updateStatus('尚未選擇學員，進度不會自動儲存'); return; }
+  if(!LS_OK){ updateStatus('此瀏覽器無法本機儲存，進度不會保留'); return; }
+  clearTimeout(saveTimer);
+  updateStatus('儲存中…');
+  saveTimer = setTimeout(()=>{
+    const state = collectState();
+    try{
+      localStorage.setItem(progressKey(activeUser), JSON.stringify(state));
+      updateStatus('已儲存：'+formatTime(state.savedAt));
+    }catch(err){
+      updateStatus('儲存失敗，裝置儲存空間可能不足');
+    }
+  }, 450);
+}
+function setActiveUser(name){
+  activeUser = name;
+  if(LS_OK) localStorage.setItem('cg90_active', name);
+  pbName.textContent = name;
+  populateSelect();
+  let state = null;
+  if(LS_OK){
+    try{ state = JSON.parse(localStorage.getItem(progressKey(name)) || 'null'); }catch(e){ state = null; }
+  }
+  applyState(state || defaultState());
+}
+
+pbSelect.addEventListener('change', ()=>{
+  const v = pbSelect.value;
+  if(v === '__new__'){
+    const name = (prompt('請輸入學員姓名（用於儲存個人的90天進度）：', activeUser || '') || '').trim();
+    if(name){ addUser(name); setActiveUser(name); }
+    else{ pbSelect.value = activeUser || '__new__'; }
+  } else {
+    setActiveUser(v);
+  }
+});
+pbClearBtn.addEventListener('click', ()=>{
+  if(!activeUser){ alert('請先選擇學員'); return; }
+  if(confirm(`確定要清除「${activeUser}」目前記錄的所有進度嗎？此操作無法復原。`)){
+    if(LS_OK) localStorage.removeItem(progressKey(activeUser));
+    applyState(defaultState());
+    updateStatus('進度已清除');
+  }
+});
+
+/* boot */
+populateSelect();
+if(LS_OK){
+  const savedActive = localStorage.getItem('cg90_active');
+  const users = getUsers();
+  if(savedActive && users.includes(savedActive)){ setActiveUser(savedActive); }
+  else{ updateStatus('尚未選擇學員，進度不會自動儲存'); }
+}else{
+  updateStatus('此瀏覽器無法使用本機儲存，進度不會保留');
+}
+</script>
+</body>
+</html>
