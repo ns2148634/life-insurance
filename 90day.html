@@ -542,9 +542,27 @@ blockquote{
 .mini-table td{padding:6px 10px;border-bottom:1px solid var(--line);color:#3a4744;}
 .mini-table td:first-child{color:var(--vermilion);font-weight:700;width:34px;text-align:center;}
 
+/* 業務員最重要的兩件事 */
+.tt-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:18px;align-items:start;}
+.tt-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;box-shadow:var(--shadow);position:relative;
+}
+.tt-num{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--vermilion);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif TC',serif;font-weight:900;font-size:15px;
+  margin-bottom:12px;
+}
+.tt-card h4{margin:0 0 8px;font-size:17px;font-weight:700;color:var(--ink-dark);}
+.tt-card > p{margin:0 0 14px;font-size:13.5px;color:var(--ink-soft);}
+@media (max-width:900px){ .tt-grid{grid-template-columns:1fr;} }
+
 /* daily checklist grid (時間管理) */
 .tm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
 .tm-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;}
+.tt-card .tm-card{background:var(--ivory);}
 .tm-card h5{margin:0 0 8px;font-family:'Noto Serif TC',serif;font-size:14px;color:var(--vermilion);}
 .tm-card ul{margin:0;padding-left:16px;font-size:13px;color:#3a4744;line-height:1.8;}
 
@@ -656,7 +674,7 @@ footer b{color:var(--bronze-light);}
       <a href="#part2"><span class="n">02</span>建立準客戶名冊</a>
       <a href="#part3"><span class="n">03</span>90天工作計劃</a>
       <a href="#scripts"><span class="n">・</span>話術手冊</a>
-      <a href="#timemgmt"><span class="n">08</span>時間管理</a>
+      <a href="#timemgmt"><span class="n">・</span>業務員最重要的兩件事</a>
       <a href="#part4"><span class="n">04</span>業務員訓練模組</a>
       <div class="grp-label">心法</div>
       <a href="#principles"><span class="n">法</span>經營心法</a>
@@ -799,9 +817,6 @@ footer b{color:var(--bronze-light);}
     <section class="block" id="part3">
       <div class="kicker"><div class="idx">03</div><div><h3>第三部｜90天工作計劃</h3><div class="sub">12週逐日行動清單，完成即打勾</div></div></div>
       <div class="week-grid" id="weekGrid"></div>
-      <div class="note-card" style="margin-top:22px;">
-        <b>業務員最重要的兩件事｜</b>開發客戶：持續每日做，便可擁有源源不絕的客戶。時間管理：每週固定2～4小時，安排下週所有行程。
-      </div>
     </section>
 
     <!-- 話術手冊 -->
@@ -811,14 +826,26 @@ footer b{color:var(--bronze-light);}
       <div id="scriptPanels"></div>
     </section>
 
-    <!-- 時間管理 -->
+    <!-- 業務員最重要的兩件事 -->
     <section class="block" id="timemgmt">
-      <div class="kicker"><div class="idx">08</div><div><h3>時間管理</div><div class="sub"></div></div></div>
-      <div class="tm-grid">
-        <div class="tm-card"><h5>推銷</h5><ul><li>新增準客戶</li><li>拜訪客戶</li><li>遞送建議書</li><li>售後服務</li></ul></div>
-        <div class="tm-card"><h5>增員</h5><ul><li>新增準增對象</li><li>增員面談</li></ul></div>
-        <div class="tm-card"><h5>進修</h5><ul><li>閱讀書籍</li><li>進修課程</li><li>健康運動</li></ul></div>
-        <div class="tm-card"><h5>生活</h5><ul><li>社團活動</li><li>家庭</li><li>娛樂</li></ul></div>
+      <div class="kicker"><div class="idx">・</div><div><h3>業務員最重要的兩件事</h3><div class="sub">緊接話術手冊七、講座之後</div></div></div>
+      <div class="tt-grid">
+        <div class="tt-card">
+          <div class="tt-num">1</div>
+          <h4>開發客戶</h4>
+          <p>持續每日做，便可擁有源源不絕的客戶。</p>
+        </div>
+        <div class="tt-card">
+          <div class="tt-num">2</div>
+          <h4>時間管理</h4>
+          <p>每週固定2～4小時，安排下週所有行程 —— 把以下四類行程，逐一排進下週的時間表：</p>
+          <div class="tm-grid">
+            <div class="tm-card"><h5>推銷</h5><ul><li>新增準客戶</li><li>拜訪客戶</li><li>遞送建議書</li><li>售後服務</li></ul></div>
+            <div class="tm-card"><h5>增員</h5><ul><li>新增準增對象</li><li>增員面談</li></ul></div>
+            <div class="tm-card"><h5>進修</h5><ul><li>閱讀書籍</li><li>進修課程</li><li>健康運動</li></ul></div>
+            <div class="tm-card"><h5>生活</h5><ul><li>社團活動</li><li>家庭</li><li>娛樂</li></ul></div>
+          </div>
+        </div>
       </div>
     </section>
 
