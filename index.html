@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<title>宸功保險｜工具總覽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1a26;--ink-mid:#142331;--ink-card:#182a3a;
+  --gold:#c2974f;--gold-lt:#dcb877;--gold-deep:#8a6a30;
+  --gold-dim:rgba(194,151,79,0.10);--gold-line:rgba(194,151,79,0.30);
+  --vermilion:#c1442d;--vermilion-lt:#d9634a;
+  --text:rgba(255,255,255,0.94);--muted:rgba(255,255,255,0.56);
+  --hint:rgba(255,255,255,0.32);--border:rgba(255,255,255,0.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 85% -10%, rgba(194,151,79,0.08), transparent 60%),
+    radial-gradient(ellipse 700px 400px at -10% 100%, rgba(193,68,45,0.06), transparent 55%),
+    var(--ink);
+  min-height:100dvh;
+}
+
+/* ---------- Header ---------- */
+header{
+  padding:56px 32px 40px;
+  max-width:1180px;margin:0 auto;
+  border-bottom:1px solid var(--border);
+}
+.crest-row{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.crest{
+  width:38px;height:38px;flex-shrink:0;
+  border:1px solid var(--gold-line);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:17px;font-weight:600;
+}
+.brand{font-family:'Cormorant Garamond',serif;letter-spacing:5px;color:var(--gold);text-transform:uppercase;font-size:14px;font-weight:600;}
+h1{
+  font-family:'Noto Serif TC',serif;font-weight:900;
+  font-size:clamp(30px,4.4vw,46px);
+  line-height:1.3;letter-spacing:1px;color:#fff;
+  margin-bottom:14px;
+}
+h1 span{color:var(--gold);}
+.sub{color:var(--muted);font-size:15px;line-height:1.9;max-width:52ch;}
+
+/* ---------- Directory ---------- */
+main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
+.section-label{
+  display:flex;align-items:center;gap:14px;
+  margin:48px 0 20px;
+  font-size:12.5px;letter-spacing:3px;color:var(--hint);text-transform:uppercase;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.section-label b{color:var(--gold);font-weight:600;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+
+.card{
+  position:relative;
+  background:var(--ink-card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px 26px 26px;
+  text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:14px;
+  transition:border-color .25s ease, transform .25s ease, background .25s ease;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold-lt));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s ease;
+}
+.card:hover{border-color:var(--gold-line);transform:translateY(-3px);background:#1c3042;}
+.card:hover::before{transform:scaleX(1);}
+.card:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.tag{
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;
+  border:1px solid var(--gold-line);color:var(--gold-lt);
+  white-space:nowrap;
+}
+.tag.internal{border-color:rgba(193,68,45,0.4);color:var(--vermilion-lt);}
+.num{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--hint);letter-spacing:1px;}
+
+.card h2{font-family:'Noto Serif TC',serif;font-size:21px;font-weight:700;color:#fff;line-height:1.4;}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.75;}
+
+.card-foot{
+  margin-top:auto;padding-top:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--border);
+  font-size:12.5px;color:var(--hint);letter-spacing:0.5px;
+}
+.arrow{color:var(--gold);font-size:16px;transition:transform .25s ease;}
+.card:hover .arrow{transform:translateX(4px);}
+
+footer{
+  max-width:1180px;margin:0 auto;padding:0 32px 48px;
+  color:var(--hint);font-size:12px;letter-spacing:0.5px;
+}
+
+@media (max-width:640px){
+  header{padding:40px 20px 28px;}
+  main{padding:8px 20px 60px;}
+  footer{padding:0 20px 40px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="crest-row">
+    <div class="crest">宸</div>
+    <div class="brand">Chenggong Insurance</div>
+  </div>
+  <h1>宸功保險<span>．</span>工具總覽</h1>
+  <p class="sub">客戶顧問與團隊管理共用的數位工具，依用途分類。點選卡片即可開啟對應頁面。</p>
+</header>
+
+<main>
+
+  <div class="section-label"><b>客戶顧問</b> Client Consultation</div>
+  <div class="grid">
+
+    <a class="card" href="./insurance-needs.html">
+      <div class="card-top">
+        <span class="tag">iPad 諮詢</span>
+        <span class="num">01</span>
+      </div>
+      <h2>經濟支柱守護計畫</h2>
+      <p>五頁式人壽保障需求分析。引導客戶完成風險視覺化、優先順序排列、保障需求試算與保費總覽。</p>
+      <div class="card-foot"><span>insurance-needs.html</span><span class="arrow">→</span></div>
+    </a>
+
+    <a class="card" href="./estate-planning.html">
+      <div class="card-top">
+        <span class="tag">iPad 諮詢</span>
+        <span class="num">02</span>
+      </div>
+      <h2>資產傳承試算</h2>
+      <p>遺產稅試算與繼承人分配視覺化，協助客戶理解傳承規劃的稅務影響與保險工具的角色。</p>
+      <div class="card-foot"><span>estate-planning.html</span><span class="arrow">→</span></div>
+    </a>
+
+  </div>
+
+  <div class="section-label"><b>團隊管理</b> Internal Training &amp; Ops</div>
+  <div class="grid">
+
+    <a class="card" href="./90day.html">
+      <div class="card-top">
+        <span class="tag internal">新人訓練</span>
+        <span class="num">03</span>
+      </div>
+      <h2>宸功出擊 90 天</h2>
+      <p>新人啟動手冊：目標試算、名單建立、週次工作計畫與話術手冊，內建個人進度儲存。</p>
+      <div class="card-foot"><span>90day.html</span><span class="arrow">→</span></div>
+    </a>
+
+    <a class="card" href="./manager-income.html">
+      <div class="card-top">
+        <span class="tag internal">主管工具</span>
+        <span class="num">04</span>
+      </div>
+      <h2>業務組織收入試算</h2>
+      <p>組織圖式的主管收入試算，依公司獎金規則逐層計算單位與轄下業務的收入結構。</p>
+      <div class="card-foot"><span>manager-income.html</span><span class="arrow">→</span></div>
+    </a>
+
+  </div>
+
+</main>
+
+<footer>宸功保險 · 南山人壽</footer>
+
+</body>
+</html>
