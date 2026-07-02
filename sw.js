@@ -1,8 +1,11 @@
-const CACHE = 'guardian-v3';
+const CACHE = 'guardian-v4';
 const BASE = '/life-insurance/';
 const ASSETS = [
   BASE,
-  BASE + 'index.html',
+  BASE + 'insurance-needs.html',
+  BASE + '90day.html',
+  BASE + 'estate-planning.html',
+  BASE + 'manager-income.html',
 ];
 
 self.addEventListener('install', function(e) {
@@ -46,7 +49,7 @@ self.addEventListener('fetch', function(e) {
       return res;
     }).catch(function() {
       return caches.match(e.request).then(function(cached){
-        return cached || caches.match(BASE + 'index.html');
+        return cached || caches.match(BASE);
       });
     })
   );

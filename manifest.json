@@ -1,7 +1,7 @@
 {
-  "name": "經濟支柱守護計畫",
-  "short_name": "守護計畫",
-  "description": "南山人壽保障需求規劃工具",
+  "name": "宸功保險工具總覽",
+  "short_name": "宸功保險",
+  "description": "南山人壽業務與客戶諮詢工具集",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",

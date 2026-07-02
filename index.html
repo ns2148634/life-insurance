@@ -6,6 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="宸功保險">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
 <title>宸功保險｜工具總覽</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,10 +43,12 @@ header{
 .crest-row{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
 .crest{
   width:38px;height:38px;flex-shrink:0;
-  border:1px solid var(--gold-line);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:17px;font-weight:600;
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid var(--gold-line);
+  box-shadow:0 2px 10px rgba(0,0,0,0.25);
 }
+.crest img{width:100%;height:100%;object-fit:cover;display:block;}
 .brand{font-family:'Cormorant Garamond',serif;letter-spacing:5px;color:var(--gold);text-transform:uppercase;font-size:14px;font-weight:600;}
 h1{
   font-family:'Noto Serif TC',serif;font-weight:900;
@@ -122,7 +129,7 @@ footer{
 
 <header>
   <div class="crest-row">
-    <div class="crest">宸</div>
+    <div class="crest"><img src="./icon-192.png" alt="宸功保險"></div>
     <div class="brand">Chenggong Insurance</div>
   </div>
   <h1>宸功保險<span>．</span>工具總覽</h1>
@@ -185,5 +192,12 @@ footer{
 
 <footer>宸功保險 · 南山人壽</footer>
 
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(function(err){
+    console.log('SW registration failed (ok in dev):', err);
+  });
+}
+</script>
 </body>
 </html>
