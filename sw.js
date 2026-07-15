@@ -1,4 +1,4 @@
-const CACHE = 'guardian-v4';
+const CACHE = 'guardian-v5';
 const BASE = '/life-insurance/';
 const ASSETS = [
   BASE,
@@ -6,6 +6,7 @@ const ASSETS = [
   BASE + '90day.html',
   BASE + 'estate-planning.html',
   BASE + 'manager-income.html',
+  BASE + 'career-system.html',
 ];
 
 self.addEventListener('install', function(e) {
