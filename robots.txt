@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# 本站為宸功保險內部說明與客戶諮詢工具，非公開內容。
+# This site is an internal tool. Please do not index.
