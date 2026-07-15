@@ -81,35 +81,74 @@ tr.total th{background:var(--ink2); color:#fff; border-color:var(--ink2)}
 tr.total td{background:#f6efd6; font-weight:700}
 caption{caption-side:top; text-align:left; padding:0 0 8px; font-size:13px; color:var(--muted)}
 
-/* ---------- 01 五階段 ---------- */
-.arc{display:flex; align-items:flex-end; gap:0; overflow-x:auto; padding-bottom:0;
-  border-bottom:3px solid var(--ink); -webkit-overflow-scrolling:touch}
-.arcstep{flex:1 0 176px; display:flex; flex-direction:column; justify-content:flex-end}
+/* ---------- 01 未來願景 ---------- */
+.thesis{background:linear-gradient(135deg,#8a3d12,#e8792f); color:#fff; border-radius:14px;
+  padding:26px 28px; box-shadow:var(--shadow)}
+.thesis .k{font-size:12px; letter-spacing:.24em; color:#ffd9bd}
+.thesis h3{margin:6px 0 8px; font-size:24px; letter-spacing:.03em; line-height:1.45}
+.thesis p{margin:0; font-size:15px; line-height:1.85; max-width:64ch; color:#fdece1}
+.evo{background:var(--card); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); overflow:hidden}
+.evorow{display:grid; grid-template-columns:1fr 52px 1fr; align-items:center;
+  border-bottom:1px solid var(--line); padding:14px 18px}
+.evorow:last-child{border-bottom:0}
+.evorow:nth-child(odd){background:#faf9f4}
+.evorow .life{font-size:14.5px; line-height:1.7; color:var(--text)}
+.evorow .life b{color:#b5442c}
+.evorow .to{text-align:center; color:var(--c1); font-size:18px; font-weight:700}
+.evorow .prod{font-size:14.5px; line-height:1.7; font-weight:700}
+.evorow .prod span{display:block; font-weight:400; font-size:13px; color:var(--muted); margin-top:2px}
+.evohead{display:grid; grid-template-columns:1fr 52px 1fr; padding:10px 18px; background:var(--ink); color:#fff;
+  font-size:12px; letter-spacing:.16em}
+.evohead .to{text-align:center}
+.stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
+.stat{background:var(--card); border:1px solid var(--line); border-top:4px solid var(--c1);
+  border-radius:12px; padding:16px 18px; box-shadow:var(--shadow)}
+.stat .v{font-size:25px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.35; letter-spacing:.01em}
+.stat .v small{font-size:14px; font-weight:400}
+.stat .k{font-size:13px; color:var(--text); margin-top:2px; font-weight:700}
+.stat .s{font-size:11.5px; color:var(--muted); margin-top:6px; line-height:1.6}
+.gapbox{background:#fdf3e9; border:1px solid #f0c9a5; border-radius:12px; padding:20px 22px}
+.gapbox h3{margin:0 0 10px; font-size:17px; color:#a8441a}
+.gapnums{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:14px 0}
+.gapnum{background:#fff; border:1px solid #f0c9a5; border-radius:10px; padding:12px 14px; text-align:center}
+.gapnum .v{font-size:22px; font-weight:700; color:#c2591b; font-variant-numeric:tabular-nums}
+.gapnum .k{font-size:12px; color:var(--muted); line-height:1.5; margin-top:2px}
+.gapbox p{margin:0; font-size:14.5px; line-height:1.85}
+.gapbox p b{color:#a8441a}
+.ns{background:linear-gradient(135deg,#0d2a3d,#17557a); color:#fff; border-radius:14px; padding:24px 26px; box-shadow:var(--shadow)}
+.ns .k{font-size:12px; letter-spacing:.24em; color:#9dc6e4}
+.ns h3{margin:6px 0 10px; font-size:22px; letter-spacing:.03em}
+.ns p{margin:0; font-size:14.5px; line-height:1.85; color:#dceaf4; max-width:66ch}
+.nsfacts{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px}
+.nsfact{background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:12px 14px}
+.nsfact .v{font-size:19px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.4}
+.nsfact .v small{font-size:12.5px; font-weight:400}
+.nsfact .n{font-size:11.5px; color:#9dc6e4; margin-top:2px}
+.creed{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+.cr{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; box-shadow:var(--shadow); text-align:center}
+.cr h3{margin:0 0 6px; font-size:20px; letter-spacing:.24em; color:var(--c1)}
+.cr p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.7}
+@media (max-width:900px){
+  .stats{grid-template-columns:1fr 1fr}
+  .nsfacts{grid-template-columns:1fr 1fr}
+  .gapnums,.creed{grid-template-columns:1fr}
+  .evorow,.evohead{grid-template-columns:1fr 32px 1fr}
+}
+
+/* ---------- 共用：晉升門檻膠囊 ---------- */
 .gate{align-self:flex-start; margin:0 0 8px 4px; background:var(--ink); color:#fff; font-size:12px;
   font-weight:700; border-radius:999px; padding:3px 10px; letter-spacing:.06em; white-space:nowrap}
-.theme{font-size:12px; letter-spacing:.24em; font-weight:700; margin:0 0 6px 2px; color:var(--c1)}
-.abox{color:#fff; border-radius:10px 10px 0 0; padding:14px; border:1px solid rgba(0,0,0,.06); border-bottom:0}
-.abox h3{margin:0 0 6px; font-size:17px; letter-spacing:.06em}
-.abox p{margin:0; font-size:13px; line-height:1.7; opacity:.94}
-.a1{background:#4f93c8; min-height:132px}
-.a2{background:#d2622f; min-height:160px}
-.a3{background:#3f8f4e; min-height:186px}
-.a4{background:#6f7b7d; min-height:212px}
-.a5{background:#1f6fae; min-height:250px}
-.founder{margin-top:20px; background:linear-gradient(135deg,#123f57,#1f6fae); color:#fff;
-  border-radius:14px; padding:24px 26px; box-shadow:var(--shadow)}
-.founder .k{font-size:12px; letter-spacing:.24em; color:#a9d2ee}
-.founder h3{margin:6px 0 8px; font-size:24px; letter-spacing:.04em}
-.founder p{margin:0; font-size:15px; line-height:1.85; max-width:62ch; color:#e8f2f9}
+
+/* ---------- 共用：競賽與伏筆 ---------- */
 .medals{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
-.medal{background:var(--card); border:1px solid var(--line); border-top:4px solid var(--c1);
+.medal{background:var(--card); border:1px solid var(--line); border-top:4px solid var(--pc);
   border-radius:12px; padding:16px 18px; box-shadow:var(--shadow)}
 .medal h3{margin:0 0 2px; font-size:17px; letter-spacing:.08em}
-.medal .when{font-size:12px; font-weight:700; color:var(--c1); letter-spacing:.08em}
+.medal .when{font-size:12px; font-weight:700; color:var(--pc); letter-spacing:.08em}
 .medal p{margin:6px 0 0; font-size:13.5px; color:var(--muted); line-height:1.7}
-.hook{margin-top:16px; background:#fdf3e9; border:1px solid #f0c9a5; border-radius:10px;
-  padding:12px 16px; font-size:14px}
-.hook b{color:#c2591b}
+.hook{margin-top:16px; background:#fbf5e4; border:1px solid #e5d29a; border-radius:10px;
+  padding:12px 16px; font-size:14px; line-height:1.8}
+.hook b{color:#8a6a30}
 
 /* ---------- 02 價值 ---------- */
 .vals{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
@@ -218,9 +257,15 @@ details.fold .body .fix{display:block; margin-top:8px; font-size:12.5px; color:#
 .r3{background:#3f8f4e; min-height:280px} .r4{background:#6f7b7d; min-height:320px}
 .r5{background:#1f6fae; min-height:360px}
 .std{background:var(--card); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden}
-.std .head{display:flex; align-items:center; gap:12px; padding:12px 16px; color:#fff}
+.std .head{display:flex; align-items:center; gap:12px; padding:12px 16px; color:#fff; cursor:pointer; list-style:none}
+.std .head::-webkit-details-marker{display:none}
+.std .head:hover{filter:brightness(1.08)}
+.std .head:focus-visible{outline:2px solid var(--gold); outline-offset:-2px}
 .std .head h3{margin:0; font-size:17px; letter-spacing:.06em}
 .std .head .tenure{margin-left:auto; font-size:12.5px; background:rgba(255,255,255,.2); padding:2px 10px; border-radius:999px; font-weight:700}
+.std .head .pm{font-size:17px; font-weight:700; opacity:.8; width:14px; text-align:center; flex:none}
+.std[open] .head .pm::before{content:"−"}
+.std .head .pm::before{content:"＋"}
 .h2c{background:#d2622f} .h3c{background:#3f8f4e} .h4c{background:#6f7b7d}
 .std .in{padding:16px}
 .routes{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
@@ -277,63 +322,120 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
 <!-- ================= 01 未來願景 ================= -->
 <section class="page p0 on" role="tabpanel">
   <span class="eyebrow">未來願景</span>
-  <h1>壽險事業五階段</h1>
-  <p class="lead">每一階段學的能力不同，收入的來源也跟著換。時間是唯一的門檻，不是誰認識誰。</p>
+  <h1>一個不會被淘汰的行業</h1>
+  <p class="lead">因為它從來不是在賣同一個東西——生活變了什麼，保險就長出什麼。</p>
 
-  <div class="arc">
-    <div class="arcstep">
-      <p class="theme">行銷</p>
-      <div class="abox a1"><h3>業務代表</h3><p>把商品講清楚，靠自己的產能賺首年度與續年度津貼。</p></div>
-    </div>
-    <div class="arcstep">
-      <div class="gate">6～9 個月</div>
-      <p class="theme">組織</p>
-      <div class="abox a2"><h3>業務主任</h3><p>開始增員帶人，單位津貼與業績獎金上線。</p></div>
-    </div>
-    <div class="arcstep">
-      <div class="gate">12 個月</div>
-      <p class="theme">管理</p>
-      <div class="abox a3"><h3>業務襄理</h3><p>帶主任、育成幹部，多一份輔導津貼。</p></div>
-    </div>
-    <div class="arcstep">
-      <div class="gate">15 個月</div>
-      <p class="theme">企業管理</p>
-      <div class="abox a4"><h3>區經理</h3><p>經營整個區的成長，多一份區成長獎金。</p></div>
-    </div>
-    <div class="arcstep">
-      <div class="gate">2 年</div>
-      <p class="theme">投資理財</p>
-      <div class="abox a5"><h3>處經理</h3><p>不再是「做業務」，而是經營一個事業體。</p></div>
-    </div>
+  <div class="thesis">
+    <div class="k">為什麼不會被淘汰</div>
+    <h3>沒有一款保險商品，活得比生活久</h3>
+    <p>六十年前賣的是養老，今天賣的是長照與實支實付。人怎麼活、怎麼老、怎麼生病、怎麼把錢留下來，每隔十年就換一次規則——每換一次，保險就得重寫一次商品。會被淘汰的從來不是這個行業，是停止學新東西的人。</p>
   </div>
 
-  <div class="founder">
-    <div class="k">處經理</div>
-    <h3>等於在南山內部創業一家公司</h3>
-    <p>自己的通訊處、自己的組織。從業務代表那天起走到這裡，公司提供的是品牌、商品、系統與訓練；你帶進去的是人和市場。這不是升到某個職位，是把一個事業做起來。</p>
+  <h2>商品的演變<span class="en">How products followed life</span></h2>
+  <div class="evo">
+    <div class="evohead"><span>生活改變了什麼</span><span class="to"></span><span>保險就長出什麼</span></div>
+    <div class="evorow">
+      <div class="life">人比六十年前<b>多活了二十幾年</b>，退休後的日子可能比工作還長</div>
+      <div class="to">→</div>
+      <div class="prod">年金險、利變型商品<span>從「活太短」的保障，補上「活太長」的風險</span></div>
+    </div>
+    <div class="evorow">
+      <div class="life">醫療進步，但<b>自費項目越來越多</b>，健保給付追不上新療法</div>
+      <div class="to">→</div>
+      <div class="prod">實支實付醫療險<span>從定額給付，變成跟著收據走</span></div>
+    </div>
+    <div class="evorow">
+      <div class="life">癌症治療進入<b>標靶與免疫</b>，一年百萬起跳，而且人不一定會走</div>
+      <div class="to">→</div>
+      <div class="prod">一次金給付型癌症險、重大傷病險<span>從「身故才賠」，變成「確診就給錢治病」</span></div>
+    </div>
+    <div class="evorow">
+      <div class="life">少子化＋雙薪，<b>老了不能靠子女</b>；失能不是死亡，是長達十年的照顧</div>
+      <div class="to">→</div>
+      <div class="prod">長照險、失能扶助險<span>保的不是死亡，是「活著但沒辦法工作」的那段路</span></div>
+    </div>
+    <div class="evorow">
+      <div class="life">利率長期走低，<b>純儲蓄撐不住通膨</b>，錢放銀行等於慢慢變薄</div>
+      <div class="to">→</div>
+      <div class="prod">利變型、外幣保單<span>把資產配置的概念放進保單</span></div>
+    </div>
+    <div class="evorow">
+      <div class="life">資產全球化，<b>客戶願意自己承擔投資風險</b>換取更高報酬</div>
+      <div class="to">→</div>
+      <div class="prod">投資型保單<span>保障與投資分離，客戶自己選標的</span></div>
+    </div>
+    <div class="evorow">
+      <div class="life">高齡化＋資產累積，<b>傳承變成問題</b>：稅要怎麼繳、給誰、給多少</div>
+      <div class="to">→</div>
+      <div class="prod">傳承規劃、保險金信託<span>從賣保單，變成做規劃</span></div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">每一次商品改版，都是一次重新拜訪客戶的理由——這也是為什麼<b>老客戶永遠服務不完</b>。</p>
+
+  <h2>市場有多大<span class="en">The market</span></h2>
+  <div class="stats">
+    <div class="stat">
+      <div class="v">2兆4,401<small> 億元</small></div>
+      <div class="k">壽險業總保費收入</div>
+      <div class="s">2024 年，年增 11.5%；新契約保費 8,418 億元，年增 25.4%</div>
+    </div>
+    <div class="stat">
+      <div class="v">2兆7,097<small> 億元</small></div>
+      <div class="k">壽險業保險給付</div>
+      <div class="s">2024 年，年增 12.7%——這一年賠出去的，比收進來的還多</div>
+    </div>
+    <div class="stat">
+      <div class="v">36兆9,005<small> 億元</small></div>
+      <div class="k">壽險業資產總額</div>
+      <div class="s">2024 年，約為台灣全年 GDP 的 1.5 倍</div>
+    </div>
+    <div class="stat">
+      <div class="v">115,879<small> 元</small></div>
+      <div class="k">每人每年保費支出</div>
+      <div class="s">2024 年保險密度。台灣的保險滲透度曾連續 13 年世界第一</div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">
+    資料來源：保險事業發展中心、壽險公會（2024 年度）。台灣保險滲透度 2007–2019 連續 13 年全球第一，2023 年為 10.3%、全球第 6，仍在世界前段。
+  </p>
+
+  <h2>真正的機會在哪<span class="en">The gap</span></h2>
+  <div class="gapbox">
+    <h3>台灣人買最多保險，卻不是買夠保險</h3>
+    <div class="gapnums">
+      <div class="gapnum"><div class="v">70.88%</div><div class="k">壽險投保率<br>每 10 人有 7 人有壽險</div></div>
+      <div class="gapnum"><div class="v">204 萬</div><div class="k">每人平均壽險保額</div></div>
+      <div class="gapnum"><div class="v">約 60 萬</div><div class="k">平均實際領到的<br>身故給付</div></div>
+    </div>
+    <p>
+      2026 年遺產稅的喪葬費扣除額是 <b>138 萬</b>——換句話說，台灣人平均買了保險，最後遺屬領到的錢<b>連辦一場後事的標準額度都不到一半</b>。
+      這個市場的機會從來不是「還沒有人買」，而是<b>買了，但買錯了、買不夠</b>。這正是需要一個顧問坐下來算的地方——也是這份工作在賣商品之外，真正在做的事。
+    </p>
+    <p class="note" style="margin-top:12px">資料來源：壽險公會投保率統計（112 年底）、保險業公開資訊觀測站（112 年）。</p>
   </div>
 
-  <h2>競賽與榮譽<span class="en">Honors</span></h2>
-  <div class="medals">
-    <div class="medal">
-      <div class="when">總公司 · 上半年度</div>
-      <h3>高峰</h3>
-      <p>全公司最高規格的業績榮譽舞台。</p>
-    </div>
-    <div class="medal">
-      <div class="when">地區 · 下半年</div>
-      <h3>新高峰</h3>
-      <p>下半年度舉辦的地區競賽，與上半年的高峰接力，一年有兩次站上台的機會。</p>
-    </div>
-    <div class="medal">
-      <div class="when">達標即參加</div>
-      <h3>海外會議旅遊競賽</h3>
-      <p>達成競賽標準即參加海外會議與旅遊，公司招待。</p>
+  <h2>你要跟誰一起走<span class="en">Nan Shan Life</span></h2>
+  <div class="ns">
+    <div class="k">Since 1963</div>
+    <h3>五大壽險中，唯一不隸屬金控的公司</h3>
+    <p>沒有銀行、沒有證券要餵——南山的資源與利潤，回到保險本業與業務通路。2011 年由潤泰集團與寶成集團合資的潤成投資控股成為最大股東，從外商轉型為扎根台灣的本土企業。</p>
+    <div class="nsfacts">
+      <div class="nsfact"><div class="v">1963<small> 年 7 月</small></div><div class="n">成立至今超過一甲子</div></div>
+      <div class="nsfact"><div class="v">661<small> 萬保戶</small></div><div class="n">逾四分之一的台灣人</div></div>
+      <div class="nsfact"><div class="v">1,172<small> 萬件</small></div><div class="n">有效保單</div></div>
+      <div class="nsfact"><div class="v">26<small> 家分公司</small></div><div class="n">逾 341 個通訊處</div></div>
     </div>
   </div>
-  <div class="hook">
-    這兩座獎盃不只是榮譽——<b>前 3 年曾獲高峰／新高峰會員資格，是委任通訊處經理的門檻之一</b>。今天拿的獎，是三年後開一家通訊處的入場券。條件細節見「晉陞透明」。
+
+  <h2>南山的理念<span class="en">Our creed</span></h2>
+  <div class="creed">
+    <div class="cr"><h3>信賴</h3><p>保險賣的是一張三十年後才兌現的承諾。撐住這張紙的，是公司能不能活得比保單久。</p></div>
+    <div class="cr"><h3>關懷</h3><p>客戶買的不是條款，是有人在他最狼狽的那天，還記得回他電話。</p></div>
+    <div class="cr"><h3>誠信</h3><p>這一行最貴的資產不是業績，是十年後客戶還願意介紹朋友給你。</p></div>
   </div>
+  <p class="note" style="margin-top:12px">
+    公司資料來源：南山人壽官方網站。保戶數、有效保單件數與通訊處家數為官網公布之近期數字，實際請以公司最新公告為準。
+  </p>
 </section>
 
 <!-- ================= 02 工作價值 ================= -->
@@ -650,6 +752,29 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
     </span>
     <span class="ar">→</span>
   </a>
+
+  <h2>收入以外<span class="en">Beyond the paycheck</span></h2>
+  <p class="note" style="margin:-4px 0 12px">報酬不只有津貼。每年還有三個舞台，達標的人自己知道值多少。</p>
+  <div class="medals">
+    <div class="medal">
+      <div class="when">總公司 · 上半年度</div>
+      <h3>高峰</h3>
+      <p>全公司最高規格的業績榮譽舞台。</p>
+    </div>
+    <div class="medal">
+      <div class="when">地區 · 下半年</div>
+      <h3>新高峰</h3>
+      <p>下半年度舉辦的地區競賽，與上半年的高峰接力，一年有兩次站上台的機會。</p>
+    </div>
+    <div class="medal">
+      <div class="when">達標即參加</div>
+      <h3>海外會議旅遊競賽</h3>
+      <p>達成競賽標準即參加海外會議與旅遊，公司招待。</p>
+    </div>
+  </div>
+  <div class="hook">
+    這兩座獎盃不只是榮譽——<b>前 3 年曾獲高峰／新高峰會員資格，是委任通訊處經理的門檻之一</b>。今天拿的獎，是三年後開一家通訊處的入場券。條件細節見「晉陞透明」。
+  </div>
 </section>
 
 <!-- ================= 05 晉陞透明 ================= -->
@@ -701,8 +826,8 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
   <h2>委任標準<span class="en">Appointment criteria</span></h2>
 
   <!-- 業務主任 -->
-  <div class="std">
-    <div class="head h2c"><h3>業務代表 → 業務主任</h3><span class="tenure">三條路</span></div>
+  <details class="std">
+    <summary class="head h2c"><h3>業務代表 → 業務主任</h3><span class="tenure">三條路</span><span class="pm"></span></summary>
     <div class="in">
       <div class="routes">
         <div class="route">
@@ -748,11 +873,11 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
         <li><b>推薦</b>：須由所屬業務主管推薦，經公司綜合考量履約評量、專業表現等因素後決定</li>
       </ul>
     </div>
-  </div>
+  </details>
 
   <!-- 業務襄理 -->
-  <div class="std">
-    <div class="head h3c"><h3>業務主任 → 業務襄理</h3><span class="tenure">任主任滿 12 個月</span></div>
+  <details class="std">
+    <summary class="head h3c"><h3>業務主任 → 業務襄理</h3><span class="tenure">任主任滿 12 個月</span><span class="pm"></span></summary>
     <div class="in">
       <div class="tw">
         <table>
@@ -775,11 +900,11 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
           <span class="sub">未達成者恢復至原合約關係</span></li>
       </ul>
     </div>
-  </div>
+  </details>
 
   <!-- 區經理 -->
-  <div class="std">
-    <div class="head h4c"><h3>業務襄理 → 區經理</h3><span class="tenure">任襄理滿 15 個月</span></div>
+  <details class="std">
+    <summary class="head h4c"><h3>業務襄理 → 區經理</h3><span class="tenure">任襄理滿 15 個月</span><span class="pm"></span></summary>
     <div class="in">
       <div class="tw">
         <table>
@@ -801,11 +926,11 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
         <li><b>委任後六個月</b>，直轄單位須維持委任當時人力條件之 3 位標準業務代表</li>
       </ul>
     </div>
-  </div>
+  </details>
 
   <!-- 通訊處經理 -->
-  <div class="std">
-    <div class="head" style="background:#1f6fae"><h3>區經理 → 通訊處經理</h3><span class="tenure">5 月／11 月推薦</span></div>
+  <details class="std">
+    <summary class="head" style="background:#1f6fae"><h3>區經理 → 通訊處經理</h3><span class="tenure">5 月／11 月推薦</span><span class="pm"></span></summary>
     <div class="in">
       <p class="note" style="margin:0 0 12px">
         5 月推薦者業績計算期間為前一年 11 月至當年 4 月；11 月推薦者為當年 5 月至 10 月。經公司審議核准後，於當年 7 月或次年 1 月委任。
@@ -847,7 +972,7 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
         <li><b>開幕補助</b>：完成搬遷後半年內可申請新成立通訊處開幕酒會費用補助，上限 1 萬元</li>
       </ul>
     </div>
-  </div>
+  </details>
 
   <h2>名詞定義<span class="en">Definitions</span></h2>
   <div class="card">
