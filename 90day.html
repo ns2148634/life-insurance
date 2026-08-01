@@ -713,6 +713,7 @@ footer b{color:var(--bronze-light);}
         <span id="pbStatus">進度僅儲存在此裝置瀏覽器中</span>
         <div class="pb-actions">
           <select id="pbSelect"><option value="">＋ 新增／切換學員</option></select>
+          <button id="pbAddBtn" type="button">＋ 新增學員</button>
           <button class="ghost" id="pbClearBtn" type="button">清除此學員進度</button>
         </div>
       </div>
@@ -1296,6 +1297,7 @@ const LS_OK = (()=>{ try{ const k='__cg90_test__'; localStorage.setItem(k,'1'); 
 const pbName = document.getElementById('pbName');
 const pbStatus = document.getElementById('pbStatus');
 const pbSelect = document.getElementById('pbSelect');
+const pbAddBtn = document.getElementById('pbAddBtn');
 const pbClearBtn = document.getElementById('pbClearBtn');
 let activeUser = '';
 let saveTimer = null;
@@ -1390,6 +1392,10 @@ function setActiveUser(name){
   applyState(state || defaultState());
 }
 
+pbAddBtn.addEventListener('click', ()=>{
+  const name = (prompt('請輸入學員姓名（用於儲存個人的90天進度）：', activeUser || '') || '').trim();
+  if(name){ addUser(name); setActiveUser(name); }
+});
 pbSelect.addEventListener('change', ()=>{
   const v = pbSelect.value;
   if(v === '__new__'){
@@ -1415,6 +1421,11 @@ if(LS_OK){
   const savedActive = localStorage.getItem('cg90_active');
   const users = getUsers();
   if(savedActive && users.includes(savedActive)){ setActiveUser(savedActive); }
+  else if(users.length === 0){
+    updateStatus('尚未建立任何學員，請點「＋ 新增學員」開始');
+    const firstName = (prompt('歡迎使用宸功出擊90天！\n請輸入第一位學員姓名開始記錄進度：', '') || '').trim();
+    if(firstName){ addUser(firstName); setActiveUser(firstName); }
+  }
   else{ updateStatus('尚未選擇學員，進度不會自動儲存'); }
 }else{
   updateStatus('此瀏覽器無法使用本機儲存，進度不會保留');

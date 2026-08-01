@@ -4,7 +4,6 @@ const ASSETS = [
   BASE,
   BASE + 'insurance-needs.html',
   BASE + '90day.html',
-  BASE + 'estate-planning.html',
   BASE + 'manager-income.html',
   BASE + 'career-system.html',
 ];
