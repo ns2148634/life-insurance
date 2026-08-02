@@ -18,13 +18,14 @@ import { getDatabase, ref, set, update, remove, onValue, get, child, serverTimes
    2. 到「專案設定 → 一般 → 你的应用」複製 firebaseConfig
    3. 貼到下方 FB_CONFIG。若留空，系統自動降級為本機儲存。 */
 const FB_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  databaseURL: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyC2dv48GBd4kWZM2Xh9-4EorqETdG3LIEA",
+  authDomain: "day-1c687.firebaseapp.com",
+  databaseURL: "https://day-1c687-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "day-1c687",
+  storageBucket: "day-1c687.firebasestorage.app",
+  messagingSenderId: "214310395755",
+  appId: "1:214310395755:web:73695ad3e6fe0cd940762e",
+  measurementId: "G-CSS0QSBD8T"
 };
 
 const FB_READY = !!(FB_CONFIG && FB_CONFIG.apiKey && FB_CONFIG.databaseURL);
@@ -37,6 +38,7 @@ if (FB_READY){
   }catch(e){ console.warn('Firebase init failed:', e); window.__fbDB = null; }
 }
 window.__FB_READY = FB_READY && !!window.__fbDB;
+window.__fb = window.__FB_READY ? { db: window.__fbDB, ref, set, update, remove, onValue, get, child, serverTimestamp, push } : null;
 </script>
 <style>
 :root{
@@ -1006,7 +1008,7 @@ footer b{color:var(--bronze-light);}
   </main>
 </div>
 
-<script>
+<script defer>
 /* ---------------- data ---------------- */
 const weeks = [
   {n:1, label:"人脈建立週", days:[
@@ -1409,7 +1411,7 @@ let cloudStudents = {};   // Firebase 上全部學員 { pushId: {name, updatedAt
 let adminOn = false;
 
 /* ---------- Firebase helpers ---------- */
-const FB = window.__FB_READY ? { db: window.__fbDB, ref, set, update, remove, onValue, get, child, serverTimestamp, push } : null;
+const FB = window.__fb;
 function syncStatus(text, cls){
   if(!pbSyncStatus) return;
   pbSyncStatus.innerHTML = cls ? `<span class="cloud-dot ${cls}"></span>${text}` : text;
