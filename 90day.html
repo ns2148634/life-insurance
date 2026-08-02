@@ -8,38 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, update, remove, onValue, get, child, serverTimestamp, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-/* ===== Firebase 設定區 =====
-   請在 Firebase Console (https://console.firebase.google.com) 建立專案：
-   1. 建立 Realtime Database（選 test mode 即可）
-   2. 到「專案設定 → 一般 → 你的应用」複製 firebaseConfig
-   3. 貼到下方 FB_CONFIG。若留空，系統自動降級為本機儲存。 */
-const FB_CONFIG = {
-  apiKey: "AIzaSyC2dv48GBd4kWZM2Xh9-4EorqETdG3LIEA",
-  authDomain: "day-1c687.firebaseapp.com",
-  databaseURL: "https://day-1c687-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "day-1c687",
-  storageBucket: "day-1c687.firebasestorage.app",
-  messagingSenderId: "214310395755",
-  appId: "1:214310395755:web:73695ad3e6fe0cd940762e",
-  measurementId: "G-CSS0QSBD8T"
-};
-
-const FB_READY = !!(FB_CONFIG && FB_CONFIG.apiKey && FB_CONFIG.databaseURL);
-let fbDB = null;
-if (FB_READY){
-  try{
-    const app = initializeApp(FB_CONFIG);
-    fbDB = getDatabase(app);
-    window.__fbDB = fbDB;
-  }catch(e){ console.warn('Firebase init failed:', e); window.__fbDB = null; }
-}
-window.__FB_READY = FB_READY && !!window.__fbDB;
-window.__fb = window.__FB_READY ? { db: window.__fbDB, ref, set, update, remove, onValue, get, child, serverTimestamp, push } : null;
-</script>
+<!-- Firebase SDK（compat 全域版，確保同步可用） -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
 :root{
   --ink:#17343a;
@@ -1410,8 +1381,34 @@ let saveTimer = null;
 let cloudStudents = {};   // Firebase 上全部學員 { pushId: {name, updatedAt, progress} }
 let adminOn = false;
 
-/* ---------- Firebase helpers ---------- */
-const FB = window.__fb;
+/* ---------- Firebase compat 初始化 ---------- */
+const FB_CONFIG = {
+  apiKey: "AIzaSyC2dv48GBd4kWZM2Xh9-4EorqETdG3LIEA",
+  authDomain: "day-1c687.firebaseapp.com",
+  databaseURL: "https://day-1c687-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "day-1c687",
+  storageBucket: "day-1c687.firebasestorage.app",
+  messagingSenderId: "214310395755",
+  appId: "1:214310395755:web:73695ad3e6fe0cd940762e",
+  measurementId: "G-CSS0QSBD8T"
+};
+let fbApp = null, fbDB = null;
+if (window.firebase && window.firebase.apps && window.firebase.apps.length === 0) {
+  try {
+    fbApp = window.firebase.initializeApp(FB_CONFIG);
+    fbDB = window.firebase.database();
+  } catch(e) { console.warn('Firebase init failed:', e); }
+} else if (window.firebase && window.firebase.apps && window.firebase.apps.length > 0) {
+  try { fbDB = window.firebase.database(); } catch(e) { console.warn('Firebase db failed:', e); }
+}
+const FB = fbDB ? {
+  db: fbDB,
+  ref: (p) => fbDB.ref(p),
+  set: (r, v) => r.set(v),
+  update: (r, v) => r.update(v),
+  remove: (r) => r.remove(),
+  onValue: (r, cb, err) => r.on('value', snap => cb(snap), err)
+} : null;
 function syncStatus(text, cls){
   if(!pbSyncStatus) return;
   pbSyncStatus.innerHTML = cls ? `<span class="cloud-dot ${cls}"></span>${text}` : text;
@@ -1732,7 +1729,7 @@ if(pbAdminBtn && !FB){
 
 /* boot */
 populateSelect();
-if(window.__FB_READY){
+if(FB){
   startCloudListen();
 }
 if(LS_OK){
