@@ -94,6 +94,15 @@ a{color:inherit;}
   padding:6px 14px;border-radius:3px;font-size:12.5px;cursor:pointer;
 }
 .ctl-btn.on{background:var(--ink-dark);border-color:var(--ink-dark);color:var(--ivory);}
+#pbUnlockBtn.unlocked{background:#4d7c3b;border-color:#4d7c3b;color:#fff;}
+#pbUnlockBtn:disabled, .pb-actions button:disabled{
+  opacity:.45;cursor:not-allowed;
+}
+.unlock-hint{
+  font-size:10.5px;color:#7a6633;background:rgba(194,151,79,.12);
+  border:1px dashed rgba(169,128,63,.4);border-radius:3px;
+  padding:3px 8px;margin-left:4px;
+}
 #pbSyncStatus{font-size:11px;color:#7a6633;}
 .cloud-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#7a6633;margin-right:4px;vertical-align:middle;}
 .cloud-dot.ok{background:#4d7c3b;}
@@ -772,6 +781,7 @@ footer b{color:var(--bronze-light);}
         <span id="pbStatus">進度僅儲存在此裝置瀏覽器中</span>
         <div class="pb-actions">
           <span id="pbSyncStatus"></span>
+          <button class="ctl-btn" id="pbUnlockBtn" type="button">🔑 主管解鎖</button>
           <button class="ctl-btn" id="pbAdminBtn" type="button">👔 主管檢視</button>
           <select id="pbSelect"><option value="">＋ 新增／切換學員</option></select>
           <button id="pbAddBtn" type="button">＋ 新增學員</button>
@@ -1373,6 +1383,7 @@ const pbAddBtn = document.getElementById('pbAddBtn');
 const pbClearBtn = document.getElementById('pbClearBtn');
 const pbSyncStatus = document.getElementById('pbSyncStatus');
 const pbAdminBtn = document.getElementById('pbAdminBtn');
+const pbUnlockBtn = document.getElementById('pbUnlockBtn');
 const adminBar = document.getElementById('adminBar');
 const adminGrid = document.getElementById('adminGrid');
 const adminClose = document.getElementById('adminClose');
@@ -1380,6 +1391,39 @@ let activeUser = '';
 let saveTimer = null;
 let cloudStudents = {};   // Firebase 上全部學員 { pushId: {name, updatedAt, progress} }
 let adminOn = false;
+let authed = false;       // 主管解鎖狀態
+
+/* 主管密碼（可自行更改） */
+const ADMIN_PW = "684";
+function requireAuth(){
+  if(authed) return true;
+  if(prompt('請輸入主管密碼以解鎖編輯權限：') === ADMIN_PW){
+    authed = true;
+    applyAuthState();
+    if(pbUnlockBtn){
+      pbUnlockBtn.textContent = '🔓 主管已解鎖';
+      pbUnlockBtn.classList.add('unlocked');
+    }
+    return true;
+  }
+  alert('密碼錯誤或已取消');
+  return false;
+}
+function applyAuthState(){
+  // 鎖定時禁用所有可編輯控制項（查看不受影響）
+  const editable = document.querySelectorAll(
+    '#goalGrid input[type=number], #weekGrid input[type=checkbox], #modGrid input[type=checkbox]'
+  );
+  editable.forEach(el=>{ el.disabled = !authed; });
+  if(pbAddBtn) pbAddBtn.disabled = !authed;
+  if(pbClearBtn) pbClearBtn.disabled = !authed;
+  // pbSelect 保持可用：所有人都可以切換查看學員進度
+  if(pbSelect) pbSelect.disabled = false;
+  if(pbUnlockBtn){
+    pbUnlockBtn.textContent = authed ? '🔓 主管已解鎖' : '🔑 主管解鎖';
+    pbUnlockBtn.classList.toggle('unlocked', authed);
+  }
+}
 
 /* ---------- Firebase compat 初始化 ---------- */
 const FB_CONFIG = {
@@ -1590,13 +1634,24 @@ function setActiveUser(name){
   }
 }
 
+if(pbUnlockBtn) pbUnlockBtn.addEventListener('click', ()=>{
+  if(authed){
+    authed = false;
+    applyAuthState();
+    if(pbUnlockBtn) pbUnlockBtn.textContent = '🔑 主管解鎖';
+    return;
+  }
+  requireAuth();
+});
 pbAddBtn.addEventListener('click', ()=>{
+  if(!requireAuth()) return;
   const name = (prompt('請輸入學員姓名（用於儲存個人的90天進度）：', activeUser || '') || '').trim();
   if(name){ addUser(name); setActiveUser(name); }
 });
 pbSelect.addEventListener('change', ()=>{
   const v = pbSelect.value;
   if(v === '__new__'){
+    if(!requireAuth()){ pbSelect.value = activeUser || '__new__'; return; }
     const name = (prompt('請輸入學員姓名（用於儲存個人的90天進度）：', activeUser || '') || '').trim();
     if(name){ addUser(name); setActiveUser(name); }
     else{ pbSelect.value = activeUser || '__new__'; }
@@ -1605,6 +1660,7 @@ pbSelect.addEventListener('change', ()=>{
   }
 });
 pbClearBtn.addEventListener('click', ()=>{
+  if(!requireAuth()) return;
   if(!activeUser){ alert('請先選擇學員'); return; }
   if(confirm(`確定要清除「${activeUser}」目前記錄的所有進度嗎？此操作無法復原。`)){
     if(LS_OK) localStorage.removeItem(progressKey(activeUser));
@@ -1664,6 +1720,7 @@ if(adminClose) adminClose.addEventListener('click', ()=>toggleAdmin(false));
 if(adminGrid) adminGrid.addEventListener('click', e=>{
   const btn = e.target.closest('.del');
   if(!btn) return;
+  if(!requireAuth()) return;
   const id = btn.dataset.del;
   const stu = cloudStudents[id];
   const name = stu ? stu.name : '此學員';
@@ -1745,6 +1802,8 @@ if(LS_OK){
 }else{
   updateStatus('此瀏覽器無法使用本機儲存，進度不會保留');
 }
+/* 初始鎖定狀態（唯讀） */
+applyAuthState();
 </script>
 </body>
 </html>
