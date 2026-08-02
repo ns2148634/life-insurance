@@ -782,20 +782,20 @@ footer b{color:var(--bronze-light);}
         <div class="pb-actions">
           <span id="pbSyncStatus"></span>
           <button class="ctl-btn" id="pbUnlockBtn" type="button">🔑 主管解鎖</button>
-          <button class="ctl-btn" id="pbAdminBtn" type="button">👔 主管檢視</button>
-          <select id="pbSelect"><option value="">＋ 新增／切換學員</option></select>
-          <button id="pbAddBtn" type="button">＋ 新增學員</button>
-          <button class="ghost" id="pbClearBtn" type="button">清除此學員進度</button>
+          <select id="pbSelect"><option value="">切換查看學員</option></select>
         </div>
       </div>
     </div>
 
-    <!-- 主管檢視 -->
+    <!-- 主管管理面板（解鎖後顯示） -->
     <div class="admin-bar" id="adminBar">
       <div class="admin-inner">
         <div class="ah">
-          <b>📊 主管追蹤總覽</b>
-          <button class="close" id="adminClose" type="button">關閉 ✕</button>
+          <b>📋 主管管理</b>
+          <div>
+            <button id="adminAddBtn" type="button" style="font-family:'Noto Sans TC',sans-serif;border:1px solid var(--vermilion);background:var(--vermilion);color:#fff;border-radius:3px;padding:5px 14px;font-size:12.5px;cursor:pointer;margin-right:8px;">＋ 新增學員</button>
+            <button class="close" id="adminClose" type="button">關閉 ✕</button>
+          </div>
         </div>
         <div class="admin-grid" id="adminGrid"></div>
       </div>
@@ -1379,18 +1379,15 @@ const LS_OK = (()=>{ try{ const k='__cg90_test__'; localStorage.setItem(k,'1'); 
 const pbName = document.getElementById('pbName');
 const pbStatus = document.getElementById('pbStatus');
 const pbSelect = document.getElementById('pbSelect');
-const pbAddBtn = document.getElementById('pbAddBtn');
-const pbClearBtn = document.getElementById('pbClearBtn');
 const pbSyncStatus = document.getElementById('pbSyncStatus');
-const pbAdminBtn = document.getElementById('pbAdminBtn');
 const pbUnlockBtn = document.getElementById('pbUnlockBtn');
 const adminBar = document.getElementById('adminBar');
 const adminGrid = document.getElementById('adminGrid');
 const adminClose = document.getElementById('adminClose');
+const adminAddBtn = document.getElementById('adminAddBtn');
 let activeUser = '';
 let saveTimer = null;
 let cloudStudents = {};   // Firebase 上全部學員 { pushId: {name, updatedAt, progress} }
-let adminOn = false;
 let authed = false;       // 主管解鎖狀態
 
 /* 主管密碼（可自行更改） */
@@ -1415,10 +1412,9 @@ function applyAuthState(){
     '#goalGrid input[type=number], #weekGrid input[type=checkbox], #modGrid input[type=checkbox]'
   );
   editable.forEach(el=>{ el.disabled = !authed; });
-  if(pbAddBtn) pbAddBtn.disabled = !authed;
-  if(pbClearBtn) pbClearBtn.disabled = !authed;
-  // pbSelect 保持可用：所有人都可以切換查看學員進度
-  if(pbSelect) pbSelect.disabled = false;
+  // 管理面板：解鎖時顯示並載入學員清單，鎖定時隱藏
+  if(adminBar) adminBar.classList.toggle('show', authed);
+  if(authed) renderAdmin();
   if(pbUnlockBtn){
     pbUnlockBtn.textContent = authed ? '🔓 主管已解鎖' : '🔑 主管解鎖';
     pbUnlockBtn.classList.toggle('unlocked', authed);
@@ -1544,9 +1540,9 @@ function addUser(name){
 }
 function populateSelect(){
   const names = getAllUserNames();
-  pbSelect.innerHTML = '<option value="__new__">＋ 新增／切換學員</option>' +
+  pbSelect.innerHTML = '<option value="">切換查看學員</option>' +
     names.map(u=>`<option value="${escapeHtml(u)}">${escapeHtml(u)}</option>`).join('');
-  pbSelect.value = activeUser || '__new__';
+  pbSelect.value = activeUser || '';
 }
 function collectState(){
   const goalsState = [...goalGrid.querySelectorAll('.goal-card')].map(c=>({
@@ -1643,104 +1639,82 @@ if(pbUnlockBtn) pbUnlockBtn.addEventListener('click', ()=>{
   }
   requireAuth();
 });
-pbAddBtn.addEventListener('click', ()=>{
-  if(!requireAuth()) return;
-  const name = (prompt('請輸入學員姓名（用於儲存個人的90天進度）：', activeUser || '') || '').trim();
-  if(name){ addUser(name); setActiveUser(name); }
-});
 pbSelect.addEventListener('change', ()=>{
   const v = pbSelect.value;
-  if(v === '__new__'){
-    if(!requireAuth()){ pbSelect.value = activeUser || '__new__'; return; }
-    const name = (prompt('請輸入學員姓名（用於儲存個人的90天進度）：', activeUser || '') || '').trim();
-    if(name){ addUser(name); setActiveUser(name); }
-    else{ pbSelect.value = activeUser || '__new__'; }
-  } else {
-    setActiveUser(v);
+  if(v){ setActiveUser(v); }
+  else{ pbSelect.value = activeUser || ''; }
+});
+// 管理面板「＋ 新增學員」
+if(adminAddBtn) adminAddBtn.addEventListener('click', ()=>{
+  if(!requireAuth()) return;
+  const name = (prompt('請輸入新學員姓名：', '') || '').trim();
+  if(name){
+    addUser(name);
+    setActiveUser(name);
+    renderAdmin();
   }
 });
-pbClearBtn.addEventListener('click', ()=>{
-  if(!requireAuth()) return;
-  if(!activeUser){ alert('請先選擇學員'); return; }
-  if(confirm(`確定要清除「${activeUser}」目前記錄的所有進度嗎？此操作無法復原。`)){
-    if(LS_OK) localStorage.removeItem(progressKey(activeUser));
-    applyState(defaultState());
-    updateStatus('進度已清除');
-    if(FB){
-      const found = cloudFindByName(activeUser);
-      if(found){
-        remove(ref(FB.db, 'cg90/students/' + found.id)).then(()=>{
-          syncStatus('☁️ 雲端資料已清除', 'ok');
-          delete cloudStudents[found.id];
-          const users = getUsers().filter(u=>u!==activeUser);
-          saveUsersList(users);
-          populateSelect();
-          renderAdmin();
-        }).catch(()=>{ syncStatus('⚠️ 雲端清除失敗', 'err'); });
-      }
-    }
-  }
+if(adminClose) adminClose.addEventListener('click', ()=>{
+  if(authed) adminBar.classList.remove('show');
 });
 
-/* ---------- 主管檢視 ---------- */
+/* ---------- 主管管理面板 ---------- */
 function renderAdmin(){
   if(!adminGrid) return;
   const list = Object.entries(cloudStudents)
     .map(([id, s])=>({ id, s }))
     .sort((a,b)=>((b.s&&b.s.updatedAt)||0)-((a.s&&a.s.updatedAt)||0));
   if(!FB){
-    adminGrid.innerHTML = '<div style="color:#9fb3b3;grid-column:1/-1;padding:10px;">⚠️ 尚未設定雲端連線（FB_CONFIG 空白），主管檢視無法使用</div>';
+    adminGrid.innerHTML = '<div style="color:#9fb3b3;grid-column:1/-1;padding:10px;">⚠️ 尚未設定雲端連線（FB_CONFIG 空白），主管管理無法使用</div>';
     return;
   }
   if(list.length === 0){
-    adminGrid.innerHTML = '<div style="color:#9fb3b3;grid-column:1/-1;padding:10px;">尚無學員資料</div>';
+    adminGrid.innerHTML = '<div style="color:#9fb3b3;grid-column:1/-1;padding:10px;">尚無學員，請點上方「＋ 新增學員」</div>';
     return;
   }
   adminGrid.innerHTML = list.map(({id, s})=>{
     const pct = stuProgressPct(s && s.progress);
     const upd = s && s.updatedAt ? '更新 ' + formatTime(s.updatedAt) : '尚未更新';
-    return `<div class="admin-stu">
+    return `<div class="admin-stu" data-id="${escapeHtml(id)}" style="cursor:pointer;" title="點擊切換並填寫此學員內容">
       <div class="sn"><span>${escapeHtml(s ? s.name : '?')}</span><button class="del" data-del="${escapeHtml(id)}" title="刪除學員">刪除</button></div>
       <div class="pg">總完成度 ${pct}%</div>
       <div class="bar"><i style="width:${pct}%"></i></div>
-      <div class="meta">${upd}</div>
+      <div class="meta">${upd}・點擊卡片填寫</div>
     </div>`;
   }).join('');
 }
 function toggleAdmin(force){
-  adminOn = force !== undefined ? force : !adminOn;
-  if(adminBar){
-    adminBar.classList.toggle('show', adminOn);
-    if(pbAdminBtn) pbAdminBtn.classList.toggle('on', adminOn);
-  }
-  if(adminOn) renderAdmin();
+  if(adminBar) adminBar.classList.toggle('show', force !== undefined ? force : adminBar.classList.contains('show'));
 }
-if(pbAdminBtn) pbAdminBtn.addEventListener('click', ()=>toggleAdmin());
-if(adminClose) adminClose.addEventListener('click', ()=>toggleAdmin(false));
 if(adminGrid) adminGrid.addEventListener('click', e=>{
   const btn = e.target.closest('.del');
-  if(!btn) return;
-  if(!requireAuth()) return;
-  const id = btn.dataset.del;
-  const stu = cloudStudents[id];
-  const name = stu ? stu.name : '此學員';
-  if(!FB) return;
-  if(confirm(`確定要從雲端刪除「${name}」嗎？此操作無法復原。`)){
-    remove(ref(FB.db, 'cg90/students/' + id))
-      .then(()=>{
-        delete cloudStudents[id];
-        // 同步從本機清單移除
-        const users = getUsers().filter(u=>u!==name);
-        saveUsersList(users);
-        if(activeUser === name){
-          activeUser = '';
-          pbName.textContent = '尚未設定';
-        }
-        populateSelect();
-        renderAdmin();
-        syncStatus('☁️ 學員已刪除', 'ok');
-      })
-      .catch(err=>{ syncStatus('⚠️ 刪除失敗', 'err'); console.warn(err); });
+  if(btn){
+    if(!requireAuth()) return;
+    const id = btn.dataset.del;
+    const stu = cloudStudents[id];
+    const name = stu ? stu.name : '此學員';
+    if(!FB) return;
+    if(confirm(`確定要從雲端刪除「${name}」嗎？此操作無法復原。`)){
+      remove(ref(FB.db, 'cg90/students/' + id))
+        .then(()=>{
+          delete cloudStudents[id];
+          // 同步從本機清單移除
+          const users = getUsers().filter(u=>u!==name);
+          saveUsersList(users);
+          if(activeUser === name){ activeUser = ''; pbName.textContent = '尚未設定'; }
+          populateSelect();
+          renderAdmin();
+          syncStatus('☁️ 學員已刪除', 'ok');
+        })
+        .catch(err=>{ syncStatus('⚠️ 刪除失敗', 'err'); console.warn(err); });
+    }
+    return;
+  }
+  // 點擊卡片 → 切換到該學員並準備填寫
+  const card = e.target.closest('.admin-stu');
+  if(card && card.dataset.id){
+    const stu = cloudStudents[card.dataset.id];
+    if(stu && stu.name){ setActiveUser(stu.name); }
   }
 });
 
@@ -1758,7 +1732,7 @@ function startCloudListen(){
     names.forEach(n=>{ if(!users.includes(n)){ users.push(n); changed = true; } });
     if(changed) saveUsersList(users);
     populateSelect();
-    if(adminOn) renderAdmin();
+    if(authed) renderAdmin();
     if(activeUser){
       const found = cloudFindByName(activeUser);
       if(found && found.data && found.data.progress && found.data.progress.savedAt){
@@ -1776,14 +1750,6 @@ function startCloudListen(){
   });
 }
 
-/* ---------- Admin 按鈕提示（無雲端時） ---------- */
-if(pbAdminBtn && !FB){
-  pbAdminBtn.title = '需設定 Firebase 才能使用主管檢視';
-  pbAdminBtn.addEventListener('click', ()=>{
-    alert('尚未設定 Firebase 雲端連線，主管檢視無法使用。\n請在 90day.html 中填入 FB_CONFIG。');
-  });
-}
-
 /* boot */
 populateSelect();
 if(FB){
@@ -1794,11 +1760,9 @@ if(LS_OK){
   const users = getUsers();
   if(savedActive && users.includes(savedActive)){ setActiveUser(savedActive); }
   else if(users.length === 0){
-    updateStatus('尚未建立任何學員，請點「＋ 新增學員」開始');
-    const firstName = (prompt('歡迎使用宸功出擊90天！\n請輸入第一位學員姓名開始記錄進度：', '') || '').trim();
-    if(firstName){ addUser(firstName); setActiveUser(firstName); }
+    updateStatus('尚未建立任何學員。請主管點「🔑 主管解鎖」後在管理面板新增學員。');
   }
-  else{ updateStatus('尚未選擇學員，進度不會自動儲存'); }
+  else{ updateStatus('尚未選擇學員。請從下拉選單選擇要查看的學員。'); }
 }else{
   updateStatus('此瀏覽器無法使用本機儲存，進度不會保留');
 }
