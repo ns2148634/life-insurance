@@ -8,6 +8,36 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, update, remove, onValue, get, child, serverTimestamp, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+/* ===== Firebase 設定區 =====
+   請在 Firebase Console (https://console.firebase.google.com) 建立專案：
+   1. 建立 Realtime Database（選 test mode 即可）
+   2. 到「專案設定 → 一般 → 你的应用」複製 firebaseConfig
+   3. 貼到下方 FB_CONFIG。若留空，系統自動降級為本機儲存。 */
+const FB_CONFIG = {
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+
+const FB_READY = !!(FB_CONFIG && FB_CONFIG.apiKey && FB_CONFIG.databaseURL);
+let fbDB = null;
+if (FB_READY){
+  try{
+    const app = initializeApp(FB_CONFIG);
+    fbDB = getDatabase(app);
+    window.__fbDB = fbDB;
+  }catch(e){ console.warn('Firebase init failed:', e); window.__fbDB = null; }
+}
+window.__FB_READY = FB_READY && !!window.__fbDB;
+</script>
 <style>
 :root{
   --ink:#17343a;
@@ -39,6 +69,62 @@ body{
 h1,h2,h3,h4,.serif{font-family:'Noto Serif TC',serif;}
 ::selection{background:var(--bronze-light);}
 a{color:inherit;}
+
+/* ---------- admin / cloud sync ---------- */
+.admin-bar{
+  display:none;
+  background:var(--ink-dark);
+  border-bottom:1px solid var(--line-dark);
+  color:var(--ivory);
+}
+.admin-bar.show{display:block;}
+.admin-inner{
+  max-width:1400px;
+  padding:14px 48px 20px;
+  font-size:13px;
+}
+.admin-inner .ah{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+  padding-bottom:8px;margin-bottom:12px;
+  border-bottom:1px solid var(--line-dark);
+}
+.admin-inner .ah b{font-family:'Noto Serif TC',serif;font-size:15px;color:var(--bronze-light);}
+.admin-inner .ah .close{
+  background:none;border:1px solid var(--bronze);color:var(--bronze-light);
+  border-radius:3px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+.admin-stu{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line-dark);
+  border-radius:5px;
+  padding:12px 14px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.admin-stu .sn{font-family:'Noto Serif TC',serif;font-weight:700;font-size:14px;color:#fff;display:flex;justify-content:space-between;align-items:center;}
+.admin-stu .sn .del{
+  background:none;border:1px solid var(--vermilion);color:var(--vermilion);
+  border-radius:3px;padding:2px 8px;font-size:11px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+}
+.admin-stu .sn .del:hover{background:var(--vermilion);color:#fff;}
+.admin-stu .pg{font-size:11.5px;color:#9fb3b3;}
+.admin-stu .bar{height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;}
+.admin-stu .bar i{display:block;height:100%;background:var(--vermilion);border-radius:3px;}
+.admin-stu .meta{font-size:10.5px;color:#7d9494;}
+@media (max-width:900px){
+  .admin-inner{padding:14px 22px 20px;}
+}
+.ctl-btn{
+  font-family:'Noto Sans TC',sans-serif;
+  border:1px solid var(--bronze);background:transparent;color:#5a4623;
+  padding:6px 14px;border-radius:3px;font-size:12.5px;cursor:pointer;
+}
+.ctl-btn.on{background:var(--ink-dark);border-color:var(--ink-dark);color:var(--ivory);}
+#pbSyncStatus{font-size:11px;color:#7a6633;}
+.cloud-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#7a6633;margin-right:4px;vertical-align:middle;}
+.cloud-dot.ok{background:#4d7c3b;}
+.cloud-dot.err{background:var(--vermilion);}
 
 /* ---------- layout shell ---------- */
 .shell{display:flex;min-height:100vh;}
@@ -712,10 +798,23 @@ footer b{color:var(--bronze-light);}
         <span>學員：<b id="pbName">尚未設定</b></span>
         <span id="pbStatus">進度僅儲存在此裝置瀏覽器中</span>
         <div class="pb-actions">
+          <span id="pbSyncStatus"></span>
+          <button class="ctl-btn" id="pbAdminBtn" type="button">👔 主管檢視</button>
           <select id="pbSelect"><option value="">＋ 新增／切換學員</option></select>
           <button id="pbAddBtn" type="button">＋ 新增學員</button>
           <button class="ghost" id="pbClearBtn" type="button">清除此學員進度</button>
         </div>
+      </div>
+    </div>
+
+    <!-- 主管檢視 -->
+    <div class="admin-bar" id="adminBar">
+      <div class="admin-inner">
+        <div class="ah">
+          <b>📊 主管追蹤總覽</b>
+          <button class="close" id="adminClose" type="button">關閉 ✕</button>
+        </div>
+        <div class="admin-grid" id="adminGrid"></div>
       </div>
     </div>
 
@@ -1299,8 +1398,74 @@ const pbStatus = document.getElementById('pbStatus');
 const pbSelect = document.getElementById('pbSelect');
 const pbAddBtn = document.getElementById('pbAddBtn');
 const pbClearBtn = document.getElementById('pbClearBtn');
+const pbSyncStatus = document.getElementById('pbSyncStatus');
+const pbAdminBtn = document.getElementById('pbAdminBtn');
+const adminBar = document.getElementById('adminBar');
+const adminGrid = document.getElementById('adminGrid');
+const adminClose = document.getElementById('adminClose');
 let activeUser = '';
 let saveTimer = null;
+let cloudStudents = {};   // Firebase 上全部學員 { pushId: {name, updatedAt, progress} }
+let adminOn = false;
+
+/* ---------- Firebase helpers ---------- */
+const FB = window.__FB_READY ? { db: window.__fbDB, ref, set, update, remove, onValue, get, child, serverTimestamp, push } : null;
+function syncStatus(text, cls){
+  if(!pbSyncStatus) return;
+  pbSyncStatus.innerHTML = cls ? `<span class="cloud-dot ${cls}"></span>${text}` : text;
+}
+function localStuKey(name){
+  let map = {};
+  if(LS_OK){ try{ map = JSON.parse(localStorage.getItem('cg90_stuKeys')||'{}'); }catch(e){} }
+  if(!map[name]){
+    map[name] = 'stu_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    if(LS_OK) localStorage.setItem('cg90_stuKeys', JSON.stringify(map));
+  }
+  return map[name];
+}
+function cloudWrite(name, state){
+  if(!FB) return;
+  const id = localStuKey(name);
+  const payload = {
+    name: name,
+    updatedAt: Date.now(),
+    progress: state
+  };
+  set(ref(FB.db, 'cg90/students/' + id), payload)
+    .then(()=>{ syncStatus('☁️ 雲端已同步', 'ok'); })
+    .catch(err=>{ console.warn('cloud write fail', err); syncStatus('⚠️ 雲端同步失敗，僅本機儲存', 'err'); });
+}
+function cloudFindByName(name){
+  for(const id in cloudStudents){
+    if(cloudStudents[id].name === name) return { id: id, data: cloudStudents[id] };
+  }
+  return null;
+}
+function calcWeekDone(weeksState){
+  if(!weeksState) return { done: 0, total: weeks.length * 5 };
+  let done = 0, total = weeks.length * 5;
+  weeks.forEach(w=>{
+    w.days.forEach((d,i)=>{
+      if(weeksState[`${w.n}-${i}`]) done++;
+    });
+  });
+  return { done, total };
+}
+function calcModDone(modulesState){
+  if(!modulesState) return { done: 0, total: modules.reduce((a,m)=>a+m.items.length,0) };
+  let done = 0, total = modules.reduce((a,m)=>a+m.items.length,0);
+  modules.forEach((m,mi)=>{
+    m.items.forEach((_,ii)=>{ if(modulesState[`${mi}-${ii}`]) done++; });
+  });
+  return { done, total };
+}
+function stuProgressPct(progress){
+  const w = calcWeekDone(progress && progress.weeks);
+  const m = calcModDone(progress && progress.modules);
+  const total = w.total + m.total;
+  const done = w.done + m.done;
+  return total ? Math.round(done / total * 100) : 0;
+}
 
 function progressKey(name){ return 'cg90_progress_' + name; }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -1312,19 +1477,32 @@ function updateStatus(text){ if(pbStatus) pbStatus.textContent = text; }
 function defaultState(){
   return { goals:[{income:'',count:''},{income:'',count:''},{income:'',count:''}], weeks:{}, modules:{}, savedAt:null };
 }
+function getAllUserNames(){
+  const set = new Set(getUsers());
+  if(FB){
+    Object.values(cloudStudents).forEach(s=>{ if(s && s.name) set.add(s.name); });
+  }
+  return [...set];
+}
 function getUsers(){
   if(!LS_OK) return [];
   try{ return JSON.parse(localStorage.getItem('cg90_users')||'[]'); }catch(e){ return []; }
 }
+function saveUsersList(list){
+  if(LS_OK) localStorage.setItem('cg90_users', JSON.stringify(list));
+}
 function addUser(name){
   const users = getUsers();
-  if(!users.includes(name)){ users.push(name); if(LS_OK) localStorage.setItem('cg90_users', JSON.stringify(users)); }
+  if(!users.includes(name)){ users.push(name); saveUsersList(users); }
   populateSelect();
+  if(FB && !cloudFindByName(name)){
+    cloudWrite(name, defaultState());
+  }
 }
 function populateSelect(){
-  const users = getUsers();
+  const names = getAllUserNames();
   pbSelect.innerHTML = '<option value="__new__">＋ 新增／切換學員</option>' +
-    users.map(u=>`<option value="${escapeHtml(u)}">${escapeHtml(u)}</option>`).join('');
+    names.map(u=>`<option value="${escapeHtml(u)}">${escapeHtml(u)}</option>`).join('');
   pbSelect.value = activeUser || '__new__';
 }
 function collectState(){
@@ -1367,16 +1545,23 @@ function applyState(state){
 }
 function scheduleSave(){
   if(!activeUser){ updateStatus('尚未選擇學員，進度不會自動儲存'); return; }
-  if(!LS_OK){ updateStatus('此瀏覽器無法本機儲存，進度不會保留'); return; }
   clearTimeout(saveTimer);
   updateStatus('儲存中…');
   saveTimer = setTimeout(()=>{
     const state = collectState();
-    try{
-      localStorage.setItem(progressKey(activeUser), JSON.stringify(state));
-      updateStatus('已儲存：'+formatTime(state.savedAt));
-    }catch(err){
-      updateStatus('儲存失敗，裝置儲存空間可能不足');
+    let savedLocal = false;
+    if(LS_OK){
+      try{
+        localStorage.setItem(progressKey(activeUser), JSON.stringify(state));
+        savedLocal = true;
+      }catch(err){
+        updateStatus('儲存失敗，裝置儲存空間可能不足');
+      }
+    }
+    if(FB && savedLocal){
+      cloudWrite(activeUser, state);
+    } else if(savedLocal){
+      updateStatus('已儲存（本機）：'+formatTime(state.savedAt));
     }
   }, 450);
 }
@@ -1386,10 +1571,24 @@ function setActiveUser(name){
   pbName.textContent = name;
   populateSelect();
   let state = null;
+  // 優先讀雲端（較新資料）
+  const cloud = cloudFindByName(name);
+  let cloudState = cloud && cloud.data && cloud.data.progress ? cloud.data.progress : null;
+  let localState = null;
   if(LS_OK){
-    try{ state = JSON.parse(localStorage.getItem(progressKey(name)) || 'null'); }catch(e){ state = null; }
+    try{ localState = JSON.parse(localStorage.getItem(progressKey(name)) || 'null'); }catch(e){ localState = null; }
+  }
+  if(cloudState && localState && cloudState.savedAt && localState.savedAt){
+    state = cloudState.savedAt >= localState.savedAt ? cloudState : localState;
+  } else {
+    state = cloudState || localState || null;
   }
   applyState(state || defaultState());
+  if(FB){
+    syncStatus('☁️ 雲端開啟', 'ok');
+  } else {
+    syncStatus('');
+  }
 }
 
 pbAddBtn.addEventListener('click', ()=>{
@@ -1412,11 +1611,128 @@ pbClearBtn.addEventListener('click', ()=>{
     if(LS_OK) localStorage.removeItem(progressKey(activeUser));
     applyState(defaultState());
     updateStatus('進度已清除');
+    if(FB){
+      const found = cloudFindByName(activeUser);
+      if(found){
+        remove(ref(FB.db, 'cg90/students/' + found.id)).then(()=>{
+          syncStatus('☁️ 雲端資料已清除', 'ok');
+          delete cloudStudents[found.id];
+          const users = getUsers().filter(u=>u!==activeUser);
+          saveUsersList(users);
+          populateSelect();
+          renderAdmin();
+        }).catch(()=>{ syncStatus('⚠️ 雲端清除失敗', 'err'); });
+      }
+    }
   }
 });
 
+/* ---------- 主管檢視 ---------- */
+function renderAdmin(){
+  if(!adminGrid) return;
+  const list = Object.entries(cloudStudents)
+    .map(([id, s])=>({ id, s }))
+    .sort((a,b)=>((b.s&&b.s.updatedAt)||0)-((a.s&&a.s.updatedAt)||0));
+  if(!FB){
+    adminGrid.innerHTML = '<div style="color:#9fb3b3;grid-column:1/-1;padding:10px;">⚠️ 尚未設定雲端連線（FB_CONFIG 空白），主管檢視無法使用</div>';
+    return;
+  }
+  if(list.length === 0){
+    adminGrid.innerHTML = '<div style="color:#9fb3b3;grid-column:1/-1;padding:10px;">尚無學員資料</div>';
+    return;
+  }
+  adminGrid.innerHTML = list.map(({id, s})=>{
+    const pct = stuProgressPct(s && s.progress);
+    const upd = s && s.updatedAt ? '更新 ' + formatTime(s.updatedAt) : '尚未更新';
+    return `<div class="admin-stu">
+      <div class="sn"><span>${escapeHtml(s ? s.name : '?')}</span><button class="del" data-del="${escapeHtml(id)}" title="刪除學員">刪除</button></div>
+      <div class="pg">總完成度 ${pct}%</div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="meta">${upd}</div>
+    </div>`;
+  }).join('');
+}
+function toggleAdmin(force){
+  adminOn = force !== undefined ? force : !adminOn;
+  if(adminBar){
+    adminBar.classList.toggle('show', adminOn);
+    if(pbAdminBtn) pbAdminBtn.classList.toggle('on', adminOn);
+  }
+  if(adminOn) renderAdmin();
+}
+if(pbAdminBtn) pbAdminBtn.addEventListener('click', ()=>toggleAdmin());
+if(adminClose) adminClose.addEventListener('click', ()=>toggleAdmin(false));
+if(adminGrid) adminGrid.addEventListener('click', e=>{
+  const btn = e.target.closest('.del');
+  if(!btn) return;
+  const id = btn.dataset.del;
+  const stu = cloudStudents[id];
+  const name = stu ? stu.name : '此學員';
+  if(!FB) return;
+  if(confirm(`確定要從雲端刪除「${name}」嗎？此操作無法復原。`)){
+    remove(ref(FB.db, 'cg90/students/' + id))
+      .then(()=>{
+        delete cloudStudents[id];
+        // 同步從本機清單移除
+        const users = getUsers().filter(u=>u!==name);
+        saveUsersList(users);
+        if(activeUser === name){
+          activeUser = '';
+          pbName.textContent = '尚未設定';
+        }
+        populateSelect();
+        renderAdmin();
+        syncStatus('☁️ 學員已刪除', 'ok');
+      })
+      .catch(err=>{ syncStatus('⚠️ 刪除失敗', 'err'); console.warn(err); });
+  }
+});
+
+/* ---------- Firebase 即時監聽 ---------- */
+function startCloudListen(){
+  if(!FB) return;
+  syncStatus('☁️ 連線中…');
+  onValue(ref(FB.db, 'cg90/students'), snap=>{
+    const data = snap.val() || {};
+    cloudStudents = data;
+    // 將雲端學員合併回本機清單
+    const names = Object.values(data).map(s=>s && s.name).filter(Boolean);
+    const users = getUsers();
+    let changed = false;
+    names.forEach(n=>{ if(!users.includes(n)){ users.push(n); changed = true; } });
+    if(changed) saveUsersList(users);
+    populateSelect();
+    if(adminOn) renderAdmin();
+    if(activeUser){
+      const found = cloudFindByName(activeUser);
+      if(found && found.data && found.data.progress && found.data.progress.savedAt){
+        // 若雲端比目前顯示新，則重新載入
+        const cur = collectState();
+        if((!cur.savedAt) || (found.data.progress.savedAt > cur.savedAt)){
+          setActiveUser(activeUser);
+        }
+      }
+    }
+    syncStatus('☁️ 雲端已連線', 'ok');
+  }, err=>{
+    console.warn('cloud listen error', err);
+    syncStatus('⚠️ 雲端連線失敗，使用本機', 'err');
+  });
+}
+
+/* ---------- Admin 按鈕提示（無雲端時） ---------- */
+if(pbAdminBtn && !FB){
+  pbAdminBtn.title = '需設定 Firebase 才能使用主管檢視';
+  pbAdminBtn.addEventListener('click', ()=>{
+    alert('尚未設定 Firebase 雲端連線，主管檢視無法使用。\n請在 90day.html 中填入 FB_CONFIG。');
+  });
+}
+
 /* boot */
 populateSelect();
+if(window.__FB_READY){
+  startCloudListen();
+}
 if(LS_OK){
   const savedActive = localStorage.getItem('cg90_active');
   const users = getUsers();
