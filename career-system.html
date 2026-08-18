@@ -304,9 +304,171 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
 
 @media (min-width:900px) and (orientation:landscape){ main{padding:28px 28px 44px} h1{font-size:30px} }
 @media print{header,nav,.pager{display:none} .page{display:block!important} details.fold{page-break-inside:avoid}}
+
+/* ===== 面談簡報模式 v2 ===== */
+body.deck-mode{background:#111b1d;overflow-x:hidden}
+.deck-mode header{
+  position:fixed;left:0;right:0;top:0;z-index:100;
+  background:rgba(13,33,36,.96);backdrop-filter:blur(12px)
+}
+.deck-mode main{
+  max-width:none;margin:0;padding:0;min-height:100vh;
+}
+.deck-mode .page{
+  display:none!important;
+  width:100%;min-height:100vh;
+  padding:112px 7vw 118px;
+  background:var(--paper);
+  position:relative;
+  overflow:hidden;
+}
+.deck-mode .page.on{display:block!important}
+.deck-mode .page .deck-slide{
+  display:none;
+  width:min(1180px,100%);
+  margin:0 auto;
+  min-height:calc(100vh - 230px);
+  animation:deckIn .28s ease both;
+}
+.deck-mode .page .deck-slide.active{display:block}
+@keyframes deckIn{
+  from{opacity:0;transform:translateX(18px)}
+  to{opacity:1;transform:none}
+}
+.deck-mode .page .deck-cover{
+  display:flex;flex-direction:column;justify-content:center;
+  min-height:calc(100vh - 230px)
+}
+.deck-mode .page .deck-cover h1{
+  font-size:clamp(34px,5vw,64px);line-height:1.25;
+  max-width:900px;margin:10px 0 18px
+}
+.deck-mode .page .deck-cover .lead{
+  font-size:clamp(17px,2vw,23px);line-height:1.8;max-width:760px
+}
+.deck-mode .page .deck-cover::after{
+  content:"面談說明";
+  display:inline-block;margin-top:34px;color:var(--muted);
+  font-size:12px;letter-spacing:.2em
+}
+.deck-mode .page .deck-slide:not(.deck-cover) > h2{
+  margin-top:0;font-size:clamp(25px,3.2vw,40px);
+  line-height:1.35;padding-left:18px;border-left-width:6px
+}
+.deck-mode .page .deck-slide:not(.deck-cover) > h2 .en{
+  font-size:12px;display:block;margin-top:7px
+}
+.deck-mode .page .deck-slide > .lead{
+  font-size:18px
+}
+.deck-mode .page .deck-slide .card,
+.deck-mode .page .deck-slide .thesis,
+.deck-mode .page .deck-slide .ns,
+.deck-mode .page .deck-slide .gapbox,
+.deck-mode .page .deck-slide .harmony{
+  max-width:1100px
+}
+.deck-mode .page .deck-slide .thesis{
+  padding:32px 34px
+}
+.deck-mode .page .deck-slide .thesis h3{
+  font-size:clamp(25px,3vw,38px)
+}
+.deck-mode .page .deck-slide .stats{
+  grid-template-columns:repeat(2,1fr);gap:18px
+}
+.deck-mode .page .deck-slide .stat{
+  padding:24px;border-top-width:5px
+}
+.deck-mode .page .deck-slide .stat .v{font-size:clamp(28px,3vw,42px)}
+.deck-mode .page .deck-slide .vals{
+  grid-template-columns:repeat(3,1fr);gap:20px
+}
+.deck-mode .page .deck-slide .val{
+  padding:26px;min-height:190px
+}
+.deck-mode .page .deck-slide .val h3{font-size:21px}
+.deck-mode .page .deck-slide .val p{font-size:15px}
+.deck-mode .page .deck-slide .tiles{
+  grid-template-columns:repeat(4,1fr);gap:18px
+}
+.deck-mode .page .deck-slide .tile{padding:24px;min-height:240px}
+.deck-mode .page .deck-slide .tile ul{font-size:15px;line-height:2}
+.deck-mode .page .deck-slide .certs{
+  overflow:visible;display:grid;grid-template-columns:repeat(5,1fr);gap:14px
+}
+.deck-mode .page .deck-slide .cert{
+  min-width:0;margin:0;height:100%
+}
+.deck-mode .page .deck-slide .medals{
+  grid-template-columns:repeat(3,1fr);gap:20px
+}
+.deck-mode .page .deck-slide .medal{padding:24px;min-height:190px}
+.deck-mode .page .deck-slide .ladder{padding-bottom:8px}
+.deck-mode .page .deck-slide .routes{grid-template-columns:repeat(3,1fr)}
+.deck-mode .page .deck-slide .disc{max-width:1000px}
+.deck-mode .deck-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:90;
+  height:72px;padding:0 7vw;display:flex;align-items:center;
+  justify-content:space-between;gap:20px;
+  background:rgba(13,33,36,.97);color:#fff
+}
+.deck-mode .deck-progress{height:3px;position:absolute;left:0;top:0;background:var(--pc);transition:width .25s}
+.deck-mode .deck-info{font-size:12px;color:#a8c6bf;letter-spacing:.08em;white-space:nowrap}
+.deck-mode .deck-counter{font-variant-numeric:tabular-nums;color:#fff}
+.deck-mode .deck-controls{display:flex;gap:8px}
+.deck-mode .deck-controls button{
+  appearance:none;border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.08);color:#fff;border-radius:999px;
+  padding:7px 16px;font:inherit;font-size:13px;cursor:pointer
+}
+.deck-mode .deck-controls button:hover{background:rgba(255,255,255,.16)}
+.deck-mode .deck-controls button:disabled{opacity:.3;cursor:default}
+.deck-mode footer{display:none}
+.deck-mode .pager{display:none}
+.deck-mode nav button{padding-left:13px;padding-right:13px}
+.deck-mode nav button .dot{width:8px;height:8px}
+.deck-mode .deck-slide .tw{max-height:58vh;overflow:auto}
+.deck-mode .deck-slide details.fold[open] .body{max-height:45vh;overflow:auto}
+.deck-mode .deck-slide .hook{font-size:15px;padding:16px 20px}
+.deck-mode .deck-slide .note{font-size:13px}
+@media(max-width:900px){
+  .deck-mode .page{padding:98px 22px 108px}
+  .deck-mode .page .deck-slide{min-height:calc(100vh - 206px)}
+  .deck-mode .page .deck-cover{min-height:calc(100vh - 206px)}
+  .deck-mode .page .deck-slide .stats,
+  .deck-mode .page .deck-slide .vals,
+  .deck-mode .page .deck-slide .medals,
+  .deck-mode .page .deck-slide .tiles,
+  .deck-mode .page .deck-slide .certs,
+  .deck-mode .page .deck-slide .routes{grid-template-columns:1fr}
+  .deck-mode .page .deck-slide .certs{display:flex;overflow-x:auto}
+  .deck-mode .page .deck-slide .cert{min-width:230px}
+  .deck-mode .page .deck-slide .ladder{overflow-x:auto}
+  .deck-mode .deck-footer{height:64px;padding:0 16px}
+  .deck-mode .deck-info{display:none}
+  .deck-mode .deck-controls{width:100%;justify-content:space-between}
+  .deck-mode .deck-controls button{flex:1}
+}
+@media(max-height:700px) and (orientation:landscape){
+  .deck-mode .page{padding-top:92px;padding-bottom:92px}
+  .deck-mode .page .deck-slide{min-height:auto}
+  .deck-mode .page .deck-cover{min-height:auto}
+  .deck-mode .deck-footer{height:58px}
+}
+
 </style>
 </head>
-<body>
+<body class="deck-mode">
+<div id="deck-footer" class="deck-footer" aria-label="面談簡報控制列">
+  <div id="deck-progress" class="deck-progress"></div>
+  <div class="deck-info"><span id="deck-category"></span></div>
+  <div class="deck-counter"><span id="deck-current">1</span> / <span id="deck-total">1</span></div>
+  <div class="deck-controls">
+    <button id="deck-prev" type="button">← 上一頁</button>
+    <button id="deck-next" type="button">下一頁 →</button>
+  </div>
+</div>
 
 <header>
   <div class="bar">
@@ -1067,67 +1229,231 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; line-height:1.8;
 (function(){
   "use strict";
 
+  /*
+   * 面談簡報模式
+   * 五大類不變；每個 h2 自動成為一張獨立簡報頁。
+   * 原始內容與文字不刪除，只重新編排。
+   */
   var COLORS = ["#b8531a", "#6c7570", "#a9803f", "#2f5f7a", "#3f7a52"];
-  var tabs  = Array.prototype.slice.call(document.querySelectorAll("#nav button"));
+  var CATEGORY_NAMES = ["未來願景","工作價值","學習成長","合理收入","晉陞透明"];
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll("#nav button"));
   var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
-  var cur = 0;
+  var curCategory = 0;
+  var curSlide = 0;
+  var slideGroups = [];
 
-  function go(i){
-    cur = Math.max(0, Math.min(pages.length - 1, i));
-    pages.forEach(function(p, k){ p.classList.toggle("on", k === cur); });
-    tabs.forEach(function(t, k){
-      var on = k === cur;
-      t.setAttribute("aria-selected", on ? "true" : "false");
-      t.style.borderBottomColor = on ? COLORS[k] : "transparent";
+  function buildSlides(){
+    pages.forEach(function(page, categoryIndex){
+      var children = Array.prototype.slice.call(page.children);
+
+      // 建立簡報容器
+      var original = children.slice();
+      var groups = [];
+      var current = document.createElement("div");
+      current.className = "deck-slide deck-cover";
+      groups.push(current);
+
+      // 第一張：eyebrow + h1 + lead
+      original.forEach(function(el){
+        if(el.matches && (el.matches(".eyebrow") || el.tagName === "H1" || el.matches(".lead"))){
+          current.appendChild(el);
+        }
+      });
+
+      // 後續每個 h2 開一張新頁，內容直到下一個 h2
+      var started = false;
+      original.forEach(function(el){
+        if(el.matches && el.matches(".eyebrow")) return;
+        if(el.tagName === "H1") return;
+        if(el.matches && el.matches(".lead")) return;
+
+        if(el.tagName === "H2"){
+          current = document.createElement("div");
+          current.className = "deck-slide";
+          current.appendChild(el);
+          groups.push(current);
+          started = true;
+        }else if(started){
+          current.appendChild(el);
+        }
+      });
+
+      // 清空原 section，再放入簡報頁
+      while(page.firstChild) page.removeChild(page.firstChild);
+      groups.forEach(function(g){ page.appendChild(g); });
+
+      // 每一大類第一頁顯示
+      groups.forEach(function(g){ g.classList.remove("active"); });
+      groups[0].classList.add("active");
+
+      slideGroups.push(groups);
     });
-    document.getElementById("prev").disabled = cur === 0;
-    document.getElementById("next").disabled = cur === pages.length - 1;
-    window.scrollTo(0, 0);
   }
-  tabs.forEach(function(t){ t.addEventListener("click", function(){ go(+t.dataset.p); }); });
-  document.getElementById("prev").addEventListener("click", function(){ go(cur - 1); });
-  document.getElementById("next").addEventListener("click", function(){ go(cur + 1); });
 
-  /* 業務津貼試算 */
+  function setCategory(n){
+    curCategory = Math.max(0, Math.min(pages.length - 1, n));
+    curSlide = 0;
+
+    pages.forEach(function(p,i){
+      p.classList.toggle("on", i === curCategory);
+      p.style.setProperty("--pc", COLORS[i]);
+    });
+
+    tabs.forEach(function(t,i){
+      var active = i === curCategory;
+      t.setAttribute("aria-selected", active ? "true" : "false");
+      t.style.borderBottomColor = active ? COLORS[i] : "transparent";
+    });
+
+    slideGroups.forEach(function(group, i){
+      group.forEach(function(slide, j){
+        slide.classList.toggle("active", i === curCategory && j === 0);
+      });
+    });
+
+    updateUI();
+    window.scrollTo(0,0);
+  }
+
+  function setSlide(n){
+    var group = slideGroups[curCategory];
+    if(!group || !group.length) return;
+
+    curSlide = Math.max(0, Math.min(group.length - 1, n));
+    group.forEach(function(slide,i){
+      slide.classList.toggle("active", i === curSlide);
+    });
+
+    updateUI();
+    window.scrollTo(0,0);
+  }
+
+  function updateUI(){
+    var group = slideGroups[curCategory] || [];
+    var total = group.length || 1;
+
+    document.getElementById("deck-category").textContent =
+      CATEGORY_NAMES[curCategory] + "　·　面談簡報";
+
+    document.getElementById("deck-current").textContent = curSlide + 1;
+    document.getElementById("deck-total").textContent = total;
+
+    document.getElementById("deck-prev").disabled =
+      curSlide === 0 && curCategory === 0;
+
+    document.getElementById("deck-next").disabled =
+      curSlide === total - 1 && curCategory === pages.length - 1;
+
+    var progress = ((curSlide + 1) / total) * 100;
+    document.getElementById("deck-progress").style.width = progress + "%";
+    document.getElementById("deck-progress").style.background = COLORS[curCategory];
+  }
+
+  function next(){
+    var group = slideGroups[curCategory];
+    if(curSlide < group.length - 1){
+      setSlide(curSlide + 1);
+    }else if(curCategory < pages.length - 1){
+      setCategory(curCategory + 1);
+    }
+  }
+
+  function prev(){
+    if(curSlide > 0){
+      setSlide(curSlide - 1);
+    }else if(curCategory > 0){
+      setCategory(curCategory - 1);
+      setSlide(slideGroups[curCategory].length - 1);
+    }
+  }
+
+  tabs.forEach(function(tab){
+    tab.addEventListener("click", function(){
+      setCategory(+tab.dataset.p);
+    });
+  });
+
+  document.getElementById("deck-prev").addEventListener("click", prev);
+  document.getElementById("deck-next").addEventListener("click", next);
+
+  // 鍵盤操作：面談時可直接用 ← → 控制
+  document.addEventListener("keydown", function(e){
+    var tag = (e.target.tagName || "").toLowerCase();
+    if(tag === "input" || tag === "select" || tag === "textarea") return;
+
+    if(e.key === "ArrowRight" || e.key === "PageDown" || e.key === " "){
+      e.preventDefault(); next();
+    }else if(e.key === "ArrowLeft" || e.key === "PageUp"){
+      e.preventDefault(); prev();
+    }else if(e.key === "Home"){
+      e.preventDefault(); setCategory(0);
+    }else if(e.key === "End"){
+      e.preventDefault();
+      setCategory(pages.length - 1);
+      setSlide(slideGroups[pages.length - 1].length - 1);
+    }
+  });
+
+  // 觸控左右滑
+  var touchX = null;
+  document.addEventListener("touchstart", function(e){
+    if(e.touches && e.touches.length === 1) touchX = e.touches[0].clientX;
+  }, {passive:true});
+
+  document.addEventListener("touchend", function(e){
+    if(touchX === null || !e.changedTouches.length) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 60) dx < 0 ? next() : prev();
+    touchX = null;
+  }, {passive:true});
+
+  /* ===== 原本的業務津貼試算 ===== */
   var RATE_L2 = 0.10, RATE_L36 = 0.05, RATE_L720 = 0.02, RATE_CASH = 0.10, RATE_PA = 0.20;
 
   function nt(n){ return Math.round(n).toLocaleString("en-US"); }
-  function set(id, v){ var el = document.getElementById(id); if (el) el.textContent = v; }
-
-  function calc(){
-    var pl  = Math.max(0, +document.getElementById("pl").value || 0);
-    var pp  = Math.max(0, +document.getElementById("pp").value || 0);
-    var r1  = +document.getElementById("r1").value;
-    var yer = +document.getElementById("ye").value;
-
-    var fyc = pl * r1, cash = fyc * RATE_CASH, pa = pp * RATE_PA;
-    var ye  = (fyc + cash + pa) * yer;
-    var l2 = pl * RATE_L2, l3 = pl * RATE_L36, l4 = pl * RATE_L720;
-    var t1 = fyc + cash + pa + ye, t2 = l2 + pa, t3 = l3 + pa, t4 = l4 + pa;
-    var total = t1 + t2 + t3 * 4 + t4 * 14;
-    var prem = pl + pp;
-
-    set("c-l1", nt(fyc)); set("c-l2", nt(l2)); set("c-l3", nt(l3)); set("c-l4", nt(l4));
-    set("c-c1", nt(cash));
-    set("c-p1", nt(pa)); set("c-p2", nt(pa)); set("c-p3", nt(pa)); set("c-p4", nt(pa));
-    set("c-y1", ye > 0 ? nt(ye) : "—");
-    set("c-t1", nt(t1)); set("c-t2", nt(t2)); set("c-t3", nt(t3)); set("c-t4", nt(t4));
-    set("sum-p", nt(prem));
-    set("sum-fyc", nt(fyc));
-    set("sum-total", nt(total));
-    set("sum-pct", prem > 0 ? "＝ 年繳保費的 " + Math.round(total / prem * 100) + "%" : "＝ 請輸入保費");
-    set("r-l1", Math.round(r1 * 100) + "%");
-    set("r-y1", yer > 0 ? (yer * 100).toFixed(1).replace(".0", "") + "%" : "無");
+  function setText(id,v){
+    var el=document.getElementById(id);
+    if(el) el.textContent=v;
   }
 
-  ["pl", "pp", "r1", "ye"].forEach(function(id){
-    var el = document.getElementById(id);
-    el.addEventListener("input", calc);
-    el.addEventListener("change", calc);
+  function calc(){
+    var plEl=document.getElementById("pl");
+    if(!plEl) return;
+
+    var pl=Math.max(0,+plEl.value||0);
+    var pp=Math.max(0,+document.getElementById("pp").value||0);
+    var r1=+document.getElementById("r1").value;
+    var yer=+document.getElementById("ye").value;
+
+    var fyc=pl*r1, cash=fyc*RATE_CASH, pa=pp*RATE_PA;
+    var ye=(fyc+cash+pa)*yer;
+    var l2=pl*RATE_L2, l3=pl*RATE_L36, l4=pl*RATE_L720;
+    var t1=fyc+cash+pa+ye, t2=l2+pa, t3=l3+pa, t4=l4+pa;
+    var total=t1+t2+t3*4+t4*14, prem=pl+pp;
+
+    setText("c-l1",nt(fyc)); setText("c-l2",nt(l2)); setText("c-l3",nt(l3)); setText("c-l4",nt(l4));
+    setText("c-c1",nt(cash));
+    setText("c-p1",nt(pa)); setText("c-p2",nt(pa)); setText("c-p3",nt(pa)); setText("c-p4",nt(pa));
+    setText("c-y1",ye>0?nt(ye):"—");
+    setText("c-t1",nt(t1)); setText("c-t2",nt(t2)); setText("c-t3",nt(t3)); setText("c-t4",nt(t4));
+    setText("sum-p",nt(prem)); setText("sum-fyc",nt(fyc)); setText("sum-total",nt(total));
+    setText("sum-pct",prem>0?"＝ 年繳保費的 "+Math.round(total/prem*100)+"%":"＝ 請輸入保費");
+    setText("r-l1",Math.round(r1*100)+"%");
+    setText("r-y1",yer>0?(yer*100).toFixed(1).replace(".0","")+"%":"無");
+  }
+
+  ["pl","pp","r1","ye"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){
+      el.addEventListener("input",calc);
+      el.addEventListener("change",calc);
+    }
   });
 
+  buildSlides();
   calc();
-  go(0);
+  setCategory(0);
 })();
 </script>
 </body>
