@@ -63,10 +63,10 @@ main{max-width:1180px; margin:0 auto; padding:24px 20px 40px}
 .eyebrow{display:inline-block; background:var(--pc); color:#fff; font-size:12px; font-weight:700;
   letter-spacing:.24em; padding:3px 12px; border-radius:99px; margin-bottom:10px}
 .p2 .eyebrow{color:#0d2124}
-h1{font-family:'Noto Serif TC',serif; font-weight:900; font-size:27px; letter-spacing:.04em; margin:0 0 4px}
+h1{font-family:'Noto Serif TC',serif; font-weight:900; font-size:27px; letter-spacing:.04em; margin:0 0 4px; padding-top:2px}
 .lead{color:var(--muted); margin:0 0 22px; font-size:15px; max-width:60ch}
-h2{font-family:'Noto Serif TC',serif; font-weight:700; font-size:18px; margin:34px 0 12px; letter-spacing:.04em; display:flex; align-items:baseline; gap:10px;
-  padding-left:11px; border-left:4px solid var(--pc)}
+h2{font-family:'Noto Serif TC',serif; font-weight:700; font-size:18px; margin:34px 0 14px; letter-spacing:.04em; display:flex; align-items:baseline; gap:10px;
+  padding:2px 0 2px 11px; border-left:4px solid var(--pc); line-height:1.4}
 h2 .en{font-size:11px; letter-spacing:.16em; color:var(--muted); font-weight:400}
 .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
 .note{font-size:13px; color:var(--muted); line-height:1.7}
@@ -340,8 +340,8 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
   min-height:calc(100vh - 230px)
 }
 .deck-mode .page .deck-cover h1{
-  font-size:clamp(34px,5vw,64px);line-height:1.25;
-  max-width:900px;margin:10px 0 18px
+  font-size:clamp(34px,5vw,64px);line-height:1.3;
+  max-width:900px;margin:12px 0 20px;padding-top:4px
 }
 .deck-mode .page .deck-cover .lead{
   font-size:clamp(17px,2vw,23px);line-height:1.8;max-width:760px
@@ -351,13 +351,26 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
   display:inline-block;margin-top:34px;color:var(--muted);
   font-size:12px;letter-spacing:.2em
 }
+
+/* 修正：簡報大標頂部切到與下方邊距過近的問題 */
 .deck-mode .page .deck-slide:not(.deck-cover) > h2{
-  margin-top:0;font-size:clamp(25px,3.2vw,40px);
-  line-height:1.35;padding-left:18px;border-left-width:6px
+  display:block;
+  margin-top:4px;
+  margin-bottom:24px;
+  padding-top:4px;
+  padding-bottom:4px;
+  font-size:clamp(25px,3.2vw,40px);
+  line-height:1.35;
+  padding-left:18px;
+  border-left-width:6px;
 }
 .deck-mode .page .deck-slide:not(.deck-cover) > h2 .en{
-  font-size:12px;display:block;margin-top:7px
+  font-size:13px;
+  display:block;
+  margin-top:8px;
+  line-height:1.4;
 }
+
 .deck-mode .page .deck-slide > .lead{
   font-size:18px
 }
@@ -579,14 +592,14 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
       2026 年遺產稅的喪葬費扣除額是 <b>138 萬</b>——換句話說，台灣人平均買了保險，最後遺屬領到的錢<b>連辦一場後事的標準額度都不到一半</b>。
       這個市場的機會從來不是「還沒有人買」，而是<b>買了，但買錯了、買不夠</b>。這正是需要一個顧問坐下來算的地方——也是這份工作在賣商品之外，真正在做的事。
     </p>
-    <p class="note" style="margin-top:12px">資料來源：壽險公會投保率統計（112 年底）、保險業公開資訊觀測站（112 年）。</p>
+    <p class="note" style="margin-top:12px">資料來源：壽險公會投保率統計（112 年底）、保險業公開資訊觀隙站（112 年）。</p>
   </div>
 
   <h2>你要跟誰一起走<span class="en">Nan Shan Life</span></h2>
   <div class="ns">
     <div class="k">Since 1963</div>
     <h3>五大壽險中，唯一不隸屬金控的公司</h3>
-    <p>沒有銀行、沒有證券要餵——南山的資源與利潤，回到保險本業與業務通路。2011 年由潤泰集團與寶成集團合資的潤成投資控股成為最大股東，從外商轉型為扎根台灣的本土企業。</p>
+    <p>沒有銀行、沒有證券要餵——南山的資源與利潤，回到保險本業與業務通路。2011 年由潤態集團與寶成集團合資的潤成投資控股成為最大股東，從外商轉型為扎根台灣的本土企業。</p>
     <div class="nsfacts">
       <div class="nsfact"><div class="v">1963<small> 年 7 月</small></div><div class="n">成立至今超過一甲子</div></div>
       <div class="nsfact"><div class="v">661<small> 萬保戶</small></div><div class="n">逾四分之一的台灣人</div></div>
@@ -599,7 +612,7 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
   <div class="creed">
     <div class="cr"><h3>信賴</h3><p>保險賣的是一張三十年後才兌現的承諾。撐住這張紙的，是公司能不能活得比保單久。</p></div>
     <div class="cr"><h3>關懷</h3><p>客戶買的不是條款，是有人在他最狼狽的那天，還記得回他電話。</p></div>
-    <div class="cr"><h3>誠信</h3><p>這一行最貴的資產不是業績，是十年後客戶還願意介紹朋友給你。</p></div>
+    <div class="cr"><h3>誠信</h3><p>這一行最貴的資點不是業績，是十年後客戶還願意介紹朋友給你。</p></div>
   </div>
   <p class="note" style="margin-top:12px">
     公司資料來源：南山人壽官方網站。保戶數、有效保單件數與通訊處家數為官網公布之近期數字，實際請以公司最新公告為準。
@@ -688,7 +701,7 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
   <details class="fold">
     <summary>預留稅源</summary>
     <div class="body">
-      遺產稅是現金稅，繳不出來就得賤賣資產。壽險給付在需要的時間點提供現金，讓資產不必被時間壓著出售。
+      遺產稅是現金稅，繳不出來就得賤賣資產。壽險給付在需要的時間點提供現金，讓資隙不必被時間壓著出售。
     </div>
   </details>
 
@@ -1050,10 +1063,10 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
           <caption>委任前 12 個月之業務主任單位成果</caption>
           <thead><tr><th>項目</th><th>標準</th></tr></thead>
           <tbody>
-            <tr><th>業績（擇一）</th><td class="l">加權計績保費 <b>360 萬</b> 且 委任 FYC <b>33.6 萬</b>　<span style="color:#6c7570">或</span>　委任 FYC <b>48 萬</b></td></tr>
+            <tr><th>業績（擇一）</th><td class="l">加權計績保費 <b>360 萬</b> 且 委任 FYC <b>33.6 萬</b> <span style="color:#6c7570">或</span> 委任 FYC <b>48 萬</b></td></tr>
             <tr><th>不同被保險人</th><td class="l">32 人以上</td></tr>
             <tr><th>單位活動率</th><td class="l">60% 以上</td></tr>
-            <tr><th>直轄單位人力（擇一）</th><td class="l">標準業務代表 2 位＋1 位獲委任或評量合格之直轄業務主任<br><span style="color:#6c7570">或</span>　標準業務代表 4 位</td></tr>
+            <tr><th>直轄單位人力（擇一）</th><td class="l">標準業務代表 2 位＋1 位獲委任或評量合格之直轄業務主任<br><span style="color:#6c7570">或</span> 標準業務代表 4 位</td></tr>
             <tr><th>單位繼續率</th><td class="l">委任前 12 個月直轄單位繼續率（LIMRA 13 個月公式）85% 以上</td></tr>
           </tbody>
         </table>
@@ -1077,10 +1090,10 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
           <caption>委任前 15 個月之業務襄理單位成果</caption>
           <thead><tr><th>項目</th><th>標準</th></tr></thead>
           <tbody>
-            <tr><th>業績（擇一）</th><td class="l">加權計績保費 <b>560 萬</b> 且 委任 FYC <b>52.5 萬</b>　<span style="color:#6c7570">或</span>　委任 FYC <b>75 萬</b></td></tr>
+            <tr><th>業績（擇一）</th><td class="l">加權計績保費 <b>560 萬</b> 且 委任 FYC <b>52.5 萬</b> <span style="color:#6c7570">或</span> 委任 FYC <b>75 萬</b></td></tr>
             <tr><th>不同被保險人</th><td class="l">48 人以上</td></tr>
             <tr><th>單位活動率</th><td class="l">60% 以上</td></tr>
-            <tr><th>直轄單位人力</th><td class="l">標準業務代表 3 位　<b>且</b>　獲委任或評量合格之直轄業務主任或業務襄理合計 3 位以上</td></tr>
+            <tr><th>直轄單位人力</th><td class="l">標準業務代表 3 位 <b>且</b> 獲委任或評量合格之直轄業務主任或業務襄理合計 3 位以上</td></tr>
             <tr><th>單位繼續率</th><td class="l">委任前 12 個月直轄單位繼續率（LIMRA 13 個月公式）85% 以上</td></tr>
           </tbody>
         </table>
@@ -1132,7 +1145,7 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
       </div>
       <ul class="reqs">
         <li><b>提出成立後未來三年的業務發展計劃</b>（須含三年業績及人力目標），並簽署聲明書</li>
-        <li><b>新開發區</b>：提報前六個月須提出預計開發區域及經營計畫，經業務通路功能主管核定；擬開發區域原則上須距分公司 30 公里內</li>
+        <li><b>新開發區</b>：提報前六個月須提出預計開發區域及經營計畫，經業務通路功能主管核定；擬開發區域原則上須距分公司 30 公隙內</li>
         <li><b>成立後六個月檢視</b>（一般通訊處）：有效人力及組數不得低於 <b>60 人及 23 組</b>；月均傳統型壽險期繳及 A&amp;H 加權保費至少達 <b>420 萬</b></li>
         <li><b>成立後檢視</b>（新開發區）：滿 1 年新開發點之客戶及人力至少占通訊處整體 15%；滿 2 年至少 20%</li>
         <li><b>開幕補助</b>：完成搬遷後半年內可申請新成立通訊處開幕酒會費用補助，上限 1 萬元</li>
@@ -1161,9 +1174,9 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
         <table>
           <thead><tr><th>合約類型</th><th>業代年資</th><th>推薦委任前個人業績（擇一）</th></tr></thead>
           <tbody>
-            <tr><th>業務主任</th><td>滿 6 個月</td><td class="l">加權計績保費 150 萬 且 委任 FYC 14 萬　<span style="color:#6c7570">或</span>　委任 FYC 20 萬</td></tr>
-            <tr><th>業務襄理</th><td>滿 12 個月</td><td class="l">加權計績保費 300 萬 且 委任 FYC 28 萬　<span style="color:#6c7570">或</span>　委任 FYC 40 萬</td></tr>
-            <tr><th>區經理</th><td>滿 12 個月</td><td class="l">加權計績保費 375 萬 且 委任 FYC 35 萬　<span style="color:#6c7570">或</span>　委任 FYC 50 萬</td></tr>
+            <tr><th>業務主任</th><td>滿 6 個月</td><td class="l">加權計績保費 150 萬 且 委任 FYC 14 萬 <span style="color:#6c7570">或</span> 委任 FYC 20 萬</td></tr>
+            <tr><th>業務襄理</th><td>滿 12 個月</td><td class="l">加權計績保費 300 萬 且 委任 FYC 28 萬 <span style="color:#6c7570">或</span> 委任 FYC 40 萬</td></tr>
+            <tr><th>區經理</th><td>滿 12 個月</td><td class="l">加權計績保費 375 萬 且 委任 FYC 35 萬 <span style="color:#6c7570">或</span> 委任 FYC 50 萬</td></tr>
           </tbody>
         </table>
       </div>
@@ -1204,7 +1217,7 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
         <li>停止招攬行為三個月處理之紀錄 → 延後 3 個月生效；六個月處理之紀錄 → 延後 6 個月生效。</li>
         <li>兩者同時存在時<b>加總計算</b>；延後生效時間超過六個月者，<b>不予委任</b>。</li>
       </ul>
-      <p style="margin:8px 0 0">另若保單因契約撤回、契約變更或解約致影響委任業績時，將恢復至原合約關係。</p>
+      <p style="margin:8px 0 0">另若保單因契約撤回、契約變距或解約致影響委任業績時，將恢復至原合約關係。</p>
     </div>
   </details>
 
@@ -1221,7 +1234,7 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
 </main>
 
 <footer>
-  宸功保險 · 南山人壽　│　本頁為團隊內部說明用途，依公司制度說明及委任辦法整理<br>
+  宸功保險 · 南山人壽 │ 本頁為團隊內部說明用途，依公司制度說明及委任辦法整理<br>
   實際津貼、獎金與委任條件依公司最新頒布之辦法為準；保險商品之保障內容以保單條款為準
 </footer>
 
@@ -1334,7 +1347,7 @@ body.deck-mode{background:#111b1d;overflow-x:hidden}
     var total = group.length || 1;
 
     document.getElementById("deck-category").textContent =
-      CATEGORY_NAMES[curCategory] + "　·　面談簡報";
+      CATEGORY_NAMES[curCategory] + " · 面談簡報";
 
     document.getElementById("deck-current").textContent = curSlide + 1;
     document.getElementById("deck-total").textContent = total;
