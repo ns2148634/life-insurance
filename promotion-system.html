@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>透明晉陞與委任標準 · 廣宸團隊 · 南山人壽</title>
+<meta name="theme-color" content="#17343a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17343a; --ink2:#274d54; --ink3:#2c4c52; --ink-dark:#0d2124;
+  --gold:#a9803f; --gold-light:#e7d5ab; --vermilion:#c1442d; --vermilion-dark:#9c351f;
+  --paper:#f6f2e7; --card:#fffdf8; --line:#e3ddc9;
+  --text:#0d2124; --muted:#6c7570;
+  --shadow:0 10px 30px -12px rgba(13,33,36,.25);
+  --radius:8px;
+  --c1:#b8531a; --c2:#6c7570; --c3:#a9803f; --c4:#2f5f7a; --c5:#3f7a52;
+  --pc:var(--ink);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--text);
+  font-family:'Noto Sans TC',"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px; line-height:1.75; -webkit-text-size-adjust:100%; -webkit-font-smoothing:antialiased;
+}
+
+header{position:fixed; left:0; right:0; top:0; z-index:100; background:var(--ink); color:#fff;
+  padding:env(safe-area-inset-top) 0 0; box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.bar{display:flex; align-items:center; gap:10px; padding:12px 20px}
+.nav-link{color:#cfe3dd; text-decoration:none; font-size:13.5px; white-space:nowrap;
+  border:1px solid rgba(255,255,255,.25); border-radius:99px; padding:4px 14px; transition:all .2s}
+.nav-link:hover{background:rgba(255,255,255,.15); color:#fff; border-color:#fff}
+.brand{font-size:15px; letter-spacing:.12em; color:#9dbdb5; font-weight:500}
+
+main{max-width:1180px; margin:0 auto; padding:90px 20px 50px}
+.eyebrow{display:inline-block; background:var(--pc); color:#fff; font-size:12px; font-weight:700;
+  letter-spacing:.2em; padding:4px 14px; border-radius:99px; margin-bottom:12px}
+h1{font-family:'Noto Serif TC',serif; font-weight:900; font-size:30px; letter-spacing:.04em; margin:0 0 8px; line-height:1.35}
+.lead{color:var(--muted); margin:0 0 24px; font-size:16.5px; max-width:65ch; font-weight:500; line-height:1.8}
+h2{font-family:'Noto Serif TC',serif; font-weight:700; font-size:21px; margin:34px 0 16px; letter-spacing:.04em; display:flex; align-items:baseline; gap:10px;
+  padding:4px 0 4px 12px; border-left:5px solid var(--pc); line-height:1.4}
+h2 .en{font-size:12px; letter-spacing:.16em; color:var(--muted); font-weight:400}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+
+/* 階梯 */
+.ladder{display:flex; align-items:flex-end; overflow-x:auto; border-bottom:3px solid var(--ink); margin-bottom:24px}
+.step{flex:1 0 186px; display:flex; flex-direction:column; justify-content:flex-end}
+.gate{align-self:flex-start; margin:0 0 8px 4px; background:var(--ink); color:#fff; font-size:12px; font-weight:700; border-radius:99px; padding:3px 10px}
+.rank{color:#fff; border-radius:var(--radius) 10px 0 0; padding:12px 14px 14px; border:1px solid rgba(0,0,0,.06)}
+.rank h3{font-family:'Noto Serif TC',serif; margin:0 0 10px; font-size:17px}
+.rank ul{margin:0; padding:0; list-style:none; font-size:13.5px; line-height:1.9}
+.rank li.new::before{content:"＋"; font-weight:700; margin-right:2px}
+.rank li.base::before{content:"·"; margin-right:6px; opacity:.6}
+.r1{background:#5a8a99; min-height:150px} .r2{background:#b8531a; min-height:220px}
+.r3{background:#3f7a52; min-height:270px} .r4{background:#6c7570; min-height:310px} .r5{background:#274d54; min-height:350px}
+
+/* 標準與細節折疊卡片 */
+.std{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:16px; overflow:hidden}
+.std summary{display:flex; align-items:center; gap:12px; padding:14px 18px; color:#fff; cursor:pointer; list-style:none; font-weight:700}
+.std summary::-webkit-details-marker{display:none}
+.std summary h3{font-family:'Noto Serif TC',serif; margin:0; font-size:18px; flex:1}
+.std summary::after{content:"▼"; font-size:12px; opacity:.8}
+.std[open] summary::after{content:"▲"}
+.std .in{padding:20px}
+
+.routes{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px}
+.route{border:1px solid var(--line); border-radius:var(--radius); padding:14px; background:#fffdf8}
+.route h4{margin:0 0 6px; font-size:15px; color:var(--ink)}
+.route p{margin:0; font-size:13px; color:var(--muted); line-height:1.6}
+
+.reqs{margin:10px 0 0; padding:0; list-style:none; font-size:14px; line-height:1.9}
+.reqs li{padding-left:22px; position:relative}
+.reqs li::before{content:"✓"; position:absolute; left:0; color:var(--c5); font-weight:700}
+
+.tw{overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:var(--radius)}
+table{border-collapse:collapse; width:100%; background:var(--card); font-size:14px; min-width:420px}
+th,td{border:1px solid var(--line); padding:9px 12px; text-align:center}
+thead th{background:var(--ink); color:#fff; font-weight:600}
+tbody tr:nth-child(even) td{background:#fbf7ea}
+
+.def-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:10px}
+.def-card{background:#fffdf8; border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
+.def-card h4{margin:0 0 4px; font-size:15px; color:var(--ink)}
+.def-card p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.65}
+
+.nav-card-link{display:flex; align-items:center; justify-content:space-between; gap:16px; background:linear-gradient(135deg,#17343a,#274d54); color:#fff; border-radius:var(--radius); padding:20px 24px; text-decoration:none; box-shadow:var(--shadow); margin:20px 0; transition:transform .2s}
+.nav-card-link:hover{transform:translateY(-2px); background:linear-gradient(135deg,#1f444c,#315e67)}
+.nav-card-link .lt{font-family:'Noto Serif TC',serif; font-size:19px; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px}
+.nav-card-link .ld{font-size:13.5px; color:#cfe3dd; line-height:1.6}
+.nav-card-link .ar{font-size:24px; color:var(--gold); flex:none}
+
+@media (max-width:900px){
+  .routes, .def-grid{grid-template-columns:1fr}
+  .brand{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="nav-link" href="./career-system.html">← 招募面談簡報</a>
+    <a class="nav-link" href="./income-system.html">收入與試算 →</a>
+    <a class="nav-link" href="./index.html">← 工具總覽</a>
+    <span class="brand">廣宸團隊 · 南山人壽</span>
+  </div>
+</header>
+
+<main>
+  <span class="eyebrow">透明晉陞</span>
+  <h1>透明化的升遷與委任標準</h1>
+  <p class="lead">不看年資、不看關係，看的是白紙黑字的委任條件。每一個階梯都有明確規定，每升一級，多開啟一組收入來源。</p>
+
+  <h2>晉陞階梯與津貼項目<span class="en">Promotion Ladder</span></h2>
+  <div class="ladder">
+    <div class="step"><div class="rank r1"><h3>業務代表</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li></ul></div></div>
+    <div class="step"><div class="gate">6～9 個月</div><div class="rank r2"><h3>業務主任</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="new">單位津貼</li><li class="new">業績獎金</li><li class="new">超額獎金</li><li class="new">晉陞津貼</li><li class="new">特別津貼</li></ul></div></div>
+    <div class="step"><div class="gate">12 個月</div><div class="rank r3"><h3>業務襄理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="new">輔導津貼</li></ul></div></div>
+    <div class="step"><div class="gate">15 個月</div><div class="rank r4"><h3>區經理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="base">輔導津貼</li><li class="new">區成長獎金</li></ul></div></div>
+    <div class="step"><div class="gate">2 年</div><div class="rank r5"><h3>處經理</h3><p style="font-size:12.5px;opacity:.85;margin:8px 0 0">經營獨立事業體。<br>委任條件依公司處級制度辦法。</p></div></div>
+  </div>
+
+  <h2>各職級委任標準細節<span class="en">Appointment Standards</span></h2>
+
+  <!-- 業務主任 -->
+  <details class="std" open>
+    <summary style="background:#b8531a">
+      <span>階梯 01</span>
+      <h3>業務主任（UM）委任標準</h3>
+    </summary>
+    <div class="in">
+      <div class="routes">
+        <div class="route">
+          <h4>快速委任（3 個月）</h4>
+          <p>考核期首 3 保單月。加權保費 60 萬／委任 FYC 8.5 萬／實收保費 18 萬三擇一。</p>
+        </div>
+        <div class="route">
+          <h4>條件 A（6 個月）</h4>
+          <p>考核期首 6 保單月。加權保費 80 萬／委任 FYC 11 萬／實收保費 24 萬三擇一。</p>
+        </div>
+        <div class="route">
+          <h4>條件 B（9 個月）</h4>
+          <p>考核期首 9 保單月。加權保費 100 萬／委任 FYC 14 萬／實收保費 30 萬三擇一。</p>
+        </div>
+      </div>
+      <p style="margin:10px 0 4px;font-weight:700;color:var(--ink)">通用必要條件：</p>
+      <ul class="reqs">
+        <li>不同被保險人至少 8 人</li>
+        <li>自己為被保險人且生效之個人壽險保額達 50 萬元以上（免體檢件）</li>
+        <li>通過投資型保險商品測驗、外幣收付非投資型保險商品測驗</li>
+        <li>完成業務主任養成班等各項指定訓練課程</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- 業務襄理 -->
+  <details class="std" open>
+    <summary style="background:#3f7a52">
+      <span>階梯 02</span>
+      <h3>業務襄理（SUM）委任標準</h3>
+    </summary>
+    <div class="in">
+      <p style="margin:0 0 10px;color:var(--muted)">基本資格：擔任業務主任滿 12 個月（任職期間未曾依辦法受降級處分，或降級後已重新委任滿 12 個月）。考核期為申請委任前連續 12 個保單月。</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>項目</th><th>路線一</th><th>路線二</th></tr></thead>
+          <tbody>
+            <tr><th>直轄加權計績保費</th><td>360 萬元以上</td><td>—</td></tr>
+            <tr><th>直轄委任 FYC</th><td>33.6 萬元以上</td><td>48 萬元以上</td></tr>
+            <tr><th>不同被保險人</th><td colspan="2">32 人以上</td></tr>
+            <tr><th>直轄單位活動率</th><td colspan="2">60% 以上</td></tr>
+            <tr><th>人力要求</th><td colspan="2">直轄組數 2 組以上，且直轄轄下業務代表至少 2 位（其中至少 1 位為自己親自招募）</td></tr>
+            <tr><th>13 個月保單繼續率</th><td colspan="2">基本保額繼續率與保費繼續率均達 85% 以上</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- 區經理 -->
+  <details class="std" open>
+    <summary style="background:#6c7570">
+      <span>階梯 03</span>
+      <h3>區經理（DM）委任標準</h3>
+    </summary>
+    <div class="in">
+      <p style="margin:0 0 10px;color:var(--muted)">基本資格：擔任業務襄理滿 15 個月。考核期為申請委任前連續 12 個保單月。</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>項目</th><th>路線一</th><th>路線二</th></tr></thead>
+          <tbody>
+            <tr><th>直轄加權計績保費</th><td>560 萬元以上</td><td>—</td></tr>
+            <tr><th>直轄委任 FYC</th><td>52.5 萬元以上</td><td>75 萬元以上</td></tr>
+            <tr><th>不同被保險人</th><td colspan="2">48 人以上</td></tr>
+            <tr><th>直轄單位活動率</th><td colspan="2">60% 以上</td></tr>
+            <tr><th>人力要求</th><td colspan="2">直轄組數 3 組以上，直轄業務代表至少 3 位、轄下業務主管至少 3 位（均須符合規定）</td></tr>
+            <tr><th>13 個月保單繼續率</th><td colspan="2">基本保額繼續率與保費繼續率均達 85% 以上</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- 通訊處經理 -->
+  <details class="std" open>
+    <summary style="background:#274d54">
+      <span>階梯 04</span>
+      <h3>通訊處經理（AM）委任條件對照</h3>
+    </summary>
+    <div class="in">
+      <p style="margin:0 0 10px;color:var(--muted)">通訊處經理是經營一個獨立事業體。分為「一般通訊處」與「新開發區通訊處」兩種門檻：</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>審查項目</th><th>一般通訊處</th><th>新開發區通訊處</th></tr></thead>
+          <tbody>
+            <tr><th>年齡與學歷</th><td colspan="2">滿 20 歲，高中（職）以上學校畢業或同等學力</td></tr>
+            <tr><th>任職資歷</th><td colspan="2">擔任區經理滿 2 年以上（或任業務主管滿 3 年以上且任區經理滿 1 年以上）</td></tr>
+            <tr><th>競賽成績</th><td colspan="2">前 3 年內曾獲高峰會或新高峰會會員資格至少 1 次</td></tr>
+            <tr><th>單位有效人力</th><td><b>70 人</b>以上（其中標準業務代表至少 35 人）</td><td><b>45 人</b>以上（其中標準業務代表至少 22 人）</td></tr>
+            <tr><th>單位組織規模</th><td><b>27 組</b>以上（含直轄組 3 組，及二代內子組至少 6 組）</td><td><b>15 組</b>以上（含直轄組 3 組，及二代內子組至少 3 組）</td></tr>
+            <tr><th>加權計績保費</th><td>近 12 個月單位加權保費達 <b>480 萬元</b>以上</td><td>近 12 個月單位加權保費達 <b>310 萬元</b>以上</td></tr>
+            <tr><th>繼續率</th><td colspan="2">單位近 12 個月 13 個月保費繼續率達 85% 以上</td> proposal
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:12px">
+        成立通訊處尚須通過<b>業務主管委任審查委員會評審</b>通過，並提出《通訊處三年經營發展計劃書》。成立初期享有總公司之<b>開幕補助金 10 萬元</b>及各項行政資源支持。
+      </p>
+    </div>
+  </details>
+
+  <h2>相關名詞定義<span class="en">Definitions</span></h2>
+  <div class="def-grid">
+    <div class="def-card">
+      <h4>加權計績保費</h4>
+      <p>依各保險商品之預算係數乘以原始保費計算之金額，用以衡量業務人員之實質產能貢獻。</p>
+    </div>
+    <div class="def-card">
+      <h4>委任 FYC</h4>
+      <p>指業務人員招攬新契約所獲取之首年度業務津貼總額，為衡量直接銷售回報之核心指標。</p>
+    </div>
+    <div class="def-card">
+      <h4>標準業務代表</h4>
+      <p>指近 24 個保單月內，首年度業務津貼（FYC）加計行銷獎金合計達 4 萬元以上，且保單繼續率符合標準者。</p>
+    </div>
+    <div class="def-card">
+      <h4>增員活動率</h4>
+      <p>指單位轄下業務人員於考核期間內，有實際招攬新契約成交並發發津貼之人數佔總人力之比例。</p>
+    </div>
+  </div>
+
+  <h2>其他委任管道與條款<span class="en">Other Rules</span></h2>
+  <div class="card" style="margin-top:10px">
+    <h3 style="font-family:'Noto Serif TC',serif;margin:0 0 10px;font-size:18px;color:var(--ink)">配偶合約委任與業務主任回任</h3>
+    <p style="margin:0 0 12px;font-size:14px;color:var(--muted)">凡業務主管之配偶申請合約委任，或原降級業務主任申請重新委任，依專章規定之特別門檻辦理：</p>
+    <ul style="margin:0;padding-left:20px;font-size:14px;line-height:1.9">
+      <li><b>業務主管配偶委任</b>：得依規定享有直轄組數免計或業績折半計績之特別委任通道。</li>
+      <li><b>業務主任回任</b>：降級為業務代表後，於 6 個月內重新達成回任條件，得申請回復業務主任職級。</li>
+      <li><b>延後生效與不予委任</b>：考核期內若有重大履約缺失、停止招攬處分或欠款未清者，公司得延後或不予委任。</li>
+    </ul>
+  </div>
+
+  <h2>接續探索<span class="en">Next Steps</span></h2>
+  <a class="nav-card-link" href="./income-system.html">
+    <span>
+      <span class="lt">進入協合式三維收入與動態試算頁面</span>
+      <span class="ld">查看 20 年津貼流、首年/續年津貼率對照，以及個人與組織收入計算方式。</span>
+    </span>
+    <span class="ar">→</span>
+  </a>
+</main>
+
+</body>
+</html>

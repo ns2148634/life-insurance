@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>協合式三維收入與津貼試算 · 廣宸團隊 · 南山人壽</title>
+<meta name="theme-color" content="#17343a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17343a; --ink2:#274d54; --ink3:#2c4c52; --ink-dark:#0d2124;
+  --gold:#a9803f; --gold-light:#e7d5ab; --vermilion:#c1442d; --vermilion-dark:#9c351f;
+  --paper:#f6f2e7; --card:#fffdf8; --line:#e3ddc9;
+  --text:#0d2124; --muted:#6c7570;
+  --shadow:0 10px 30px -12px rgba(13,33,36,.25);
+  --radius:8px;
+  --c1:#b8531a; --c2:#6c7570; --c3:#a9803f; --c4:#2f5f7a; --c5:#3f7a52;
+  --pc:var(--ink);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--text);
+  font-family:'Noto Sans TC',"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px; line-height:1.75; -webkit-text-size-adjust:100%; -webkit-font-smoothing:antialiased;
+}
+
+header{position:fixed; left:0; right:0; top:0; z-index:100; background:var(--ink); color:#fff;
+  padding:env(safe-area-inset-top) 0 0; box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.bar{display:flex; align-items:center; gap:10px; padding:12px 20px}
+.nav-link{color:#cfe3dd; text-decoration:none; font-size:13.5px; white-space:nowrap;
+  border:1px solid rgba(255,255,255,.25); border-radius:99px; padding:4px 14px; transition:all .2s}
+.nav-link:hover{background:rgba(255,255,255,.15); color:#fff; border-color:#fff}
+.brand{font-size:15px; letter-spacing:.12em; color:#9dbdb5; font-weight:500}
+.title{font-family:'Noto Serif TC',serif; font-size:16px; font-weight:700; letter-spacing:.06em; margin-left:auto; margin-right:8px}
+
+main{max-width:1180px; margin:0 auto; padding:90px 20px 50px}
+.eyebrow{display:inline-block; background:var(--pc); color:#fff; font-size:12px; font-weight:700;
+  letter-spacing:.2em; padding:4px 14px; border-radius:99px; margin-bottom:12px}
+h1{font-family:'Noto Serif TC',serif; font-weight:900; font-size:30px; letter-spacing:.04em; margin:0 0 8px; line-height:1.35}
+.lead{color:var(--muted); margin:0 0 24px; font-size:16.5px; max-width:65ch; font-weight:500; line-height:1.8}
+h2{font-family:'Noto Serif TC',serif; font-weight:700; font-size:21px; margin:34px 0 16px; letter-spacing:.04em; display:flex; align-items:baseline; gap:10px;
+  padding:4px 0 4px 12px; border-left:5px solid var(--pc); line-height:1.4}
+h2 .en{font-size:12px; letter-spacing:.16em; color:var(--muted); font-weight:400}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+.note{font-size:13.5px; color:var(--muted); line-height:1.7}
+.note b{color:#9c351f}
+
+/* 三大概念 */
+.three-pillars{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px}
+.pillar-card{background:var(--card); border:1px solid var(--line); border-top:5px solid var(--c3); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+.pillar-card .tag-p{font-size:13px; font-weight:700; color:var(--c3); letter-spacing:.14em; margin-bottom:6px}
+.pillar-card h3{font-family:'Noto Serif TC',serif; font-size:22px; margin:0 0 8px; color:var(--ink)}
+.pillar-card .sub-p{font-size:15px; font-weight:700; color:var(--vermilion); margin-bottom:10px}
+.pillar-card p{margin:0; font-size:14px; color:var(--muted); line-height:1.7}
+
+/* 三維圖表 */
+.harmony{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 20px 14px; box-shadow:var(--shadow)}
+.hchart{display:grid; grid-template-columns:34px 1fr; gap:10px}
+.yaxis{writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; color:var(--ink); font-weight:700; letter-spacing:.4em; font-size:14px; border-left:2px solid var(--ink); position:relative}
+.yaxis::before{content:"▲"; position:absolute; top:-10px; left:-9px; font-size:11px; writing-mode:horizontal-tb}
+.wedges{display:grid; grid-template-columns:1fr 1.15fr 1fr; height:220px; gap:6px}
+.wedge{position:relative; display:flex; border-radius:4px}
+.wedge span{writing-mode:vertical-rl; font-weight:700; font-size:clamp(14px,1.7vw,18px); letter-spacing:.14em; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.25)}
+.w-serv{background:linear-gradient(160deg,#8fb3bf,#2f5f7a); clip-path:polygon(0 0,100% 0,100% 100%); align-items:flex-start; justify-content:flex-end; padding:14px 14px 0 0}
+.w-fy{background:linear-gradient(180deg,#d8b46a,#a9803f); align-items:center; justify-content:center}
+.w-fy span{color:#2b1d08; text-shadow:none}
+.w-org{background:linear-gradient(200deg,#d9704f,#c1442d); clip-path:polygon(0 0,100% 0,0 100%); align-items:flex-start; justify-content:flex-start; padding:14px 0 0 14px}
+.xaxis{grid-column:2; display:flex; justify-content:space-between; align-items:center; border-top:2px solid var(--ink); margin-top:8px; padding-top:6px; font-weight:700; color:var(--ink); font-size:14px}
+
+.sources{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px}
+.s3{border:1px solid var(--line); border-radius:var(--radius); padding:16px; background:#fffdf8}
+.s3 h3{font-family:'Noto Serif TC',serif; margin:0 0 6px; font-size:16.5px; display:flex; align-items:center; gap:8px}
+.s3 h3::before{content:""; width:10px; height:10px; border-radius:50%; flex:none}
+.s3.serv h3::before{background:#2f5f7a} .s3.fy h3::before{background:#a9803f} .s3.org h3::before{background:#c1442d}
+.s3 p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.7}
+.s3 .from{display:block; margin-top:8px; font-size:12px; letter-spacing:.06em; color:var(--ink3); font-weight:700}
+
+/* 動態算牌器 */
+.calc{display:grid; grid-template-columns:290px 1fr; gap:20px; align-items:start}
+.inputs{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
+.fld{margin-bottom:14px}
+.fld label{display:block; font-size:13px; font-weight:700; color:var(--ink); margin-bottom:5px}
+.fld .hint{font-weight:400; color:var(--muted); font-size:12px}
+.fld input,.fld select{width:100%; font:inherit; font-size:15px; padding:8px 10px; border:1px solid var(--line); border-radius:4px; background:#fffdf8}
+.sumline{display:flex; justify-content:space-between; border-top:1px dashed var(--line); margin-top:14px; padding-top:10px; font-size:14px}
+.bigsum{background:var(--ink); color:#fff; border-radius:var(--radius); padding:18px; margin-top:14px}
+.bigsum .k{font-size:12px; letter-spacing:.14em; color:#9dbdb5}
+.bigsum .v{font-family:'Noto Serif TC',serif; font-size:30px; font-weight:700; color:var(--gold-light)}
+.bigsum .s{font-size:13.5px; color:var(--gold)}
+
+.tw{overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:var(--radius)}
+table{border-collapse:collapse; width:100%; background:var(--card); font-size:14.5px; min-width:420px}
+th,td{border:1px solid var(--line); padding:9px 12px; text-align:center}
+thead th{background:var(--ink); color:#fff; font-weight:600}
+tbody tr:nth-child(even) td{background:#fbf7ea}
+td.num{font-variant-numeric:tabular-nums}
+
+.medals{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px}
+.medal{background:var(--card); border:1px solid var(--line); border-top:4px solid var(--pc); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow)}
+.medal h3{font-family:'Noto Serif TC',serif; margin:0 0 2px; font-size:17px; letter-spacing:.08em}
+.medal .when{font-size:12px; font-weight:700; color:var(--pc); letter-spacing:.08em}
+.medal p{margin:6px 0 0; font-size:13.5px; color:var(--muted); line-height:1.7}
+.hook{margin-top:16px; background:#f7efdc; border:1px solid #dcc99b; border-radius:var(--radius); padding:14px 18px; font-size:14px; line-height:1.8}
+.hook b{color:#7d5f2c}
+
+.nav-card-link{display:flex; align-items:center; justify-content:space-between; gap:16px; background:linear-gradient(135deg,#17343a,#274d54); color:#fff; border-radius:var(--radius); padding:20px 24px; text-decoration:none; box-shadow:var(--shadow); margin:20px 0; transition:transform .2s}
+.nav-card-link:hover{transform:translateY(-2px); background:linear-gradient(135deg,#1f444c,#315e67)}
+.nav-card-link .lt{font-family:'Noto Serif TC',serif; font-size:19px; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px}
+.nav-card-link .ld{font-size:13.5px; color:#cfe3dd; line-height:1.6}
+.nav-card-link .ar{font-size:24px; color:var(--gold); flex:none}
+
+@media (max-width:900px){
+  .three-pillars, .sources, .calc, .medals{grid-template-columns:1fr}
+  .brand{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="nav-link" href="./career-system.html">← 招募面談簡報</a>
+    <a class="nav-link" href="./promotion-system.html">透明晉陞說明 →</a>
+    <a class="nav-link" href="./index.html">← 工具總覽</a>
+    <span class="brand">廣宸團隊 · 南山人壽</span>
+  </div>
+</header>
+
+<main>
+  <span class="eyebrow">合理收入</span>
+  <h1>協合式三維收入與津貼試算</h1>
+  <p class="lead">努力，能不能累積成收入？三個收入來源同時運作，用時間與組織加寬你的所得底盤。</p>
+
+  <h2>收入的三大核心概念<span class="en">Core Concepts</span></h2>
+  <div class="three-pillars">
+    <div class="pillar-card">
+      <div class="tag-p">CONCEPT 01</div>
+      <h3>累積</h3>
+      <div class="sub-p">不是每個月重新歸零</div>
+      <p>今天做的每一份努力與服務，都會轉化為續年度服務津貼，陪伴客戶多久，收入就延續多久。</p>
+    </div>
+    <div class="pillar-card">
+      <div class="tag-p">CONCEPT 02</div>
+      <h3>協合</h3>
+      <div class="sub-p">不是只有「我賺多少」</div>
+      <p>結合個人銷售、團隊輔導與組織發展。一個人走得快，一群人走得遠，三塊收入同時加寬。</p>
+    </div>
+    <div class="pillar-card">
+      <div class="tag-p">CONCEPT 03</div>
+      <h3>挑戰</h3>
+      <div class="sub-p">打破固定薪資天花板</div>
+      <p>沒有主管能限制你的薪水。你的收入上限，完全取決於你想把自己帶到多遠的地方。</p>
+    </div>
+  </div>
+
+  <h2>三維收入架構分析<span class="en">Three Dimensions</span></h2>
+  <div class="harmony">
+    <div class="hchart">
+      <div class="yaxis">時間</div>
+      <div class="wedges">
+        <div class="wedge w-serv"><span>續年度服務獎金</span></div>
+        <div class="wedge w-fy"><span>首年度業務獎金</span></div>
+        <div class="wedge w-org"><span>組織發展獎金</span></div>
+      </div>
+      <div class="xaxis">
+        <span>◀ 客戶服務</span><span class="mid">所 得</span><span>組織發展 ▶</span>
+      </div>
+    </div>
+    <div class="sources">
+      <div class="s3 serv">
+        <h3>續年度服務獎金</h3>
+        <p>客戶留在身邊，保單續繳就持續給付，最長至第 20 保單年度。服務的客戶越多、年資越久，這塊越厚。</p>
+        <span class="from">來源：續年度津貼</span>
+      </div>
+      <div class="s3 fy">
+        <h3>首年度業務獎金</h3>
+        <p>當年度成交的新契約收入。這塊不隨時間累積，做多少算多少。</p>
+        <span class="from">來源：首年度津貼 ＋ 現金獎 ＋ 年終獎金</span>
+      </div>
+      <div class="s3 org">
+        <h3>組織發展獎金</h3>
+        <p>帶人、育才之後產生的單位收入。組織越成熟這塊越寬，且不受個人時間上限限制。</p>
+        <span class="from">來源：單位津貼、業績獎金、超額獎金、晉陞／特別／輔導津貼</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <p style="margin:0 0 10px;font-weight:700;color:var(--ink)">一般工作只有中間那一塊：做一年、領一年。壽險事業的差別在左右兩翼——</p>
+    <ul style="margin:0; padding-left:20px; line-height:1.95">
+      <li><b>往左走</b>：把客戶服務好，續年度津貼自動延續，形成穩定基本盤。</li>
+      <li><b>往右走</b>：把夥伴帶起來，組織發展獎金隨單位規模成長，突破個人時間天花板。</li>
+      <li>三塊同時累積——這是靠時間與團隊「加寬」而不是「歸零重來」的收入結構。</li>
+    </ul>
+  </div>
+
+  <h2>業務津貼動態試算<span class="en">Calculator</span></h2>
+  <p class="note" style="margin:-4px 0 12px">以一張保單看 20 年的津貼流。預設以年繳保費 6 萬元為例（LIFE 5 萬、PA 1 萬）。</p>
+  <div class="calc">
+    <div class="inputs">
+      <div class="fld">
+        <label for="pl">LIFE 年繳保費 <span class="hint">壽險主約</span></label>
+        <input id="pl" type="number" inputmode="numeric" min="0" step="1000" value="50000">
+      </div>
+      <div class="fld">
+        <label for="pp">PA 年繳保費 <span class="hint">傷害險</span></label>
+        <input id="pp" type="number" inputmode="numeric" min="0" step="1000" value="10000">
+      </div>
+      <div class="fld">
+        <label for="r1">首年度津貼率 <span class="hint">依商品而異</span></label>
+        <select id="r1">
+          <option value="0.50">50%</option><option value="0.45">45%</option>
+          <option value="0.40" selected>40%（範例）</option><option value="0.35">35%</option>
+          <option value="0.30">30%</option><option value="0.25">25%</option><option value="0.20">20%</option>
+        </select>
+      </div>
+      <div class="fld">
+        <label for="ye">年終給付比例 <span class="hint">看全年津貼總額級距</span></label>
+        <select id="ye">
+          <option value="0">無（全年未達 2 萬）</option>
+          <option value="0.065">6.5%（2～4 萬）</option>
+          <option value="0.075">7.5%（4～6 萬）</option>
+          <option value="0.085">8.5%（6～8 萬）</option>
+          <option value="0.095">9.5%（8～10 萬）</option>
+          <option value="0.11" selected>11%（10 萬以上）</option>
+        </select>
+      </div>
+      <div class="sumline"><span>年繳保費合計</span><b id="sum-p">60,000</b></div>
+      <div class="sumline"><span>首年度津貼（FYC）</span><b id="sum-fyc">20,000</b></div>
+      <div class="bigsum">
+        <div class="k">20 年津貼合計</div>
+        <div class="v" id="sum-total">93,640</div>
+        <div class="s" id="sum-pct">＝ 年繳保費的 156%</div>
+      </div>
+    </div>
+    <div>
+      <div class="tw">
+        <table>
+          <caption>金額為單張保單、單一業務代表可得之津貼。</caption>
+          <thead><tr><th>項目</th><th>第 1 年</th><th>第 2 年</th><th>第 3～6 年<br><small>每年</small></th><th>第 7～20 年<br><small>每年</small></th></tr></thead>
+          <tbody>
+            <tr><th>LIFE 津貼</th><td class="num" id="c-l1"></td><td class="num" id="c-l2"></td><td class="num" id="c-l3"></td><td class="num" id="c-l4"></td></tr>
+            <tr><th>現金獎</th><td class="num" id="c-c1"></td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><th>PA 津貼</th><td class="num" id="c-p1"></td><td class="num" id="c-p2"></td><td class="num" id="c-p3"></td><td class="num" id="c-p4"></td></tr>
+            <tr><th>年終獎金</th><td class="num" id="c-y1"></td><td>—</td><td>—</td><td>—</td></tr>
+            <tr style="background:#f4ead3;font-weight:700"><th>合計</th><td class="num" id="c-t1"></td><td class="num" id="c-t2"></td><td class="num" id="c-t3"></td><td class="num" id="c-t4"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tw" style="margin-top:14px">
+        <table>
+          <caption>津貼率一覽</caption>
+          <thead><tr><th>項目</th><th>計算基礎</th><th>第 1 年</th><th>第 2 年</th><th>第 3～6 年</th><th>第 7～20 年</th></tr></thead>
+          <tbody>
+            <tr><th>LIFE 津貼</th><td>LIFE 年繳保費</td><td id="r-l1">40%</td><td>10%</td><td>5%</td><td>2%</td></tr>
+            <tr><th>現金獎</th><td>首年度津貼</td><td>10%</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><th>PA 津貼</th><td>PA 年繳保費</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td></tr>
+            <tr><th>年終獎金</th><td>該保單年度津貼總額</td><td id="r-y1">11%</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:12px">
+        <b>年終給付比例看的是你「全年」的業務津貼總額</b>，不是單張保單——本例採 11%（全年津貼達 10 萬以上）。本表年終獎金列於首年度計算；續年度津貼最長給付至第 20 保單年度，且以保單持續有效為前提。
+      </p>
+    </div>
+  </div>
+
+  <h2>主管的組織收入怎麼算？<span class="en">Manager Income</span></h2>
+  <a class="nav-card-link" href="./manager-income.html">
+    <span>
+      <span class="lt">業務組織收入試算工具</span>
+      <span class="ld">單位津貼、業績獎金、超額獎金、年終獎金與公積金的逐層計算，都在組織圖式試算工具裡。</span>
+    </span>
+    <span class="ar">→</span>
+  </a>
+
+  <h2>榮譽舞台與海外競賽<span class="en">Recognition</span></h2>
+  <div class="medals">
+    <div class="medal">
+      <div class="when">總公司 · 上半年度</div>
+      <h3>高峰</h3>
+      <p>全公司最高規格的業績榮譽舞台。</p>
+    </div>
+    <div class="medal">
+      <div class="when">地區 · 下半年</div>
+      <h3>新高峰</h3>
+      <p>下半年度地區競賽，與上半年高峰接力，一年兩次榮譽機會。</p>
+    </div>
+    <div class="medal">
+      <div class="when">達標即參加</div>
+      <h3>海外會議旅遊競賽</h3>
+      <p>達成競賽標準即參加海外會議與旅遊，公司全額招待。</p>
+    </div>
+  </div>
+  <div class="hook">
+    這兩座獎盃不只是榮譽——<b>前 3 年曾獲高峰／新高峰會員資格，是委任通訊處經理的門檻之一</b>。今天拿的獎，是三年後開一家通訊處的入場券。條件細節請參閱 <a href="./promotion-system.html" style="color:inherit;font-weight:700">晉陞制度頁面</a>。
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  function nt(n){ return Math.round(n).toLocaleString("en-US"); }
+  function setText(id,v){
+    var el=document.getElementById(id);
+    if(el) el.textContent=v;
+  }
+
+  function calc(){
+    var plEl=document.getElementById("pl");
+    if(!plEl) return;
+
+    var pl=Math.max(0,+plEl.value||0);
+    var pp=Math.max(0,+document.getElementById("pp").value||0);
+    var r1=+document.getElementById("r1").value;
+    var yer=+document.getElementById("ye").value;
+
+    var fyc=pl*r1, cash=fyc*0.10, pa=pp*0.20;
+    var ye=(fyc+cash+pa)*yer;
+    var l2=pl*0.10, l3=pl*0.05, l4=pl*0.02;
+    var t1=fyc+cash+pa+ye, t2=l2+pa, t3=l3+pa, t4=l4+pa;
+    var total=t1+t2+t3*4+t4*14, prem=pl+pp;
+
+    setText("c-l1",nt(fyc)); setText("c-l2",nt(l2)); setText("c-l3",nt(l3)); setText("c-l4",nt(l4));
+    setText("c-c1",nt(cash));
+    setText("c-p1",nt(pa)); setText("c-p2",nt(pa)); setText("c-p3",nt(pa)); setText("c-p4",nt(pa));
+    setText("c-y1",ye>0?nt(ye):"—");
+    setText("c-t1",nt(t1)); setText("c-t2",nt(t2)); setText("c-t3",nt(t3)); setText("c-t4",nt(t4));
+    setText("sum-p",nt(prem)); setText("sum-fyc",nt(fyc)); setText("sum-total",nt(total));
+    setText("sum-pct",prem>0?"＝ 年繳保費的 "+Math.round(total/prem*100)+"%":"＝ 請輸入保費");
+    setText("r-l1",Math.round(r1*100)+"%");
+    setText("r-y1",yer>0?(yer*100).toFixed(1).replace(".0","")+"%":"無");
+  }
+
+  ["pl","pp","r1","ye"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){
+      el.addEventListener("input",calc);
+      el.addEventListener("change",calc);
+    }
+  });
+  calc();
+})();
+</script>
+</body>
+</html>
