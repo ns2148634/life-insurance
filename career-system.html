@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>理想的工作 · 壽險事業制度說明 · 廣宸團隊</title>
+<title>你想要的，究竟是一份工作，還是一個未來？ · 廣宸團隊</title>
 <meta name="theme-color" content="#17343a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
   --paper:#f6f2e7; --card:#fffdf8; --line:#e3ddc9;
   --text:#0d2124; --muted:#6c7570;
   --shadow:0 10px 30px -12px rgba(13,33,36,.25);
-  --radius:6px;
+  --radius:8px;
   --c1:#b8531a; --c2:#6c7570; --c3:#a9803f; --c4:#2f5f7a; --c5:#3f7a52;
   --pc:var(--ink);
 }
@@ -64,79 +64,32 @@ main{max-width:1180px; margin:0 auto; padding:24px 20px 40px}
 
 .eyebrow{display:inline-block; background:var(--pc); color:#fff; font-size:12px; font-weight:700;
   letter-spacing:.2em; padding:4px 14px; border-radius:99px; margin-bottom:12px}
-h1{font-family:'Noto Serif TC',serif; font-weight:900; font-size:30px; letter-spacing:.04em; margin:0 0 8px}
-.lead{color:var(--muted); margin:0 0 24px; font-size:16px; max-width:65ch; font-weight:500}
-h2{font-family:'Noto Serif TC',serif; font-weight:700; font-size:20px; margin:34px 0 16px; letter-spacing:.04em; display:flex; align-items:baseline; gap:10px;
+h1{font-family:'Noto Serif TC',serif; font-weight:900; font-size:32px; letter-spacing:.04em; margin:0 0 8px; line-height:1.35}
+.lead{color:var(--muted); margin:0 0 24px; font-size:17px; max-width:65ch; font-weight:500; line-height:1.8}
+h2{font-family:'Noto Serif TC',serif; font-weight:700; font-size:22px; margin:34px 0 16px; letter-spacing:.04em; display:flex; align-items:baseline; gap:10px;
   padding:4px 0 4px 12px; border-left:5px solid var(--pc); line-height:1.4}
 h2 .en{font-size:12px; letter-spacing:.16em; color:var(--muted); font-weight:400}
-.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
-.note{font-size:13px; color:var(--muted); line-height:1.7}
-.note b{color:#9c351f}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+.note{font-size:13.5px; color:var(--muted); line-height:1.7}
 
-/* 表格與算牌 */
-.tw{overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:var(--radius)}
-table{border-collapse:collapse; width:100%; background:var(--card); font-size:14.5px; min-width:420px}
-th,td{border:1px solid var(--line); padding:9px 12px; text-align:center}
-thead th{background:var(--ink); color:#fff; font-weight:600; border-color:var(--ink2)}
-tbody th{background:#f3eddc; text-align:left; font-weight:600}
-tbody tr:nth-child(even) td{background:#fbf7ea}
-td.num{font-variant-numeric:tabular-nums}
-td.l{text-align:left}
+/* 01 願景 / 創業卡片 */
+.hero-card{background:linear-gradient(135deg,#17343a,#274d54); color:#fff; border-radius:var(--radius); padding:32px; box-shadow:var(--shadow); margin-bottom:20px}
+.hero-card h3{font-family:'Noto Serif TC',serif; font-size:26px; font-weight:900; color:var(--gold-light); margin:0 0 12px; line-height:1.4}
+.hero-card p{margin:0; font-size:16px; color:#cfe3dd; line-height:1.8}
 
-/* 01 願景 */
-.vision-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-.v-card{background:var(--card); border:1px solid var(--line); border-top:5px solid var(--c1); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
-.v-card .tag{font-size:12px; font-weight:700; color:var(--c1); letter-spacing:.1em; margin-bottom:6px}
-.v-card h3{font-family:'Noto Serif TC',serif; font-size:19px; margin:0 0 8px; color:var(--ink)}
-.v-card p{margin:0; font-size:14px; color:var(--muted); line-height:1.7}
+.trait-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+.trait-card{background:var(--card); border:1px solid var(--line); border-top:5px solid var(--c1); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
+.trait-card h3{font-family:'Noto Serif TC',serif; font-size:19px; margin:0 0 8px; color:var(--ink)}
+.trait-card p{margin:0; font-size:14px; color:var(--muted); line-height:1.7}
 
-.ns-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
-.ns-card{background:linear-gradient(135deg,#17343a,#274d54); color:#fff; border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
-.ns-card .num-badge{font-family:'Noto Serif TC',serif; font-size:32px; font-weight:900; color:var(--gold-light); line-height:1}
-.ns-card h3{font-size:18px; margin:8px 0 6px; letter-spacing:.05em}
-.ns-card p{margin:0; font-size:13.5px; color:#cfe3dd; line-height:1.65}
+/* 02 就業到創業路徑 */
+.pathway{display:flex; flex-direction:column; gap:10px; margin:20px 0}
+.path-node{background:var(--card); border:1px solid var(--line); border-left:6px solid var(--c4); border-radius:var(--radius); padding:16px 20px; display:flex; align-items:center; gap:16px; box-shadow:var(--shadow)}
+.path-node .role{font-family:'Noto Serif TC',serif; font-size:18px; font-weight:700; color:var(--ink); width:140px; flex:none}
+.path-node .desc{font-size:14px; color:var(--muted); flex:1}
+.path-arrow{text-align:center; color:var(--c4); font-weight:700; font-size:18px; margin:-4px 0}
 
-/* 02 價值 */
-.val-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
-.val-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); display:flex; gap:14px; align-items:flex-start}
-.val-card .ico{font-size:28px; line-height:1; flex:none; background:#f4ead3; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center}
-.val-card .content{flex:1}
-.val-card .num-tag{font-size:11px; font-weight:700; color:var(--c3); letter-spacing:.12em}
-.val-card h3{font-family:'Noto Serif TC',serif; font-size:17px; margin:2px 0 4px; color:var(--ink)}
-.val-card p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.6}
-
-/* 03 收入 */
-.harmony{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 20px 14px; box-shadow:var(--shadow)}
-.hchart{display:grid; grid-template-columns:34px 1fr; gap:10px}
-.yaxis{writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center;
-  color:var(--ink); font-weight:700; letter-spacing:.4em; font-size:14px; border-left:2px solid var(--ink); position:relative}
-.yaxis::before{content:"▲"; position:absolute; top:-10px; left:-9px; font-size:11px; writing-mode:horizontal-tb}
-.wedges{display:grid; grid-template-columns:1fr 1.15fr 1fr; height:220px; gap:6px}
-.wedge{position:relative; display:flex; border-radius:4px}
-.wedge span{writing-mode:vertical-rl; font-weight:700; font-size:clamp(14px,1.7vw,18px);
-  letter-spacing:.14em; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.25)}
-.w-serv{background:linear-gradient(160deg,#8fb3bf,#2f5f7a); clip-path:polygon(0 0,100% 0,100% 100%); align-items:flex-start; justify-content:flex-end; padding:14px 14px 0 0}
-.w-fy{background:linear-gradient(180deg,#d8b46a,#a9803f); align-items:center; justify-content:center}
-.w-fy span{color:#2b1d08; text-shadow:none}
-.w-org{background:linear-gradient(200deg,#d9704f,#c1442d); clip-path:polygon(0 0,100% 0,0 100%); align-items:flex-start; justify-content:flex-start; padding:14px 0 0 14px}
-.xaxis{grid-column:2; display:flex; justify-content:space-between; align-items:center; border-top:2px solid var(--ink); margin-top:8px; padding-top:6px; font-weight:700; color:var(--ink); font-size:14px}
-
-.sources{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px}
-.s3{border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; background:#fffdf8}
-.s3 h3{font-family:'Noto Serif TC',serif; margin:0 0 6px; font-size:16px; display:flex; align-items:center; gap:8px}
-.s3 h3::before{content:""; width:10px; height:10px; border-radius:50%; flex:none}
-.s3.serv h3::before{background:#2f5f7a} .s3.fy h3::before{background:#a9803f} .s3.org h3::before{background:#c1442d}
-.s3 p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.7}
-
-.calc{display:grid; grid-template-columns:280px 1fr; gap:20px; align-items:start}
-.inputs{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
-.fld{margin-bottom:14px}
-.fld label{display:block; font-size:13px; font-weight:700; color:var(--ink); margin-bottom:5px}
-.fld input,.fld select{width:100%; font:inherit; font-size:15px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; background:#fffdf8}
-.bigsum{background:var(--ink); color:#fff; border-radius:var(--radius); padding:16px; margin-top:14px}
-.bigsum .v{font-family:'Noto Serif TC',serif; font-size:28px; font-weight:700; color:var(--gold-light)}
-
-/* 04 晉陞 */
+/* 晉陞階梯與表格 */
 .ladder{display:flex; align-items:flex-end; overflow-x:auto; border-bottom:3px solid var(--ink)}
 .step{flex:1 0 186px; display:flex; flex-direction:column; justify-content:flex-end}
 .gate{align-self:flex-start; margin:0 0 8px 4px; background:var(--ink); color:#fff; font-size:12px; font-weight:700; border-radius:99px; padding:3px 10px}
@@ -145,35 +98,69 @@ td.l{text-align:left}
 .rank ul{margin:0; padding:0; list-style:none; font-size:13.5px; line-height:1.9}
 .rank li.new::before{content:"＋"; font-weight:700; margin-right:2px}
 .rank li.base::before{content:"·"; margin-right:6px; opacity:.6}
-.r1{background:#5a8a99; min-height:150px} .r2{background:#b8531a; min-height:230px}
-.r3{background:#3f7a52; min-height:280px} .r4{background:#6c7570; min-height:320px} .r5{background:#274d54; min-height:360px}
+.r1{background:#5a8a99; min-height:150px} .r2{background:#b8531a; min-height:220px}
+.r3{background:#3f7a52; min-height:270px} .r4{background:#6c7570; min-height:310px} .r5{background:#274d54; min-height:350px}
 
 .std{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden}
 .std .head{display:flex; align-items:center; gap:12px; padding:12px 16px; color:#fff; cursor:pointer; list-style:none}
 .std .head h3{font-family:'Noto Serif TC',serif; margin:0; font-size:17px}
 .std .in{padding:16px}
-.routes{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-.route{border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; background:#fffdf8}
-.reqs{margin:14px 0 0; padding:0; list-style:none; font-size:14px; line-height:1.9}
-.reqs li{padding-left:22px; position:relative}
-.reqs li::before{content:"✓"; position:absolute; left:0; color:var(--c5); font-weight:700}
+.tw{overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:var(--radius)}
+table{border-collapse:collapse; width:100%; background:var(--card); font-size:14.5px; min-width:420px}
+th,td{border:1px solid var(--line); padding:9px 12px; text-align:center}
+thead th{background:var(--ink); color:#fff; font-weight:600}
+tbody tr:nth-child(even) td{background:#fbf7ea}
 
-/* ---------- 05 廣宸特色與系統 ---------- */
-.gc-pillar-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-.gc-pillar{background:var(--card); border:1px solid var(--line); border-top:5px solid var(--c5); border-radius:var(--radius); padding:22px; text-align:center; box-shadow:var(--shadow)}
-.gc-pillar .ico{font-size:36px; margin-bottom:10px}
-.gc-pillar h3{font-family:'Noto Serif TC',serif; font-size:20px; margin:0 0 6px; color:var(--ink)}
-.gc-pillar p{font-size:14px; color:var(--muted); margin:0}
+/* 03 累積 × 協合 × 挑戰 */
+.three-pillars{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px}
+.pillar-card{background:var(--card); border:1px solid var(--line); border-top:5px solid var(--c3); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+.pillar-card .tag-p{font-size:13px; font-weight:700; color:var(--c3); letter-spacing:.14em; margin-bottom:6px}
+.pillar-card h3{font-family:'Noto Serif TC',serif; font-size:22px; margin:0 0 8px; color:var(--ink)}
+.pillar-card .sub-p{font-size:15px; font-weight:700; color:var(--vermilion); margin-bottom:10px}
+.pillar-card p{margin:0; font-size:14px; color:var(--muted); line-height:1.7}
 
-/* 90天時間軸 */
-.timeline{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; position:relative; margin-top:20px}
-.tl-item{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); position:relative}
-.tl-item::before{content:""; position:absolute; top:-8px; left:20px; width:16px; height:16px; background:var(--c5); border-radius:50%}
+.harmony{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 20px 14px; box-shadow:var(--shadow)}
+.hchart{display:grid; grid-template-columns:34px 1fr; gap:10px}
+.yaxis{writing-mode:vertical-rl; display:flex; align-items:center; justify-content:center; color:var(--ink); font-weight:700; letter-spacing:.4em; font-size:14px; border-left:2px solid var(--ink); position:relative}
+.wedges{display:grid; grid-template-columns:1fr 1.15fr 1fr; height:220px; gap:6px}
+.wedge{position:relative; display:flex; border-radius:4px}
+.wedge span{writing-mode:vertical-rl; font-weight:700; font-size:clamp(14px,1.7vw,18px); letter-spacing:.14em; color:#fff}
+.w-serv{background:linear-gradient(160deg,#8fb3bf,#2f5f7a); clip-path:polygon(0 0,100% 0,100% 100%); align-items:flex-start; justify-content:flex-end; padding:14px 14px 0 0}
+.w-fy{background:linear-gradient(180deg,#d8b46a,#a9803f); align-items:center; justify-content:center}
+.w-fy span{color:#2b1d08}
+.w-org{background:linear-gradient(200deg,#d9704f,#c1442d); clip-path:polygon(0 0,100% 0,0 100%); align-items:flex-start; justify-content:flex-start; padding:14px 0 0 14px}
+.xaxis{grid-column:2; display:flex; justify-content:space-between; align-items:center; border-top:2px solid var(--ink); margin-top:8px; padding-top:6px; font-weight:700; color:var(--ink); font-size:14px}
+
+.calc{display:grid; grid-template-columns:280px 1fr; gap:20px; align-items:start}
+.inputs{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+.fld{margin-bottom:14px}
+.fld label{display:block; font-size:13px; font-weight:700; color:var(--ink); margin-bottom:5px}
+.fld input,.fld select{width:100%; font:inherit; font-size:15px; padding:8px 10px; border:1px solid var(--line); border-radius:4px; background:#fffdf8}
+.bigsum{background:var(--ink); color:#fff; border-radius:var(--radius); padding:16px; margin-top:14px}
+.bigsum .v{font-family:'Noto Serif TC',serif; font-size:28px; font-weight:700; color:var(--gold-light)}
+
+/* 04 銷售與增才 */
+.two-core{display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:20px}
+.core-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
+.core-card .tag-c{font-size:12px; font-weight:700; color:var(--c4); letter-spacing:.14em; margin-bottom:6px}
+.core-card h3{font-family:'Noto Serif TC',serif; font-size:22px; margin:0 0 8px; color:var(--ink)}
+.core-card .subtitle{font-size:16px; font-weight:700; color:var(--vermilion); margin-bottom:12px}
+.core-card p{margin:0; font-size:14.5px; color:var(--muted); line-height:1.75}
+
+.val-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+.val-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); display:flex; gap:14px; align-items:flex-start}
+.val-card .ico{font-size:26px; flex:none; background:#f4ead3; width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center}
+.val-card .content{flex:1}
+.val-card h3{font-family:'Noto Serif TC',serif; font-size:16.5px; margin:0 0 4px; color:var(--ink)}
+.val-card p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.6}
+
+/* 05 廣宸系統 */
+.timeline{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px}
+.tl-item{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow)}
 .tl-item .day{font-family:'Noto Serif TC',serif; font-weight:900; font-size:22px; color:var(--c5); margin-bottom:4px}
 .tl-item h4{margin:0 0 6px; font-size:16px; color:var(--ink)}
 .tl-item p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.6}
 
-/* 十大模組點擊展開 */
 .modules-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
 details.mod-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
 details.mod-card summary{cursor:pointer; padding:14px 18px; font-weight:700; font-size:15px; list-style:none; display:flex; align-items:center; gap:12px}
@@ -182,30 +169,25 @@ details.mod-card summary .num{background:var(--ink); color:#fff; font-size:12px;
 details.mod-card summary .title{color:var(--ink); flex:1}
 details.mod-card summary::after{content:"＋"; font-weight:700; color:var(--c5)}
 details.mod-card[open] summary::after{content:"−"}
-details.mod-card .mod-body{padding:0 18px 14px 18px; font-size:13.5px; color:var(--muted); border-top:1px dashed var(--line); margin-top:6px; padding-top:10px; line-height:1.7}
+details.mod-card .mod-body{padding:0 18px 14px; font-size:13.5px; color:var(--muted); border-top:1px dashed var(--line); margin-top:6px; padding-top:10px; line-height:1.7}
 
-/* 廣宸系統層級圖 */
-.sys-flow{display:flex; flex-direction:column; gap:12px; max-width:800px; margin:0 auto}
-.sys-node{background:var(--card); border:1px solid var(--line); border-left:6px solid var(--ink); border-radius:var(--radius); padding:16px 20px; display:flex; align-items:center; gap:16px; box-shadow:var(--shadow)}
-.sys-node .label{font-family:'Noto Serif TC',serif; font-size:18px; font-weight:700; color:var(--ink); width:130px; flex:none}
-.sys-node .desc{font-size:14px; color:var(--muted); flex:1}
-.sys-arrow{text-align:center; color:var(--c5); font-weight:700; font-size:20px; margin:-6px 0}
-
-/* 人才三大核心與CTA */
 .persona-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; text-align:center}
 .persona-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px 18px; box-shadow:var(--shadow)}
 .persona-card .big-title{font-family:'Noto Serif TC',serif; font-size:26px; font-weight:900; color:var(--c1); margin-bottom:4px}
 .persona-card .sub-title{font-size:15px; font-weight:700; color:var(--ink); margin-bottom:8px}
 .persona-card p{font-size:13.5px; color:var(--muted); margin:0}
 
-.cta-box{background:linear-gradient(135deg,#17343a,#274d54); color:#fff; border-radius:var(--radius); padding:32px; text-align:center; box-shadow:var(--shadow); margin-top:24px}
-.cta-box h3{font-family:'Noto Serif TC',serif; font-size:22px; margin:0 0 12px; color:var(--gold-light)}
-.cta-box p{font-size:16px; color:#cfe3dd; margin:0; line-height:1.8}
+.cta-box{background:linear-gradient(135deg,#17343a,#274d54); color:#fff; border-radius:var(--radius); padding:36px 28px; text-align:center; box-shadow:var(--shadow); margin-top:24px}
+.cta-box .cta-stage{font-size:14px; color:#9dbdb5; letter-spacing:.16em; margin-bottom:8px; font-weight:700}
+.cta-box h3{font-family:'Noto Serif TC',serif; font-size:26px; margin:0 0 16px; color:var(--gold-light)}
+.cta-box p{font-size:16.5px; color:#cfe3dd; margin:0 0 20px; line-height:1.85}
+.cta-box .cta-btn{display:inline-block; background:var(--gold); color:#0d2124; font-weight:700; font-size:16px; padding:12px 32px; border-radius:99px; text-decoration:none; transition:all .2s}
+.cta-box .cta-btn:hover{background:var(--gold-light); transform:translateY(-2px)}
 
 @media (max-width:900px){
-  .vision-grid, .ns-grid, .val-grid, .sources, .tiles, .routes, .gc-pillar-grid, .timeline, .modules-grid, .persona-grid{grid-template-columns:1fr}
+  .trait-grid, .three-pillars, .two-core, .val-grid, .timeline, .modules-grid, .persona-grid{grid-template-columns:1fr}
   .calc{grid-template-columns:1fr}
-  .sys-node{flex-direction:column; align-items:flex-start; gap:4px}
+  .path-node{flex-direction:column; align-items:flex-start; gap:4px}
   .brand{display:none}
 }
 
@@ -239,97 +221,109 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
 <header>
   <div class="bar">
     <a class="home" href="./index.html">← 工具總覽</a>
-    <span class="brand">宸功保險 · 南山人壽</span>
-    <span class="title"><small>理想的工作</small>壽險事業制度說明</span>
+    <span class="brand">廣宸團隊 · 南山人壽</span>
+    <span class="title"><small>理想的工作</small>職涯願景與事業說明</span>
     <button id="menu-toggle" class="menu-toggle" aria-label="切換選單">
       <span></span><span></span><span></span>
     </button>
   </div>
   <nav id="nav">
-    <button role="tab" aria-selected="true"  data-p="0"><span class="dot" style="background:#b8531a"></span>1. 事業願景</button>
-    <button role="tab" aria-selected="false" data-p="1"><span class="dot" style="background:#6c7570"></span>2. 工作價值</button>
-    <button role="tab" aria-selected="false" data-p="2"><span class="dot" style="background:#a9803f"></span>3. 合理收入</button>
-    <button role="tab" aria-selected="false" data-p="3"><span class="dot" style="background:#2f5f7a"></span>4. 透明晉陞</button>
-    <button role="tab" aria-selected="false" data-p="4"><span class="dot" style="background:#3f7a52"></span>5. 為什麼是廣宸</button>
+    <button role="tab" aria-selected="true"  data-p="0"><span class="dot" style="background:#b8531a"></span>01. 未來與方向</button>
+    <button role="tab" aria-selected="false" data-p="1"><span class="dot" style="background:#6c7570"></span>02. 就業到創業</button>
+    <button role="tab" aria-selected="false" data-p="2"><span class="dot" style="background:#a9803f"></span>03. 累積與收入</button>
+    <button role="tab" aria-selected="false" data-p="3"><span class="dot" style="background:#2f5f7a"></span>04. 銷售與增才</button>
+    <button role="tab" aria-selected="false" data-p="4"><span class="dot" style="background:#3f7a52"></span>05. 為什麼是廣宸</button>
   </nav>
 </header>
 
 <main>
 
 <section class="page p0 on">
-  <span class="eyebrow">事業願景</span>
+  <span class="eyebrow">01｜思考選擇</span>
   <h1>你想要的，究竟是一份工作，還是一個未來？</h1>
-  <p class="lead">一個結合「無上限收入」與「社會價值」，且越老越吃香的永續賽道。</p>
+  <p class="lead">如果你不只想換一份工作，而是想建立一份屬於自己的事業。</p>
 
-  <h2>保險事業的三大不可替代性<span class="en">Why Insurance Career</span></h2>
-  <div class="vision-grid">
-    <div class="v-card">
-      <div class="tag">01 · 人性溫度</div>
-      <h3>AI 帶不走的情感連結</h3>
-      <p>演算法可以精算機率，但無法在客戶人生最狼狽時給予擁抱與遞送支票。這是一份越具備溝通與同理心，越無可取代的專業。</p>
-    </div>
-    <div class="v-card">
-      <div class="tag">02 · 萬億剛需</div>
-      <h3>超高齡社會的剛性需求</h3>
-      <p>台灣邁入超高齡化與少子化，長照、醫療自費與資產傳承需求呈爆發性成長。你不是在推銷，而是為客戶建構家庭安全網。</p>
-    </div>
-    <div class="v-card">
-      <div class="tag">03 · 低風險創業</div>
-      <h3>沒有存貨壓力的個人事業</h3>
-      <p>零庫房壓力、零倒閉風險。享有企業級的後勤資源與品牌背書，打造專屬於你、可永續傳承的客戶資產。</p>
-    </div>
+  <h2>給想掌握自己人生的人<span class="en">Page 1: The Opportunity</span></h2>
+  <div class="hero-card">
+    <h3>這不是一份「打工」的選擇，這是一趟建立個人事業的起點。</h3>
+    <p>傳統工作用時間換固定薪水，年資增加，選擇卻越來越少。我們在尋找的，不是只想找一份安穩薪水的人，而是有企圖心、想掌握自己收入、希望未來能成為經營者的人。</p>
   </div>
 
-  <h2>選擇南山人壽的四大理由<span class="en">Why Nan Shan</span></h2>
-  <div class="ns-grid">
-    <div class="ns-card">
-      <div class="num-badge">專屬</div>
-      <h3>唯一不隸屬金控的五大壽險</h3>
-      <p>沒有銀行與證券的交叉銷售壓力，全公司資源 100% 聚焦於壽險本業、保戶服務與業務通路發展。</p>
+  <h2>你具備我們期待的特質嗎？<span class="en">Page 2: Who We Target</span></h2>
+  <div class="trait-grid">
+    <div class="trait-card">
+      <h3>不滿足於固定薪資上限</h3>
+      <p>相信自己的努力與回報應該成正比，希望獲得無上限的收入自主權。</p>
     </div>
-    <div class="ns-card">
-      <div class="num-badge">660+萬</div>
-      <h3>全台每 4 人就有 1 位南山保戶</h3>
-      <p>超過一甲子的信譽累積，強大的品牌知名度與保戶基礎，讓你在開拓市場與建立信任時事半功倍。</p>
+    <div class="trait-card">
+      <h3>渴望掌握時間主導權</h3>
+      <p>不願一輩子被打卡鐘限制，希望打磨專業，擁有靈活掌控生活的彈性。</p>
     </div>
-    <div class="ns-card">
-      <div class="num-badge">在地</div>
-      <h3>深耕台灣 · 潤成團隊支持</h3>
-      <p>由潤泰集團與寶成集團強強聯手的潤成投資控股支持，扎根台灣本土，提供最實質的在地資源與數位工具。</p>
-    </div>
-    <div class="ns-card">
-      <div class="num-badge">育才</div>
-      <h3>業界首屈一指的黃埔培訓</h3>
-      <p>從零基礎新人到組織企業家，提供階梯式扎實訓練與導師手把手帶領，把「小白變專家」的成熟育才體系。</p>
+    <div class="trait-card">
+      <h3>抱持企業家與創業思維</h3>
+      <p>不只做好個人銷售，更有野心帶領團隊、經營事業體，打造可傳承的資產。</p>
     </div>
   </div>
 </section>
 
 <section class="page p1">
-  <span class="eyebrow">工作價值</span>
-  <h1>從就業，到創業：壽險其實只有兩件事</h1>
-  <p class="lead">銷售 × 增才。我們不只賣商品，我們為每個家庭在最危難的那天，提供確定性的尊嚴與保障。</p>
+  <span class="eyebrow">02｜事業發展</span>
+  <h1>從「就業」走向「創業」的路</h1>
+  <p class="lead">南山給你的，不只是從業務員做到主管的升遷制度，而是提供一條明確的創業路徑。</p>
 
-  <h2>守護家庭與資產的 10 大黃金價值<span class="en">The 10 Golden Values</span></h2>
-  <div class="val-grid">
-    <div class="val-card"><div class="ico">🛡️</div><div class="content"><div class="num-tag">VALUE 01</div><h3>收入替代</h3><p>當家庭支柱因病或意外倒下，保險金代替你繼續支付房貸、生活費與孩子學費。</p></div></div>
-    <div class="val-card"><div class="ico">🏥</div><div class="content"><div class="num-tag">VALUE 02</div><h3>醫療尊嚴</h3><p>面對高額自費新醫療技術（如標靶、免疫療法），不必動用積蓄即可獲得最佳治療。</p></div></div>
-    <div class="val-card"><div class="ico">🌴</div><div class="content"><div class="num-tag">VALUE 03</div><h3>退休自主</h3><p>建構源源不絕的終身現金流，讓晚年生活優雅獨立，不必看子女臉色過日子。</p></div></div>
-    <div class="val-card"><div class="ico">❤️</div><div class="content"><div class="num-tag">VALUE 04</div><h3>愛的傳承</h3><p>留愛不留債。確定性的身故給付，確保對家人的愛與責任能無縫延續下一代。</p></div></div>
-    <div class="val-card"><div class="ico">🔒</div><div class="content"><div class="num-tag">VALUE 05</div><h3>資產保全</h3><p>具備法律專屬保護特性，有效隔離商業風險與個人債務，保護核心財富安全。</p></div></div>
-    <div class="val-card"><div class="ico">⚖️</div><div class="content"><div class="num-tag">VALUE 06</div><h3>預留稅源</h3><p>遺產稅為現金稅，指定受益人的保險金能即時提供變現，避免繼承人賤賣資產。</p></div></div>
-    <div class="val-card"><div class="ico">🏢</div><div class="content"><div class="num-tag">VALUE 07</div><h3>企業永續</h3><p>Key-man 關鍵人才保障與 Buy-Sell 股權買賣協議，確保企業營運不因意外中斷。</p></div></div>
-    <div class="val-card"><div class="ico">💰</div><div class="content"><div class="num-tag">VALUE 08</div><h3>應急金庫</h3><p>累積之保單價值準備金可靈活借款，週轉速度快，是緊急資金調度的強大後盾。</p></div></div>
-    <div class="val-card"><div class="ico">📈</div><div class="content"><div class="num-tag">VALUE 09</div><h3>強迫儲蓄</h3><p>專款專用克服人性消費衝動，運用時間複利效果，有紀律地達成人生各階段目標。</p></div></div>
-    <div class="val-card"><div class="ico">🤝</div><div class="content"><div class="num-tag">VALUE 10</div><h3>心理安寧</h3><p>用極低的成本鎖定不可預知的風險，讓家庭成員獲得發自內心的安全感與定心丸。</p></div></div>
+  <h2>清晰的六大創業階梯<span class="en">Page 1: Career Pathway</span></h2>
+  <div class="pathway">
+    <div class="path-node"><div class="role">1. 業務代表</div><div class="desc"><b>【就業階段】</b> 打磨基礎，把自己做好，建立專屬客戶資產。</div></div>
+    <div class="path-arrow">↓</div>
+    <div class="path-node"><div class="role">2. 業務主任</div><div class="desc"><b>【團隊起步】</b> 開始帶領新人，開啟第一層組織津貼與輔導紅利。</div></div>
+    <div class="path-arrow">↓</div>
+    <div class="path-node"><div class="role">3. 業務襄理</div><div class="desc"><b>【管理進階】</b> 打造直轄團隊，個人銷售與組織發展並重。</div></div>
+    <div class="path-arrow">↓</div>
+    <div class="path-node"><div class="role">4. 區經理</div><div class="desc"><b>【準企業家】</b> 育成次世代主管，具備經營一個區域單位的實力。</div></div>
+    <div class="path-arrow">↓</div>
+    <div class="path-node" style="border-left-color:var(--gold)"><div class="role">5. 獨立通訊處</div><div class="desc"><b>【獨立創業】</b> 開立專屬通訊處辦公室，擁有獨立經營權與開幕補助。</div></div>
+    <div class="path-arrow">↓</div>
+    <div class="path-node" style="border-left-color:var(--c1)"><div class="role">6. 經營合夥人</div><div class="desc"><b>【事業傳承】</b> 共享組織擴張總收益，實現真正的事業永續經營。</div></div>
+  </div>
+
+  <h2>透明白紙黑字的晉陞制度<span class="en">Page 2: Standard Rules</span></h2>
+  <div class="ladder">
+    <div class="step"><div class="rank r1"><h3>業務代表</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li></ul></div></div>
+    <div class="step"><div class="gate">6～9 個月</div><div class="rank r2"><h3>業務主任</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="new">單位津貼</li><li class="new">業績獎金</li><li class="new">超額獎金</li><li class="new">晉陞津貼</li><li class="new">特別津貼</li></ul></div></div>
+    <div class="step"><div class="gate">12 個月</div><div class="rank r3"><h3>業務襄理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="new">輔導津貼</li></ul></div></div>
+    <div class="step"><div class="gate">15 個月</div><div class="rank r4"><h3>區經理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="base">輔導津貼</li><li class="new">區成長獎金</li></ul></div></div>
+    <div class="step"><div class="gate">2 年</div><div class="rank r5"><h3>處經理</h3><p style="font-size:12.5px;opacity:.85;margin:8px 0 0">經營獨立事業體。<br>委任條件依公司處級制度辦法。</p></div></div>
   </div>
 </section>
 
 <section class="page p2">
-  <span class="eyebrow">合理收入</span>
+  <span class="eyebrow">03｜收入架構</span>
   <h1>努力，能不能累積成收入？</h1>
-  <p class="lead">三個收入來源同時運作：越有時間累積，收入的底盤越寬。</p>
+  <p class="lead">打破傳統上班族「下個月又歸零」的循環，用時間加寬你的收入底盤。</p>
 
+  <h2>收入的三大核心概念<span class="en">Page 1: Accumulation x Synergy x Challenge</span></h2>
+  <div class="three-pillars">
+    <div class="pillar-card">
+      <div class="tag-p">CONCEPT 01</div>
+      <h3>累積</h3>
+      <div class="sub-p">不是每個月重新歸零</div>
+      <p>今天做的每一份努力與服務，都會轉化為續年度服務津貼，陪伴客戶多久，收入就延續多久。</p>
+    </div>
+    <div class="pillar-card">
+      <div class="tag-p">CONCEPT 02</div>
+      <h3>協合</h3>
+      <div class="sub-p">不是只有「我賺多少」</div>
+      <p>結合個人銷售、團隊輔導與組織發展。一個人走得快，一群人走得遠，三塊收入同時加寬。</p>
+    </div>
+    <div class="pillar-card">
+      <div class="tag-p">CONCEPT 03</div>
+      <h3>挑戰</h3>
+      <div class="sub-p">打破固定薪資天花板</div>
+      <p>沒有主管能限制你的薪水。你的收入上限，完全取決於你想把自己帶到多遠的地方。</p>
+    </div>
+  </div>
+
+  <h2>三維收入結構圖表<span class="en">Page 2: Harmony Income</span></h2>
   <div class="harmony">
     <div class="hchart">
       <div class="yaxis">時間</div>
@@ -342,26 +336,9 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
         <span>◀ 客戶服務</span><span class="mid">所 得</span><span>組織發展 ▶</span>
       </div>
     </div>
-    <div class="sources">
-      <div class="s3 serv">
-        <h3>續年度服務獎金</h3>
-        <p>客戶留在身邊，保單續繳就持續給付，最長至第 20 保單年度。服務的客戶越多、年資越久，這塊越厚。</p>
-        <span style="font-size:12px;font-weight:700;color:var(--ink3);display:block;margin-top:6px">來源：續年度津貼</span>
-      </div>
-      <div class="s3 fy">
-        <h3>首年度業務獎金</h3>
-        <p>當年度成交的新契約收入。這塊不隨時間累積，做多少算多少。</p>
-        <span style="font-size:12px;font-weight:700;color:var(--ink3);display:block;margin-top:6px">來源：首年度津貼 ＋ 現金獎 ＋ 年終獎金</span>
-      </div>
-      <div class="s3 org">
-        <h3>組織發展獎金</h3>
-        <p>帶人、育才之後產生的單位收入。組織越成熟這塊越寬，且不受個人時間上限限制。</p>
-        <span style="font-size:12px;font-weight:700;color:var(--ink3);display:block;margin-top:6px">來源：單位津貼、業績獎金、超額獎金、晉陞／特別／輔導津貼</span>
-      </div>
-    </div>
   </div>
 
-  <h2>業務津貼試算<span class="en">Calculator</span></h2>
+  <h2>業務津貼動態試算<span class="en">Page 3: Calculator</span></h2>
   <div class="calc">
     <div class="inputs">
       <div class="fld">
@@ -375,8 +352,8 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
       <div class="fld">
         <label for="r1">首年度津貼率</label>
         <select id="r1">
-          <option value="0.50">50%</option><option value="0.45">45%</option>
-          <option value="0.40" selected>40%（範例）</option><option value="0.35">35%</option>
+          <option value="0.50">50%</option>
+          <option value="0.40" selected>40%（範例）</option>
           <option value="0.30">30%</option>
         </select>
       </div>
@@ -384,7 +361,6 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
         <label for="ye">年終給付比例</label>
         <select id="ye">
           <option value="0">無（全年未達 2 萬）</option>
-          <option value="0.085">8.5%（6～8 萬）</option>
           <option value="0.11" selected>11%（10 萬以上）</option>
         </select>
       </div>
@@ -412,33 +388,50 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
 </section>
 
 <section class="page p3">
-  <span class="eyebrow">透明晉陞</span>
-  <h1>透明化的升遷制度</h1>
-  <p class="lead">職級不看年資、不看關係，看的是白紙黑字的委任條件。每升一級，多開啟一組收入來源。</p>
+  <span class="eyebrow">04｜工作實質</span>
+  <h1>壽險工作，其實只有兩件事</h1>
+  <p class="lead">重新定義你的日常工作：從「賣保單」轉變為「解決問題」與「成就他人」。</p>
 
-  <div class="ladder">
-    <div class="step"><div class="rank r1"><h3>業務代表</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li></ul></div></div>
-    <div class="step"><div class="gate">6～9 個月</div><div class="rank r2"><h3>業務主任</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="new">單位津貼</li><li class="new">業績獎金</li><li class="new">超額獎金</li><li class="new">晉陞津貼</li><li class="new">特別津貼</li></ul></div></div>
-    <div class="step"><div class="gate">12 個月</div><div class="rank r3"><h3>業務襄理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="new">輔導津貼</li></ul></div></div>
-    <div class="step"><div class="gate">15 個月</div><div class="rank r4"><h3>區經理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="base">輔導津貼</li><li class="new">區成長獎金</li></ul></div></div>
-    <div class="step"><div class="gate">2 年</div><div class="rank r5"><h3>處經理</h3><p style="font-size:12.5px;opacity:.85;margin:8px 0 0">經營一個事業體。<br>委任條件依公司處級制度辦法。</p></div></div>
+  <h2>兩大核心工作模組<span class="en">Page 1: Sales &amp; Recruiting</span></h2>
+  <div class="two-core">
+    <div class="core-card">
+      <div class="tag-c">MODULE 01</div>
+      <h3>① 銷售</h3>
+      <div class="subtitle">解決問題的方案</div>
+      <p>我們不是去賣一張商品，而是當一個家庭面臨疾病、長照、退休或資產傳承風險時，我們能不能幫他找到確定性的解決方案。</p>
+    </div>
+    <div class="core-card">
+      <div class="tag-c">MODULE 02</div>
+      <h3>② 增才</h3>
+      <div class="subtitle">成就他人的事業</div>
+      <p>當你開始培養一個人、成就一個人，你的工作就不再只是個人業務，而是協助夥伴建立事業，邁向團隊經營者。</p>
+    </div>
+  </div>
+
+  <h2>守護客戶的 10 大黃金價值<span class="en">Page 2: The Value Map</span></h2>
+  <div class="val-grid">
+    <div class="val-card"><div class="ico">🛡️</div><div class="content"><h3>01. 收入替代</h3><p>家庭支柱倒下時，保險金代替你支應房貸與生活費。</p></div></div>
+    <div class="val-card"><div class="ico">🏥</div><div class="content"><h3>02. 醫療尊嚴</h3><p>高額自費新醫療技術（標靶/免疫），安心接受最佳治療。</p></div></div>
+    <div class="val-card"><div class="ico">🌴</div><div class="content"><h3>03. 退休自主</h3><p>源源不絕的終身現金流，晚年生活優雅獨立。</p></div></div>
+    <div class="val-card"><div class="ico">❤️</div><div class="content"><h3>04. 愛的傳承</h3><p>確定性的身故給付，確保對家人的責任無縫延續。</p></div></div>
+    <div class="val-card"><div class="ico">🔒</div><div class="content"><h3>05. 資產保全</h3><p>具備法律專屬保護，隔離商業風險與個人債務。</p></div></div>
+    <div class="val-card"><div class="ico">⚖️</div><div class="content"><h3>06. 預留稅源</h3><p>提供現金變現，避免繼承人急迫賤賣資產。</p></div></div>
+    <div class="val-card"><div class="ico">🏢</div><div class="content"><h3>07. 企業永續</h3><p>Key-man 股權買賣協議，確保企業營運不中斷。</p></div></div>
+    <div class="val-card"><div class="ico">💰</div><div class="content"><h3>08. 應急金庫</h3><p>保單價值金靈活借款，緊急資金調度的強大後盾。</p></div></div>
+    <div class="val-card"><div class="ico">📈</div><div class="content"><h3>09. 強迫儲蓄</h3><p>時間複利效果，專款專用有紀律達成目標。</p></div></div>
+    <div class="val-card"><div class="ico">🤝</div><div class="content"><h3>10. 心理安寧</h3><p>低成本鎖定未知風險，獲得發自內心的定心丸。</p></div></div>
   </div>
 </section>
 
 <section class="page p4">
-  <span class="eyebrow">廣宸特色</span>
-  <h1>05｜為什麼是廣宸？</h1>
+  <span class="eyebrow">05｜廣宸特色</span>
+  <h1>為什麼選擇廣宸團隊？</h1>
   <p class="lead">宸功出擊 90 天 × 十大模組 × 宸功系統</p>
 
-  <h2>我們不只教你怎麼做<span class="en">Page 1: Our Growth System</span></h2>
+  <h2>我們不只教你怎麼做<span class="en">Page 1: System Overview</span></h2>
   <div class="card" style="margin-bottom:18px">
     <p style="font-size:18px;font-weight:700;color:var(--ink);margin:0 0 8px">進入廣宸，你得到的不是一本新人手冊，而是一套陪你從 0 開始的成長系統。</p>
-    <p style="margin:0;color:var(--muted)">結合強大的階段培訓、實戰經驗與底層數位工具，讓你每一階段都有跡可循。</p>
-  </div>
-  <div class="gc-pillar-grid">
-    <div class="gc-pillar"><div class="ico">🚀</div><h3>宸功出擊 90 天</h3><p>明確的 90 天起步藍圖，帶你建立自信與節奏。</p></div>
-    <div class="gc-pillar"><div class="ico">📚</div><h3>十大訓練模組</h3><p>打通推銷與增員脈絡，可依個人進度選擇重點學習。</p></div>
-    <div class="gc-pillar"><div class="ico">⚙️</div><h3>宸功系統</h3><p>支撐個人與團隊長期成長的數位底層運作架構。</p></div>
+    <p style="margin:0;color:var(--muted)">我們不靠天天口號盯人，而是用成熟可複製的系統，幫你建立穩定節奏。</p>
   </div>
 
   <h2>宸功出擊 90 天<span class="en">Page 2: 90 Days Timeline</span></h2>
@@ -448,13 +441,13 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
   </div>
   <div class="timeline">
     <div class="tl-item"><div class="day">Day 1</div><h4>認識工作</h4><p>理解行業價值、職涯願景與團隊運作規範。</p></div>
-    <div class="tl-item"><div class="day">Day 30</div><h4>建立基本能力</h4><p>考取關鍵證照，掌握商品基礎與需求分析工具。</p></div>
-    <div class="tl-item"><div class="day">Day 60</div><h4>進入實戰</h4><p>導師陪同演練，累積實際面談經驗與問答能力。</p></div>
-    <div class="tl-item"><div class="day">Day 90</div><h4>建立工作節奏</h4><p>形成穩定拜訪與經營習慣，開始獨立作業。</p></div>
+    <div class="tl-item"><div class="day">Day 30</div><h4>建立基本能力</h4><p>考取關鍵證照，掌握商品基礎與需求分析。</p></div>
+    <div class="tl-item"><div class="day">Day 60</div><h4>進入實戰</h4><p>導師陪同演練，累積實際面談經驗與問答。</p></div>
+    <div class="tl-item"><div class="day">Day 90</div><h4>建立工作節奏</h4><p>形成穩定拜訪習慣，順利開始獨立作業。</p></div>
   </div>
 
-  <h2>十大訓練模組<span class="en">Page 3: 10 Modules</span></h2>
-  <p class="note" style="margin:-4px 0 14px">點擊各模組可展開觀看詳細培訓焦點：</p>
+  <h2>十大訓練模組<span class="en">Page 3: 10 Modules Map</span></h2>
+  <p class="note" style="margin:-4px 0 14px">點擊各模組可展開詳細培訓重點：</p>
   <div class="modules-grid">
     <details class="mod-card"><summary><span class="num">01</span><span class="title">職業心態與職涯認知</span></summary><div class="mod-body">確立保險事業願景，建構正確的顧問式服務觀念。</div></details>
     <details class="mod-card"><summary><span class="num">02</span><span class="title">證照輔導與專業知識</span></summary><div class="mod-body">高效通過壽險、外幣、產險及投資型等基本與進階證照。</div></details>
@@ -468,21 +461,12 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
     <details class="mod-card"><summary><span class="num">10</span><span class="title">團隊管理與組織經營</span></summary><div class="mod-body">掌握帶人學程與輔導心法，從業務員晉升為組織企業家。</div></details>
   </div>
 
-  <h2>宸功系統<span class="en">Page 4: The 底層架構</span></h2>
-  <div class="card" style="margin-bottom:20px">
-    <p style="margin:0;font-size:16px;line-height:1.8"><b>90 天，是你進入這個行業的起點；宸功系統，才是你長期成長的底層架構。</b><br><span style="color:var(--muted);font-size:14px">這是一套貫穿業務能力、管理能力與組織經營的完整傳承系統，帶你從「就業」走向「創業」。</span></p>
-  </div>
-  <div class="sys-flow">
-    <div class="sys-node"><div class="label">新人階段</div><div class="desc">接受「宸功出擊 90 天」訓練，扎實基礎。</div></div>
-    <div class="sys-arrow">↓</div>
-    <div class="sys-node"><div class="label">獨立作業</div><div class="desc">運用十大模組與數位工具，實現穩定個人收入。</div></div>
-    <div class="sys-arrow">↓</div>
-    <div class="sys-node" style="border-left-color:var(--gold)"><div class="label">宸功系統</div><div class="desc">全面開啟「業務能力 × 管理能力 × 組織經營」三維賦能。</div></div>
-    <div class="sys-arrow">↓</div>
-    <div class="sys-node" style="border-left-color:var(--c1)"><div class="label">事業創業</div><div class="desc">成立個人通訊處，擁有可傳承的事業體與永續團隊。</div></div>
+  <h2>宸功系統：長期成長的底層架構<span class="en">Page 4: Architecture</span></h2>
+  <div class="card">
+    <p style="margin:0;font-size:16px;line-height:1.8"><b>90 天，是你進入這個行業的起點；宸功系統，才是你長期成長的底層架構。</b><br><span style="color:var(--muted);font-size:14px">一套貫穿業務能力、管理能力與組織經營的完整傳承系統。</span></p>
   </div>
 
-  <h2>廣宸真正想培養的是什麼人？<span class="en">Page 5: Who We Are Looking For</span></h2>
+  <h2>廣宸真正想培養的是什麼人？<span class="en">Page 5: Core Talent</span></h2>
   <div class="card" style="margin-bottom:18px;text-align:center">
     <h3 style="font-family:'Noto Serif TC',serif;font-size:22px;margin:0;color:var(--ink)">我們不是只想培養一個會賣保險的人。</h3>
   </div>
@@ -492,9 +476,12 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
     <div class="persona-card"><div class="big-title">會經營</div><div class="sub-title">精通創業</div><p>具備企業家思維，經營永續團隊事業。</p></div>
   </div>
 
+  <h2>結語：一份工作，三個階段<span class="en">Page 6: Final Call</span></h2>
   <div class="cta-box">
+    <div class="cta-stage">就業（把自己做好） → 管理（把別人帶好） → 創業（把組織經營好）</div>
     <h3>你想走到哪裡？</h3>
-    <p>如果你只想找一份工作，這裡可能不是唯一的選擇。<br>但如果你想看看自己能不能走得更遠，<b>廣宸願意陪你走一段。</b></p>
+    <p>如果你不想只找一份工作，歡迎來認識廣宸。<br>我們願意陪你走一段，看看你能走多遠。</p>
+    <a class="cta-btn" href="./index.html">了解廣宸團隊工具箱 →</a>
   </div>
 </section>
 
@@ -505,7 +492,7 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
   "use strict";
 
   var COLORS = ["#b8531a", "#6c7570", "#a9803f", "#2f5f7a", "#3f7a52"];
-  var CATEGORY_NAMES = ["事業願景","工作價值","合理收入","透明晉陞","為什麼是廣宸"];
+  var CATEGORY_NAMES = ["01. 未來與方向","02. 就業到創業","03. 累積與收入","04. 銷售與增才","05. 為什麼是廣宸"];
 
   var tabs = Array.prototype.slice.call(document.querySelectorAll("#nav button"));
   var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
@@ -683,7 +670,7 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
     setText("c-p1",nt(pa)); setText("c-p2",nt(pa)); setText("c-p3",nt(pa)); setText("c-p4",nt(pa));
     setText("c-y1",ye>0?nt(ye):"—");
     setText("c-t1",nt(t1)); setText("c-t2",nt(t2)); setText("c-t3",nt(t3)); setText("c-t4",nt(t4));
-    setText("sum-p",nt(prem)); setText("sum-fyc",nt(fyc)); setText("sum-total",nt(total));
+    setText("sum-total",nt(total));
     setText("sum-pct",prem>0?"＝ 年繳保費的 "+Math.round(total/prem*100)+"%":"＝ 請輸入保費");
   }
 
