@@ -312,6 +312,13 @@ body.pdfing #printArea{display:block!important;position:absolute;left:0;top:0;wi
   .stage-head{flex-direction:column;align-items:flex-start;gap:10px;}
   #botnav{margin:0 12px calc(10px + env(safe-area-inset-bottom));padding:10px;border-radius:20px;}
 }
+/* 圖側點擊導覽 */
+.diagram-shell{cursor:pointer;}
+.diagram-shell:active{opacity:.9;}
+.tap-hint{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-8px 4px 14px;font-size:12.5px;letter-spacing:.5px;color:var(--hint);}
+.tap-hint b{color:var(--gold-lt);font-weight:600;}
+.hl-tap{color:var(--gold-lt);font-weight:600;}
+@media (max-width:640px){.tap-hint{font-size:11.5px;margin-top:-4px;}}
 </style>
 </head>
 <body>
@@ -381,7 +388,7 @@ body.pdfing #printArea{display:block!important;position:absolute;left:0;top:0;wi
 <!-- ══ S1 風險確認 ══ -->
 <div class="screen" id="s1">
   <div class="stitle">人生收支曲線</div>
-  <div class="ssub">人生有 8 個關鍵階段。按下「下一步」，我們一站一站看懂風險藏在哪裡。</div>
+  <div class="ssub">人生有 8 個關鍵階段。點圖的<span class="hl-tap">右半＝下一步、左半＝回上一步</span>；看完按下方的「前往風險衡量」。</div>
 
   <div class="stage-head">
     <div class="stage-chip" id="stageChip">準備開始</div>
@@ -454,15 +461,17 @@ body.pdfing #printArea{display:block!important;position:absolute;left:0;top:0;wi
 
       <!-- stage8：醫療費用（橫跨各階段的共同風險） -->
       <g class="rstage" id="rstage8">
-        <line x1="285" y1="58" x2="301" y2="74" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="301" y1="58" x2="285" y2="74" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="293" y1="58" x2="293" y2="30" stroke="#d6645a" stroke-width="1.5" stroke-dasharray="3,2"/>
-        <text x="293" y="21" font-size="13" fill="#e08a81" text-anchor="middle" font-weight="700">醫療費用</text>
+        <line x1="254" y1="42" x2="270" y2="58" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="270" y1="42" x2="254" y2="58" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="262" y1="42" x2="262" y2="30" stroke="#d6645a" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="262" y="22" font-size="13" fill="#e08a81" text-anchor="middle" font-weight="700">醫療費用</text>
       </g>
     </svg>
   </div>
 
-  <div class="caption-box"><div class="caption-text" id="captionText">這張人生收支曲線，藏著 8 個關鍵點。按下「下一步」，我們一站一站看。</div></div>
+  <div class="tap-hint"><span>◀ <b>左半：回上一步</b></span><span><b>右半：下一步</b> ▶</span></div>
+
+  <div class="caption-box"><div class="caption-text" id="captionText">這張人生收支曲線，藏著 8 個關鍵點。點圖「右半」開始一站一站看，「左半」可以回上一步。</div></div>
 
 </div>
 
@@ -569,7 +578,7 @@ var STEPS=[
 ];
 
 var CAPTIONS=[
-  '這張人生收支曲線，藏著 8 個關鍵點。按下「下一步」，我們一站一站看。',
+  '這張人生收支曲線，藏著 8 個關鍵點。點圖的<strong>右半＝下一步</strong>、<strong>左半＝回上一步</strong>。',
   '人生是一條<strong>永不回頭的單行道</strong>——我們只會愈來愈老，不會愈來愈年輕。',
   '<strong>支出</strong>，從出生那一刻起就已經開始，直到離開的那一天，從未停止。',
   '但<strong>收入</strong>，只存在於就業到退休這段期間。',
@@ -701,16 +710,10 @@ function goBack(){if(step>0)go(step-1);}
 
 function updateMainBtn(){
   var btn=document.getElementById('mbtn');
-  if(step===1){
-    // 全域底部按鈕，讓它能在完成前或完成後均切換下一個畫面的狀態
-    btn.textContent=riskStage<TOTAL_RISK_STAGES?('下一步（'+riskStage+'/'+TOTAL_RISK_STAGES+'）→'):STEPS[step].next;
-  } else {
-    btn.textContent=STEPS[step].next;
-  }
+  btn.textContent=STEPS[step].next;
 }
 
 function handleNext(){
-  if(step===1&&riskStage<TOTAL_RISK_STAGES){advanceRisk();return;}
   if(step===0&&!birthCheck()){return;}
   if(step===4){go(0);return;}
   go(step+1);
@@ -719,6 +722,9 @@ function handleNext(){
 // ── S1 互動圖專屬控制 ──
 function advanceRisk(){
   if(riskStage<TOTAL_RISK_STAGES){riskStage++;renderRiskStage();}
+}
+function prevRisk(){
+  if(riskStage>0){riskStage--;renderRiskStage();}
 }
 function jumpRisk(n){
   if(n>=1&&n<=TOTAL_RISK_STAGES){riskStage=n;renderRiskStage();}
@@ -995,6 +1001,14 @@ function exportPDF(){
 initDrag();
 renderTop();
 renderRiskStage();
+
+  // 點圖控制：左半＝上一步、右半＝下一步
+  var ds=document.getElementById('diagramShell');
+  if(ds)ds.addEventListener('click',function(e){
+    var r=ds.getBoundingClientRect();
+    var x=e.clientX-r.left;
+    if(x<r.width/2){prevRisk();}else{advanceRisk();}
+  });
 
   // 點擊圓點可跳回任一階段
   var dots=document.getElementById("stageDots");
