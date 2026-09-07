@@ -23,8 +23,14 @@
   --danger:#d6645a;--blue:#5b9bd1;--r:14px;--rl:22px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);font-size:17px;}
-#shell{width:100vw;height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+
+/* 修正 iPad 橫向畫面被切到：固定 html, body，將滾動全權交給 #canvas */
+html,body{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  width:100%;height:100%;height:100dvh;overflow:hidden;
+  font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);font-size:17px;
+}
+#shell{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;
   background:radial-gradient(ellipse at top right,rgba(194,151,79,0.06),transparent 55%),var(--ink);}
 #pbar{height:4px;flex-shrink:0;background:rgba(255,255,255,0.06);}
 #pfill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-lt));transition:width .5s ease;}
@@ -32,7 +38,9 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 .logo{font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;}
 .page-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600;color:#fff;letter-spacing:1px;}
 .slbl{font-size:13px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-#canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 32px 32px;scroll-behavior:smooth;}
+
+/* 修正 iPad 橫向滾動底部邊距，確保不會被遮擋 */
+#canvas{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:8px 32px 80px;scroll-behavior:smooth;}
 .screen{max-width:920px;margin-left:auto;margin-right:auto;}
 #botnav{padding:16px 32px calc(20px + env(safe-area-inset-bottom));flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid var(--border);background:var(--ink);}
 .btn-next{flex:1;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#1a1208;font-weight:700;font-family:'Noto Serif TC',serif;font-size:18px;letter-spacing:1px;padding:18px 32px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(194,151,79,0.28);transition:all .2s;}
@@ -75,13 +83,9 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 .isb-t{font-size:15px;line-height:1.85;}
 .hl{color:var(--gold-lt);font-weight:600;}
 
-/* ── S1 風險確認（互動圖） ── */
-.diagram-shell{background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--rl);padding:18px 14px 8px;margin-bottom:18px;cursor:pointer;position:relative;transition:border-color .2s;}
-.diagram-shell:active{border-color:var(--gold-line);}
+/* ── S1 風險確認（互動圖與控制） ── */
+.diagram-shell{background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--rl);padding:18px 14px 8px;margin-bottom:18px;position:relative;}
 .diagram-shell svg text{font-family:'Noto Sans TC',sans-serif;}
-.tap-hint{position:absolute;bottom:10px;right:16px;font-size:12px;color:var(--hint);display:flex;align-items:center;gap:6px;}
-.tap-hint .pulse{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.6s infinite;}
-@keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
 .stage-dots{display:flex;gap:6px;justify-content:center;margin-bottom:16px;}
 .sdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.14);transition:all .3s;}
 .sdot.done{background:var(--gold);}
@@ -91,6 +95,23 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 .caption-text strong{color:var(--gold-lt);}
 .rstage{opacity:0;transition:opacity .5s ease;}
 .rstage.show{opacity:1;}
+
+/* 人生圖專屬切換按鈕 */
+.step-ctrl { display: flex; justify-content: center; gap: 16px; margin-top: 16px; margin-bottom: 24px; }
+.btn-step {
+  background: transparent; border: 1.5px solid var(--gold-line); color: var(--gold-lt);
+  border-radius: 50px; padding: 10px 24px; font-size: 15px; cursor: pointer; transition: all 0.2s;
+  font-family: 'Noto Sans TC', sans-serif; min-width: 120px;
+}
+.btn-step:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--border); }
+.btn-step:not(:disabled):active { background: var(--gold-dim); }
+
+/* 醫療費用新增卡片 */
+.med-card {
+  background: linear-gradient(135deg, var(--ink-mid), rgba(214,100,90,0.08));
+  border: 1.5px solid rgba(214,100,90,0.3); border-radius: var(--rl); padding: 24px; margin-top: 24px;
+}
+.med-card .tag { border-color: rgba(214,100,90,0.5); color: var(--danger); margin-bottom: 12px; display: inline-block;}
 
 /* ── S2 風險衡量 ── */
 .rlist{display:flex;flex-direction:column;gap:14px;margin-bottom:18px;}
@@ -197,23 +218,16 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
    橫向 iPad／寬螢幕優化
 ═══════════════════════════════ */
 @media (min-width:900px) and (orientation:landscape){
-  /* 基本資料：兩欄排列，避免單欄在寬螢幕被拉得很開 */
   .qlist{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;}
   .qcard:nth-child(1),.qcard:nth-child(3){grid-column:1;}
   .qcard:nth-child(2),.qcard:nth-child(4){grid-column:2;}
   .qcard:last-child{grid-column:1/-1;}
-
-  /* 整體說明文字放大，符合橫向 iPad 閱讀距離 */
   .ssub{font-size:18px;}
   .qtext{font-size:18px;}
   .qhint{font-size:14px;}
-
-  /* 方法與選擇（S3）：每項說明文字放大 */
   .scn{font-size:19px;}
   .scw{font-size:16px;line-height:1.75;}
   .nstit{font-size:23px;}
-
-  /* 總表與保費（S4）：說明與表格文字放大 */
   .sintro{font-size:18px;}
   .ntbl{font-size:16px;}
   .ntbl th{font-size:13px;}
@@ -221,15 +235,10 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
   .nprod{font-size:13.5px;}
   .dtl{font-size:16px;}
   .dtr{font-size:17px;}
-
-  /* 風險衡量（S2）卡片文字放大 */
   .rname{font-size:21px;}
   .rdesc{font-size:15.5px;}
-
-  /* 風險確認（S1）說明文字放大 */
   .caption-text{font-size:18px;}
 }
-
 @media (min-width:1100px) and (orientation:landscape){
   .screen{max-width:1040px;}
 }
@@ -302,7 +311,8 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
 
   <div class="stage-dots" id="stageDots"></div>
 
-  <div class="diagram-shell" id="diagramShell" onclick="advanceRisk()">
+  <!-- 人生圖區塊 (移除了原本 onclick) -->
+  <div class="diagram-shell" id="diagramShell">
     <svg viewBox="0 0 600 230" width="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="arrowhead" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
@@ -365,10 +375,23 @@ html,body{width:100%;height:100dvh;overflow:hidden;font-family:'Noto Sans TC',sa
         <text x="355" y="34" font-size="13" fill="#b89cda" text-anchor="middle" font-weight="700">失能長年病</text>
       </g>
     </svg>
-    <div class="tap-hint" id="tapHint"><span class="pulse"></span><span>點一下繼續</span></div>
+  </div>
+
+  <!-- 人生圖專屬 控制按鈕 -->
+  <div class="step-ctrl">
+    <button type="button" class="btn-step" id="btn-prev-risk" onclick="prevRisk()">← 前一步</button>
+    <button type="button" class="btn-step" id="btn-next-risk" onclick="advanceRisk()">下一步 →</button>
   </div>
 
   <div class="caption-box"><div class="caption-text" id="captionText">點一下圖表，開始了解人生的風險。</div></div>
+
+  <!-- 新增的 醫療費用 區塊 -->
+  <div class="med-card">
+    <div class="tag internal tag-danger">跨階段共同風險</div>
+    <div class="stitle" style="font-size:24px; color:#fff; margin-bottom:8px; margin-top:8px;">醫療費用</div>
+    <div class="ssub" style="margin-bottom:0; font-size:15px; color:var(--text);">就是在活的太短、活的太長、收入中斷、失能長年病時都可能遇到的問題，醫療費用。突發的龐大開銷，往往會瞬間侵蝕我們累積的資產與原本的財務規劃。</div>
+  </div>
+
 </div>
 
 <!-- ══ S2 風險衡量 ══ -->
@@ -458,14 +481,14 @@ var riskStage=0;
 var TOTAL_RISK_STAGES=7;
 var STEPS=[
   {lbl:'',next:'了解人生風險 →',title:''},
-  {lbl:'01 / 04',next:'下一步 →',title:'風險確認'},
+  {lbl:'01 / 04',next:'前往風險衡量 →',title:'風險確認'},
   {lbl:'02 / 04',next:'查看方法與選擇 →',title:'風險衡量'},
   {lbl:'03 / 04',next:'查看總表與保費 →',title:'方法與選擇'},
   {lbl:'04 / 04',next:'重新開始',title:'總表與保費'}
 ];
 
 var CAPTIONS=[
-  '點一下圖表，開始了解人生的風險。',
+  '點一下按鈕，開始了解人生的風險。',
   '人生是一條<strong>永不回頭的單行道</strong>——我們只會愈來愈老，不會愈來愈年輕。',
   '<strong>支出</strong>，從出生那一刻起就已經開始，直到離開的那一天，從未停止。',
   '但<strong>收入</strong>，只存在於就業到退休這段期間。',
@@ -561,7 +584,8 @@ function goBack(){if(step>0)go(step-1);}
 function updateMainBtn(){
   var btn=document.getElementById('mbtn');
   if(step===1){
-    btn.textContent=riskStage<TOTAL_RISK_STAGES?('下一步（'+riskStage+'/'+TOTAL_RISK_STAGES+'）→'):'前往風險衡量 →';
+    // 全域底部按鈕，讓它能在完成前或完成後均切換下一個畫面的狀態
+    btn.textContent=riskStage<TOTAL_RISK_STAGES?('下一步（'+riskStage+'/'+TOTAL_RISK_STAGES+'）→'):STEPS[step].next;
   } else {
     btn.textContent=STEPS[step].next;
   }
@@ -573,18 +597,25 @@ function handleNext(){
   go(step+1);
 }
 
-// ── S1 互動圖 ──
+// ── S1 互動圖專屬控制 ──
+function advanceRisk(){
+  if(riskStage<TOTAL_RISK_STAGES){riskStage++;renderRiskStage();}
+}
+function prevRisk(){
+  if(riskStage>0){riskStage--;renderRiskStage();}
+}
+
 function renderRiskStage(){
   for(var i=1;i<=TOTAL_RISK_STAGES;i++){
     var g=document.getElementById('rstage'+i);
     if(g)g.classList.toggle('show',i<=riskStage);
   }
-  // 支出線／收入線文字只在剛出現的那一階段顯示，進入下一動作就消失
   var expLbl=document.getElementById('expenseLabel');
   if(expLbl)expLbl.style.display=(riskStage===2)?'block':'none';
   var incLbl=document.getElementById('incomeLabel');
   if(incLbl)incLbl.style.display=(riskStage===3)?'block':'none';
   document.getElementById('captionText').innerHTML=CAPTIONS[riskStage];
+  
   var dotsWrap=document.getElementById('stageDots');
   var dotsHtml='';
   for(var d=1;d<=TOTAL_RISK_STAGES;d++){
@@ -592,12 +623,14 @@ function renderRiskStage(){
     dotsHtml+='<div class="'+cls+'"></div>';
   }
   dotsWrap.innerHTML=dotsHtml;
-  var hint=document.getElementById('tapHint');
-  if(hint)hint.style.display=riskStage<TOTAL_RISK_STAGES?'flex':'none';
+  
+  // 更新獨立的上下一步按鈕狀態
+  var btnPrev = document.getElementById('btn-prev-risk');
+  var btnNext = document.getElementById('btn-next-risk');
+  if(btnPrev) btnPrev.disabled = (riskStage === 0);
+  if(btnNext) btnNext.disabled = (riskStage === TOTAL_RISK_STAGES);
+
   updateMainBtn();
-}
-function advanceRisk(){
-  if(riskStage<TOTAL_RISK_STAGES){riskStage++;renderRiskStage();}
 }
 
 // ── syncCalc ──
@@ -638,13 +671,13 @@ function updateRank(){
   rankOrder=[];
   var names={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
   document.querySelectorAll('#rlist .rcard').forEach(function(el,i){el.querySelector('.rnum').textContent=i+1;el.classList.add('ranked');rankOrder.push(el.dataset.id);});
-  document.getElementById('rprev').textContent='您的擔心順序：'+rankOrder.map(function(r,i){return(i+1)+'. '+names[r];}).join('　');
+  document.getElementById('rprev').textContent='您的擔心順序：'+rankOrder.map(function(r,i){return(i+1)+'. '+names[r];}).join(' ');
 }
 
 // ── PLAN 定義 ──
 var PLANS={
   interrupt:{title:'收入中斷',ico:'⏸',subs:[
-    {name:'一般住院',         why:'住院期間公司多半停薪。不論疾病或意外需要住院，每月可領補貼彌補薪資缺口，讓家庭現金流不中斷。',    defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
+    {name:'一般住院',      why:'住院期間公司多半停薪。不論疾病或意外需要住院，每月可領補貼彌補薪資缺口，讓家庭現金流不中斷。',    defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
     {name:'意外無法工作',     why:'骨折等傷況可能只住院三天，但在家休養三個月甚至半年。在家休養期間同樣有補貼，每月約 3 萬元。', defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
     {name:'意外住院（綜合）', why:'意外到需要住院，同時觸發前兩項保障，合計給付，最嚴重情況下保障最充足。',                    defFn:function(s){var h=pf(getInputVal('interrupt',0))||s.mi;var w=pf(getInputVal('interrupt',1))||s.mi;return fmtN(h+w);},  unit:'元/月'}
   ]},
@@ -660,7 +693,7 @@ var PLANS={
   medical:{title:'醫療費用',ico:'🏥',subs:[
     {name:'住院醫療（實支實付）',why:'國人一次住院平均約 10 萬。自費手術材料動輒數十萬。花多少賠多少，解決最大的醫療費用風險。入住加護病房額度加倍。',defFn:function(s){return '20-40';},        unit:'萬/次'},
     {name:'病房費差額',          why:'健保房常沒空床。雙人房每日 1,500–2,500 元，單人房 3,000–6,000 元。讓你安心選擇適合的病房。',                          defFn:function(s){return '3000-6000';},     unit:'元/日'},
-    {name:'意外門診醫療',        why:'因意外受傷不需住院，連門診都可實支實付。含中醫復健，一次意外最高理賠 3 萬元。',                                          defFn:function(s){return '3';},             unit:'萬/次'}
+    {name:'意外門診醫療',        why:'因意外受傷不需住院，連門診都可實支實付。含中醫復健，一次意外最高理賠 3 萬元。',                                        defFn:function(s){return '3';},             unit:'萬/次'}
   ]}
 };
 
@@ -809,7 +842,7 @@ function exportPDF(){
 
   var html='<div class="pp-wrap">'
     +'<div class="pp-hd"><div><div class="pp-brand">Guardian · 宸功保險</div><div class="pp-title">保障規劃報告</div></div>'
-    +'<div class="pp-meta">'+(s.name?'<strong>'+s.name+' '+gLabel+'</strong><br>':'')+'保險年齡：'+(s.age||'—')+'歲　年收入：'+s.ai+'萬　月收入：'+fmtN(s.mi)+'元<br>製表：'+ds+'</div></div>'
+    +'<div class="pp-meta">'+(s.name?'<strong>'+s.name+' '+gLabel+'</strong><br>':'')+'保險年齡：'+(s.age||'—')+'歲 年收入：'+s.ai+'萬 月收入：'+fmtN(s.mi)+'元<br>製表：'+ds+'</div></div>'
     +'<div class="pp-principle"><strong>雙十原則：</strong>年保費上限 <strong>'+Math.round(s.ai*0.1*10)/10+'萬元/年</strong>（年收入×10%）；壽險最低保額 <strong>'+Math.round(s.ai*10)+'萬元</strong>（年收入×10倍）</div>'
     +'<div class="pp-2col">'
     +'<div class="pp-needs">'
@@ -818,7 +851,7 @@ function exportPDF(){
     +'</div>'
     +premSec
     +'</div>'
-    +'<div class="pp-footer"><span>本報告為保障需求分析，實際保費依投保時年齡健康狀況及費率為準。</span><span>宸功保險　'+ds+'</span></div>'
+    +'<div class="pp-footer"><span>本報告為保障需求分析，實際保費依投保時年齡健康狀況及費率為準。</span><span>宸功保險 '+ds+'</span></div>'
     +'</div>';
 
   document.getElementById('printArea').innerHTML=html;
