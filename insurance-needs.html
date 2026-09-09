@@ -468,8 +468,6 @@ body.pdfing #printArea{display:block!important;position:absolute;left:0;top:0;wi
 
   <div class="tap-hint"><span>◀ <b>左半：回上一步</b></span><span><b>右半：下一步</b> ▶</span></div>
 
-  <div class="caption-box"><div class="caption-text" id="captionText">這張人生收支曲線，藏著 8 個關鍵點。點圖「右半」開始一站一站看，「左半」可以回上一步。</div></div>
-
 </div>
 
 <!-- ══ S2 風險衡量 ══ -->
@@ -738,7 +736,7 @@ function renderRiskStage(){
   if(incLbl)incLbl.style.display=(riskStage===3)?'block':'none';
   document.getElementById('captionText').innerHTML=CAPTIONS[riskStage];
   var chip=document.getElementById('stageChip');
-  if(chip)chip.textContent=(riskStage===0)?('共 '+TOTAL_RISK_STAGES+' 個階段'):('STEP '+riskStage+' / '+TOTAL_RISK_STAGES);
+  if(chip)chip.textContent=(riskStage===0)?('共 '+TOTAL_RISK_STAGES+' 個步驟'):('STEP '+riskStage+' / '+TOTAL_RISK_STAGES);
   
   var dotsWrap=document.getElementById('stageDots');
   var dotsHtml='';
