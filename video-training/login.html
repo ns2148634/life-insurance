@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="影片研習">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<title>登入｜影片研習</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap" style="max-width:420px; padding-top:12vh;">
+  <div class="card">
+    <h1 style="margin-top:0; font-size:1.2rem;">業務員影片研習</h1>
+    <p class="dim" style="margin-top:-6px;">請使用主管配發的帳號登入</p>
+    <div id="err" class="error" style="display:none;"></div>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required autocomplete="username">
+      <input type="password" id="password" placeholder="密碼" required autocomplete="current-password">
+      <button type="submit" id="submitBtn" style="width:100%;">登入</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) location.href = "videos.html";
+})();
+
+const form = document.getElementById("loginForm");
+const errBox = document.getElementById("err");
+const submitBtn = document.getElementById("submitBtn");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  errBox.style.display = "none";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "登入中…";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errBox.textContent = "帳號或密碼錯誤，請確認後再試一次";
+    errBox.style.display = "block";
+    submitBtn.disabled = false;
+    submitBtn.textContent = "登入";
+    return;
+  }
+  location.href = "videos.html";
+});
+</script>
+</body>
+</html>

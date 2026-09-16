@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="影片研習">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<title>影片研習｜宸功保險</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>影片研習</h1>
+    <div class="who">
+      <span id="whoami">載入中…</span>
+      <button class="secondary" id="logoutBtn">登出</button>
+    </div>
+  </header>
+  <div id="list">
+    <p class="dim">載入影片清單中…</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { location.href = "login.html"; return; }
+  const user = session.user;
+
+  const { data: profile } = await sb.from("profiles").select("full_name").eq("id", user.id).single();
+  document.getElementById("whoami").textContent = profile?.full_name || user.email;
+
+  const [{ data: videos }, { data: progressRows }] = await Promise.all([
+    sb.from("videos").select("*").order("sort_order", { ascending: true }),
+    sb.from("watch_progress").select("*").eq("user_id", user.id)
+  ]);
+
+  const progressMap = {};
+  (progressRows || []).forEach(p => { progressMap[p.video_id] = p; });
+
+  const listEl = document.getElementById("list");
+  if (!videos || videos.length === 0) {
+    listEl.innerHTML = '<p class="dim">目前還沒有上架的影片</p>';
+    return;
+  }
+
+  listEl.innerHTML = videos.map(v => {
+    const p = progressMap[v.id];
+    const percent = p ? Math.min(100, Math.round(p.percent)) : 0;
+    const done = !!(p && p.completed_at);
+    return `
+      <a class="card" href="watch.html?id=${v.id}" style="display:block; color:inherit;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong>${escapeHtml(v.title)}</strong>
+          <span class="badge ${done ? "done" : ""}">${done ? "已完成" : percent > 0 ? "進行中" : "尚未開始"}</span>
+        </div>
+        ${v.description ? `<div class="dim" style="margin-top:6px;">${escapeHtml(v.description)}</div>` : ""}
+        <div class="progress-bar"><span style="width:${percent}%"></span></div>
+        <div class="dim">${percent}%</div>
+      </a>`;
+  }).join("");
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  location.href = "login.html";
+});
+
+init();
+</script>
+</body>
+</html>

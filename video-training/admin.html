@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="影片研習">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<title>管理後台｜影片研習完成度</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap" style="max-width:1000px;">
+  <header class="top">
+    <h1>團隊觀看完成度</h1>
+    <div class="who">
+      <a href="videos.html">回影片清單</a>
+      <button class="secondary" id="logoutBtn">登出</button>
+    </div>
+  </header>
+  <div id="content"><p class="dim">載入中…</p></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { location.href = "login.html"; return; }
+
+  const { data: myProfile } = await sb.from("profiles").select("is_admin").eq("id", session.user.id).single();
+  if (!myProfile || !myProfile.is_admin) {
+    document.getElementById("content").innerHTML = '<p class="error">你沒有權限查看這個頁面</p>';
+    return;
+  }
+
+  const [{ data: videos }, { data: profiles }, { data: progress }] = await Promise.all([
+    sb.from("videos").select("*").order("sort_order", { ascending: true }),
+    sb.from("profiles").select("*").order("full_name", { ascending: true }),
+    sb.from("watch_progress").select("*")
+  ]);
+
+  const key = (u, v) => u + "|" + v;
+  const map = {};
+  (progress || []).forEach(p => { map[key(p.user_id, p.video_id)] = p; });
+
+  const users = (profiles || []).filter(p => !p.is_admin);
+
+  if (!videos?.length || !users.length) {
+    document.getElementById("content").innerHTML = '<p class="dim">目前還沒有影片或業務員資料</p>';
+    return;
+  }
+
+  let html = '<div style="overflow-x:auto;"><table><thead><tr><th style="text-align:left;">業務員</th>';
+  videos.forEach(v => { html += `<th>${escapeHtml(v.title)}</th>`; });
+  html += "</tr></thead><tbody>";
+
+  users.forEach(u => {
+    html += `<tr><td class="name">${escapeHtml(u.full_name || u.id)}</td>`;
+    videos.forEach(v => {
+      const p = map[key(u.id, v.id)];
+      const percent = p ? Math.round(p.percent) : 0;
+      const done = !!(p && p.completed_at);
+      html += `<td>${done ? "✅" : percent > 0 ? percent + "%" : "—"}</td>`;
+    });
+    html += "</tr>";
+  });
+  html += "</tbody></table></div>";
+  document.getElementById("content").innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  location.href = "login.html";
+});
+
+init();
+</script>
+</body>
+</html>

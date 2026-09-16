@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="影片研習">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<title>觀看中｜影片研習</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  #playerBox { position: relative; width: 100%; padding-top: 56.25%; border-radius: 14px; overflow: hidden; }
+  #playerBox iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="videos.html">← 返回清單</a>
+    <span class="dim" id="statusText"></span>
+  </header>
+  <h1 id="title" style="font-size:1.15rem;">載入中…</h1>
+  <div id="playerBox"><div id="player"></div></div>
+  <div class="progress-bar" style="margin-top:16px;"><span id="bar" style="width:0%"></span></div>
+  <div class="dim" id="percentText">0%</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const COMPLETE_THRESHOLD = 0.9; // 看滿 90% 算完成
+
+let user, video, ytPlayer, saveTimer;
+let maxWatchedSec = 0;
+let alreadyCompleted = false;
+
+const videoId = new URLSearchParams(location.search).get("id");
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { location.href = "login.html"; return; }
+  user = session.user;
+
+  if (!videoId) { document.getElementById("title").textContent = "找不到影片"; return; }
+
+  const { data: v, error } = await sb.from("videos").select("*").eq("id", videoId).single();
+  if (error || !v) { document.getElementById("title").textContent = "找不到影片"; return; }
+  video = v;
+  document.getElementById("title").textContent = video.title;
+
+  const { data: existing } = await sb.from("watch_progress")
+    .select("*").eq("user_id", user.id).eq("video_id", video.id).maybeSingle();
+  if (existing) {
+    maxWatchedSec = existing.watched_sec || 0;
+    alreadyCompleted = !!existing.completed_at;
+    updateBar(existing.percent || 0);
+  }
+
+  loadYouTubeApi();
+}
+
+function loadYouTubeApi() {
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.body.appendChild(tag);
+  window.onYouTubeIframeAPIReady = () => {
+    ytPlayer = new YT.Player("player", {
+      videoId: video.youtube_id,
+      playerVars: { rel: 0, modestbranding: 1 },
+      events: {
+        onReady: () => {
+          saveTimer = setInterval(saveProgress, 10000);
+        },
+        onStateChange: (e) => {
+          if (e.data === YT.PlayerState.ENDED) saveProgress(true);
+        }
+      }
+    });
+  };
+}
+
+async function saveProgress(forceComplete) {
+  if (!ytPlayer || typeof ytPlayer.getCurrentTime !== "function") return;
+  const current = Math.floor(ytPlayer.getCurrentTime());
+  const duration = video.duration_sec || Math.floor(ytPlayer.getDuration()) || 1;
+  maxWatchedSec = Math.max(maxWatchedSec, current);
+  let percent = Math.min(100, (maxWatchedSec / duration) * 100);
+  if (forceComplete) percent = 100;
+
+  const isComplete = alreadyCompleted || percent >= COMPLETE_THRESHOLD * 100;
+  if (isComplete) alreadyCompleted = true;
+
+  updateBar(percent);
+
+  await sb.from("watch_progress").upsert({
+    user_id: user.id,
+    video_id: video.id,
+    watched_sec: maxWatchedSec,
+    percent: percent,
+    completed_at: isComplete ? new Date().toISOString() : null,
+    last_watched_at: new Date().toISOString()
+  }, { onConflict: "user_id,video_id" });
+}
+
+function updateBar(percent) {
+  const p = Math.round(percent);
+  document.getElementById("bar").style.width = p + "%";
+  document.getElementById("percentText").textContent = p + "%" + (alreadyCompleted ? "（已完成）" : "");
+}
+
+window.addEventListener("beforeunload", () => { if (ytPlayer) saveProgress(); });
+
+init();
+</script>
+</body>
+</html>
