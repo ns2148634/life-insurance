@@ -301,7 +301,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield;}
 /* PDF 產生時切換到白底報表版型 */
 body.pdfing .screen{display:none!important;}
 body.pdfing #botnav,body.pdfing #pbar,body.pdfing #topbar{display:none!important;}
-body.pdfing #printArea{display:block!important;position:absolute;left:0;top:0;width:1123px;background:#fff;z-index:50;}
+/* 注意：#printArea 必須留在文檔流（position:static），
+   因為 html2pdf 會複製一份 #printArea 放進自己的 container 再截圖，
+   若用 absolute 會讓該 container 高度變 0 → 產生空白 PDF。 */
+body.pdfing #canvas{visibility:hidden;}
+body.pdfing #printArea{display:block!important;position:static;left:auto;top:auto;width:100%;background:#fff;}
 /* 手機直向收斂 */
 @media (max-width:760px){
   #topbar{padding:12px 14px 10px;gap:10px;}
@@ -539,7 +543,7 @@ body.pdfing #printArea{display:block!important;position:absolute;left:0;top:0;wi
     </div>
   </div>
 
-  <button class="pdfbtn" onclick="exportPDF()">📄 匯出保障規劃報告（PDF）</button>
+  <button class="pdfbtn" id="pdfbtn" onclick="exportPDF()">📄 匯出保障規劃報告（PDF）</button>
 </div>
 
 <div id="printArea"></div>
