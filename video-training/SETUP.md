@@ -80,5 +80,7 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 | 重設密碼出現 `function extensions.crypt(text, text) does not exist` | pgcrypto 不在 `extensions` schema。執行：`create extension if not exists pgcrypto with schema extensions;`，若已安裝在別處請改該函式內的 schema 前綴。 |
 | 重設密碼出現 `permission denied for function admin_reset_user_password` | 呼叫者不是管理員（`profiles.is_admin = false`），或該函式的 grant 未生效。 |
 | 重設密碼後無法用新密碼登入 | 代表直接寫 `auth.users.encrypted_password` 在此專案不相容。請改用 Dashboard → Authentication → Users → 該使用者 → Reset password 重設，並回報以便改走 Admin API（Edge Function）。 |
+| 重設密碼出現 `Could not find the function public.admin_reset_user_password(...)` | PostgREST 的 schema 快取還沒更新。在 SQL Editor 執行：`notify pgrst, 'reload schema';` 再重試。 |
 | 業務員登入後被導回登入頁 | Session 遺失（例如瀏覽器隱私模式、或 `config.js` 的 URL / anon key 有誤）。 |
+
 
