@@ -21,6 +21,7 @@
     <h1>影片研習</h1>
     <div class="who">
       <span id="whoami">載入中…</span>
+      <a href="profile.html">我的帳號</a>
       <button class="secondary" id="logoutBtn">登出</button>
     </div>
   </header>
@@ -39,8 +40,9 @@ async function init() {
   if (!session) { location.href = "login.html"; return; }
   const user = session.user;
 
-  const { data: profile } = await sb.from("profiles").select("full_name").eq("id", user.id).single();
-  document.getElementById("whoami").textContent = profile?.full_name || user.email;
+  const { data: profile } = await sb.from("profiles").select("full_name, email").eq("id", user.id).maybeSingle();
+  document.getElementById("whoami").textContent = profile?.full_name || profile?.email || user.email;
+
 
   const [{ data: videos }, { data: progressRows }] = await Promise.all([
     sb.from("videos").select("*").order("sort_order", { ascending: true }),

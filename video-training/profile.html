@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="影片研習">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<title>我的帳號｜影片研習</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap" style="max-width:520px;">
+  <header class="top">
+    <h1>我的帳號</h1>
+    <div class="who">
+      <a href="videos.html">回影片清單</a>
+      <button class="secondary" id="logoutBtn">登出</button>
+    </div>
+  </header>
+
+  <div class="card">
+    <h2 class="card-title">個人資料</h2>
+    <div id="infoMsg" style="display:none;"></div>
+    <form id="infoForm">
+      <label class="field" for="emailInput">Email（登入帳號，不可修改）</label>
+      <input type="email" id="emailInput" readonly>
+
+      <label class="field" for="nameInput">姓名</label>
+      <input type="text" id="nameInput" maxlength="40" placeholder="請填寫你的姓名" required>
+
+      <button type="submit" id="saveInfoBtn" style="width:100%;">儲存</button>
+    </form>
+    <p class="dim" style="margin-bottom:0;">姓名會顯示在影片清單與主管的團隊完成度報表。</p>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">更改密碼</h2>
+    <div id="pwMsg" style="display:none;"></div>
+    <form id="pwForm">
+      <label class="field" for="curPw">目前密碼</label>
+      <input type="password" id="curPw" required autocomplete="current-password">
+
+      <label class="field" for="newPw">新密碼（至少 8 個字元）</label>
+      <input type="password" id="newPw" minlength="8" required autocomplete="new-password">
+
+      <label class="field" for="newPw2">再次輸入新密碼</label>
+      <input type="password" id="newPw2" minlength="8" required autocomplete="new-password">
+
+      <label class="check"><input type="checkbox" id="signOutOthers" checked>同時登出其他裝置的登入狀態</label>
+
+      <button type="submit" id="savePwBtn" style="width:100%;">變更密碼</button>
+    </form>
+    <p class="dim" style="margin-bottom:0;">忘記目前密碼時，請洽主管協助重設。</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let user;
+
+const infoMsg = document.getElementById("infoMsg");
+const pwMsg = document.getElementById("pwMsg");
+
+function showMsg(el, text, ok) {
+  el.className = ok ? "ok" : "error";
+  el.textContent = text;
+  el.style.display = "block";
+}
+function clearMsg(el) {
+  el.style.display = "none";
+  el.textContent = "";
+}
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { location.href = "login.html"; return; }
+  user = session.user;
+
+  document.getElementById("emailInput").value = user.email || "";
+
+  const { data: profile, error } = await sb.from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    showMsg(infoMsg, "讀取個人資料失敗：" + error.message, false);
+    return;
+  }
+  document.getElementById("nameInput").value = profile?.full_name || "";
+}
+
+// ---- 儲存姓名 ----------------------------------------------------------
+document.getElementById("infoForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  clearMsg(infoMsg);
+
+  const btn = document.getElementById("saveInfoBtn");
+  const fullName = document.getElementById("nameInput").value.trim();
+  if (!fullName) { showMsg(infoMsg, "請填寫姓名", false); return; }
+
+  btn.disabled = true;
+  btn.textContent = "儲存中…";
+
+  // 有資料列就更新、沒有就新增（舊帳號可能是主管手動建立，沒有 profiles 資料列）
+  const { error } = await sb.from("profiles")
+    .upsert({ id: user.id, full_name: fullName, email: user.email }, { onConflict: "id" });
+
+  if (error) {
+    showMsg(infoMsg, "儲存失敗：" + error.message, false);
+  } else {
+    // 同步寫進 auth 的 user metadata，方便日後回填與主管辨識
+    const { error: metaErr } = await sb.auth.updateUser({ data: { full_name: fullName } });
+    showMsg(infoMsg, metaErr
+      ? "姓名已儲存（metadata 同步失敗，不影響使用）"
+      : "姓名已儲存，回影片清單即可看到", true);
+  }
+
+  btn.disabled = false;
+  btn.textContent = "儲存";
+});
+
+// ---- 更改密碼 ----------------------------------------------------------
+document.getElementById("pwForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  clearMsg(pwMsg);
+
+  const btn = document.getElementById("savePwBtn");
+  const cur = document.getElementById("curPw").value;
+  const np = document.getElementById("newPw").value;
+  const np2 = document.getElementById("newPw2").value;
+
+  if (np.length < 8) { showMsg(pwMsg, "新密碼至少需要 8 個字元", false); return; }
+  if (np !== np2) { showMsg(pwMsg, "兩次輸入的新密碼不一致", false); return; }
+  if (np === cur) { showMsg(pwMsg, "新密碼不可與目前密碼相同", false); return; }
+
+  btn.disabled = true;
+  btn.textContent = "處理中…";
+
+  // 先用目前密碼登入一次：除了驗證身分，也讓 session 變成「剛登入」，
+  // 這樣即使專案開啟「更改密碼需重新驗證」也能順利通過。
+  const { error: verifyErr } = await sb.auth.signInWithPassword({
+    email: user.email,
+    password: cur
+  });
+
+  if (verifyErr) {
+    showMsg(pwMsg, "目前密碼不正確，請重新輸入", false);
+    btn.disabled = false;
+    btn.textContent = "變更密碼";
+    return;
+  }
+
+  const { error } = await sb.auth.updateUser({ password: np });
+
+  if (error) {
+    const weak = error.code === "weak_password" || /password/i.test(error.message || "");
+    showMsg(pwMsg, weak ? "新密碼不符合規則：" + error.message : "變更失敗：" + error.message, false);
+  } else {
+    document.getElementById("curPw").value = "";
+    document.getElementById("newPw").value = "";
+    document.getElementById("newPw2").value = "";
+
+    if (document.getElementById("signOutOthers").checked) {
+      // 讓其他裝置的登入狀態失效（失敗不影響「密碼已變更」這件事）
+      await sb.auth.signOut({ scope: "others" });
+    }
+    showMsg(pwMsg, "密碼已變更，下次請用新密碼登入", true);
+  }
+
+  btn.disabled = false;
+  btn.textContent = "變更密碼";
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  location.href = "login.html";
+});
+
+init();
+</script>
+</body>
+</html>

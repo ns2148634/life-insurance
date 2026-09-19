@@ -21,6 +21,7 @@
     <h1>團隊觀看完成度</h1>
     <div class="who">
       <a href="videos.html">回影片清單</a>
+      <a href="profile.html">我的帳號</a>
       <button class="secondary" id="logoutBtn">登出</button>
     </div>
   </header>
@@ -32,55 +33,166 @@
 <script>
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+let videos = [];
+let users = [];
+let progressMap = {};
+let resetTarget = null;   // 目前選取要重設密碼的業務員
+
+const contentEl = document.getElementById("content");
+
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { location.href = "login.html"; return; }
 
-  const { data: myProfile } = await sb.from("profiles").select("is_admin").eq("id", session.user.id).single();
+  const { data: myProfile, error: profErr } = await sb.from("profiles")
+    .select("is_admin").eq("id", session.user.id).maybeSingle();
+
+  if (profErr) {
+    contentEl.innerHTML = '<p class="error">讀取權限失敗：' + escapeHtml(profErr.message) + "</p>";
+    return;
+  }
   if (!myProfile || !myProfile.is_admin) {
-    document.getElementById("content").innerHTML = '<p class="error">你沒有權限查看這個頁面</p>';
+    contentEl.innerHTML = '<p class="error">你沒有權限查看這個頁面</p>';
     return;
   }
 
-  const [{ data: videos }, { data: profiles }, { data: progress }] = await Promise.all([
+  const [{ data: vids }, { data: profiles }, { data: progress }] = await Promise.all([
     sb.from("videos").select("*").order("sort_order", { ascending: true }),
     sb.from("profiles").select("*").order("full_name", { ascending: true }),
     sb.from("watch_progress").select("*")
   ]);
 
+  videos = vids || [];
+  users = (profiles || []).filter(p => !p.is_admin);
+
   const key = (u, v) => u + "|" + v;
-  const map = {};
-  (progress || []).forEach(p => { map[key(p.user_id, p.video_id)] = p; });
+  progressMap = {};
+  (progress || []).forEach(p => { progressMap[key(p.user_id, p.video_id)] = p; });
 
-  const users = (profiles || []).filter(p => !p.is_admin);
-
-  if (!videos?.length || !users.length) {
-    document.getElementById("content").innerHTML = '<p class="dim">目前還沒有影片或業務員資料</p>';
-    return;
-  }
-
-  let html = '<div style="overflow-x:auto;"><table><thead><tr><th style="text-align:left;">業務員</th>';
-  videos.forEach(v => { html += `<th>${escapeHtml(v.title)}</th>`; });
-  html += "</tr></thead><tbody>";
-
-  users.forEach(u => {
-    html += `<tr><td class="name">${escapeHtml(u.full_name || u.id)}</td>`;
-    videos.forEach(v => {
-      const p = map[key(u.id, v.id)];
-      const percent = p ? Math.round(p.percent) : 0;
-      const done = !!(p && p.completed_at);
-      html += `<td>${done ? "✅" : percent > 0 ? percent + "%" : "—"}</td>`;
-    });
-    html += "</tr>";
-  });
-  html += "</tbody></table></div>";
-  document.getElementById("content").innerHTML = html;
+  render();
 }
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[c]));
+}
+
+// 還沒填姓名時，退而顯示 email（舊版會顯示 UUID，很難辨識）
+function displayName(u) {
+  return u.full_name || u.email || u.id;
+}
+
+function randomPassword(len) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  const arr = new Uint32Array(len);
+  crypto.getRandomValues(arr);
+  return Array.from(arr, n => chars[n % chars.length]).join("");
+}
+
+function render() {
+  if (!videos.length || !users.length) {
+    contentEl.innerHTML = '<p class="dim">目前還沒有影片或業務員資料</p>';
+    return;
+  }
+
+  let html = "";
+
+  // ---- 重設密碼面板 ----
+  if (resetTarget) {
+    html += `
+      <div class="card">
+        <h2 class="card-title">重設密碼：${escapeHtml(displayName(resetTarget))}</h2>
+        <div id="resetMsg" style="display:none;"></div>
+        <label class="field" for="tempPw">臨時密碼（至少 8 個字元）</label>
+        <input type="text" id="tempPw" placeholder="輸入或按下方按鈕產生" autocomplete="off">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="genPwBtn" class="secondary">產生隨機密碼</button>
+          <button type="button" id="confirmResetBtn">確認重設</button>
+          <button type="button" id="cancelResetBtn" class="secondary">取消</button>
+        </div>
+        <p class="dim" style="margin-bottom:0;">
+          重設後該業務員會被強制登出；請把臨時密碼提供給他，並請他登入後到「我的帳號」自行更改。
+        </p>
+      </div>`;
+  }
+
+  // ---- 完成度表格 ----
+  html += '<div style="overflow-x:auto;"><table><thead><tr><th style="text-align:left;">業務員</th>';
+  videos.forEach(v => { html += `<th>${escapeHtml(v.title)}</th>`; });
+  html += "<th>操作</th></tr></thead><tbody>";
+
+  users.forEach(u => {
+    html += `<tr><td class="name">${escapeHtml(displayName(u))}</td>`;
+    videos.forEach(v => {
+      const p = progressMap[u.id + "|" + v.id];
+      const percent = p ? Math.round(p.percent) : 0;
+      const done = !!(p && p.completed_at);
+      html += `<td>${done ? "✅" : percent > 0 ? percent + "%" : "—"}</td>`;
+    });
+    html += `<td><button type="button" class="secondary small" data-reset="${u.id}">重設密碼</button></td></tr>`;
+  });
+
+  html += "</tbody></table></div>";
+  contentEl.innerHTML = html;
+
+  bindEvents();
+}
+
+function bindEvents() {
+  contentEl.querySelectorAll("[data-reset]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      resetTarget = users.find(u => u.id === btn.dataset.reset) || null;
+      render();
+    });
+  });
+
+  const cancelBtn = document.getElementById("cancelResetBtn");
+  if (cancelBtn) cancelBtn.addEventListener("click", () => { resetTarget = null; render(); });
+
+  const genBtn = document.getElementById("genPwBtn");
+  if (genBtn) genBtn.addEventListener("click", () => {
+    document.getElementById("tempPw").value = randomPassword(10);
+  });
+
+  const confirmBtn = document.getElementById("confirmResetBtn");
+  if (confirmBtn) confirmBtn.addEventListener("click", () => doReset(confirmBtn));
+}
+
+// ---- 呼叫 SQL 內的 admin_reset_user_password（security definer，只有 admin 能成功）----
+async function doReset(btn) {
+  const msg = document.getElementById("resetMsg");
+  const input = document.getElementById("tempPw");
+  const pw = input.value.trim();
+
+  msg.style.display = "none";
+  if (pw.length < 8) {
+    msg.className = "error";
+    msg.textContent = "臨時密碼至少需要 8 個字元";
+    msg.style.display = "block";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "處理中…";
+
+  const { data, error } = await sb.rpc("admin_reset_user_password", {
+    p_user_id: resetTarget.id,
+    p_new_password: pw
+  });
+
+  if (error) {
+    msg.className = "error";
+    msg.textContent = "重設失敗：" + error.message;
+  } else {
+    msg.className = "ok";
+    msg.innerHTML = `已重設 ${escapeHtml(data || "")} 的密碼。臨時密碼：`
+      + `<span class="code-box">${escapeHtml(pw)}</span>`;
+  }
+  msg.style.display = "block";
+
+  btn.disabled = false;
+  btn.textContent = "確認重設";
 }
 
 document.getElementById("logoutBtn").addEventListener("click", async () => {
