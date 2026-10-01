@@ -151,6 +151,14 @@ a{color:inherit;}
   color:#9fb3b3;
   letter-spacing:.05em;
 }
+.brand .back-home{
+  display:inline-block;margin-top:12px;padding:5px 13px;
+  font-size:12px;letter-spacing:.06em;
+  color:var(--bronze-light);text-decoration:none;
+  border:1px solid var(--line-dark);border-radius:var(--radius);
+  transition:background .18s ease,color .18s ease,border-color .18s ease;
+}
+.brand .back-home:hover{background:var(--bronze);border-color:var(--bronze);color:var(--ink-dark);}
 
 nav.toc{padding:6px 0;}
 nav.toc .grp-label{
@@ -198,6 +206,25 @@ nav.toc a.active{
   font-size:18px;
   box-shadow:var(--shadow);
 }
+
+/* 手機／平板：右上角固定「回主畫面」（左上角是選單鈕，故放右側） */
+.home-fab{
+  display:none;
+  position:fixed;
+  top:14px; right:14px;
+  z-index:60;
+  height:42px;padding:0 16px;
+  border-radius:50px;
+  background:var(--ink-dark);
+  color:var(--ivory);
+  font-size:12.5px;letter-spacing:.06em;
+  text-decoration:none;
+  align-items:center;justify-content:center;
+  box-shadow:var(--shadow);
+}
+@media (max-width:900px){ .home-fab{display:inline-flex;} }
+/* 目錄抽屜打開時，避免浮動按鈕壓在抽屜內容上（不支援 :has() 的瀏覽器會自動忽略此行） */
+body:has(.sidebar.open) .home-fab{display:none;}
 
 .main{flex:1;min-width:0;}
 
@@ -721,6 +748,7 @@ footer b{color:var(--bronze-light);}
 <body>
 
 <button class="menu-toggle" id="menuToggle" aria-label="開啟目錄">☰</button>
+<a class="home-fab" href="./index.html">← 回主畫面</a>
 <div class="overlay" id="overlay"></div>
 
 <div class="shell">
@@ -731,6 +759,7 @@ footer b{color:var(--bronze-light);}
       <div class="mark">宸功保險 CHENGGONG</div>
       <h1>宸功出擊<br>90天</h1>
       <p>業務員啟動手冊・線上版</p>
+      <a class="back-home" href="./index.html">← 回主畫面</a>
     </div>
     <nav class="toc" id="toc">
       <div class="grp-label">開場</div>

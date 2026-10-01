@@ -22,6 +22,9 @@
   header h1{font-size:24px;font-weight:800;letter-spacing:.5px;margin:0;}
   header .sub{color:var(--ink-soft);font-size:12.5px;margin-top:5px;}
 
+  header .hrow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  header .home-link{flex:none;display:inline-block;text-decoration:none;font-size:12.5px;font-weight:700;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;box-shadow:var(--shadow);}
+  header .home-link:hover{color:var(--gold);border-color:var(--gold-soft);}
   .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-top:16px;}
   .card .head{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
   .card .head h2{margin:0;font-size:14.5px;font-weight:800;letter-spacing:.5px;}
@@ -112,8 +115,13 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>業務組織收入試算</h1>
-    <div class="sub">115 年上半年・各職級各項獎金辦法（單位／業績／特別／升級／輔導／報酬／獎金二）</div>
+    <div class="hrow">
+      <div>
+        <h1>業務組織收入試算</h1>
+        <div class="sub">115 年上半年・各職級各項獎金辦法（單位／業績／特別／升級／輔導／報酬／獎金二）</div>
+      </div>
+      <a class="home-link" href="./index.html">← 回主畫面</a>
+    </div>
   </header>
 
   <div class="card">

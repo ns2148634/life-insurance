@@ -241,6 +241,8 @@ html,body{
 .tb-brand{display:flex;align-items:center;gap:12px;min-width:0;}
 .tb-crest{width:36px;height:36px;flex-shrink:0;border-radius:10px;border:1px solid var(--gold-line);box-shadow:0 2px 10px rgba(0,0,0,.3);}
 .tb-name{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:600;letter-spacing:1px;color:#fff;white-space:nowrap;}
+.tb-home{flex:none;font-size:12.5px;letter-spacing:.5px;color:var(--hint);text-decoration:none;border:1px solid var(--border);border-radius:50px;padding:6px 13px;white-space:nowrap;transition:all .25s;}
+.tb-home:hover{color:#fff;border-color:var(--gold-line);background:var(--gold-dim);}
 .tb-steps{display:flex;align-items:center;gap:2px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end;}
 .ts{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:50px;color:var(--hint);font-size:12.5px;letter-spacing:.5px;white-space:nowrap;transition:all .25s;border:1px solid transparent;}
 .ts i{font-style:normal;width:21px;height:21px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:11.5px;border:1px solid var(--border);flex-shrink:0;}
@@ -311,6 +313,7 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
   #topbar{padding:12px 14px 10px;gap:10px;}
   .tb-crest{width:28px;height:28px;border-radius:8px;}
   .tb-name{font-size:13.5px;letter-spacing:.5px;}
+  .tb-home{font-size:11.5px;padding:5px 10px;}
   .ts{padding:6px 8px;}
   .ts b{display:none;}
   .stage-head{flex-direction:column;align-items:flex-start;gap:10px;}
@@ -323,6 +326,91 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
 .tap-hint b{color:var(--gold-lt);font-weight:600;}
 .hl-tap{color:var(--gold-lt);font-weight:600;}
 @media (max-width:640px){.tap-hint{font-size:11.5px;margin-top:-4px;}}
+
+/* ═══════════════════════════════════════════════════════
+   自適應強化（置於樣式表最後，覆蓋前面所有固定斷點）
+   1) 流體字級：768–1180px 連續縮放，直向平板不再有死角
+   2) 視窗高度：支援 iOS 鍵盤／動態工具列（--app-h 由 JS 寫入）
+   3) 底部按鈕列：任何尺寸都完整顯示在下方
+═══════════════════════════════════════════════════════ */
+/* 淡入只做透明度，避免與縮放用的 transform 相互覆蓋 */
+@keyframes fup{from{opacity:0;}to{opacity:1;}}
+
+/* 1. 視窗高度：JS 以 visualViewport 寫入，鍵盤彈出時按鈕列不會被遮住 */
+#shell{height:var(--app-h,100dvh);transform:translateY(var(--app-top,0px));}
+
+/* 2. 內容區：流體留白、min-height:0 保險（移除原本 80px 無效底部留白） */
+#canvas{padding:8px clamp(14px,3.2vw,48px) clamp(8px,2vh,18px);min-height:0;}
+
+/* 3. 流體字級與間距 */
+.tb-name{overflow:hidden;text-overflow:ellipsis;min-width:0;}   /* 窄寬度時優雅截斷，不再壓到「回主畫面」 */
+.stitle{font-size:clamp(26px,0.55vw + 24.5px,32px);}
+.ssub{font-size:clamp(15.5px,0.45vw + 13.8px,18px);margin-bottom:clamp(18px,2.4vh,26px);}
+.intro-mark{font-size:clamp(12px,0.35vw + 11px,14px);}
+.qcard{padding:clamp(16px,1.1vw + 12px,22px) clamp(16px,1.4vw + 10px,24px);}
+.qtext{font-size:clamp(16.5px,0.2vw + 15.75px,18px);}
+.qhint{font-size:clamp(12.5px,0.2vw + 11.75px,14px);}
+.qrow input[type="text"],.qrow input[type="number"],.qdate input{font-size:clamp(22px,0.9vw + 18.6px,28px);}
+.qresult{font-size:clamp(26px,0.5vw + 24.1px,30px);}
+.isb-t{font-size:clamp(14px,0.15vw + 13.4px,16px);}
+.caption-text{font-size:clamp(15.5px,0.25vw + 14.6px,18px);}
+.rcard{padding:clamp(16px,1.2vw + 11px,22px) clamp(16px,1.4vw + 12px,24px);}
+.rname{font-size:clamp(18px,0.35vw + 16.7px,21px);}
+.rdesc{font-size:clamp(13px,0.3vw + 11.9px,15.5px);}
+.scard{padding:clamp(15px,1vw + 11px,19px) clamp(16px,1.3vw + 11px,21px);}
+.nstit{font-size:clamp(20px,0.35vw + 18.7px,23px);}
+.scn{font-size:clamp(16.5px,0.3vw + 15.4px,19px);}
+.scw{font-size:clamp(13.5px,0.3vw + 12.4px,16px);}
+.scval-input{font-size:clamp(22px,0.9vw + 18.6px,26px);}
+.sintro{font-size:clamp(15.5px,0.25vw + 14.6px,18px);}
+.ntbl{font-size:clamp(13.5px,0.25vw + 12.6px,16px);}
+.nv{font-size:clamp(13.5px,0.25vw + 12.6px,16px);}
+.dtl{font-size:clamp(14.5px,0.1vw + 14.1px,16px);}
+.dtr{font-size:clamp(15.5px,0.1vw + 15.1px,17px);}
+.ptval{font-size:clamp(32px,1.1vw + 27.9px,40px);}
+.pramt{font-size:clamp(19px,0.4vw + 17.5px,22px);}
+.calcbtn,.pdfbtn{font-size:clamp(15.5px,0.3vw + 14.4px,17px);}
+
+/* 4. 底部按鈕列：流體尺寸 + 禁止換行裁切，永遠完整顯示在下方 */
+#botnav{
+  margin:0 clamp(10px,2.4vw,26px) calc(8px + env(safe-area-inset-bottom));
+  padding:clamp(8px,1.5vh,14px) clamp(10px,1.6vw,14px);
+  gap:clamp(8px,1.6vw,14px);
+  flex-shrink:0;
+}
+.btn-next{
+  font-size:clamp(15.5px,0.35vw + 14.2px,18px);
+  padding:clamp(13px,1.9vh,18px) clamp(16px,2.8vw,32px);
+  white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;
+}
+.btn-back{
+  font-size:clamp(13.5px,0.3vw + 12.4px,16px);
+  padding:clamp(12px,1.8vh,17px) clamp(13px,2.2vw,28px);
+  white-space:nowrap;flex-shrink:0;
+}
+
+/* 5. 平板（含直向）也自動適應：寬螢幕表單與 S4 改雙欄 */
+@media (min-width:980px){
+  .qlist{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;align-items:start;}
+  .qcard:nth-child(1),.qcard:nth-child(3){grid-column:1;}
+  .qcard:nth-child(2),.qcard:nth-child(4){grid-column:2;}
+  .qcard:last-child{grid-column:1/-1;}
+}
+@media (min-width:1000px){
+  .s4grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;align-items:start;}
+}
+
+/* 6. 極窄／極矮裝置：優先保住底部按鈕列完整 */
+@media (max-width:400px){
+  #botnav{gap:8px;}
+  .btn-back{padding-left:12px;padding-right:12px;}
+}
+@media (max-height:430px){
+  #topbar{padding:6px 14px;gap:10px;}
+  .tb-steps{display:none;}
+  #botnav{margin-bottom:calc(6px + env(safe-area-inset-bottom));padding-top:8px;padding-bottom:8px;}
+  .btn-next,.btn-back{padding-top:10px;padding-bottom:10px;}
+}
 </style>
 </head>
 <body>
@@ -333,6 +421,7 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
     <img class="tb-crest" src="./icon-192.png" alt="宸功保險">
     <span class="tb-name" id="toplogo">宸功保險 · 守護計畫</span>
   </div>
+  <a class="tb-home" href="./index.html">← 回主畫面</a>
   <div class="tb-steps" id="tbSteps"></div>
 </div>
 <div id="canvas">
@@ -784,7 +873,7 @@ function initDrag(){
     el.addEventListener('dragover',function(e){e.preventDefault();el.classList.add('dover');});
     el.addEventListener('dragleave',function(){el.classList.remove('dover');});
     el.addEventListener('drop',function(e){e.preventDefault();el.classList.remove('dover');if(dragSrc&&dragSrc!==el){var arr=Array.from(list.children);var si=arr.indexOf(dragSrc),ti=arr.indexOf(el);if(si<ti)list.insertBefore(dragSrc,el.nextSibling);else list.insertBefore(dragSrc,el);}updateRank();});
-    el.addEventListener('touchstart',function(e){touchItem=el;var t=e.touches[0];var r=el.getBoundingClientRect();touchOffX=t.clientX-r.left;touchOffY=t.clientY-r.top;touchClone=el.cloneNode(true);touchClone.style.cssText='position:fixed;z-index:999;width:'+r.width+'px;opacity:.8;pointer-events:none;transition:none;left:'+(t.clientX-touchOffX)+'px;top:'+(t.clientY-touchOffY)+'px;';document.body.appendChild(touchClone);el.classList.add('dragging');},{passive:true});
+    el.addEventListener('touchstart',function(e){touchItem=el;var t=e.touches[0];var r=el.getBoundingClientRect();touchOffX=t.clientX-r.left;touchOffY=t.clientY-r.top;touchClone=el.cloneNode(true);var __sc=window.__fitScale||1;touchClone.style.cssText='position:fixed;z-index:999;width:'+(r.width/__sc)+'px;transform-origin:top left;transform:scale('+__sc+');opacity:.8;pointer-events:none;transition:none;left:'+(t.clientX-touchOffX)+'px;top:'+(t.clientY-touchOffY)+'px;';document.body.appendChild(touchClone);el.classList.add('dragging');},{passive:true});
     el.addEventListener('touchmove',function(e){if(!touchClone)return;e.preventDefault();var t=e.touches[0];touchClone.style.left=(t.clientX-touchOffX)+'px';touchClone.style.top=(t.clientY-touchOffY)+'px';touchClone.style.display='none';var below=document.elementFromPoint(t.clientX,t.clientY);touchClone.style.display='';var target=below?below.closest('.rcard'):null;list.querySelectorAll('.rcard').forEach(function(c){c.classList.remove('dover');});if(target&&target!==touchItem)target.classList.add('dover');},{passive:false});
     el.addEventListener('touchend',function(e){if(touchClone){document.body.removeChild(touchClone);touchClone=null;}el.classList.remove('dragging');list.querySelectorAll('.rcard').forEach(function(c){c.classList.remove('dover');});var t=e.changedTouches[0];var below=document.elementFromPoint(t.clientX,t.clientY);var target=below?below.closest('.rcard'):null;if(target&&target!==touchItem){var arr=Array.from(list.children);var si=arr.indexOf(touchItem),ti=arr.indexOf(target);if(si<ti)list.insertBefore(touchItem,target.nextSibling);else list.insertBefore(touchItem,target);}touchItem=null;updateRank();});
   });
@@ -998,6 +1087,71 @@ function exportPDF(){
     .then(function(){pdfDone();})
     .catch(function(){pdfDone();alert('PDF 產生失敗，已改用列印功能。');window.print();});
 }
+// ── 自適應：視窗高度（iOS 鍵盤／動態工具列）＋ 內容輕量縮放（0.85～1） ──
+var __fitScale=1,__fitRaf=0,__appRaf=0;
+function fitScreen(){
+  var cv=document.getElementById('canvas');
+  var el=cv?cv.querySelector('.screen.on'):null;
+  if(!cv||!el)return;
+  el.style.removeProperty('transform');
+  el.style.removeProperty('transform-origin');
+  el.style.removeProperty('height');
+  __fitScale=1;
+  var cs=window.getComputedStyle(cv);
+  var avail=cv.clientHeight-(parseFloat(cs.paddingTop)||0)-(parseFloat(cs.paddingBottom)||0);
+  var h=el.offsetHeight;
+  if(!avail||!h||h<=avail)return;   // 塞得下就不縮放，維持原尺寸
+  var s=avail/h;
+  if(s>1)s=1;
+  if(s<0.85)s=0.85;                 // 輕量縮放下限，低於 0.85 就改為滾動
+  if(s>=0.995)return;
+  el.style.transformOrigin='top center';
+  el.style.transform='scale('+s+')';
+  el.style.height=Math.round(h*s)+'px';  // 補償 transform 不佔版面高度
+  __fitScale=s;
+}
+function requestFit(){
+  if(__fitRaf)return;
+  __fitRaf=requestAnimationFrame(function(){__fitRaf=0;fitScreen();});
+}
+function setAppH(){
+  var vv=window.visualViewport;
+  var h=(vv&&vv.height)?vv.height:window.innerHeight;
+  var top=(vv&&vv.offsetTop)?vv.offsetTop:0;
+  var st=document.documentElement.style;
+  st.setProperty('--app-h',Math.round(h)+'px');
+  st.setProperty('--app-top',Math.round(top)+'px');
+  fitScreen();
+}
+function requestAppH(){
+  if(__appRaf)return;
+  __appRaf=requestAnimationFrame(function(){__appRaf=0;setAppH();});
+}
+window.addEventListener('resize',requestAppH);
+window.addEventListener('orientationchange',requestAppH);
+window.addEventListener('load',requestAppH);
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',requestAppH);
+  window.visualViewport.addEventListener('scroll',requestAppH);
+}
+// 字型載入、topbar/canvas 高度變化（例如 webfont 換行）後重新量測，避免比例過時
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){requestAppH();});
+if(window.ResizeObserver){
+  var __canvasEl=document.getElementById('canvas');
+  if(__canvasEl)new ResizeObserver(function(){requestFit();}).observe(__canvasEl);
+}
+// 換頁與計算保費後自動重新量測（go / calcPremium 有 inline onclick，改走包裝函式）
+var __origGo=go;
+go=function(n){__origGo(n);requestFit();};
+var __origCalcPremium=calcPremium;
+calcPremium=function(){
+  __origCalcPremium();
+  requestFit();
+  var p=document.getElementById('premsec');
+  if(p&&p.offsetParent)requestAnimationFrame(function(){p.scrollIntoView({behavior:'smooth',block:'start'});});
+};
+setAppH();
+
 // ── INIT ──
 initDrag();
 renderTop();
