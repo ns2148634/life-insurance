@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="業務分享專區">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<title>業務分享專區｜宸功保險</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>業務分享專區</h1>
+    <div class="who">
+      <a href="../index.html">← 回主畫面</a>
+      <span id="whoami">載入中…</span>
+      <a href="../video-training/profile.html">我的帳號</a>
+      <button class="secondary" id="logoutBtn">登出</button>
+    </div>
+  </header>
+
+  <!-- ---- 分享表單 ---- -->
+  <div class="card">
+    <h2 class="card-title" id="formTitle">分享一個連結</h2>
+    <div id="editingBar" class="editing-bar" style="display:none;">
+      <span class="dim">正在編輯：<span id="editingName"></span></span>
+      <button type="button" class="secondary small" id="cancelEditBtn">取消編輯</button>
+    </div>
+    <div id="formMsg" style="display:none;"></div>
+    <form id="shareForm">
+      <label class="field" for="urlInput">連結網址（http / https）</label>
+      <input type="url" id="urlInput" placeholder="https://..." required autocomplete="off">
+
+      <label class="field" for="titleInput">標題</label>
+      <input type="text" id="titleInput" maxlength="200" placeholder="文章 / 新聞標題" required>
+
+      <label class="field" for="summaryInput">分享理由／可切入的推銷點（選填）</label>
+      <textarea id="summaryInput" maxlength="500" placeholder="例：可用來說明醫療自費缺口、提醒長照準備…"></textarea>
+
+      <label class="field" for="categoryInput">分類</label>
+      <select id="categoryInput"></select>
+
+      <label class="field" for="tagsInput">標籤（選填，用逗號分隔）</label>
+      <input type="text" id="tagsInput" placeholder="例：長照, 實支實付, 退休">
+
+      <button type="submit" id="submitBtn" style="width:100%;">分享</button>
+    </form>
+  </div>
+
+  <!-- ---- 搜尋 / 篩選 ---- -->
+  <div class="toolbar">
+    <input type="search" id="searchInput" placeholder="搜尋標題、分享理由、標籤">
+    <select id="filterCategory"></select>
+    <select id="sortSelect">
+      <option value="new">最新分享</option>
+      <option value="old">最舊分享</option>
+      <option value="mine">只看我的分享</option>
+    </select>
+  </div>
+
+  <div id="list"><p class="dim">載入分享清單中…</p></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const CATEGORIES = ["醫療健康", "退休理財", "稅務法令", "時事趨勢", "業務心法", "其他"];
+
+let user = null;
+let myName = "";
+let allLinks = [];
+let editingId = null;
+
+const listEl = document.getElementById("list");
+const formMsg = document.getElementById("formMsg");
+const form = document.getElementById("shareForm");
+const submitBtn = document.getElementById("submitBtn");
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+// 只允許 http / https，其餘（javascript:, data: ...）一律視為無效
+function safeUrl(u) {
+  try {
+    const x = new URL(String(u).trim());
+    if (x.protocol === "http:" || x.protocol === "https:") return x.href;
+  } catch (e) {}
+  return null;
+}
+
+function hostOf(u) {
+  try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; }
+}
+
+function fmtDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d)) return "";
+  const p = n => String(n).padStart(2, "0");
+  return `${d.getFullYear()}/${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function showMsg(el, text, ok) {
+  el.className = ok ? "ok" : "error";
+  el.textContent = text;
+  el.style.display = "block";
+}
+function clearMsg(el) { el.style.display = "none"; el.textContent = ""; }
+
+function fillSelect(el, options, includeAll) {
+  const opts = (includeAll ? ['<option value="__all">全部分類</option>'] : [])
+    .concat(options.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`));
+  el.innerHTML = opts.join("");
+}
+
+// 標籤：支援半形與全形逗號，最多 10 個
+function parseTags(raw) {
+  return String(raw || "").split(/[,，]/).map(t => t.trim()).filter(Boolean).slice(0, 10);
+}
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { location.href = "login.html"; return; }
+  user = session.user;
+
+  fillSelect(document.getElementById("categoryInput"), CATEGORIES, false);
+  document.getElementById("categoryInput").value = "其他";
+  fillSelect(document.getElementById("filterCategory"), CATEGORIES, true);
+
+  const { data: profile } = await sb.from("profiles")
+    .select("full_name, email").eq("id", user.id).maybeSingle();
+  myName = (profile && (profile.full_name || profile.email)) || user.email || "同仁";
+  document.getElementById("whoami").textContent = myName;
+
+  await loadLinks();
+}
+
+async function loadLinks() {
+  const { data, error } = await sb.from("shared_links")
+    .select("*").order("created_at", { ascending: false });
+
+  if (error) {
+    listEl.innerHTML = '<p class="error">讀取分享清單失敗：' + escapeHtml(error.message) + "</p>";
+    return;
+  }
+  allLinks = data || [];
+  render();
+}
+
+function render() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const cat = document.getElementById("filterCategory").value;
+  const sort = document.getElementById("sortSelect").value;
+
+  let rows = allLinks.slice();
+  if (cat !== "__all") rows = rows.filter(r => r.category === cat);
+  if (sort === "mine") rows = rows.filter(r => r.shared_by === user.id);
+  if (q) {
+    rows = rows.filter(r => [
+      r.title, r.summary, r.source, r.shared_by_name, (r.tags || []).join(" ")
+    ].join(" ").toLowerCase().includes(q));
+  }
+  rows.sort((a, b) => {
+    const ta = new Date(a.created_at).getTime();
+    const tb = new Date(b.created_at).getTime();
+    return sort === "old" ? ta - tb : tb - ta;
+  });
+
+  if (rows.length === 0) {
+    listEl.innerHTML = allLinks.length === 0
+      ? '<p class="dim">目前還沒有人分享，成為第一個分享資料的人吧！</p>'
+      : '<p class="dim">沒有符合條件的分享</p>';
+    return;
+  }
+
+  listEl.innerHTML = rows.map(r => {
+    const url = safeUrl(r.url);
+    const host = hostOf(r.url) || r.source || "";
+    const favicon = host
+      ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32`
+      : "";
+    const mine = r.shared_by === user.id;
+    const tags = (r.tags || []).map(t => `<span class="chip tag">#${escapeHtml(t)}</span>`).join("");
+    const href = escapeHtml(url || "#");
+
+    return `
+      <article class="link-card">
+        <div class="link-head">
+          ${favicon ? `<img class="favicon" src="${favicon}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : ""}
+          <div class="link-title-wrap">
+            <a class="link-title" href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.title)}</a>
+            <div class="link-meta">${escapeHtml(r.source || host || "")} · ${escapeHtml(r.shared_by_name || "同仁")} · ${escapeHtml(fmtDate(r.created_at))}</div>
+          </div>
+          <span class="chip">${escapeHtml(r.category || "其他")}</span>
+        </div>
+        ${r.summary ? `<p class="link-summary">${escapeHtml(r.summary)}</p>` : ""}
+        ${tags ? `<div class="link-tags">${tags}</div>` : ""}
+        <div class="link-actions">
+          <a class="btn small" href="${href}" target="_blank" rel="noopener noreferrer">開啟原文</a>
+          <button type="button" class="secondary small" data-copy="${r.id}">複製連結</button>
+          ${mine ? `<button type="button" class="secondary small" data-edit="${r.id}">編輯</button>
+                    <button type="button" class="secondary small danger" data-del="${r.id}">刪除</button>` : ""}
+        </div>
+      </article>`;
+  }).join("");
+
+  bindListEvents();
+}
+
+function bindListEvents() {
+  listEl.querySelectorAll("[data-copy]").forEach(btn => {
+    btn.addEventListener("click", () => copyLink(btn.dataset.copy, btn));
+  });
+  listEl.querySelectorAll("[data-edit]").forEach(btn => {
+    btn.addEventListener("click", () => startEdit(btn.dataset.edit));
+  });
+  listEl.querySelectorAll("[data-del]").forEach(btn => {
+    btn.addEventListener("click", () => removeLink(btn.dataset.del, btn));
+  });
+}
+
+async function copyLink(id, btn) {
+  const r = allLinks.find(x => x.id === id);
+  if (!r) return;
+  const text = safeUrl(r.url) || r.url;
+
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (e) {
+    // 後備方案（舊瀏覽器 / 非 https 環境）
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e2) {}
+    document.body.removeChild(ta);
+  }
+
+  const old = btn.textContent;
+  btn.textContent = "已複製 ✓";
+  setTimeout(() => { btn.textContent = old; }, 1500);
+}
+
+function startEdit(id) {
+  const r = allLinks.find(x => x.id === id);
+  if (!r) return;
+
+  editingId = id;
+  document.getElementById("urlInput").value = r.url || "";
+  document.getElementById("titleInput").value = r.title || "";
+  document.getElementById("summaryInput").value = r.summary || "";
+  document.getElementById("categoryInput").value =
+    CATEGORIES.includes(r.category) ? r.category : "其他";
+  document.getElementById("tagsInput").value = (r.tags || []).join(", ");
+
+  document.getElementById("formTitle").textContent = "編輯分享";
+  document.getElementById("editingName").textContent = r.title || "";
+  document.getElementById("editingBar").style.display = "flex";
+  submitBtn.textContent = "儲存變更";
+  clearMsg(formMsg);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function resetForm() {
+  editingId = null;
+  form.reset();
+  document.getElementById("categoryInput").value = "其他";
+  document.getElementById("formTitle").textContent = "分享一個連結";
+  document.getElementById("editingBar").style.display = "none";
+  document.getElementById("editingName").textContent = "";
+  submitBtn.textContent = "分享";
+  clearMsg(formMsg);
+}
+
+async function removeLink(id, btn) {
+  const r = allLinks.find(x => x.id === id);
+  if (!r) return;
+  if (!confirm(`確定要刪除「${r.title}」嗎？`)) return;
+
+  btn.disabled = true;
+  const { error } = await sb.from("shared_links").delete().eq("id", id);
+
+  if (error) {
+    showMsg(formMsg, "刪除失敗：" + error.message, false);
+    btn.disabled = false;
+    return;
+  }
+  await loadLinks();
+}
+
+// ---- 送出（新增 / 編輯共用）----
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  clearMsg(formMsg);
+
+  const url = safeUrl(document.getElementById("urlInput").value);
+  if (!url) {
+    showMsg(formMsg, "網址格式不正確，請填 http:// 或 https:// 開頭的完整網址", false);
+    return;
+  }
+
+  const title = document.getElementById("titleInput").value.trim();
+  if (!title) { showMsg(formMsg, "請填寫標題", false); return; }
+
+  const category = document.getElementById("categoryInput").value;
+  const payload = {
+    url,
+    title,
+    summary: document.getElementById("summaryInput").value.trim() || null,
+    category: CATEGORIES.includes(category) ? category : "其他",
+    tags: parseTags(document.getElementById("tagsInput").value),
+    source: hostOf(url) || null
+  };
+
+  const wasEditing = !!editingId;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "處理中…";
+
+  let error;
+  if (wasEditing) {
+    ({ error } = await sb.from("shared_links").update(payload).eq("id", editingId));
+  } else {
+    ({ error } = await sb.from("shared_links").insert({
+      ...payload,
+      shared_by: user.id,
+      shared_by_name: myName
+    }));
+  }
+
+  submitBtn.disabled = false;
+
+  if (error) {
+    submitBtn.textContent = wasEditing ? "儲存變更" : "分享";
+    showMsg(formMsg, (wasEditing ? "更新失敗：" : "分享失敗：") + error.message, false);
+    return;
+  }
+
+  resetForm();
+  showMsg(formMsg, wasEditing ? "已更新分享 ✓" : "已分享，謝謝你的貢獻 ✓", true);
+  await loadLinks();
+});
+
+// ---- 工具列 / 其他按鈕 ----
+["searchInput", "filterCategory", "sortSelect"].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener("input", render);
+  el.addEventListener("change", render);
+});
+
+document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  location.href = "login.html";
+});
+
+init();
+</script>
+</body>
+</html>

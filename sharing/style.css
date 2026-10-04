@@ -1,0 +1,190 @@
+:root {
+  /* 色碼對齊首頁 index.html 的 :root token（--ink / --ink-card / --border / --gold / --gold-deep / --text / --muted） */
+  --bg: #0d1a26;                       /* = 首頁 --ink */
+  --bg-card: #182a3a;                  /* = 首頁 --ink-card */
+  --border: rgba(255,255,255,0.09);    /* = 首頁 --border */
+  --text: rgba(255,255,255,0.94);      /* = 首頁 --text */
+  --text-dim: rgba(255,255,255,0.56);  /* = 首頁 --muted */
+  --accent: #c2974f;                   /* = 首頁 --gold */
+  --accent-dim: #8a6a30;               /* = 首頁 --gold-deep */
+  --danger: #d9534f;
+  --success: #4caf7d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+.wrap {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+header.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-bottom: 28px;
+}
+
+header.top h1 { font-size: 1.3rem; margin: 0; }
+
+header.top .who {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+a { color: var(--accent); text-decoration: none; }
+
+button, .btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #1a1406;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+button.secondary, .btn.secondary {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+button.danger { color: var(--danger); }
+button:disabled { opacity: 0.5; cursor: default; }
+button.small, .btn.small { padding: 6px 12px; font-size: 0.8rem; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.card-title { font-size: 1rem; margin: 0 0 14px; }
+
+input[type="email"], input[type="password"], input[type="text"],
+input[type="url"], input[type="search"], textarea, select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0a141f;
+  color: var(--text);
+  font-size: 1rem;
+  margin-bottom: 14px;
+  font-family: inherit;
+}
+textarea { min-height: 84px; resize: vertical; }
+select { appearance: none; }
+input[readonly], input:disabled { opacity: 0.65; }
+
+label.field {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+label.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0 0 14px;
+}
+label.check input { width: auto; margin: 0; }
+
+.error { color: var(--danger); font-size: 0.9rem; margin-bottom: 12px; }
+.ok { color: var(--success); font-size: 0.9rem; margin-bottom: 12px; }
+.dim { color: var(--text-dim); font-size: 0.85rem; }
+
+/* ---- 工具列：搜尋 / 分類 / 排序 ---- */
+.toolbar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+  margin: 22px 0 14px;
+}
+.toolbar input, .toolbar select { margin-bottom: 0; }
+@media (max-width: 640px) {
+  .toolbar { grid-template-columns: 1fr; }
+}
+
+/* ---- 分享卡片 ---- */
+.link-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 12px;
+}
+.link-head { display: flex; align-items: flex-start; gap: 12px; }
+.link-head .favicon {
+  width: 22px; height: 22px; border-radius: 5px;
+  flex-shrink: 0; margin-top: 2px; background: #0a141f;
+}
+.link-title-wrap { flex: 1; min-width: 0; }
+.link-title {
+  color: var(--text); font-weight: 600; font-size: 1rem;
+  line-height: 1.45; overflow-wrap: anywhere;
+}
+.link-title:hover { color: var(--accent); }
+.link-meta { color: var(--text-dim); font-size: 0.78rem; margin-top: 4px; }
+.link-summary { margin: 12px 0 0; font-size: 0.9rem; line-height: 1.7; color: var(--text); overflow-wrap: anywhere; }
+.link-tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.link-actions { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.chip.tag { border-color: var(--border); color: var(--text-dim); }
+
+/* 主管重設密碼時顯示臨時密碼（沿用 video-training 樣式） */
+.code-box {
+  display: inline-block;
+  background: #0a141f;
+  border: 1px dashed var(--accent);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  user-select: all;
+}
+
+/* 編輯中提示 */
+.editing-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  margin-bottom: 14px;
+}
