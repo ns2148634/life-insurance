@@ -114,6 +114,51 @@ main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
 .arrow{color:var(--gold);font-size:16px;transition:transform .25s ease;}
 .card:hover .arrow{transform:translateX(4px);}
 
+/* ---------- 業務同仁登入 ---------- */
+.account-bar{
+  margin-top:26px;padding:18px 20px;
+  border:1px solid var(--border);border-radius:14px;
+  background:rgba(255,255,255,0.025);
+}
+.ab-title{
+  font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--hint);margin-bottom:12px;
+}
+.account-form{display:flex;flex-wrap:wrap;gap:10px;}
+.account-form input{
+  flex:1 1 200px;min-width:0;padding:11px 14px;
+  border-radius:9px;border:1px solid var(--border);
+  background:#0a141f;color:var(--text);font-size:14px;font-family:inherit;
+}
+.account-form input:focus{outline:none;border-color:var(--gold-line);}
+.account-form button{
+  flex:0 0 auto;padding:11px 24px;border-radius:9px;border:none;
+  background:var(--gold);color:#1a1406;font-weight:700;font-size:14px;
+  font-family:inherit;cursor:pointer;
+}
+.account-form button:disabled{opacity:.55;cursor:default;}
+.account-msg{margin-top:10px;font-size:13px;}
+.account-msg.err{color:var(--vermilion-lt);}
+.account-msg.ok{color:#7fc9a3;}
+.hint-line{margin:10px 0 0;font-size:12.5px;color:var(--hint);line-height:1.7;}
+.ab-user{
+  display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;
+  font-size:14px;color:var(--muted);
+}
+.ab-user b{color:#fff;font-weight:600;}
+.ab-badge{
+  font-size:11px;padding:2px 9px;border-radius:999px;
+  border:1px solid var(--gold-line);color:var(--gold-lt);letter-spacing:1px;
+}
+.ab-link{
+  padding:7px 14px;border-radius:8px;border:1px solid var(--gold-line);
+  color:var(--gold-lt);font-size:13px;text-decoration:none;
+}
+.ab-link:hover{background:var(--gold-dim);}
+.ab-link.plain{border-color:var(--border);color:var(--muted);}
+button.ab-link{font-family:inherit;cursor:pointer;background:transparent;}
+button.ab-link:hover{background:rgba(255,255,255,0.05);}
+
 footer{
   max-width:1180px;margin:0 auto;padding:0 32px 48px;
   color:var(--hint);font-size:12px;letter-spacing:0.5px;
@@ -135,6 +180,11 @@ footer{
   </div>
   <h1>宸功保險<span>．</span>工具總覽</h1>
   <p class="sub">客戶顧問與團隊管理共用的數位工具，依用途分類。點選卡片即可開啟對應頁面。</p>
+
+  <section class="account-bar" id="accountBar">
+    <div class="ab-title">業務同仁登入 Login</div>
+    <div id="accountBody"><div class="ab-user">載入中…</div></div>
+  </section>
 </header>
 
 <main>
@@ -228,6 +278,94 @@ footer{
 
 <footer>宸功保險 · 南山人壽</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script>
+const accountBody = document.getElementById("accountBody");
+
+let sb = null;
+try {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+  sb = null;
+}
+
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+async function renderAccount() {
+  if (!sb) {
+    accountBody.innerHTML = '<div class="account-msg err">無法載入登入元件，請確認網路連線後重新整理。</div>';
+    return;
+  }
+
+  const { data: { session } } = await sb.auth.getSession();
+
+  if (!session) { renderLogin(); return; }
+
+  const user = session.user;
+  const { data: profile } = await sb.from("profiles")
+    .select("full_name, email, is_admin").eq("id", user.id).maybeSingle();
+
+  const name = (profile && (profile.full_name || profile.email)) || user.email || "同仁";
+  const isAdmin = !!(profile && profile.is_admin);
+
+  accountBody.innerHTML = `
+    <div class="ab-user">
+      <span>已登入：<b>${esc(name)}</b>${isAdmin ? ' <span class="ab-badge">管理員</span>' : ""}</span>
+      <a class="ab-link" href="./video-training/profile.html">我的帳號</a>
+      <a class="ab-link" href="./sharing/share.html">業務分享專區</a>
+      ${isAdmin ? '<a class="ab-link" href="./accounts.html">帳號管理</a>' : ""}
+      <button type="button" class="ab-link plain" id="homeLogout">登出</button>
+    </div>`;
+
+  document.getElementById("homeLogout").addEventListener("click", async () => {
+    await sb.auth.signOut();
+    renderAccount();
+  });
+}
+
+function renderLogin() {
+  accountBody.innerHTML = `
+    <form class="account-form" id="homeLoginForm">
+      <input type="email" id="homeEmail" placeholder="Email" autocomplete="username" required>
+      <input type="password" id="homePw" placeholder="密碼" autocomplete="current-password" required>
+      <button type="submit" id="homeLoginBtn">登入</button>
+    </form>
+    <div class="account-msg" id="homeMsg"></div>
+    <p class="hint-line">登入後即可使用影片研習、業務分享專區等內部工具。忘記密碼請洽主管協助重設。</p>`;
+
+  const form = document.getElementById("homeLoginForm");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("homeMsg");
+    const btn = document.getElementById("homeLoginBtn");
+    msg.className = "account-msg";
+    msg.textContent = "";
+    btn.disabled = true;
+    btn.textContent = "登入中…";
+
+    const email = document.getElementById("homeEmail").value.trim();
+    const password = document.getElementById("homePw").value;
+
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      msg.className = "account-msg err";
+      msg.textContent = "帳號或密碼錯誤，請確認後再試一次";
+      btn.disabled = false;
+      btn.textContent = "登入";
+      return;
+    }
+    renderAccount();
+  });
+}
+
+renderAccount();
+</script>
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(function(err){

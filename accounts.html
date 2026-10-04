@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="帳號管理">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>帳號管理｜宸功保險</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1a26;--ink-card:#182a3a;
+  --gold:#c2974f;--gold-lt:#dcb877;
+  --gold-dim:rgba(194,151,79,0.10);--gold-line:rgba(194,151,79,0.30);
+  --vermilion-lt:#d9634a;
+  --text:rgba(255,255,255,0.94);--muted:rgba(255,255,255,0.56);
+  --hint:rgba(255,255,255,0.32);--border:rgba(255,255,255,0.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 85% -10%, rgba(194,151,79,0.08), transparent 60%),
+    radial-gradient(ellipse 700px 400px at -10% 100%, rgba(193,68,45,0.06), transparent 55%),
+    var(--ink);
+  min-height:100dvh;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:44px 24px 72px;}
+
+/* ---------- header ---------- */
+.top{
+  display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;
+  justify-content:space-between;
+  padding-bottom:22px;margin-bottom:22px;
+  border-bottom:1px solid var(--border);
+}
+h1{
+  font-family:'Noto Serif TC',serif;font-weight:900;
+  font-size:clamp(24px,3.4vw,34px);letter-spacing:1px;color:#fff;
+}
+h1 span{color:var(--gold);}
+.sub{margin-top:10px;font-size:13.5px;color:var(--hint);line-height:1.8;max-width:520px;}
+.who{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:13.5px;}
+.who a{color:var(--gold-lt);text-decoration:none;border-bottom:1px solid var(--gold-line);padding-bottom:2px;}
+.who a:hover{color:#fff;}
+
+/* ---------- buttons ---------- */
+button{font-family:inherit;}
+.primary{
+  padding:10px 20px;border-radius:9px;border:none;cursor:pointer;
+  background:var(--gold);color:#1a1406;font-weight:700;font-size:14px;
+}
+.primary:disabled{opacity:.55;cursor:default;}
+.ghost{
+  padding:10px 18px;border-radius:9px;cursor:pointer;font-size:14px;
+  background:transparent;color:var(--muted);border:1px solid var(--border);
+}
+.ghost:hover{color:#fff;border-color:var(--gold-line);}
+.sm{padding:6px 12px;font-size:12.5px;border-radius:7px;}
+
+/* ---------- table ---------- */
+.table-wrap{
+  overflow-x:auto;border:1px solid var(--border);border-radius:14px;
+  background:rgba(255,255,255,0.02);
+}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:580px;}
+th,td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle;}
+th{
+  font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--hint);font-weight:600;white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,0.025);}
+td.name-cell{font-weight:600;color:#fff;}
+td.email-cell{color:var(--muted);font-size:13px;word-break:break-all;}
+td.dim{color:var(--hint);font-size:12.5px;white-space:nowrap;}
+.ops{white-space:nowrap;}
+.ops button{margin-right:6px;}
+.ops button:last-child{margin-right:0;}
+.badge{
+  display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;
+  border:1px solid var(--gold-line);color:var(--gold-lt);letter-spacing:1px;
+}
+.none{color:var(--hint);font-size:11.5px;}
+.inline-input{
+  width:100%;min-width:110px;padding:8px 10px;border-radius:8px;
+  border:1px solid var(--gold-line);background:#0a141f;color:var(--text);
+  font-size:14px;font-family:inherit;
+}
+.inline-input:focus{outline:none;border-color:var(--gold);}
+
+/* ---------- reset panel ---------- */
+.card{
+  margin-top:24px;padding:22px 22px 20px;
+  border:1px solid var(--gold-line);border-radius:14px;
+  background:linear-gradient(180deg, rgba(194,151,79,0.07), rgba(255,255,255,0.015));
+}
+.card h2{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;}
+.card h2 em{font-style:normal;color:var(--gold-lt);}
+.card .target{font-size:12.5px;color:var(--hint);margin-bottom:18px;word-break:break-all;}
+.field-label{display:block;font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--hint);margin-bottom:8px;}
+.pw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.pw-row input{
+  flex:1 1 220px;min-width:0;padding:11px 14px;border-radius:9px;
+  border:1px solid var(--border);background:#0a141f;color:var(--gold-lt);
+  font-size:15px;font-family:ui-monospace,Consolas,monospace;letter-spacing:1px;
+}
+.pw-row input:focus{outline:none;border-color:var(--gold-line);}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.note{margin-top:16px;font-size:12.5px;color:var(--hint);line-height:1.8;}
+.msg{margin-top:14px;font-size:13.5px;line-height:1.7;}
+.msg.err{color:var(--vermilion-lt);}
+.msg.ok{color:#7fc9a3;}
+.dim-note{font-size:12.5px;color:var(--hint);line-height:1.8;margin-bottom:18px;}
+.error{color:var(--vermilion-lt);font-size:14px;line-height:1.8;}
+.center{text-align:center;color:var(--hint);padding:48px 0;font-size:14px;}
+
+@media (max-width:640px){
+  .wrap{padding:30px 16px 56px;}
+  .top{align-items:flex-start;flex-direction:column;}
+  th,td{padding:11px 10px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>帳號<span>管理</span></h1>
+      <p class="sub">列出所有已建立的業務同仁帳號，可修正姓名與代為重設密碼。</p>
+    </div>
+    <div class="who">
+      <a href="./index.html">← 回主畫面</a>
+      <a href="./video-training/profile.html">我的帳號</a>
+      <button class="ghost sm" id="logoutBtn">登出</button>
+    </div>
+  </header>
+
+  <div class="dim-note" id="howto">
+    新增帳號請至 Supabase Dashboard → Authentication → Users → Add user（記得勾選 Auto Confirm User）；
+    建立後再到此頁補上姓名。
+  </div>
+
+  <div id="content"><p class="center">載入中…</p></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const contentEl = document.getElementById("content");
+
+let sb = null;
+try {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+  sb = null;
+}
+
+let profiles = [];        // 全部帳號（profiles）
+let editId = null;        // 正在編輯姓名的 profile id
+let resetTarget = null;   // 正在重設密碼的 profile
+let pendingPassword = ""; // 重設面板中的新密碼
+let flash = null;         // { type, text } 表格上方提示
+let editDraft = "";       // 姓名編輯中的暫存值（驗證失敗時保留輸入）
+
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function fmtDate(v) {
+  if (!v) return "—";
+  const d = new Date(v);
+  if (isNaN(d.getTime())) return "—";
+  const p = n => String(n).padStart(2, "0");
+  return d.getFullYear() + "/" + p(d.getMonth() + 1) + "/" + p(d.getDate());
+}
+
+function makePassword(len) {
+  const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const buf = new Uint32Array(len);
+  crypto.getRandomValues(buf);
+  let out = "";
+  for (let i = 0; i < len; i++) out += chars[buf[i] % chars.length];
+  return out;
+}
+
+async function init() {
+  if (!sb) {
+    contentEl.innerHTML = '<p class="error">無法載入 Supabase 元件，請確認網路連線後重新整理。</p>';
+    return;
+  }
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { location.href = "./index.html"; return; }
+
+  const { data: me, error } = await sb.from("profiles")
+    .select("is_admin").eq("id", session.user.id).maybeSingle();
+
+  if (error) {
+    contentEl.innerHTML = '<p class="error">讀取權限失敗：' + esc(error.message) + "</p>";
+    return;
+  }
+  if (!me || !me.is_admin) {
+    contentEl.innerHTML = '<p class="error">你沒有權限查看這個頁面（僅限管理員）。</p>';
+    return;
+  }
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await sb.auth.signOut();
+    location.href = "./index.html";
+  });
+
+  await loadProfiles();
+}
+
+async function loadProfiles() {
+  const { data, error } = await sb.from("profiles")
+    .select("id, full_name, email, is_admin, created_at")
+    .order("is_admin", { ascending: false })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    contentEl.innerHTML = '<p class="error">讀取帳號清單失敗：' + esc(error.message) + "</p>";
+    return;
+  }
+  profiles = data || [];
+  render();
+}
+function render() {
+  const rows = profiles.map(p => {
+    const editing = editId === p.id;
+
+    const nameCell = editing
+      ? '<input class="inline-input" id="nameInput" value="' + esc(editDraft) + '" maxlength="40" autocomplete="off">'
+      : (p.full_name ? esc(p.full_name) : '<span class="none">（未填寫）</span>');
+
+    const ops = editing
+      ? '<button class="primary sm" data-act="save" data-id="' + p.id + '">儲存</button>' +
+        '<button class="ghost sm" data-act="cancel">取消</button>'
+      : '<button class="ghost sm" data-act="edit" data-id="' + p.id + '">改姓名</button>' +
+        '<button class="ghost sm" data-act="reset" data-id="' + p.id + '">重設密碼</button>';
+
+    return "<tr>" +
+      '<td class="name-cell">' + nameCell + "</td>" +
+      '<td class="email-cell">' + esc(p.email || "—") + "</td>" +
+      "<td>" + (p.is_admin ? '<span class="badge">管理員</span>' : '<span class="none">業務員</span>') + "</td>" +
+      '<td class="dim">' + fmtDate(p.created_at) + "</td>" +
+      '<td class="ops">' + ops + "</td>" +
+      "</tr>";
+  }).join("");
+
+  contentEl.innerHTML =
+    (flash ? '<div class="msg ' + flash.type + '">' + esc(flash.text) + "</div>" : "") +
+    '<div class="table-wrap"><table>' +
+      "<thead><tr><th>姓名</th><th>Email（登入帳號）</th><th>權限</th><th>建立日期</th><th>操作</th></tr></thead>" +
+      "<tbody>" + (rows || '<tr><td colspan="5" class="center">尚無帳號</td></tr>') + "</tbody>" +
+    "</table></div>" +
+    '<p class="note">共 ' + profiles.length + " 個帳號。姓名修改後會立即套用到影片研習與業務分享專區。</p>" +
+    (resetTarget ? resetPanelHtml() : "");
+
+  bindEvents();
+}
+
+function resetPanelHtml() {
+  const p = resetTarget;
+  const who = p.full_name
+    ? esc(p.full_name) + "（" + esc(p.email || "無 Email") + "）"
+    : esc(p.email || "此帳號");
+
+  return '<div class="card">' +
+    "<h2>重設密碼：<em>" + who + "</em></h2>" +
+    '<p class="target">重設後該同仁所有裝置會被強制登出，需以新密碼重新登入。</p>' +
+    '<label class="field-label" for="pwInput">新密碼（至少 8 個字元）</label>' +
+    '<div class="pw-row">' +
+      '<input id="pwInput" type="text" value="' + esc(pendingPassword) + '" maxlength="64" autocomplete="off" spellcheck="false">' +
+      '<button class="ghost sm" data-act="gen">重新產生</button>' +
+      '<button class="ghost sm" data-act="copy">複製</button>' +
+    "</div>" +
+    '<div class="actions">' +
+      '<button class="primary" id="doResetBtn" data-act="doReset" data-id="' + p.id + '">確認重設</button>' +
+      '<button class="ghost" data-act="closeReset">取消</button>' +
+    "</div>" +
+    '<p class="note">請以安全方式（當面或私訊）把新密碼交給本人，不要把密碼留在公開對話中。</p>' +
+    '<div class="msg" id="resetMsg"></div>' +
+  "</div>";
+}
+function bindEvents() {
+  contentEl.querySelectorAll("[data-act]").forEach(btn => {
+    btn.addEventListener("click", () => handleAction(btn.dataset.act, btn.dataset.id));
+  });
+
+  const nameInput = document.getElementById("nameInput");
+  if (nameInput) {
+    nameInput.focus();
+    nameInput.select();
+    nameInput.addEventListener("input", e => { editDraft = e.target.value; });
+    nameInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); handleAction("save", editId); }
+      else if (e.key === "Escape") { e.preventDefault(); handleAction("cancel"); }
+    });
+  }
+
+  const pwInput = document.getElementById("pwInput");
+  if (pwInput) {
+    pwInput.addEventListener("keydown", e => {
+      if (e.key === "Enter" && resetTarget) { e.preventDefault(); handleAction("doReset", resetTarget.id); }
+    });
+  }
+}
+
+async function handleAction(act, id) {
+  if (act === "edit") {
+    const p = profiles.find(x => x.id === id);
+    editId = id;
+    editDraft = (p && p.full_name) || "";
+    flash = null;
+    render();
+    return;
+  }
+  if (act === "cancel") { editId = null; editDraft = ""; render(); return; }
+  if (act === "save") { await saveName(id); return; }
+
+  if (act === "reset") {
+    resetTarget = profiles.find(x => x.id === id) || null;
+    pendingPassword = makePassword(12);
+    flash = null;
+    render();
+    return;
+  }
+  if (act === "gen") {
+    pendingPassword = makePassword(12);
+    const el = document.getElementById("pwInput");
+    if (el) el.value = pendingPassword;
+    return;
+  }
+  if (act === "copy") { await copyPassword(); return; }
+  if (act === "closeReset") { resetTarget = null; pendingPassword = ""; render(); return; }
+  if (act === "doReset") { await doReset(id); return; }
+}
+async function saveName(id) {
+  if (editId === null) return;
+
+  const value = editDraft.trim();
+  if (!value) {
+    flash = { type: "err", text: "姓名不能留空" };
+    render();
+    return;
+  }
+  if (value.length > 40) {
+    flash = { type: "err", text: "姓名請勿超過 40 個字" };
+    render();
+    return;
+  }
+
+  const { error } = await sb.from("profiles").update({ full_name: value }).eq("id", id);
+
+  if (error) {
+    flash = { type: "err", text: "儲存失敗：" + error.message };
+    render();
+    return;
+  }
+
+  const p = profiles.find(x => x.id === id);
+  if (p) p.full_name = value;
+  editId = null;
+  editDraft = "";
+  flash = { type: "ok", text: "已更新姓名：" + value };
+  render();
+}
+
+async function doReset(id) {
+  const input = document.getElementById("pwInput");
+  const msgEl = document.getElementById("resetMsg");
+  const btn = document.getElementById("doResetBtn");
+  const pw = (input ? input.value : "").trim();
+
+  if (msgEl) { msgEl.className = "msg"; msgEl.textContent = ""; }
+
+  if (pw.length < 8) {
+    if (msgEl) { msgEl.className = "msg err"; msgEl.textContent = "密碼至少需要 8 個字元"; }
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = "重設中…"; }
+
+  const { error } = await sb.rpc("admin_reset_user_password", {
+    p_user_id: id,
+    p_new_password: pw
+  });
+
+  if (error) {
+    if (msgEl) { msgEl.className = "msg err"; msgEl.textContent = "重設失敗：" + error.message; }
+    if (btn) { btn.disabled = false; btn.textContent = "確認重設"; }
+    return;
+  }
+
+  resetTarget = null;
+  pendingPassword = "";
+  flash = { type: "ok", text: "密碼已重設完成，請把新密碼交給本人（該同仁已被強制登出）。" };
+  render();
+}
+
+async function copyPassword() {
+  const input = document.getElementById("pwInput");
+  const msgEl = document.getElementById("resetMsg");
+  const text = (input ? input.value : "") || pendingPassword;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    if (msgEl) { msgEl.className = "msg ok"; msgEl.textContent = "已複製到剪貼簿"; }
+  } catch (e) {
+    if (input) { input.focus(); input.select(); }
+    if (msgEl) { msgEl.className = "msg err"; msgEl.textContent = "無法自動複製，已選取文字，請按 Ctrl+C"; }
+  }
+}
+
+init();
+</script>
+</body>
+</html>

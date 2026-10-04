@@ -1,12 +1,21 @@
-const CACHE = 'guardian-v7';
+const CACHE = 'guardian-v8';
 const BASE = '/life-insurance/';
 const ASSETS = [
   BASE,
+  BASE + 'config.js',
+  BASE + 'accounts.html',
   BASE + 'insurance-needs.html',
   BASE + '90day.html',
   BASE + 'manager-income.html',
   BASE + 'career-system.html',
   BASE + 'libs/html2pdf.bundle.min.js',
+  BASE + 'video-training/login.html',
+  BASE + 'video-training/videos.html',
+  BASE + 'video-training/watch.html',
+  BASE + 'video-training/profile.html',
+  BASE + 'video-training/admin.html',
+  BASE + 'video-training/style.css',
+  BASE + 'video-training/config.js',
   BASE + 'sharing/login.html',
   BASE + 'sharing/share.html',
   BASE + 'sharing/style.css',

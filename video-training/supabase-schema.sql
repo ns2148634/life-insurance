@@ -145,6 +145,14 @@ create policy "update own profile" on public.profiles
   using ( (select auth.uid()) = id )
   with check ( (select auth.uid()) = id );
 
+-- admin 可改任何人的 profile（帳號管理頁 accounts.html 用來修正姓名）；
+-- is_admin 欄位另有 trigger trg_protect_is_admin 把關（見第 7 節）
+drop policy if exists "admin update any profile" on public.profiles;
+create policy "admin update any profile" on public.profiles
+  for update to authenticated
+  using ( (select private.is_admin()) )
+  with check ( (select private.is_admin()) );
+
 -- ---- videos -----------------------------------------------------------
 -- 登入使用者皆可讀（維護請直接在 Supabase 後台操作）
 drop policy if exists "authenticated read videos" on public.videos;

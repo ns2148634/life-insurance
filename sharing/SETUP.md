@@ -18,6 +18,7 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`（與 `video-training` 共用同一組�
 - **瀏覽**所有人的分享（卡片式），可「開啟原文」與「複製連結」
 - 只有**分享者本人**能編輯 / 刪除自己的分享
 - 搜尋（標題 / 理由 / 標籤 / 來源 / 分享者）、**分類篩選**、排序（最新 / 最舊 / 只看我的）
+- 分享人姓名以**即時查詢**顯示：同仁在「我的帳號」改名後，**舊分享也會跟著顯示新名**
 - 網址僅允許 `http` / `https`（前端驗證 + 資料庫 check 約束雙重把關）
 
 > Phase 2（尚未實作，schema 已預留 `is_hidden` 欄位）：管理員下架、我的最愛、重複連結提醒、自動抓取標題。
@@ -29,6 +30,8 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`（與 `video-training` 共用同一組�
 2. 打開 Supabase Dashboard → **SQL Editor** → **New query**。
 3. 把 `sharing/supabase-schema-links.sql` **整份內容貼上** → Run。
    - 這份 SQL 是**可重複執行**的，之後改動都能直接整份重跑。
+   - 從 2026-10 版起，本檔額外包含 `public.get_user_display_names()` 函式
+     （分享人姓名的即時查詢），**沒重跑的話舊分享改名後仍會顯示舊名**。
 4. 若分享清單出現「找不到資料表 shared_links」，在 SQL Editor 執行：
    ```sql
    notify pgrst, 'reload schema';
@@ -55,9 +58,11 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`（與 `video-training` 共用同一組�
   透過 `private.is_admin()`（security definer）判斷，避免 RLS 遞迴。
 - **防 XSS**：所有輸出文字經 `escapeHtml`；網址經 `safeUrl()` 只允許 `http`/`https`，
   外連一律 `target="_blank" rel="noopener noreferrer"`。
-- 分享人姓名採**快照**（`shared_by_name`，分享當下寫入）以避免讀取他人的 `profiles`
-  （`profiles` 只能讀自己或管理員，若即時 join 會拿不到姓名）。
-  改名後舊分享仍顯示舊名，屬預期行為。
+- 分享人姓名顯示為**即時查詢**：`shared_by_name`（分享當下寫入）僅作為**後備快照**，
+  前端另呼叫 `public.get_user_display_names(p_ids)`（security definer）取得最新姓名，
+  因此同仁在「我的帳號」改名後，**舊分享也會跟著顯示新名**。
+  該函式只回傳呼叫者指定的 id、且需登入、單次上限 500 筆，不會外洩全體同仁名單；
+  若函式尚未建立（未重跑 SQL）或呼叫失敗，會自動退回快照，不影響瀏覽。
 
 ## 六、疑難排解
 
@@ -67,6 +72,7 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`（與 `video-training` 共用同一組�
 | 分享送出後出現 `new row violates row-level security policy` | insert policy 未生效，或未登入。整份重跑 SQL 後重新登入再試。 |
 | 分享後看不到自己的資料 | 讀取 policy 未生效，或 `is_hidden` 被設為 `true`（MVP 不會）。整份重跑 SQL。 |
 | 列表顯示 email 而非姓名 | 該同仁尚未在「我的帳號」填寫姓名（沿用影片研習的 `profiles.full_name`）。 |
+| 同仁改名後，舊分享仍顯示舊名 | 尚未重跑 `sharing/supabase-schema-links.sql`（缺少 `get_user_display_names` 函式），或該筆的 `shared_by` 為 null（原作者帳號已刪除，只能顯示快照）。 |
 | 送出時顯示「網址格式不正確」 | 需填完整網址且以 `http://` 或 `https://` 開頭（例如少了 `https://` 會擋下）。 |
 | 點了卡片上的編輯 / 刪除沒反應 | 該筆不是你的分享；只有分享者本人（或管理員）能看到這兩個按鈕。 |
 | 網址要換成新分類卻被擋 | 新分類需同步更新資料庫的 check 約束與前端 `CATEGORIES`（見第四節）。 |

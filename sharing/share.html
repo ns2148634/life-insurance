@@ -80,6 +80,7 @@ let user = null;
 let myName = "";
 let allLinks = [];
 let editingId = null;
+let nameMap = {};   // shared_by -> 即時姓名（由 get_user_display_names 取得）
 
 const listEl = document.getElementById("list");
 const formMsg = document.getElementById("formMsg");
@@ -111,6 +112,12 @@ function fmtDate(iso) {
   if (isNaN(d)) return "";
   const p = n => String(n).padStart(2, "0");
   return `${d.getFullYear()}/${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+// 分享人顯示姓名：優先用「即時」姓名（改名後舊分享也會跟著更新），
+// 查不到時退回分享當下的快照 shared_by_name。
+function displayName(r) {
+  return (r.shared_by && nameMap[r.shared_by]) || r.shared_by_name || "同仁";
 }
 
 function showMsg(el, text, ok) {
@@ -157,7 +164,24 @@ async function loadLinks() {
     return;
   }
   allLinks = data || [];
+  await loadDisplayNames();
   render();
+}
+
+// 取得分享人的即時姓名（同仁改名後，舊分享也會跟著顯示新名）
+// 依賴 supabase-schema-links.sql 的 public.get_user_display_names；
+// 若尚未執行該 SQL，這裡會靜默失敗並退回快照，不影響瀏覽。
+async function loadDisplayNames() {
+  const ids = Array.from(new Set(allLinks.map(r => r.shared_by).filter(Boolean)));
+  nameMap = {};
+  if (ids.length === 0) return;
+
+  const { data, error } = await sb.rpc("get_user_display_names", { p_ids: ids });
+  if (error || !Array.isArray(data)) return;
+
+  data.forEach(row => {
+    if (row && row.user_id) nameMap[row.user_id] = row.display_name;
+  });
 }
 
 function render() {
@@ -170,7 +194,7 @@ function render() {
   if (sort === "mine") rows = rows.filter(r => r.shared_by === user.id);
   if (q) {
     rows = rows.filter(r => [
-      r.title, r.summary, r.source, r.shared_by_name, (r.tags || []).join(" ")
+      r.title, r.summary, r.source, displayName(r), r.shared_by_name, (r.tags || []).join(" ")
     ].join(" ").toLowerCase().includes(q));
   }
   rows.sort((a, b) => {
@@ -202,7 +226,7 @@ function render() {
           ${favicon ? `<img class="favicon" src="${favicon}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : ""}
           <div class="link-title-wrap">
             <a class="link-title" href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.title)}</a>
-            <div class="link-meta">${escapeHtml(r.source || host || "")} · ${escapeHtml(r.shared_by_name || "同仁")} · ${escapeHtml(fmtDate(r.created_at))}</div>
+            <div class="link-meta">${escapeHtml(r.source || host || "")} · ${escapeHtml(displayName(r))} · ${escapeHtml(fmtDate(r.created_at))}</div>
           </div>
           <span class="chip">${escapeHtml(r.category || "其他")}</span>
         </div>
@@ -331,7 +355,9 @@ form.addEventListener("submit", async (e) => {
 
   let error;
   if (wasEditing) {
-    ({ error } = await sb.from("shared_links").update(payload).eq("id", editingId));
+    // 順手更新快照，讓「即使沒跑到 RPC」的場合也能拿到較新的姓名
+    ({ error } = await sb.from("shared_links")
+      .update({ ...payload, shared_by_name: myName }).eq("id", editingId));
   } else {
     ({ error } = await sb.from("shared_links").insert({
       ...payload,

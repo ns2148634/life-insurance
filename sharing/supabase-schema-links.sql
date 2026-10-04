@@ -134,6 +134,39 @@ create policy "admin delete any share" on public.shared_links
   using ( (select private.is_admin()) );
 
 -- =========================================================
+-- 3.5 取得分享人的「即時」顯示姓名
+--     問題：public.profiles 的 RLS 只允許讀自己或管理員，
+--           前端無法即時 join 出分享人姓名，只能靠 shared_by_name 快照，
+--           導致同仁改名後，舊分享仍顯示舊名。
+--     解法：用 security definer 函式代查，但只回傳「呼叫者指定的那幾個 id」，
+--           不會把全體同仁的名單倒給一般使用者。
+--     前端：share.html 以 sb.rpc('get_user_display_names', { p_ids: [...] }) 呼叫，
+--           查不到（或本函式尚未建立）時自動退回 shared_by_name 快照。
+-- =========================================================
+create or replace function public.get_user_display_names(p_ids uuid[])
+returns table (user_id uuid, display_name text)
+language sql
+security definer
+set search_path = ''
+stable
+as $$
+  select p.id as user_id,
+         coalesce(
+           nullif(btrim(p.full_name), ''),
+           nullif(btrim(p.email), ''),
+           '同仁'
+         ) as display_name
+  from public.profiles p
+  where p.id = any(p_ids)
+    -- 僅限登入者，且一次最多 500 筆，避免被當成大量列舉的跳板
+    and (select auth.uid()) is not null
+    and coalesce(array_length(p_ids, 1), 0) <= 500;
+$$;
+
+revoke all on function public.get_user_display_names(uuid[]) from public, anon;
+grant execute on function public.get_user_display_names(uuid[]) to authenticated;
+
+-- =========================================================
 -- 4. 讓 PostgREST 立即認得新表 / 新欄位（避免 schema cache 找不到）
 -- =========================================================
 notify pgrst, 'reload schema';
@@ -151,4 +184,11 @@ notify pgrst, 'reload schema';
 --              '<你的 user id>', '王小明');
 -- 3. 若分享清單出現「找不到資料表 shared_links」：
 --      在 SQL Editor 執行  notify pgrst, 'reload schema';  再重試。
+-- 4. 要驗證「分享人姓名即時更新」，可在改了某人的 full_name 後重新整理 share.html，
+--    舊分享應顯示新名。若仍顯示舊名，檢查下列兩點：
+--      a. 本檔（含 3.5 節的 get_user_display_names）是否已整份重跑。
+--      b. 前端 sb.rpc('get_user_display_names', { p_ids: [...] }) 是否有錯誤
+--         （開發者工具 Console / Network 可看，未登入會被 RLS 條件擋成空結果）。
+--    也可在 SQL Editor 直接呼叫測試：
+--      select * from public.get_user_display_names(array['<某個 user id>']::uuid[]);
 -- =========================================================

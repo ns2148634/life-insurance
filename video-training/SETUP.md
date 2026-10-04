@@ -11,6 +11,7 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 | `watch.html` | 觀看影片並記錄進度 |
 | `profile.html` | **我的帳號**：填寫/修改姓名、自行更改密碼 |
 | `admin.html` | 主管後台：團隊完成度、**代為重設業務員密碼** |
+| `../accounts.html` | **帳號管理**（網站根目錄）：所有帳號清單、修改姓名、重設密碼 |
 | `config.js` | Supabase URL / anon key |
 | `supabase-schema.sql` | 資料表、RLS、函式、觸發器（可重複執行） |
 
@@ -58,6 +59,21 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 > 由資料庫端的 `security definer` 函式檢查 `private.is_admin()` 後更新 `auth.users.encrypted_password`
 > 並刪除 `auth.sessions`。未登入者或非管理員呼叫會直接被拒絕（42501）。
 
+## 四之二、帳號管理頁（`accounts.html`，網站根目錄）
+
+網站首頁（`index.html`）上方有登入區塊，登入後若身分是管理員，會多出 **帳號管理** 的連結。
+
+1. 未登入直接開啟 `accounts.html` → 會自動導回首頁登入
+2. 非管理員登入 → 顯示「你沒有權限查看這個頁面（僅限管理員）」
+3. 管理員可看到所有帳號（姓名 / Email / 權限 / 建立日期）：
+   - **改姓名** → 直接更新 `public.profiles.full_name`，影片研習與業務分享專區會同步顯示新姓名
+   - **重設密碼** → 與 `admin.html` 相同，走 `admin_reset_user_password`
+4. **新增帳號**仍須在 Dashboard → Authentication → Users → Add user（前端沒有 service_role，無法代為註冊）
+
+帳號清單是讀 `public.profiles`（由 `admin read all profiles` policy 授權），
+因此只有 `profiles` 裡有資料列的帳號才會出現；若是直接在 Authentication 新增、卻沒看到，
+請確認 `handle_new_user` 觸發器有正常建立 profile（可重跑 `supabase-schema.sql` 第 9 節補齊）。
+
 ## 五、安全性設計（本次修訂）
 
 - **修掉 policy 無限遞迴**：舊版 `profiles` 的 admin policy 直接 `select profiles`，
@@ -69,6 +85,8 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 - `anon` 角色已撤銷 `profiles` / `videos` / `watch_progress` 的所有權限。
 - policy 皆使用官方建議寫法：`to authenticated` + `(select auth.uid())`。
 - `admin_reset_user_password` 只 `grant execute` 給 `authenticated`，且函式內再檢查管理員身分。
+- **`accounts.html` 改姓名**：新增 `admin update any profile` policy，讓管理員能更新任何人的 `profiles` 列
+  （`using` / `with check` 都是 `private.is_admin()`）；`is_admin` 欄位仍由 `trg_protect_is_admin` 把關。
 
 ## 六、疑難排解
 
@@ -82,5 +100,8 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 | 重設密碼後無法用新密碼登入 | 代表直接寫 `auth.users.encrypted_password` 在此專案不相容。請改用 Dashboard → Authentication → Users → 該使用者 → Reset password 重設，並回報以便改走 Admin API（Edge Function）。 |
 | 重設密碼出現 `Could not find the function public.admin_reset_user_password(...)` | PostgREST 的 schema 快取還沒更新。在 SQL Editor 執行：`notify pgrst, 'reload schema';` 再重試。 |
 | 業務員登入後被導回登入頁 | Session 遺失（例如瀏覽器隱私模式、或 `config.js` 的 URL / anon key 有誤）。 |
+| `accounts.html` 改姓名出現 `new row violates row-level security policy` | 少了 `admin update any profile` policy，重跑一次 `supabase-schema.sql`。 |
+| `accounts.html` 帳號數量比 Authentication → Users 少 | 該帳號沒有對應的 `profiles` 資料列；重跑 `supabase-schema.sql` 第 9 節補齊。 |
+| 首頁登入成功但沒有出現「帳號管理」連結 | `public.profiles.is_admin` 為 false。執行 `update public.profiles set is_admin = true where id = '<你的 user id>';` |
 
 
