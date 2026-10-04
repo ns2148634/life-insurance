@@ -38,18 +38,28 @@
 <script src="config.js"></script>
 <script>
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const COMPLETE_THRESHOLD = 0.9; // 看滿 90% 算完成
+const COMPLETE_THRESHOLD = 0.9;  // 看滿 90% 算完成
+const SAVE_INTERVAL_MS = 5000;   // 播放中每 5 秒存一次進度
+const MIN_RESUME_SEC = 5;        // 至少看過 5 秒才需要「續看」
 
 let user, video, ytPlayer, saveTimer;
+let accessToken = null;      // 關頁前用原生 fetch 儲存時需要
 let maxWatchedSec = 0;
+let completedAt = null;      // 既有的完成時間（不要每次覆蓋）
 let alreadyCompleted = false;
+let saving = false;          // 防止重複送出
 
 const videoId = new URLSearchParams(location.search).get("id");
+const statusEl = document.getElementById("statusText");
 
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { location.href = "login.html"; return; }
   user = session.user;
+  accessToken = session.access_token;
+
+  // token 會過期；登入狀態有更新時同步（pagehide 的 keepalive 儲存要用到）
+  sb.auth.onAuthStateChange((_event, s) => { if (s) accessToken = s.access_token; });
 
   if (!videoId) { document.getElementById("title").textContent = "找不到影片"; return; }
 
@@ -58,15 +68,64 @@ async function init() {
   video = v;
   document.getElementById("title").textContent = video.title;
 
-  const { data: existing } = await sb.from("watch_progress")
+  // 讀出這位觀看者上次的進度，下次進來才能顯示並續看
+  const { data: existing, error: progressErr } = await sb.from("watch_progress")
     .select("*").eq("user_id", user.id).eq("video_id", video.id).maybeSingle();
+  if (progressErr) console.error("[watch_progress] 讀取進度失敗:", progressErr);
+
   if (existing) {
-    maxWatchedSec = existing.watched_sec || 0;
-    alreadyCompleted = !!existing.completed_at;
-    updateBar(existing.percent || 0);
+    maxWatchedSec = Number(existing.watched_sec) || 0;
+    completedAt = existing.completed_at || null;
+    alreadyCompleted = !!completedAt;
+    updateBar(Number(existing.percent) || 0);
+    if (alreadyCompleted) {
+      setStatus("這支影片已完成");
+    } else if (maxWatchedSec > 0) {
+      setStatus("上次觀看至 " + hms(maxWatchedSec));
+    }
   }
 
   loadYouTubeApi();
+}
+
+// 把秒數顯示成 m:ss
+function hms(sec) {
+  sec = Math.max(0, Math.floor(Number(sec) || 0));
+  return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
+}
+
+function setStatus(msg, isError) {
+  statusEl.textContent = msg;
+  statusEl.style.color = isError ? "var(--danger)" : "";
+}
+
+// 依目前播放位置組出要寫入 watch_progress 的資料列
+function buildRow(forceComplete) {
+  if (!user || !video || !ytPlayer || typeof ytPlayer.getCurrentTime !== "function") return null;
+
+  const current = Math.floor(ytPlayer.getCurrentTime());
+  const duration = Number(video.duration_sec) || Math.floor(ytPlayer.getDuration()) || 0;
+  if (!duration) return null;
+
+  maxWatchedSec = Math.max(maxWatchedSec, current);
+  let percent = Math.min(100, (maxWatchedSec / duration) * 100);
+  if (forceComplete) percent = 100;
+  percent = Math.round(percent * 100) / 100;
+
+  const isComplete = !!completedAt || percent >= COMPLETE_THRESHOLD * 100;
+  if (isComplete && !completedAt) completedAt = new Date().toISOString();
+  alreadyCompleted = isComplete;
+
+  updateBar(percent);
+
+  return {
+    user_id: user.id,
+    video_id: video.id,
+    watched_sec: maxWatchedSec,
+    percent: percent,
+    completed_at: isComplete ? completedAt : null,
+    last_watched_at: new Date().toISOString()
+  };
 }
 
 function loadYouTubeApi() {
@@ -79,46 +138,73 @@ function loadYouTubeApi() {
       playerVars: { rel: 0, modestbranding: 1 },
       events: {
         onReady: () => {
-          saveTimer = setInterval(saveProgress, 10000);
+          // 下次進來：自動跳回上次看到的位置繼續
+          if (!alreadyCompleted && maxWatchedSec >= MIN_RESUME_SEC) {
+            ytPlayer.seekTo(maxWatchedSec, true);
+            setStatus("已從上次位置 " + hms(maxWatchedSec) + " 繼續播放");
+          }
+          saveTimer = setInterval(() => saveProgress(false), SAVE_INTERVAL_MS);
         },
         onStateChange: (e) => {
-          if (e.data === YT.PlayerState.ENDED) saveProgress(true);
+          if (e.data === YT.PlayerState.PAUSED) saveProgress(false);  // 暫停就先存
+          if (e.data === YT.PlayerState.ENDED) saveProgress(true);    // 播完直接算完成
         }
       }
     });
   };
 }
 
+// 播放中定時 / 暫停 / 播完 都會走這裡，確實寫進 watch_progress
 async function saveProgress(forceComplete) {
-  if (!ytPlayer || typeof ytPlayer.getCurrentTime !== "function") return;
-  const current = Math.floor(ytPlayer.getCurrentTime());
-  const duration = video.duration_sec || Math.floor(ytPlayer.getDuration()) || 1;
-  maxWatchedSec = Math.max(maxWatchedSec, current);
-  let percent = Math.min(100, (maxWatchedSec / duration) * 100);
-  if (forceComplete) percent = 100;
+  if (saving) return;
+  const row = buildRow(forceComplete);
+  if (!row) return;
 
-  const isComplete = alreadyCompleted || percent >= COMPLETE_THRESHOLD * 100;
-  if (isComplete) alreadyCompleted = true;
+  saving = true;
+  const { error } = await sb.from("watch_progress")
+    .upsert(row, { onConflict: "user_id,video_id" });
+  saving = false;
 
-  updateBar(percent);
-
-  await sb.from("watch_progress").upsert({
-    user_id: user.id,
-    video_id: video.id,
-    watched_sec: maxWatchedSec,
-    percent: percent,
-    completed_at: isComplete ? new Date().toISOString() : null,
-    last_watched_at: new Date().toISOString()
-  }, { onConflict: "user_id,video_id" });
+  if (error) {
+    console.error("[watch_progress] 儲存失敗:", error);
+    setStatus("進度儲存失敗：" + error.message, true);
+    return;
+  }
+  setStatus("已儲存進度 " + hms(maxWatchedSec) + (alreadyCompleted ? "（已完成）" : ""));
 }
 
+// 關頁 / 切到背景時的最後一存：
+// 用原生 fetch + keepalive，瀏覽器才不會像 async supabase 請求那樣把請求直接取消。
+function flushProgress() {
+  if (!user || !video || !accessToken) return;
+  if (!ytPlayer || typeof ytPlayer.getCurrentTime !== "function") return;
+
+  const row = buildRow(false);
+  if (!row) return;
+
+  fetch(SUPABASE_URL + "/rest/v1/watch_progress?on_conflict=user_id,video_id", {
+    method: "POST",
+    keepalive: true,
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": "Bearer " + accessToken,
+      "Content-Type": "application/json",
+      "Prefer": "resolution=merge-duplicates"
+    },
+    body: JSON.stringify(row)
+  }).then((res) => {
+    if (!res.ok) return res.text().then((t) => console.error("[watch_progress] 離開頁面前儲存失敗:", res.status, t));
+  }).catch((err) => console.error("[watch_progress] 離開頁面前儲存失敗:", err));
+}
+
+document.addEventListener("visibilitychange", () => { if (document.hidden) flushProgress(); });
+window.addEventListener("pagehide", flushProgress);
+
 function updateBar(percent) {
-  const p = Math.round(percent);
+  const p = Math.min(100, Math.max(0, Math.round(Number(percent) || 0)));
   document.getElementById("bar").style.width = p + "%";
   document.getElementById("percentText").textContent = p + "%" + (alreadyCompleted ? "（已完成）" : "");
 }
-
-window.addEventListener("beforeunload", () => { if (ytPlayer) saveProgress(); });
 
 init();
 </script>

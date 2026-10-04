@@ -14,6 +14,7 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 | `../accounts.html` | **帳號管理**（網站根目錄）：所有帳號清單、修改姓名、重設密碼 |
 | `config.js` | Supabase URL / anon key |
 | `supabase-schema.sql` | 資料表、RLS、函式、觸發器（可重複執行） |
+| `supabase-watch-progress-fix.sql` | **觀看進度寫不進去時的診斷 + 修復**（可重複執行） |
 
 ## 二、第一次使用（或每次修改 SQL 後）必做
 
@@ -103,5 +104,8 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 | `accounts.html` 改姓名出現 `new row violates row-level security policy` | 少了 `admin update any profile` policy，重跑一次 `supabase-schema.sql`。 |
 | `accounts.html` 帳號數量比 Authentication → Users 少 | 該帳號沒有對應的 `profiles` 資料列；重跑 `supabase-schema.sql` 第 9 節補齊。 |
 | 首頁登入成功但沒有出現「帳號管理」連結 | `public.profiles.is_admin` 為 false。執行 `update public.profiles set is_admin = true where id = '<你的 user id>';` |
+| **影片進度條會動，但 `watch_progress` 一直是空的**、重新進入影片從 0 開始 | 寫入被 DB 擋掉，而舊版前端把錯誤吞掉了（所以只看到「有進度、沒存下來」）。開 DevTools → Console 看 `[watch_progress] 儲存失敗: ...`：<br>`42P10` = 表少了 `(user_id, video_id)` 主鍵（`upsert` 的 `onConflict` 對不上）<br>`42501` = RLS policy 不存在或權限不足<br>執行 `supabase-watch-progress-fix.sql`（整份貼上 Run，可重複執行）即可修好。 |
+| Watch 頁右上角顯示「進度儲存失敗：…」 | 這是**刻意保留**的提示（2026-10 修訂：不再靜默失敗）。錯誤碼對照同上，跑一次 `supabase-watch-progress-fix.sql` 後重新整理即可。 |
+| 影片看到一半離開，下次進來沒有回到上次的位置 | 需 `watch_progress` 有寫入成功（見上一列）。成功時 Watch 頁會顯示「上次觀看至 m:ss」並自動 `seekTo` 續看；**已完成的影片**會從頭播、不續看。 |
 
 
