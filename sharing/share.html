@@ -27,8 +27,17 @@
     </div>
   </header>
 
-  <!-- ---- 分享表單 ---- -->
-  <div class="card">
+  <!-- ---- 頁面訊息（表單收合時，分享成功 / 刪除失敗也看得到）---- -->
+  <div id="pageMsg" style="display:none;"></div>
+
+  <!-- ---- 我要分享：預設只顯示這顆按鈕，點了才展開下面的表單 ---- -->
+  <div class="compose-bar">
+    <button type="button" id="toggleFormBtn">＋ 我要分享</button>
+    <span class="dim">看到值得分享的新聞／文章，貼上來讓大家一起用</span>
+  </div>
+
+  <!-- ---- 分享表單（預設收合，讓一進站先看到分享清單）---- -->
+  <div class="card" id="composer" style="display:none;">
     <h2 class="card-title" id="formTitle">分享一個連結</h2>
     <div id="editingBar" class="editing-bar" style="display:none;">
       <span class="dim">正在編輯：<span id="editingName"></span></span>
@@ -87,6 +96,12 @@ const formMsg = document.getElementById("formMsg");
 const form = document.getElementById("shareForm");
 const submitBtn = document.getElementById("submitBtn");
 
+// 分享表單預設收合（一進站先看到分享清單），「＋ 我要分享」才展開
+const composerEl = document.getElementById("composer");
+const pageMsg = document.getElementById("pageMsg");
+const toggleFormBtn = document.getElementById("toggleFormBtn");
+let composerOpen = false;
+
 function escapeHtml(s) {
   return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -126,6 +141,18 @@ function showMsg(el, text, ok) {
   el.style.display = "block";
 }
 function clearMsg(el) { el.style.display = "none"; el.textContent = ""; }
+
+// ---- 分享表單的展開 / 收合 ----
+function setComposerOpen(open) {
+  composerOpen = !!open;
+  composerEl.style.display = composerOpen ? "" : "none";
+  toggleFormBtn.textContent = composerOpen ? "收起表單" : "＋ 我要分享";
+  if (!composerOpen) return;
+
+  composerEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  const first = document.getElementById("urlInput");
+  try { first.focus({ preventScroll: true }); } catch (e) { first.focus(); }
+}
 
 function fillSelect(el, options, includeAll) {
   const opts = (includeAll ? ['<option value="__all">全部分類</option>'] : [])
@@ -295,7 +322,7 @@ function startEdit(id) {
   document.getElementById("editingBar").style.display = "flex";
   submitBtn.textContent = "儲存變更";
   clearMsg(formMsg);
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  setComposerOpen(true);   // 表單預設是收合的，編輯時自動展開並捲到表單
 }
 
 function resetForm() {
@@ -318,7 +345,7 @@ async function removeLink(id, btn) {
   const { error } = await sb.from("shared_links").delete().eq("id", id);
 
   if (error) {
-    showMsg(formMsg, "刪除失敗：" + error.message, false);
+    showMsg(pageMsg, "刪除失敗：" + error.message, false);
     btn.disabled = false;
     return;
   }
@@ -329,6 +356,7 @@ async function removeLink(id, btn) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearMsg(formMsg);
+  clearMsg(pageMsg);
 
   const url = safeUrl(document.getElementById("urlInput").value);
   if (!url) {
@@ -375,7 +403,8 @@ form.addEventListener("submit", async (e) => {
   }
 
   resetForm();
-  showMsg(formMsg, wasEditing ? "已更新分享 ✓" : "已分享，謝謝你的貢獻 ✓", true);
+  setComposerOpen(false);   // 送出後收合表單，回到分享清單
+  showMsg(pageMsg, wasEditing ? "已更新分享 ✓" : "已分享，謝謝你的貢獻 ✓", true);
   await loadLinks();
 });
 
@@ -386,7 +415,13 @@ form.addEventListener("submit", async (e) => {
   el.addEventListener("change", render);
 });
 
-document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+document.getElementById("cancelEditBtn").addEventListener("click", () => {
+  resetForm();
+  setComposerOpen(false);
+});
+
+// 「＋ 我要分享」：展開 / 收起表單
+toggleFormBtn.addEventListener("click", () => setComposerOpen(!composerOpen));
 
 document.getElementById("logoutBtn").addEventListener("click", async () => {
   await sb.auth.signOut();
