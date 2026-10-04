@@ -1173,7 +1173,9 @@ renderRiskStage();
     var arr=Array.prototype.slice.call(dots.children);
     jumpRisk(arr.indexOf(t)+1);
   });
-if('serviceWorker' in navigator){
+// 本機開發（localhost / 127.0.0.1）不註冊 Service Worker，避免快取干擾測試（詳見 DEV.md）
+var isLocalDev = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+if('serviceWorker' in navigator && !isLocalDev){
   window.addEventListener('load',function(){
     navigator.serviceWorker.register('./sw.js',{scope:'./'})
       .then(function(r){console.log('SW:',r.scope);})

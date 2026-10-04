@@ -367,7 +367,9 @@ function renderLogin() {
 renderAccount();
 </script>
 <script>
-if ('serviceWorker' in navigator) {
+// 本機開發（localhost / 127.0.0.1）不註冊 Service Worker，避免快取干擾測試；
+// sw.js 本身在偵測到本機時也會自動卸載。詳見 DEV.md。
+if ('serviceWorker' in navigator && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
   navigator.serviceWorker.register('./sw.js').catch(function(err){
     console.log('SW registration failed (ok in dev):', err);
   });

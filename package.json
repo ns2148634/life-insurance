@@ -1,5 +1,11 @@
 {
+  "name": "life-insurance",
+  "private": true,
+  "scripts": {
+    "dev": "node dev-server.js"
+  },
   "dependencies": {
     "@supabase/server": "^1.6.1"
   }
 }
+
