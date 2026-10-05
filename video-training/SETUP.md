@@ -64,7 +64,7 @@ Supabase 專案：`dwesqvutdlvnmajxdcpn`
 
 網站首頁（`index.html`）上方有登入區塊，登入後若身分是管理員，會多出 **帳號管理** 的連結。
 
-1. 未登入直接開啟 `accounts.html` → 會自動導回首頁登入
+1. 未登入直接開啟 `accounts.html` → 會自動導向 `login.html` 登入（登入後再回到這一頁）
 2. 非管理員登入 → 顯示「你沒有權限查看這個頁面（僅限管理員）」
 3. 管理員可看到所有帳號（姓名 / Email / 權限 / 建立日期）：
    - **改姓名** → 直接更新 `public.profiles.full_name`，影片研習與業務分享專區會同步顯示新姓名

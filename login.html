@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="登入">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>登入｜宸功保險</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1a26;--ink-card:#182a3a;
+  --gold:#c2974f;--gold-lt:#dcb877;
+  --gold-dim:rgba(194,151,79,0.10);--gold-line:rgba(194,151,79,0.30);
+  --vermilion-lt:#d9634a;
+  --text:rgba(255,255,255,0.94);--muted:rgba(255,255,255,0.56);
+  --hint:rgba(255,255,255,0.32);--border:rgba(255,255,255,0.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 85% -10%, rgba(194,151,79,0.10), transparent 60%),
+    radial-gradient(ellipse 700px 400px at -10% 100%, rgba(193,68,45,0.07), transparent 55%),
+    var(--ink);
+  min-height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  padding:32px 20px;
+}
+.card{
+  width:100%;max-width:400px;
+  padding:34px 28px 28px;
+  border:1px solid var(--gold-line);border-radius:16px;
+  background:linear-gradient(180deg, rgba(194,151,79,0.08), rgba(255,255,255,0.02));
+  box-shadow:0 18px 44px -20px rgba(0,0,0,0.7);
+}
+.crest{
+  width:44px;height:44px;border-radius:11px;overflow:hidden;
+  border:1px solid var(--gold-line);margin-bottom:18px;
+}
+.crest img{width:100%;height:100%;object-fit:cover;display:block;}
+h1{
+  font-family:'Noto Serif TC',serif;font-weight:900;
+  font-size:23px;letter-spacing:1px;color:#fff;line-height:1.4;
+}
+h1 span{color:var(--gold);}
+.sub{margin-top:10px;font-size:13.5px;color:var(--hint);line-height:1.85;}
+form{margin-top:24px;display:flex;flex-direction:column;gap:12px;}
+input{
+  width:100%;padding:12px 14px;border-radius:9px;
+  border:1px solid var(--border);background:#0a141f;color:var(--text);
+  font-size:15px;font-family:inherit;
+}
+input::placeholder{color:rgba(255,255,255,0.28);}
+input:focus{outline:none;border-color:var(--gold);}
+button{
+  width:100%;padding:12px 20px;border-radius:9px;border:none;cursor:pointer;
+  background:var(--gold);color:#1a1406;font-weight:700;font-size:15px;font-family:inherit;
+  transition:opacity .2s ease;
+}
+button:disabled{opacity:.55;cursor:default;}
+.msg{display:none;margin-top:14px;font-size:13.5px;line-height:1.7;}
+.msg.err{display:block;color:var(--vermilion-lt);}
+.hint{margin-top:18px;font-size:12.5px;color:var(--hint);line-height:1.8;}
+.hint b{color:var(--muted);font-weight:600;}
+@media (max-width:420px){ .card{padding:28px 20px 24px;} }
+</style>
+</head>
+
+<body>
+<div class="card">
+  <div class="crest"><img src="./icon-192.png" alt="宸功保險"></div>
+  <h1>宸功保險<span> · 內部工具</span></h1>
+  <p class="sub">本網站所有功能（試算工具、90 天手冊、影片研習、業務分享專區）都需登入後才能使用。</p>
+
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" autocomplete="username" autofocus required>
+    <input type="password" id="password" placeholder="密碼" autocomplete="current-password" required>
+    <button type="submit" id="submitBtn">登入</button>
+  </form>
+
+  <div class="msg" id="msg"></div>
+
+  <p class="hint">
+    帳號由主管配發，<b>不開放自行註冊</b>。忘記密碼請洽主管協助重設。
+  </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script>
+const msgEl = document.getElementById("msg");
+const form = document.getElementById("loginForm");
+const btn = document.getElementById("submitBtn");
+const emailEl = document.getElementById("email");
+const pwEl = document.getElementById("password");
+
+function showErr(text) {
+  msgEl.className = "msg err";
+  msgEl.textContent = text;
+}
+function clearMsg() {
+  msgEl.className = "msg";
+  msgEl.textContent = "";
+}
+
+// ---- 登入後要去的頁面（只允許站內相對路徑，避免被拿來做開放轉址）----
+function safeNext() {
+  let v = "";
+  try { v = new URLSearchParams(location.search).get("next") || ""; } catch (e) { v = ""; }
+  if (!v) return "./index.html";
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(v)) return "./index.html";   // 有 scheme，如 https://evil
+  if (v.slice(0, 2) === "//") return "./index.html";                // protocol-relative
+  if (/login\.html(\?|#|$)/i.test(v)) return "./index.html";        // 別自己繞回來
+  return v;
+}
+const NEXT = safeNext();
+
+// ---- 連不到 Supabase 時（auth-guard.js 會帶 error=1 過來）----
+try {
+  if (new URLSearchParams(location.search).get("error") === "1") {
+    showErr("無法連線驗證登入狀態，請確認網路連線後重新整理。");
+  }
+} catch (e) { /* ignore */ }
+
+let sb = null;
+try {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+  sb = null;
+}
+if (!sb && !msgEl.textContent) {
+  showErr("無法載入登入元件（Supabase SDK），請確認網路後重新整理。");
+}
+
+// ---- 已經登入就直接前往目標頁 ----
+(async () => {
+  if (!sb) return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) location.replace(NEXT);
+})();
+
+// ---- 登入 ----
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!sb) {
+    showErr("目前無法登入，請確認網路連線後重新整理。");
+    return;
+  }
+
+  clearMsg();
+  btn.disabled = true;
+  btn.textContent = "登入中…";
+
+  const email = emailEl.value.trim();
+  const password = pwEl.value;
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    showErr("帳號或密碼錯誤，請確認後再試一次");
+    btn.disabled = false;
+    btn.textContent = "登入";
+    return;
+  }
+
+  location.replace(NEXT);
+});
+</script>
+</body>
+</html>

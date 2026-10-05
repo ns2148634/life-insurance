@@ -201,7 +201,11 @@ async function init() {
   }
 
   const { data: { session } } = await sb.auth.getSession();
-  if (!session) { location.href = "./index.html"; return; }
+  if (!session) {
+    // 全站都需登入：未登入直接帶去登入頁，登入後再回到這一頁
+    location.replace("./login.html?next=" + encodeURIComponent(location.pathname));
+    return;
+  }
 
   const { data: me, error } = await sb.from("profiles")
     .select("is_admin").eq("id", session.user.id).maybeSingle();
@@ -217,7 +221,7 @@ async function init() {
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     await sb.auth.signOut();
-    location.href = "./index.html";
+    location.replace("./login.html");
   });
 
   await loadProfiles();

@@ -67,14 +67,83 @@ npm run dev
 
 ## 四、各頁面在本機的預期行為
 
+> **全站都需登入**：所有頁面的 `<head>` 都載入了 `auth-guard.js`，
+> 未登入會自動導向根目錄的 `login.html`（機制見「四之一」）。
+
 | 頁面 | 本機可測 | 說明 |
 | --- | --- | --- |
-| `index.html` | ✅ | 上方登入區塊需連得到 Supabase；其餘為靜態目錄 |
-| `insurance-needs.html` 等試算工具 | ✅ | 純前端計算，離線也能用（`html2pdf` 已放在 `libs/`） |
-| `90day.html`（90 天手冊） | ✅ | 雲端用 Firebase RTDB；**連不到時會自動退回「僅本機儲存」**，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」，不影響本機測試 |
+| `login.html`（根目錄） | ✅ | 全站共用登入頁；本身不需登入即可開 |
+| `index.html` | ✅ | 工具總覽；需登入。登入區塊仍需連得到 Supabase |
+| `insurance-needs.html` 等試算工具 | ✅ | 需登入；計算本身是純前端（`html2pdf` 已放在 `libs/`） |
+| `90day.html`（90 天手冊） | ✅ | 需登入；進度**跟著登入帳號**存（Firebase RTDB `cg90/users/<uid>` + 本機 mirror），連不到雲端時會自動退回「僅本機儲存」，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」（見「四之二」） |
 | `accounts.html` | ✅ | 需管理員帳號登入，且該帳號 `profiles.is_admin = true` |
 | `video-training/*` | ✅ | 需登入；影片為 YouTube 內嵌，需網路 |
 | `sharing/*` | ✅ | 需登入 |
+
+---
+
+## 四之一、全站登入守衛（`auth-guard.js` + `login.html`）
+
+本站是**純靜態網站、沒有後端**，所以「要登入才能用」是由前端守衛達成：
+
+| 檔案 | 角色 |
+| --- | --- |
+| `auth-guard.js` | **守衛**。放在需要登入的頁面 `<head>`：先隱藏 `<body>`（避免內容閃現）→ 動態載入 Supabase SDK 與 `config.js` → 檢查 session → 未登入就 `location.replace('login.html?next=<原本要去的頁面>')` |
+| `login.html`（根目錄） | **全站共用登入頁**。登入成功後用 `next` 導回原本要去的頁面（只接受站內相對路徑，避免被拿來做開放轉址） |
+
+要讓**新頁面**也需要登入，只要在 `<head>` 內加一行：
+
+```html
+<script src="./auth-guard.js"></script>
+```
+
+子目錄頁面可自行指定路徑（預設找同層的 `config.js` / `login.html`）：
+
+```html
+<script src="../auth-guard.js" data-config="../config.js" data-login="../login.html"></script>
+```
+
+頁面若需要同一個 Supabase client，等守衛準備好再拿（`index.html` 就是這樣寫的）：
+
+```js
+const { sb, session, user } = await window.authGuard.ready;
+```
+
+### 注意事項（務必理解）
+
+- **這只是前端擋人，不是真正的安全機制。** 靜態網站的 HTML 本來就是公開的，
+  有決心的人停用 JS 或直接看原始碼，仍看得到頁面內容。
+  **真正保護資料的是 Supabase 的 RLS**——影片、分享連結、帳號資料都存在 Supabase，
+  未登入者拿不到。
+- 因此守衛採「**無法驗證就不放行**」：離線或 CDN 被擋載入失敗時，
+  會帶 `error=1` 導向登入頁，不會出現「載入失敗就放行」的後門。
+- 副作用：**離線時可能無法使用**（原本試算工具可離線用）。
+  若瀏覽器已快取 `supabase-js` 且 session 仍未過期，離線還是進得來；否則會停在登入頁。
+- `config.js` 已改成「已宣告就略過」的寫法（`typeof` 判斷 + `var`），
+  所以守衛與頁面各自載入時，不會發生 `const` 重複宣告的 `SyntaxError`。
+
+---
+
+## 四之二、`90day.html` 的進度存在哪（跟著登入帳號）
+
+**2026-10 修訂**：移除「🔑 主管解鎖」密碼、移除「切換查看學員」下拉，並一併移除主管管理面板
+（新增學員／刪除／點卡片切換）。90 天的進度**直接綁定登入帳號**，不必再選「這是哪一位學員的」。
+
+| 位置 | 內容 |
+| --- | --- |
+| 雲端 Firebase RTDB `cg90/users/<登入者 uid>` | `{ uid, name, email, updatedAt, progress }`；`name` 取自 `profiles.full_name`，沒填就退成 email |
+| 本機 `localStorage` `cg90_progress_<uid>` | 同一份進度的 mirror；雲端連不上時仍會保存（狀態列顯示「☁️ 未連線雲端，僅本機儲存」） |
+| 舊版資料 `cg90/students/<隨機 id>` | **保留不動**。只有在「這個帳號完全沒有紀錄」且姓名相同時，才會自動沿用一次，避免舊進度消失 |
+
+- 同步判定：比 `progress.savedAt`，**雲端較新就覆蓋畫面**（在別台裝置更新過也會帶入）。
+- 反過來，本機比雲端新（或雲端還沒有資料）時，第一次連線會把本機推上去。
+- 沒有取得登入者時（守衛正在導向 `login.html`）**完全不寫入**任何資料。
+- 頁面只讀寫「自己那一份」，但 ⚠️ **Firebase Realtime Database 的讀寫權限以 Firebase 規則為準**
+  （與 Supabase 的 RLS 無關）。要真的保護資料，請到 Firebase Console → Realtime Database → Rules
+  限制成「只有登入者能存取自己的節點」；前端守衛本身沒有任何祕密可言。
+- 目前全站只有這一頁用 Firebase，其餘（影片研習、業務分享）都走 Supabase。
+  若日後想統一，把這頁改成 Supabase 資料表（`auth.uid()` + RLS）會更一致，
+  但需要在 SQL Editor 執行一次新增資料表的 SQL。
 
 ---
 

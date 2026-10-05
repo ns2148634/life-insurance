@@ -170,6 +170,9 @@ footer{
   footer{padding:0 20px 40px;}
 }
 </style>
+<!-- 全站登入守衛：未登入會自動導向 login.html -->
+<script src="./auth-guard.js"></script>
+
 </head>
 <body>
 
@@ -278,22 +281,38 @@ footer{
 
 <footer>宸功保險 · 南山人壽</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./config.js"></script>
 <script>
 const accountBody = document.getElementById("accountBody");
 
 let sb = null;
-try {
-  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch (e) {
-  sb = null;
-}
 
 function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[c]));
+}
+
+// head 的 auth-guard.js 已經確認登入、也載入好 SDK 與 config.js，
+// 這裡直接沿用同一個 client，避免重複建立連線與重複 refresh token。
+async function boot() {
+  if (window.authGuard && window.authGuard.ready) {
+    try {
+      const g = await window.authGuard.ready;
+      sb = (g && g.sb) || null;
+    } catch (e) {
+      sb = null;
+    }
+  }
+
+  if (!sb && window.supabase) {
+    try {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch (e) {
+      sb = null;
+    }
+  }
+
+  renderAccount();
 }
 
 async function renderAccount() {
@@ -324,7 +343,8 @@ async function renderAccount() {
 
   document.getElementById("homeLogout").addEventListener("click", async () => {
     await sb.auth.signOut();
-    renderAccount();
+    // 全站都需登入：登出後直接回到登入頁，避免留在原頁看到內容
+    location.replace("./login.html");
   });
 }
 
@@ -364,7 +384,7 @@ function renderLogin() {
   });
 }
 
-renderAccount();
+boot();
 </script>
 <script>
 // 本機開發（localhost / 127.0.0.1）不註冊 Service Worker，避免快取干擾測試；
