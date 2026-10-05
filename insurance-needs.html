@@ -277,6 +277,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield;}
 .s4grid{display:flex;flex-direction:column;gap:18px;margin-top:8px;}
 .s4col{display:flex;flex-direction:column;gap:16px;min-width:0;}
 .s4label{font-size:12px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+/* 重大疾病/癌症 商品選擇（預設 10TSDD，可選 10TDD） */
+.psel{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--r);padding:15px 17px;margin-bottom:16px;}
+.psel-lbl{font-size:12px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.psel-opts{display:flex;gap:10px;flex-wrap:wrap;}
+.psel-opts label{flex:1 1 170px;display:flex;align-items:center;gap:9px;cursor:pointer;font-size:14px;color:var(--text);line-height:1.45;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;transition:all .2s;}
+.psel-opts label:has(input:checked){border-color:var(--gold-line);background:var(--gold-dim);color:var(--gold-lt);}
+.psel-opts input{accent-color:var(--gold);width:16px;height:16px;flex-shrink:0;}
+.psel-note{font-size:12.5px;color:var(--hint);line-height:1.65;margin-top:10px;}
 #s4 .pdfbtn{margin-top:8px;}
 #s4 .warn,#s4 .sintro{margin-bottom:16px;}
 
@@ -602,6 +610,14 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
   <div class="s4grid">
     <div class="s4col">
       <div class="s4label">保障需求總覽</div>
+      <div class="psel" id="psel">
+        <div class="psel-lbl">重大疾病 / 癌症 商品選擇</div>
+        <div class="psel-opts">
+          <label><input type="radio" name="critProd" value="TSDD" checked onchange="onProdChange()"><span>10TSDD（預設）</span></label>
+          <label><input type="radio" name="critProd" value="TDD" onchange="onProdChange()"><span>10TDD（保額＝需求額度）</span></label>
+        </div>
+        <div class="psel-note">10TSDD：以投保保額計收保費，給付金額＝投保保額 ×4（等於需求額度）。10TDD：保額直接等於需求額度，依 10TDD 年繳費率表（每 10 萬元保險金額）計收。切換後請再按「計算年繳保費」。</div>
+      </div>
       <table class="ntbl" id="ntbl"></table>
       <button class="calcbtn" id="calcbtn" onclick="calcPremium()">計算年繳保費 →</button>
     </div>
@@ -652,6 +668,8 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
 // ── 費率表 ──
 var TLTC={15:[50,40],16:[51,41],17:[52,42],18:[53,43],19:[54,44],20:[55,45],21:[57,46],22:[58,46],23:[60,47],24:[61,47],25:[63,48],26:[64,48],27:[66,49],28:[67,49],29:[69,50],30:[70,50],31:[73,52],32:[76,53],33:[79,55],34:[82,56],35:[85,58],36:[88,59],37:[91,61],38:[94,62],39:[97,64],40:[100,65],41:[112,73],42:[119,81],43:[126,86],44:[136,89],45:[148,94],46:[164,102],47:[182,113],48:[196,126],49:[208,137],50:[220,145],51:[250,181],52:[280,210],53:[310,242],54:[340,277],55:[370,319],56:[400,358],57:[430,394],58:[460,429],59:[490,465],60:[520,500]};
 var TSDD={20:[370,400],21:[419,444],22:[468,488],23:[517,532],24:[566,576],25:[615,620],26:[664,664],27:[713,708],28:[762,752],29:[811,796],30:[860,840],31:[974,931],32:[1088,1022],33:[1202,1113],34:[1316,1204],35:[1430,1295],36:[1544,1386],37:[1658,1477],38:[1772,1568],39:[1886,1659],40:[2000,1750],41:[2190,1880],42:[2380,2010],43:[2570,2140],44:[2760,2270],45:[2950,2400],46:[3140,2530],47:[3330,2660],48:[3520,2790],49:[3710,2920],50:[3900,3050],51:[4337,3354],52:[4774,3658],53:[5211,3962],54:[5648,4266],55:[6085,4570],56:[6522,4874],57:[6959,5178],58:[7396,5482],59:[7833,5786],60:[8270,6090],61:[8807,6480],62:[9344,6870],63:[9881,7260],64:[10418,7650],65:[10955,8040],66:[11492,8430],67:[12029,8820],68:[12566,9210],69:[13103,9600],70:[13640,9990]};
+// 10TDD 重大疾病定期險｜年繳費率表（每 10 萬元保險金額，單位：新台幣元）可投保年齡 20–70 歲
+var TDD={20:[84,92],21:[91,105],22:[100,115],23:[110,118],24:[123,161],25:[139,180],26:[158,210],27:[181,240],28:[208,271],29:[241,306],30:[278,342],31:[323,379],32:[373,420],33:[429,461],34:[488,507],35:[552,554],36:[619,606],37:[692,662],38:[771,719],39:[852,776],40:[940,830],41:[1031,879],42:[1131,927],43:[1237,974],44:[1352,1024],45:[1475,1077],46:[1609,1134],47:[1757,1193],48:[1919,1258],49:[2106,1331],50:[2335,1415],51:[2576,1500],52:[2869,1601],53:[3195,1712],54:[3481,1832],55:[3768,1961],56:[4054,2104],57:[4341,2264],58:[4627,2447],59:[4914,2605],60:[5200,2940],61:[5640,3226],62:[6080,3512],63:[6520,3798],64:[6960,4084],65:[7400,4370],66:[7840,4656],67:[8280,4942],68:[8720,5228],69:[9160,5514],70:[9600,5800]};
 var HIR={0:[176,154],1:[176,154],2:[176,154],3:[176,154],4:[176,154],5:[122,108],6:[113,99],7:[104,88],8:[92,78],9:[84,69],10:[75,58],11:[72,56],12:[72,55],13:[67,54],14:[65,52],15:[63,49],16:[66,52],17:[66,53],18:[71,54],19:[73,56],20:[75,59],21:[79,63],22:[82,67],23:[85,72],24:[87,78],25:[92,83],26:[93,93],27:[97,101],28:[100,114],29:[104,122],30:[107,133],31:[112,134],32:[116,136],33:[122,138],34:[127,137],35:[131,139],36:[138,142],37:[144,143],38:[152,144],39:[157,145],40:[164,148],41:[176,150],42:[186,151],43:[199,156],44:[209,157],45:[221,160],46:[225,166],47:[227,172],48:[231,177],49:[234,182],50:[238,189],51:[252,193],52:[268,200],53:[283,207],54:[297,211],55:[312,218],56:[328,227],57:[344,236],58:[361,244],59:[376,253],60:[394,262],61:[414,284],62:[436,305],63:[458,328],64:[480,349],65:[500,370],66:[537,397],67:[573,422],68:[609,449],69:[644,476],70:[681,501],71:[716,537],72:[749,573],73:[785,610],74:[818,645],75:[853,682]};
 var HSA=[{max:25,m:3750,f:3750},{max:30,m:3750,f:5600},{max:35,m:3750,f:7200},{max:40,m:4910,f:7250},{max:45,m:7170,f:7400},{max:50,m:9300,f:8500},{max:55,m:11900,f:9800},{max:60,m:15300,f:12000},{max:65,m:21500,f:16400}];
 var N1TR={15:[6.6,3.1],16:[8.9,3.5],17:[11.0,3.8],18:[11.2,4.2],19:[11.3,4.3],20:[11.3,4.3],21:[11.4,4.4],22:[11.6,4.4],23:[11.8,4.6],24:[11.9,4.8],25:[13.3,4.9],26:[12.1,5.1],27:[12.3,5.4],28:[12.3,5.4],29:[13.4,5.5],30:[12.6,5.7],31:[13.1,5.8],32:[14.0,5.9],33:[14.1,6.6],34:[15.0,7.1],35:[31.4,7.6],36:[33.3,8.1],37:[36.1,8.6],38:[39.0,9.4],39:[20.8,10.4],40:[22.5,11.1],41:[23.9,11.6],42:[26.3,12.5],43:[28.7,13.3],44:[31.4,14.6],45:[34.2,16.1],46:[37.2,17.7],47:[40.3,19.3],48:[43.8,21.3],49:[47.7,23.5],50:[51.4,26.9],51:[55.3,28.4],52:[59.4,31.4],53:[63.5,33.6],54:[67.6,35.6],55:[71.1,35.4],56:[76.0,40.9],57:[82.3,42.2],58:[89.9,46.9],59:[99.4,51.8],60:[108.3,57.7],61:[115.6,59.2],62:[124.6,61.7],63:[135.5,67.7],64:[148.2,74.6],65:[162.3,80.7],66:[177.1,89.9],67:[192.9,100.5],68:[211.0,112.8],69:[231.1,126.7],70:[252.9,142.3]};
@@ -938,18 +956,27 @@ function buildPlan(){
   document.getElementById('edit-hint').style.display='flex';
 }
 
+// ── 重大疾病/癌症 商品切換（預設 10TSDD，可選 10TDD） ──
+function getCritProd(){var el=document.querySelector('input[name="critProd"]:checked');return el?el.value:'TSDD';}
+function onProdChange(){
+  var shown=document.getElementById('premsec').style.display==='block';
+  buildSummary();
+  if(shown)calcPremium();
+}
+
 function buildSummary(){
   var s=getState();
   var picons={interrupt:'⏸',death:'🕊',disability:'♿',medical:'🏥'};
   document.getElementById('warn').style.display=s.age?'none':'block';
   document.getElementById('sintro').innerHTML=(s.name?'<span class="hl">'+s.name+'</span>，根據':'根據')+'您的財務狀況（年收入 <span class="hl">'+s.ai+'</span> 萬元，保險年齡 <span class="hl">'+s.age+'</span> 歲）與擔心排序，以下是完整保障需求總表。';
   var uv=getUserVals(s);
+  var critProd=getCritProd();
   var rows=[
     {cat:'interrupt',name:'一般住院補貼',     need:fmtN(pf(uv.hospMonth))+' 元/月', prod:'1HIR 住院日額'},
     {cat:'interrupt',name:'意外無法工作',     need:fmtN(pf(uv.accWork))+' 元/月',   prod:'NAI 意外附約'},
     {cat:'interrupt',name:'意外住院（綜合）', need:fmtN(pf(uv.accHosp))+' 元/月',  prod:'1HIR + NAI'},
     {cat:'disability',name:'意外失能',        need:uv.disability+' 萬元',            prod:'NAI + PAMR + YPAR'},
-    {cat:'disability',name:'重大疾病/癌症',   need:uv.critical+' 萬元',              prod:'10TSDD'},
+    {cat:'disability',name:'重大疾病/癌症',   need:uv.critical+' 萬元',              prod:(critProd==='TDD'?'10TDD':'10TSDD')},
     {cat:'disability',name:'長期照護',        need:uv.ltc+' 萬/月',                  prod:'10TLTC'},
     {cat:'death',name:'一般身故',             need:uv.deathGen+' 萬元',              prod:'N1TR 定期壽險'},
     {cat:'death',name:'意外身故',             need:uv.deathAcc+' 萬元',              prod:'N1TR + NAI'},
@@ -988,7 +1015,8 @@ function calcPremium(){
   var tltcR=TLTC[Math.min(age,60)];
   if(tltcR){var lm=pf(uv.ltc)||3;addItem('10TLTC 長期照顧定期險','保額'+(lm*12)+'萬月補'+lm+'萬，'+age+'歲'+(gi===0?'男':'女'),tltcR[gi]*(lm*12));}
   var tsddR=TSDD[Math.min(age,70)];
-  if(tsddR){var cn=pf(uv.critical)||Math.round(s.ai*3);var tc=Math.round(cn/4*10)/10;addItem('10TSDD 重大疾病定期險','投保'+tc+'萬給付'+cn+'萬，'+age+'歲'+(gi===0?'男':'女'),tsddR[gi]*(tc/10));}
+  var cn=pf(uv.critical)||Math.round(s.ai*3);
+  if(getCritProd()==='TDD'){var tddR=TDD[Math.min(age,70)];if(tddR)addItem('10TDD 重大疾病定期險','保額'+cn+'萬，'+age+'歲'+(gi===0?'男':'女'),tddR[gi]*(cn/10));}else if(tsddR){var tc=Math.round(cn/4*10)/10;addItem('10TSDD 重大疾病定期險','投保'+tc+'萬給付'+cn+'萬，'+age+'歲'+(gi===0?'男':'女'),tsddR[gi]*(tc/10));}
   var n1R=N1TR[Math.min(age,70)];
   if(n1R){var dn=pf(uv.deathGen)||Math.round(s.ai*10);addItem('N1TR 定期壽險',dn+'萬保額，'+age+'歲'+(gi===0?'男':'女'),n1R[gi]*dn);}
   var hsR=getHSA(age);
@@ -1010,6 +1038,8 @@ function exportPDF(){
   var uv=getUserVals(s);
   var ordMap={};rankOrder.forEach(function(r,i){ordMap[r]=i+1;});
   var catName={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
+  var critProd=getCritProd();
+  var critPlan=(critProd==='TDD')?pf(uv.critical):Math.round(pf(uv.critical)/4*10)/10;
   var catIco={interrupt:'⏸',death:'🕊',disability:'♿',medical:'🏥'};
 
   var gi=s.gi,age=s.age,premItems=[],premTotal=0;
@@ -1020,7 +1050,9 @@ function exportPDF(){
   addP('PAMR 計劃3','意外門診實支實付',3260);
   var disN=pf(uv.disability)||Math.round(s.ai*10);var yN=Math.max(0,disN-300);if(yN>0)addP('YPAR 意外傷害附約',yN+'萬保額',yN*11.8);
   var tltcR=TLTC[Math.min(age||30,60)];if(tltcR){var lm=pf(uv.ltc)||3;addP('10TLTC 長期照顧定期險','保額'+(lm*12)+'萬月補'+lm+'萬',tltcR[gi]*(lm*12));}
-  var tsddR=TSDD[Math.min(age||30,70)];if(tsddR){var cn=pf(uv.critical)||Math.round(s.ai*3);var tc=Math.round(cn/4*10)/10;addP('10TSDD 重大疾病定期險','投保'+tc+'萬給付'+cn+'萬',tsddR[gi]*(tc/10));}
+  var cnP=pf(uv.critical)||Math.round(s.ai*3);
+  if(critProd==='TDD'){var tddR=TDD[Math.min(age||30,70)];if(tddR)addP('10TDD 重大疾病定期險','保額'+cnP+'萬',tddR[gi]*(cnP/10));}
+  else{var tsddR=TSDD[Math.min(age||30,70)];if(tsddR){var tcP=Math.round(cnP/4*10)/10;addP('10TSDD 重大疾病定期險','投保'+tcP+'萬給付'+cnP+'萬',tsddR[gi]*(tcP/10));}}
   var n1R=N1TR[Math.min(age||30,70)];if(n1R){var dn=pf(uv.deathGen)||Math.round(s.ai*10);addP('N1TR 定期壽險',dn+'萬保額',n1R[gi]*dn);}
   var hsR=getHSA(age||30);if(hsR)addP('1HS A型 實支實付','20萬/次加護病房40萬',(gi===0)?hsR.m:hsR.f);
 
@@ -1034,7 +1066,7 @@ function exportPDF(){
     {cat:'death',name:'一般身故',need:uv.deathGen+' 萬元',plan:uv.deathGen+' 萬元'},
     {cat:'death',name:'意外身故',need:uv.deathAcc+' 萬元',plan:uv.deathAcc+' 萬元'},
     {cat:'disability',name:'意外失能',need:uv.disability+' 萬元',plan:uv.disability+' 萬元'},
-    {cat:'disability',name:'重大疾病/癌症',need:uv.critical+' 萬元',plan:Math.round(pf(uv.critical)/4*10)/10+' 萬元'},
+    {cat:'disability',name:'重大疾病/癌症',need:uv.critical+' 萬元',plan:critPlan+' 萬元'},
     {cat:'disability',name:'長期照護',need:uv.ltc+' 萬/月',plan:uv.ltc+' 萬/月'},
     {cat:'medical',name:'住院醫療',need:uv.medHosp+' 萬/次',plan:uv.medHosp+' 萬/次'},
     {cat:'medical',name:'病房費差額',need:uv.medRoom+' 元/日',plan:uv.medRoom+' 元/日'},
