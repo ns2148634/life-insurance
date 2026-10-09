@@ -76,6 +76,7 @@ npm run dev
 | `index.html` | ✅ | 工具總覽；需登入。登入區塊仍需連得到 Supabase |
 | `insurance-needs.html` 等試算工具 | ✅ | 需登入；計算本身是純前端（`html2pdf` 已放在 `libs/`） |
 | `90day.html`（90 天手冊） | ✅ | 需登入；進度**跟著登入帳號**存（Firebase RTDB `cg90/users/<uid>` + 本機 mirror），連不到雲端時會自動退回「僅本機儲存」，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」（見「四之二」） |
+| `goal-system.html`（一定要宸功專區） | ✅ | 需登入；每月目標存在 Supabase `public.goal_targets`（一人一月一筆）。**第一次使用前需先在 SQL Editor 執行 `supabase-schema-goals.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`） |
 | `accounts.html` | ✅ | 需管理員帳號登入，且該帳號 `profiles.is_admin = true` |
 | `video-training/*` | ✅ | 需登入；影片為 YouTube 內嵌，需網路 |
 | `sharing/*` | ✅ | 需登入 |

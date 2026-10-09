@@ -5,6 +5,7 @@
 - `index.html` 工具總覽首頁（含登入區塊）
 - `login.html` 全站登入頁（**所有頁面都需登入**）＋ `auth-guard.js` 登入守衛
 - `insurance-needs.html`／`career-system.html`／`income-system.html`／`manager-income.html`／`promotion-system.html`／`90day.html` 各項諮詢與訓練工具
+- `goal-system.html` 一定要宸功專區（每月目標：FYC／保費／件數 → 自動換算每週行動量；首頁顯示個人與通訊處目標總額）
 - `accounts.html` 帳號管理（限管理員）
 - `video-training/` 影片研習系統（Supabase 登入／觀看進度）
 - `sharing/` 業務分享專區（Supabase）

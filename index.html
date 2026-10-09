@@ -159,6 +159,29 @@ main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
 button.ab-link{font-family:inherit;cursor:pointer;background:transparent;}
 button.ab-link:hover{background:rgba(255,255,255,0.05);}
 
+/* ---------- 本月目標摘要 Monthly Targets ---------- */
+.goal-bar{
+  margin-top:14px;padding:16px 20px;
+  border:1px solid var(--gold-line);border-radius:14px;
+  background:var(--gold-dim);
+}
+.gb-title{
+  font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--gold-lt);margin-bottom:12px;
+}
+.gb-title span{margin-left:6px;letter-spacing:0.5px;color:var(--muted);text-transform:none;}
+.gb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
+.gb-box{
+  background:rgba(0,0,0,0.18);border:1px solid var(--border);border-radius:11px;
+  padding:12px 15px;
+}
+.gb-l{font-size:12px;color:var(--hint);margin-bottom:8px;letter-spacing:0.5px;}
+.gb-v{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:3px 0;}
+.gb-k{font-size:12.5px;color:var(--muted);}
+.gb-v b{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;color:#fff;}
+.gb-link{display:inline-block;margin-top:13px;color:var(--gold-lt);font-size:13px;text-decoration:none;}
+.gb-link:hover{text-decoration:underline;}
+
 footer{
   max-width:1180px;margin:0 auto;padding:0 32px 48px;
   color:var(--hint);font-size:12px;letter-spacing:0.5px;
@@ -188,9 +211,41 @@ footer{
     <div class="ab-title">業務同仁登入 Login</div>
     <div id="accountBody"><div class="ab-user">載入中…</div></div>
   </section>
+
+  <section class="goal-bar" id="goalBar" style="display:none">
+    <div class="gb-title">本月目標 Monthly Targets<span id="gbMonth"></span></div>
+    <div class="gb-grid">
+      <div class="gb-box">
+        <div class="gb-l">我的目標</div>
+        <div class="gb-v"><span class="gb-k">FYC</span><b id="gbMyFyc">—</b></div>
+        <div class="gb-v"><span class="gb-k">目標保費</span><b id="gbMyPremium">—</b></div>
+      </div>
+      <div class="gb-box">
+        <div class="gb-l">整個通訊處</div>
+        <div class="gb-v"><span class="gb-k">FYC 合計</span><b id="gbUnitFyc">—</b></div>
+        <div class="gb-v"><span class="gb-k">保費合計</span><b id="gbUnitPremium">—</b></div>
+      </div>
+    </div>
+    <a class="gb-link" href="./goal-system.html">前往「一定要宸功專區」設定每月目標 →</a>
+  </section>
 </header>
 
 <main>
+
+  <div class="section-label"><b>目標管理</b> Goal Setting</div>
+  <div class="grid">
+
+    <a class="card" href="./goal-system.html">
+      <div class="card-top">
+        <span class="tag">每月目標</span>
+        <span class="num">★</span>
+      </div>
+      <h2>一定要宸功專區</h2>
+      <p>輸入每月 FYC、目標保費與目標件數，系統自動換算每週需接觸、面談、約訪的人數，並彙整整個通訊處的目標總額。</p>
+      <div class="card-foot"><span>goal-system.html</span><span class="arrow">→</span></div>
+    </a>
+
+  </div>
 
   <div class="section-label"><b>客戶顧問</b> Client Consultation</div>
   <div class="grid">
@@ -292,6 +347,57 @@ function esc(s) {
   }[c]));
 }
 
+// 目前月份 → "YYYY-MM-01"（goal_targets.period_month 一律存每月 1 號）
+function currentPeriod() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-01";
+}
+
+function fmtMoney(n) {
+  const v = Math.max(0, Math.round(Number(n) || 0));
+  return v.toLocaleString("zh-TW");
+}
+
+// 首頁「本月目標」摘要：我的目標 + 整個通訊處加總
+// 通訊處加總走 Supabase 函式 get_unit_goal_totals()，只回傳加總、不揭露個人明細。
+// 若尚未執行 supabase-schema-goals.sql，這裡會靜靜失敗並保持「—」，不影響首頁其他功能。
+async function loadGoalSummary(user) {
+  const bar = document.getElementById("goalBar");
+  if (!bar || !sb || !user) return;
+
+  const period = currentPeriod();
+  const set = (id, txt) => { const n = document.getElementById(id); if (n) n.textContent = txt; };
+
+  set("gbMonth", "（" + period.slice(0, 7).replace("-", " / ") + "）");
+  set("gbMyFyc", "—");
+  set("gbMyPremium", "—");
+  set("gbUnitFyc", "—");
+  set("gbUnitPremium", "—");
+  bar.style.display = "";
+
+  try {
+    const { data, error } = await sb.from("goal_targets")
+      .select("fyc_target, premium_target")
+      .eq("user_id", user.id).eq("period_month", period).maybeSingle();
+    if (error) throw error;
+    if (data) {
+      set("gbMyFyc", fmtMoney(data.fyc_target));
+      set("gbMyPremium", fmtMoney(data.premium_target));
+    } else {
+      set("gbMyFyc", "未設定");
+      set("gbMyPremium", "未設定");
+    }
+  } catch (e) { /* 資料表尚未建立時保持「—」 */ }
+
+  try {
+    const { data, error } = await sb.rpc("get_unit_goal_totals", { p_month: period });
+    if (error) throw error;
+    const row = Array.isArray(data) ? data[0] : data;
+    set("gbUnitFyc", fmtMoney(row && row.fyc));
+    set("gbUnitPremium", fmtMoney(row && row.premium));
+  } catch (e) { /* 略 */ }
+}
+
 // head 的 auth-guard.js 已經確認登入、也載入好 SDK 與 config.js，
 // 這裡直接沿用同一個 client，避免重複建立連線與重複 refresh token。
 async function boot() {
@@ -346,9 +452,14 @@ async function renderAccount() {
     // 全站都需登入：登出後直接回到登入頁，避免留在原頁看到內容
     location.replace("./login.html");
   });
+
+  loadGoalSummary(user);
 }
 
 function renderLogin() {
+  const goalBar = document.getElementById("goalBar");
+  if (goalBar) goalBar.style.display = "none";
+
   accountBody.innerHTML = `
     <form class="account-form" id="homeLoginForm">
       <input type="email" id="homeEmail" placeholder="Email" autocomplete="username" required>

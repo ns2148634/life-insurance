@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="一定要宸功專區">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>一定要宸功專區｜宸功保險</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1a26;--ink-mid:#142331;--ink-card:#182a3a;
+  --gold:#c2974f;--gold-lt:#dcb877;--gold-deep:#8a6a30;
+  --gold-dim:rgba(194,151,79,0.10);--gold-line:rgba(194,151,79,0.30);
+  --vermilion:#c1442d;--vermilion-lt:#d9634a;
+  --text:rgba(255,255,255,0.94);--muted:rgba(255,255,255,0.56);
+  --hint:rgba(255,255,255,0.32);--border:rgba(255,255,255,0.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 85% -10%, rgba(194,151,79,0.08), transparent 60%),
+    radial-gradient(ellipse 700px 400px at -10% 100%, rgba(193,68,45,0.06), transparent 55%),
+    var(--ink);
+  min-height:100dvh;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:0 24px 72px;}
+
+/* ---------- header ---------- */
+header.top{padding:46px 0 26px;border-bottom:1px solid var(--border);}
+.brand-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.crest{width:38px;height:38px;flex-shrink:0;border-radius:10px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+.crest img{width:100%;height:100%;object-fit:cover;display:block;}
+.brand{font-family:'Cormorant Garamond',serif;letter-spacing:5px;color:var(--gold);text-transform:uppercase;font-size:13px;font-weight:600;}
+h1{font-family:'Noto Serif TC',serif;font-weight:900;font-size:clamp(26px,4vw,40px);line-height:1.3;letter-spacing:1px;color:#fff;}
+h1 span{color:var(--gold);}
+.lead{color:var(--muted);font-size:14.5px;line-height:1.9;max-width:56ch;margin-top:6px;}
+.who{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:20px;font-size:14px;color:var(--muted);}
+.who a{color:var(--gold-lt);text-decoration:none;}
+.ghost{padding:7px 14px;border-radius:8px;border:1px solid var(--border);color:var(--muted);background:transparent;font-family:inherit;font-size:13px;cursor:pointer;}
+.ghost:hover{background:rgba(255,255,255,0.05);}
+
+/* ---------- panels ---------- */
+.panel{
+  margin-top:22px;background:var(--ink-card);border:1px solid var(--border);
+  border-radius:16px;padding:24px 24px 26px;
+}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+.panel-head h2{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;color:#fff;}
+.dim{color:var(--hint);font-size:12.5px;}
+
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+.field{display:block;}
+.fl{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;letter-spacing:0.3px;}
+.field > input,.inp{
+  display:flex;align-items:center;width:100%;
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#0a141f;
+}
+.field > input{padding:11px 14px;color:var(--text);font-size:15px;font-family:inherit;}
+.field > input:focus,.inp:focus-within{outline:none;border-color:var(--gold-line);}
+.inp .unit{flex:0 0 auto;padding:11px 10px;font-size:12px;color:var(--hint);border-right:1px solid var(--border);background:rgba(255,255,255,0.03);}
+.inp input{flex:1 1 auto;min-width:0;border:none;outline:none;background:transparent;color:var(--text);font-size:15px;font-family:inherit;padding:11px 12px;}
+.actions{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap;}
+.actions button{
+  padding:11px 26px;border-radius:10px;border:none;background:var(--gold);color:#1a1406;
+  font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;
+}
+.actions button:disabled{opacity:.55;cursor:default;}
+.save-status{font-size:12.5px;color:var(--hint);}
+
+.msg{margin-top:18px;padding:12px 16px;border-radius:10px;font-size:13.5px;border:1px solid var(--border);background:rgba(255,255,255,0.03);}
+.msg.ok{color:#7fc9a3;border-color:rgba(127,201,163,0.35);}
+.msg.err{color:var(--vermilion-lt);border-color:rgba(193,68,45,0.35);}
+
+.calc-note{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.calc-note b{color:var(--gold-lt);}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+.stat{
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;
+  padding:16px 14px;text-align:center;
+}
+.stat.gold{border-color:var(--gold-line);background:var(--gold-dim);}
+.stat .sl{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;}
+.stat .sv{font-family:'Noto Serif TC',serif;font-size:30px;font-weight:900;color:#fff;line-height:1;}
+.stat.gold .sv{color:var(--gold-lt);}
+.stat .su{display:block;font-size:11px;color:var(--hint);margin-top:6px;}
+
+.mini{width:100%;border-collapse:collapse;margin-top:18px;font-size:13.5px;}
+.mini th,.mini td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:right;}
+.mini thead th{font-size:12px;color:var(--hint);font-weight:500;letter-spacing:0.5px;}
+.mini tbody th{text-align:left;color:var(--muted);font-weight:500;}
+.mini tbody td{font-family:'Cormorant Garamond',serif;font-size:17px;color:#fff;letter-spacing:0.5px;}
+.mini tbody td:last-child{font-family:'Noto Sans TC',sans-serif;font-size:12px;color:var(--hint);}
+.foot-hint{margin-top:14px;font-size:13px;color:var(--gold-lt);line-height:1.8;}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
+.kv .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px dashed var(--border);}
+.kv .row:last-child{border-bottom:none;}
+.kv .k{font-size:13px;color:var(--muted);}
+.kv .v{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;color:#fff;}
+.kv .v small{font-size:12px;color:var(--hint);font-family:'Noto Sans TC',sans-serif;font-weight:400;margin-left:4px;}
+.kv .big{font-size:24px;color:var(--gold-lt);}
+
+@media (max-width:640px){
+  .wrap{padding:0 18px 60px;}
+  header.top{padding:34px 0 22px;}
+  .panel{padding:20px 18px 22px;}
+}
+</style>
+<script src="./auth-guard.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand-row">
+      <div class="crest"><img src="./icon-192.png" alt="宸功保險"></div>
+      <div class="brand">Chenggong Insurance</div>
+    </div>
+    <h1>一定要<span>宸功</span>專區</h1>
+    <p class="lead">填寫自己的每月目標（FYC、目標保費、目標件數），系統會用件數自動換算每週該做的接觸、面談與約訪量。目標填得越清楚，每週的行動就越明確。</p>
+    <div class="who">
+      <a href="./index.html">← 回主畫面</a>
+      <span id="whoami">載入中…</span>
+      <a href="./video-training/profile.html">我的帳號</a>
+      <button class="ghost" type="button" id="logoutBtn">登出</button>
+    </div>
+  </header>
+
+  <div id="pageMsg" class="msg" style="display:none;"></div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>一、我的每月目標</h2>
+      <span class="dim">每月各自獨立，換月份請重新設定</span>
+    </div>
+    <div class="form-grid">
+      <label class="field">
+        <span class="fl">月份</span>
+        <input type="month" id="monthInput">
+      </label>
+      <label class="field">
+        <span class="fl">FYC 目標（首年度佣金）</span>
+        <div class="inp"><span class="unit">NT$</span><input type="number" id="fycInput" min="0" step="1000" inputmode="numeric" placeholder="0"></div>
+      </label>
+      <label class="field">
+        <span class="fl">目標保費</span>
+        <div class="inp"><span class="unit">NT$</span><input type="number" id="premiumInput" min="0" step="1000" inputmode="numeric" placeholder="0"></div>
+      </label>
+      <label class="field">
+        <span class="fl">目標件數</span>
+        <div class="inp"><span class="unit">件</span><input type="number" id="caseInput" min="0" step="1" inputmode="numeric" placeholder="0"></div>
+      </label>
+    </div>
+    <div class="actions">
+      <button type="button" id="saveBtn">儲存本月目標</button>
+      <span class="save-status" id="saveStatus"></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>二、每週行動計畫</h2>
+      <span class="dim">比例依 90 天手冊：接觸 ×5、面談 ×3、約訪 ×10</span>
+    </div>
+    <p class="calc-note">以「目標件數 <b id="calcCases">0</b> 件／月」換算；每月以 <b>4 週</b>計，每週件數無條件進位。</p>
+    <div class="stat-grid">
+      <div class="stat"><span class="sl">每週成交</span><b class="sv" id="wkCase">0</b><span class="su">件</span></div>
+      <div class="stat"><span class="sl">每週接觸（拜訪）</span><b class="sv" id="wkContact">0</b><span class="su">人</span></div>
+      <div class="stat"><span class="sl">每週面談（談 case）</span><b class="sv" id="wkTalk">0</b><span class="su">人</span></div>
+      <div class="stat gold"><span class="sl">每週約訪</span><b class="sv" id="wkVisit">0</b><span class="su">人</span></div>
+    </div>
+    <table class="mini">
+      <thead><tr><th>項目</th><th>每月</th><th>每週</th><th>換算比例</th></tr></thead>
+      <tbody>
+        <tr><th>成交</th><td id="mCase">0</td><td id="wCaseT">0</td><td>基準</td></tr>
+        <tr><th>接觸（拜訪）</th><td id="mContact">0</td><td id="wContactT">0</td><td>×5</td></tr>
+        <tr><th>面談（談 case）</th><td id="mTalk">0</td><td id="wTalkT">0</td><td>×3</td></tr>
+        <tr><th>約訪</th><td id="mVisit">0</td><td id="wVisitT">0</td><td>×10</td></tr>
+      </tbody>
+    </table>
+    <p class="foot-hint" id="visitHint"></p>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <div class="panel-head"><h2>我的當月目標</h2></div>
+      <div class="kv" id="mineBox"><div class="dim">載入中…</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>整個通訊處總目標</h2>
+        <span class="dim">全體同仁加總</span>
+      </div>
+      <div class="kv" id="unitBox"><div class="dim">載入中…</div></div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* =========================================================
+   一定要宸功專區 — 每月目標（Supabase public.goal_targets）
+   - 每月目標：FYC（首年度佣金）、目標保費、目標件數
+   - 件數自動換算每週行動量（比例沿用 90day.html：接觸 ×5、面談 ×3、約訪 ×10）
+   - 顯示「我的當月目標」與「整個通訊處加總」
+   ========================================================= */
+const WEEK_PER_MONTH = 4;              // 每月以 4 週估算（整數好排行程）
+const RATIO = { contact: 5, talk: 3, visit: 10 };
+
+const el = {
+  whoami: document.getElementById('whoami'),
+  logoutBtn: document.getElementById('logoutBtn'),
+  pageMsg: document.getElementById('pageMsg'),
+  monthInput: document.getElementById('monthInput'),
+  fycInput: document.getElementById('fycInput'),
+  premiumInput: document.getElementById('premiumInput'),
+  caseInput: document.getElementById('caseInput'),
+  saveBtn: document.getElementById('saveBtn'),
+  saveStatus: document.getElementById('saveStatus'),
+  calcCases: document.getElementById('calcCases'),
+  wkCase: document.getElementById('wkCase'),
+  wkContact: document.getElementById('wkContact'),
+  wkTalk: document.getElementById('wkTalk'),
+  wkVisit: document.getElementById('wkVisit'),
+  mCase: document.getElementById('mCase'),
+  mContact: document.getElementById('mContact'),
+  mTalk: document.getElementById('mTalk'),
+  mVisit: document.getElementById('mVisit'),
+  wCaseT: document.getElementById('wCaseT'),
+  wContactT: document.getElementById('wContactT'),
+  wTalkT: document.getElementById('wTalkT'),
+  wVisitT: document.getElementById('wVisitT'),
+  visitHint: document.getElementById('visitHint'),
+  mineBox: document.getElementById('mineBox'),
+  unitBox: document.getElementById('unitBox')
+};
+
+let client = null;
+let user = null;
+
+function money(n){
+  const v = Math.max(0, Math.round(Number(n) || 0));
+  return v.toLocaleString('zh-TW');
+}
+function currentMonth(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+function monthToDate(m){ return (m || currentMonth()) + '-01'; }
+
+function showMsg(text, ok){
+  el.pageMsg.className = 'msg ' + (ok ? 'ok' : 'err');
+  el.pageMsg.textContent = text;
+  el.pageMsg.style.display = '';
+}
+function clearMsg(){ el.pageMsg.style.display = 'none'; el.pageMsg.textContent = ''; }
+
+/* ---------- 件數 → 每月 / 每週 行動量 ---------- */
+function recalc(){
+  const cases = Math.max(0, Math.round(Number(el.caseInput.value) || 0));
+  const wk = cases > 0 ? Math.ceil(cases / WEEK_PER_MONTH) : 0;
+
+  el.calcCases.textContent = cases;
+  el.wkCase.textContent = wk;
+  el.wkContact.textContent = wk * RATIO.contact;
+  el.wkTalk.textContent = wk * RATIO.talk;
+  el.wkVisit.textContent = wk * RATIO.visit;
+
+  el.mCase.textContent = cases;
+  el.mContact.textContent = cases * RATIO.contact;
+  el.mTalk.textContent = cases * RATIO.talk;
+  el.mVisit.textContent = cases * RATIO.visit;
+
+  el.wCaseT.textContent = wk;
+  el.wContactT.textContent = wk * RATIO.contact;
+  el.wTalkT.textContent = wk * RATIO.talk;
+  el.wVisitT.textContent = wk * RATIO.visit;
+
+  el.visitHint.textContent = cases > 0
+    ? '要達成每月 ' + cases + ' 件，平均每週要安排：拜訪／接觸 ' + (wk * RATIO.contact)
+      + ' 人、面談 ' + (wk * RATIO.talk) + ' 人、約訪 ' + (wk * RATIO.visit) + ' 人。'
+    : '填入目標件數後，這裡會顯示每週需拜訪／面談／約訪的人數。';
+}
+
+/* ---------- 面板：我的目標 / 通訊處加總 ---------- */
+function renderMine(row){
+  if(!row){
+    el.mineBox.innerHTML = '<div class="row"><span class="k">本月尚未設定目標</span>'
+      + '<span class="v"><a href="#" id="goSet" style="color:var(--gold-lt);font-size:14px;">立即設定 ↑</a></span></div>';
+    const go = document.getElementById('goSet');
+    if(go) go.addEventListener('click', function(e){
+      e.preventDefault();
+      el.fycInput.focus();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    return;
+  }
+  el.mineBox.innerHTML =
+    '<div class="row"><span class="k">FYC 目標（首年度佣金）</span><span class="v big">' + money(row.fyc_target) + '<small>元</small></span></div>'
+    + '<div class="row"><span class="k">目標保費</span><span class="v big">' + money(row.premium_target) + '<small>元</small></span></div>'
+    + '<div class="row"><span class="k">目標件數</span><span class="v">' + money(row.case_target) + '<small>件</small></span></div>';
+}
+
+function renderUnit(row){
+  if(!row || !row.members){
+    el.unitBox.innerHTML = '<div class="dim">這個月還沒有人設定目標。</div>';
+    return;
+  }
+  el.unitBox.innerHTML =
+    '<div class="row"><span class="k">FYC 目標合計</span><span class="v big">' + money(row.fyc) + '<small>元</small></span></div>'
+    + '<div class="row"><span class="k">目標保費合計</span><span class="v big">' + money(row.premium) + '<small>元</small></span></div>'
+    + '<div class="row"><span class="k">目標件數合計</span><span class="v">' + money(row.cases) + '<small>件</small></span></div>'
+    + '<div class="row"><span class="k">已設定人數</span><span class="v">' + money(row.members) + '<small>人</small></span></div>';
+}
+/* ---------- 讀取某月資料 ---------- */
+async function loadMonth(month){
+  const period = monthToDate(month);
+
+  const { data, error } = await client.from('goal_targets')
+    .select('fyc_target, premium_target, case_target')
+    .eq('user_id', user.id).eq('period_month', period).maybeSingle();
+
+  if(error){
+    showMsg('讀取目標失敗：' + error.message + '（若尚未建立資料表，請先在 Supabase 執行 supabase-schema-goals.sql）', false);
+    el.mineBox.innerHTML = '<div class="dim">讀取失敗</div>';
+  } else {
+    clearMsg();
+    renderMine(data);
+    el.fycInput.value = data ? (data.fyc_target || '') : '';
+    el.premiumInput.value = data ? (data.premium_target || '') : '';
+    el.caseInput.value = data ? (data.case_target || '') : '';
+  }
+  recalc();
+  await loadUnitTotals(period);
+}
+
+async function loadUnitTotals(period){
+  const { data, error } = await client.rpc('get_unit_goal_totals', { p_month: period });
+  if(error){
+    el.unitBox.innerHTML = '<div class="dim">讀取通訊處加總失敗，請確認已執行 supabase-schema-goals.sql。</div>';
+    return;
+  }
+  renderUnit(Array.isArray(data) ? data[0] : data);
+}
+
+/* ---------- 儲存 ---------- */
+async function save(){
+  if(!client || !user) return;
+  const month = el.monthInput.value || currentMonth();
+  const payload = {
+    user_id: user.id,
+    period_month: monthToDate(month),
+    fyc_target: Math.max(0, Math.round(Number(el.fycInput.value) || 0)),
+    premium_target: Math.max(0, Math.round(Number(el.premiumInput.value) || 0)),
+    case_target: Math.max(0, Math.round(Number(el.caseInput.value) || 0))
+  };
+
+  el.saveBtn.disabled = true;
+  el.saveBtn.textContent = '儲存中…';
+  const { error } = await client.from('goal_targets').upsert(payload, { onConflict: 'user_id,period_month' });
+  el.saveBtn.disabled = false;
+  el.saveBtn.textContent = '儲存本月目標';
+
+  if(error){ showMsg('儲存失敗：' + error.message, false); return; }
+
+  el.saveStatus.textContent = '上次儲存：' + new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+  showMsg('已儲存 ' + month + ' 的每月目標 ✓', true);
+  await loadMonth(month);
+}
+
+/* ---------- 事件 ---------- */
+[el.fycInput, el.premiumInput, el.caseInput].forEach(function(i){ i.addEventListener('input', recalc); });
+el.monthInput.addEventListener('change', function(){ clearMsg(); loadMonth(el.monthInput.value); });
+el.saveBtn.addEventListener('click', save);
+el.logoutBtn.addEventListener('click', async function(){
+  try { if(client) await client.auth.signOut(); } catch(e){}
+  location.replace('./login.html');
+});
+
+/* ---------- boot ---------- */
+(async function boot(){
+  el.monthInput.value = currentMonth();
+  recalc();
+
+  if(!window.authGuard || !window.authGuard.ready){
+    showMsg('無法載入登入元件，請確認網路連線後重新整理。', false);
+    return;
+  }
+  let g;
+  try { g = await window.authGuard.ready; } catch(e){ return; }
+  if(!g || !g.session || !g.user) return;   // 守衛正在導向 login.html
+
+  client = g.sb;
+  user = g.user;
+
+  try {
+    const { data: profile } = await client.from('profiles')
+      .select('full_name, email').eq('id', user.id).maybeSingle();
+    el.whoami.textContent = (profile && (profile.full_name || profile.email)) || user.email || '同仁';
+  } catch(e){ el.whoami.textContent = user.email || '同仁'; }
+
+  await loadMonth(el.monthInput.value);
+})();
+</script>
+</body>
+</html>
