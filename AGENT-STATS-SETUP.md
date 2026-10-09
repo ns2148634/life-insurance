@@ -7,7 +7,7 @@
 
 ```
 保顧+ (Next.js + Supabase uditztyjqbpzxzgquiym)
-  ①  排程呼叫 /api/cron/sync-agent-stats（帶 x-cron-secret）
+  ①  GitHub Actions 排程呼叫 /api/cron/sync-agent-stats（每天 3 次、帶 x-cron-secret）
   ②  export_agent_stats(p_from, p_to)         ← 只吐「筆數」，不含記事內容／客戶姓名
   ③  以 service role 寫入本站的 ingest_agent_stats(p_rows)
 本站 (純靜態 GitHub Pages + Supabase dwesqvutdlvnmajxdcpn)
@@ -133,9 +133,60 @@ public.agent_stats
 curl.exe -i -H "x-cron-secret: <你的 CRON_SECRET>" "https://tool.showall.tw/api/cron/sync-agent-stats?months=2"
 ```
 
-### 3. 設定排程（cron-job.org：**每天 3 次**）
+### 3. 設定排程（每天 3 次：台北 07:30／12:30／17:30）
 
-保顧+ 沒有 `vercel.json`，cron 一律靠**外部排程**帶標頭觸發（本專案的現行做法＝**不必改程式**）。
+保顧+ 沒有 `vercel.json`，cron 一律靠**外部觸發**帶標頭打
+`https://tool.showall.tw/api/cron/sync-agent-stats?months=6`（本專案現行做法＝**不必改程式**）。
+下面兩個免費做法**擇一即可**；端點是冪等 upsert，兩個都開也只是多打幾次，不會重複計算。
+
+| | 做法 A：GitHub Actions（**預設**） | 做法 B：cron-job.org |
+|---|---|---|
+| 第三方服務 | **不需要** | 要帳號 ＋ API key |
+| 準點 | GitHub 官方說明：尖峰（整點前後）可能延遲數分鐘 | 準點到分 |
+| 失敗怎麼知道 | 自己看 Actions 頁，或開 GitHub 的失敗通知 | 可開 email 失敗通知 |
+| 設定放哪 | 私有 repo `insurance-tools` 的 workflow（進版控、可 review） | cron-job.org Console |
+
+#### 做法 A：GitHub Actions（不用第三方，預設）
+
+- 檔案在**保顧+ 的 repo** `insurance-tools`：`.github/workflows/sync-agent-stats.yml`。
+  repo 是私有的，所以 workflow 設定與執行紀錄都不公開。
+- **為什麼放私有 repo**：公開 repo 的排程 workflow **閒置 60 天會被 GitHub 自動停用**
+  （官方原文：In a public repository, scheduled workflows are automatically disabled when no repository
+  activity has occurred in 60 days），私有 repo 不受此限。代價是私有 repo 的 Actions 會計分鐘數：
+  一天 3 次 × 30 天＝90 次、每次不滿 1 分鐘以 1 分鐘計 ≈ **90 分鐘／月**，免費方案 2,000 分鐘／月很夠。
+- **cron 一律 UTC**（GitHub 規定），要自己換算；且刻意排在 `:30`——整點是 GitHub 排程最壅塞的時段（官方建議避開）：
+
+  | 台北 | UTC | 寫法 |
+  |---|---|---|
+  | 07:30 | 前一天 23:30 | `30 23 * * *` |
+  | 12:30 | 04:30 | `30 4 * * *` |
+  | 17:30 | 09:30 | `30 9 * * *` |
+
+- 排程只會被**預設分支（`main`）**上的版本觸發：改時間＝改那三行 cron 再 push。
+- 一次性設定（需先 `gh auth login`）：
+
+  ```powershell
+  # 1) 把 CRON_SECRET 放進 repo secret（值＝上一節那把；不會進指令歷史）
+  $s = Read-Host '貼上 CRON_SECRET（不會顯示）' -AsSecureString
+  [System.Net.NetworkCredential]::new('', $s).Password |
+    gh secret set CRON_SECRET --repo ns2148634/insurance-tools
+  gh secret list --repo ns2148634/insurance-tools      # 應看到 CRON_SECRET
+
+  # 2) 手動測一次（months=2 只回溯兩個月，快又輕）
+  gh workflow run sync-agent-stats.yml --repo ns2148634/insurance-tools -f months=2
+  gh run watch --repo ns2148634/insurance-tools        # 綠勾＝成功
+  ```
+
+  或走網頁：repo → **Actions** → 左側「實績同步」→ **Run workflow**（可填 `months`）。
+- 平時：`gh run list --repo ns2148634/insurance-tools` 看歷史；
+  `gh workflow disable|enable sync-agent-stats.yml --repo ns2148634/insurance-tools` 臨時停／開。
+- 每次執行的網址、HTTP 碼與回應 JSON 都會寫進該 run 的 **Summary**；
+  失敗訊息會直接說明是哪一種（401 secret 不符／503 環境變數未生效／500 SQL 未執行）。
+- **失敗通知要自己開**：GitHub → Settings → Notifications → Actions → 只通知失敗的 workflow；
+  沒開就只能自己來看 Actions 頁。
+
+#### 做法 B：cron-job.org（要準點到分再用）
+
 以免費的 [cron-job.org](https://cron-job.org) 為例，**一個 job 就能設多個時間**，所以一天 3 次只要一筆 job：
 
 | 欄位 | 填值 |
@@ -149,10 +200,6 @@ curl.exe -i -H "x-cron-secret: <你的 CRON_SECRET>" "https://tool.showall.tw/ap
 1. 登入 cron-job.org → **Create cronjob** → 照上表填（時間欄可按 **＋** 逐個加入 07:30 / 12:30 / 17:30）→ 儲存。
 2. 存檔後按 **TEST RUN**：回應應為 `{"ok":true,"months":6,"rows":N,"syncedAt":"…"}`。
 3. 之後在該 job 的 **History** 可看每次執行的 HTTP 狀態；建議開啟 email 失敗通知（排程掛掉才不會無聲無息）。
-
-- 為什麼一天 3 次？「我的實績」是月度統計：早班、午休、收班各同步一次，白天記的行程最慢約 4~5 小時就會出現在本站（每天只跑 07:30 的話最壞要等近 24 小時）。
-- `months` 預設 6、上限 24（回溯補齊歷史月份；每次都是 upsert，**重跑安全**，跑幾次都不會重複計算）。
-- `rows` 是**所有月份加總的寫入列數**；`0` 代表那些月份沒有可匯出的記事（正常）。
 
 **不想點 UI？用 API 一次建好**（cron-job.org → Settings → **API key**；官方文件 <https://docs.cron-job.org/rest-api.html>）：
 
@@ -196,15 +243,20 @@ Invoke-RestMethod -Uri 'https://api.cron-job.org/jobs' -Headers @{ Authorization
 > 不加 `-DryRun` 即建立並回讀驗證（API key 與 `CRON_SECRET` 用隱藏輸入詢問，不會進指令歷史）。
 > 預設就是每天 3 次 07:30／12:30／17:30；改時間用 `-Hours 8,13,18 -Minutes 0`、改回溯月數用 `-Months 12`、更新既有 job 用 `-JobId <id>`。
 
+#### 兩個做法共同的注意事項
+
+- **為什麼一天 3 次？**「我的實績」是月度統計：早班、午休、收班各同步一次，白天記的行程最慢約 4~5 小時
+  就會出現在本站（每天只跑 07:30 的話最壞要等近 24 小時）。
+- `months` 預設 6、上限 24（回溯補齊歷史月份；每次都是 upsert，**重跑安全**，跑幾次都不會重複計算）。
+- `rows` 是**所有月份加總的寫入列數**；`0` 代表那些月份沒有可匯出的記事（正常）。
+- 想更即時（例如每小時）：做法 A 多加幾行 cron、做法 B 改排程即可，成本都極低。
+
 > **為什麼不用 Vercel 內建的 Vercel Cron？**
 > 1. **免費的 Hobby 方案「一天只能執行一次」**——排程寫成一天多次（如 `30 7,12,17 * * *`）**會在部署時就失敗**
 >    （官方限制：Hobby＝Once per day；Pro 才支援 Once per minute）。要一天 3 次就得升級 Pro。
 > 2. 就算升級，Vercel Cron 的請求只帶 `Authorization: Bearer $CRON_SECRET`、**不會**帶 `x-cron-secret`，
 >    還得改 `app/api/cron/sync-agent-stats/route.ts` 並新增 `vercel.json`。
-> 所以維持外部排程（cron-job.org）：**不必改程式、不必付費、時間要調隨時可調**。
-
-> 補充：GitHub Actions 也能排程（`on: schedule`，一天 3 次沒問題），但公開 repo 的排程 workflow
-> **閒置 60 天會被自動停用**，觸發時間也常延遲數分鐘；除非你不想用第三方服務，否則 cron-job.org 較省事。
+> 所以維持**外部觸發**（做法 A／B 都是打同一支端點）：**不必改程式、不必付費、時間要調隨時可調**。
 
 ---
 
@@ -217,6 +269,8 @@ Invoke-RestMethod -Uri 'https://api.cron-job.org/jobs' -Headers @{ Authorization
 2. **帶正確 secret** → 回 `{"ok":true,"months":6,"rows":N,...}`。若回 `503`＝環境變數沒設好或**沒 Redeploy**；
    若回 `500 ... Could not find the function ...`＝四把都好了，但對應那支 SQL（`export_agent_stats` 在保顧+、
    `ingest_agent_stats` 在本站）還沒執行。
+   - **排程本身有沒有在跑**：`gh run list --repo ns2148634/insurance-tools --limit 5`（或 repo → Actions →
+     「實績同步」）；每個 run 的 **Summary** 有該次網址、HTTP 碼與回應 JSON，失敗訊息會直接指出是哪一種（401／503／500）。
 3. **同步範圍對不對**（保顧+ 的 Supabase SQL Editor）：跑一次匯出函式看名單——
    ```sql
    select * from public.export_agent_stats(
@@ -261,7 +315,8 @@ notify pgrst, 'reload schema';
    請以相同 Email 登入兩邊（或請管理員調整帳號）。
 2. **你既沒團隊、也沒付費**：保顧+ 只匯出「團隊成員（團隊統計已解鎖）」與「個人付費者」兩類
    （條件見「誰會被同步」）。免費帳號、或團隊 `stats_status` 未解鎖而自己又沒付費，都不會被同步。
-3. **排程還沒跑**：手動觸發一次 cron（見「二、3」）即可。
+3. **排程還沒跑**：手動觸發一次即可——
+   `gh workflow run sync-agent-stats.yml --repo ns2148634/insurance-tools -f months=2`（詳見「二、3」）。
 4. 保顧+ 沒有行事曆——實績來源是**客戶記事的分類**。沒有記任何記事的那個月就是 0 筆。
 
 **Q3. 為什麼只有筆數，沒有客戶清單？**
@@ -279,9 +334,12 @@ notify pgrst, 'reload schema';
 **Q6. 重跑 cron 會不會把數字加兩倍？**
 → 不會。`agent_stats` 以 `unique(email, stat_month)` 為鍵做 upsert，重跑只會覆蓋成最新值。
 
-**Q7. 一天要跑幾次？**
-→ **目前設定一天 3 次**（07:30／12:30／17:30 台北）。實績是月累計、不是即時看板，不需要每分鐘同步；
-   3 次已讓白天記的行程最慢 4~5 小時內出現在本站。想更即時（例如每小時）只要改 cron-job.org 的排程，成本仍極低。
+**Q7. 一天要跑幾次？誰在跑？**
+→ **目前設定一天 3 次**（台北 07:30／12:30／17:30），由 **GitHub Actions** 排程觸發
+   （`insurance-tools` 的 `.github/workflows/sync-agent-stats.yml`，UTC `30 23`／`30 4`／`30 9`）。
+   實績是月累計、不是即時看板，不需要每分鐘同步；3 次已讓白天記的行程最慢 4~5 小時內出現在本站。
+   GitHub 的排程偶爾會延遲幾分鐘；想「準點到分」或不想用 GitHub，改用 cron-job.org（見「二、3」做法 B）即可——
+   端點是冪等 upsert，兩個都開只是多打幾次、不會重複計算。想更即時（例如每小時）就多加幾行 cron，成本仍極低。
 
 **Q8. 在 SQL Editor 執行 `supabase-schema-agent-stats.sql` 時出現
 `42P01 relation "public.profiles" does not exist`**
