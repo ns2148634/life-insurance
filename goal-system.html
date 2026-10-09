@@ -191,6 +191,32 @@ h1 span{color:var(--gold);}
     <p class="foot-hint" id="visitHint"></p>
   </section>
 
+  <section class="panel">
+    <div class="panel-head">
+      <h2>三、我的實績（來自保顧+）</h2>
+      <span class="dim" id="perfSync">同步時間：—</span>
+    </div>
+    <p class="calc-note">資料由「保顧+」自動同步，只取<b>記事筆數</b>，不含客戶姓名與記事內容。</p>
+    <div class="stat-grid">
+      <div class="stat"><span class="sl">新客戶</span><b class="sv" id="pfNew">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">約訪聯繫</span><b class="sv" id="pfVisit">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">複訪</span><b class="sv" id="pfFollow">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">遞送建議書</span><b class="sv" id="pfTalk">–</b><span class="su">筆</span></div>
+      <div class="stat gold"><span class="sl">簽約</span><b class="sv" id="pfSigned">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">本月總計</span><b class="sv" id="pfTotal">–</b><span class="su">筆</span></div>
+    </div>
+    <table class="mini">
+      <thead><tr><th>項目</th><th>本月目標</th><th>本月實績</th><th>達成率</th></tr></thead>
+      <tbody>
+        <tr><th>約訪聯繫</th><td id="gapVisitTarget">0</td><td id="gapVisitActual">–</td><td id="gapVisitRate" style="color:var(--gold-lt);">—</td></tr>
+        <tr><th>接觸（新客戶＋複訪）</th><td id="gapContactTarget">0</td><td id="gapContactActual">–</td><td id="gapContactRate" style="color:var(--gold-lt);">—</td></tr>
+        <tr><th>面談（遞送建議書）</th><td id="gapTalkTarget">0</td><td id="gapTalkActual">–</td><td id="gapTalkRate" style="color:var(--gold-lt);">—</td></tr>
+        <tr><th>成交（簽約）</th><td id="gapCaseTarget">0</td><td id="gapCaseActual">–</td><td id="gapCaseRate" style="color:var(--gold-lt);">—</td></tr>
+      </tbody>
+    </table>
+    <p class="foot-hint" id="perfHint"></p>
+  </section>
+
   <section class="grid2">
     <div class="panel">
       <div class="panel-head"><h2>我的當月目標</h2></div>
@@ -241,7 +267,27 @@ const el = {
   wVisitT: document.getElementById('wVisitT'),
   visitHint: document.getElementById('visitHint'),
   mineBox: document.getElementById('mineBox'),
-  unitBox: document.getElementById('unitBox')
+  unitBox: document.getElementById('unitBox'),
+  perfSync: document.getElementById('perfSync'),
+  perfHint: document.getElementById('perfHint'),
+  pfNew: document.getElementById('pfNew'),
+  pfVisit: document.getElementById('pfVisit'),
+  pfFollow: document.getElementById('pfFollow'),
+  pfTalk: document.getElementById('pfTalk'),
+  pfSigned: document.getElementById('pfSigned'),
+  pfTotal: document.getElementById('pfTotal'),
+  gapVisitTarget: document.getElementById('gapVisitTarget'),
+  gapVisitActual: document.getElementById('gapVisitActual'),
+  gapVisitRate: document.getElementById('gapVisitRate'),
+  gapContactTarget: document.getElementById('gapContactTarget'),
+  gapContactActual: document.getElementById('gapContactActual'),
+  gapContactRate: document.getElementById('gapContactRate'),
+  gapTalkTarget: document.getElementById('gapTalkTarget'),
+  gapTalkActual: document.getElementById('gapTalkActual'),
+  gapTalkRate: document.getElementById('gapTalkRate'),
+  gapCaseTarget: document.getElementById('gapCaseTarget'),
+  gapCaseActual: document.getElementById('gapCaseActual'),
+  gapCaseRate: document.getElementById('gapCaseRate')
 };
 
 let client = null;
@@ -289,6 +335,8 @@ function recalc(){
     ? '要達成每月 ' + cases + ' 件，平均每週要安排：拜訪／接觸 ' + (wk * RATIO.contact)
       + ' 人、面談 ' + (wk * RATIO.talk) + ' 人、約訪 ' + (wk * RATIO.visit) + ' 人。'
     : '填入目標件數後，這裡會顯示每週需拜訪／面談／約訪的人數。';
+
+  renderGapTargets();
 }
 
 /* ---------- 面板：我的目標 / 通訊處加總 ---------- */
@@ -321,6 +369,98 @@ function renderUnit(row){
     + '<div class="row"><span class="k">目標件數合計</span><span class="v">' + money(row.cases) + '<small>件</small></span></div>'
     + '<div class="row"><span class="k">已設定人數</span><span class="v">' + money(row.members) + '<small>人</small></span></div>';
 }
+/* ---------- 面板：我的實績（來自保顧+ 的 agent_stats） ----------
+   - 只讀取自己那一列（RLS 保底：user_id = auth.uid()），資料由「保顧+」的排程寫入。
+   - 保顧+ 沒有行事曆，統計來源是「客戶記事」的分類筆數（八分類，本站取其中五項）。
+   - 目標欄沿用「二、每週行動計畫」的換算：接觸 ×5、面談 ×3、約訪 ×10。 */
+const GAP_ACTUAL_KEYS = ['gapVisitActual', 'gapContactActual', 'gapTalkActual', 'gapCaseActual'];
+const GAP_RATE_KEYS = ['gapVisitRate', 'gapContactRate', 'gapTalkRate', 'gapCaseRate'];
+
+function setText(keys, text){
+  keys.forEach(function(k){ el[k].textContent = text; });
+}
+function rateText(actual, target){
+  if(!target) return '—';
+  return Math.round(actual / target * 100) + '%';
+}
+
+/* 只更新「本月目標」四個數字（件數一改就即時跟著動） */
+function renderGapTargets(){
+  const cases = Math.max(0, Math.round(Number(el.caseInput.value) || 0));
+  const tVisit = cases * RATIO.visit;
+  const tContact = cases * RATIO.contact;
+  const tTalk = cases * RATIO.talk;
+
+  el.gapVisitTarget.textContent = tVisit;
+  el.gapContactTarget.textContent = tContact;
+  el.gapTalkTarget.textContent = tTalk;
+  el.gapCaseTarget.textContent = cases;
+
+  return { cases: cases, visit: tVisit, contact: tContact, talk: tTalk };
+}
+
+function renderPerf(row, month){
+  const n = function(k){ return row ? (Number(row[k]) || 0) : 0; };
+  const t = renderGapTargets();
+
+  // ① 實績六格
+  el.pfNew.textContent    = row ? n('new_client')   : '–';
+  el.pfVisit.textContent  = row ? n('first_visit')  : '–';
+  el.pfFollow.textContent = row ? n('follow_up')    : '–';
+  el.pfTalk.textContent   = row ? n('discuss_case') : '–';
+  el.pfSigned.textContent = row ? n('signed')       : '–';
+  el.pfTotal.textContent  = row ? n('total')        : '–';
+
+  if(!row){
+    setText(GAP_ACTUAL_KEYS, '–');
+    setText(GAP_RATE_KEYS, '—');
+    el.perfHint.textContent = '本月尚無保顧+ 實績資料。若你已在保顧+ 記錄行程，'
+      + '請確認兩個系統使用相同的 Email（否則資料對不到你的帳號）、或等下一次同步；'
+      + '若你是免費帳號又沒有團隊，保顧+ 不會匯出你的實績（見 AGENT-STATS-SETUP.md）。';
+    return;
+  }
+
+  // ② 實績（接觸＝新客戶＋複訪）
+  const aVisit = n('first_visit');
+  const aContact = n('new_client') + n('follow_up');
+  const aTalk = n('discuss_case');
+  const aCase = n('signed');
+
+  el.gapVisitActual.textContent = aVisit;
+  el.gapContactActual.textContent = aContact;
+  el.gapTalkActual.textContent = aTalk;
+  el.gapCaseActual.textContent = aCase;
+
+  el.gapVisitRate.textContent = rateText(aVisit, t.visit);
+  el.gapContactRate.textContent = rateText(aContact, t.contact);
+  el.gapTalkRate.textContent = rateText(aTalk, t.talk);
+  el.gapCaseRate.textContent = rateText(aCase, t.cases);
+
+  el.perfHint.textContent = month + ' 的實績為保顧+ 記事的筆數統計（「接觸」＝新客戶＋複訪）。'
+    + '達成率未達 100% 時，先補足約訪與接觸量，成交自然會跟上。';
+}
+
+async function loadPerf(period){
+  const { data, error } = await client.from('agent_stats')
+    .select('*').eq('user_id', user.id).eq('stat_month', period)
+    .order('synced_at', { ascending: false }).limit(1);
+
+  if(error){
+    el.perfSync.textContent = '同步時間：—';
+    renderPerf(null, period.slice(0, 7));
+    el.perfHint.textContent = '讀取保顧+ 實績失敗：' + error.message
+      + '（若尚未建立資料表，請先在 Supabase 執行 supabase-schema-agent-stats.sql）';
+    return;
+  }
+
+  const row = (Array.isArray(data) && data.length) ? data[0] : null;
+  el.perfSync.textContent = (row && row.synced_at)
+    ? '資料更新：' + new Date(row.synced_at).toLocaleString('zh-TW',
+        { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : '同步時間：—';
+  renderPerf(row, period.slice(0, 7));
+}
+
 /* ---------- 讀取某月資料 ---------- */
 async function loadMonth(month){
   const period = monthToDate(month);
@@ -341,6 +481,7 @@ async function loadMonth(month){
   }
   recalc();
   await loadUnitTotals(period);
+  await loadPerf(period);
 }
 
 async function loadUnitTotals(period){
