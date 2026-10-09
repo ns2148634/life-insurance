@@ -133,30 +133,74 @@ public.agent_stats
 curl.exe -i -H "x-cron-secret: <你的 CRON_SECRET>" "https://tool.showall.tw/api/cron/sync-agent-stats?months=2"
 ```
 
-### 3. 設定排程（cron-job.org）
+### 3. 設定排程（cron-job.org：**每天 3 次**）
 
 保顧+ 沒有 `vercel.json`，cron 一律靠**外部排程**帶標頭觸發（本專案的現行做法＝**不必改程式**）。
-以免費的 [cron-job.org](https://cron-job.org) 為例：
+以免費的 [cron-job.org](https://cron-job.org) 為例，**一個 job 就能設多個時間**，所以一天 3 次只要一筆 job：
 
 | 欄位 | 填值 |
 |------|------|
+| Title | `保顧+ 實績同步` |
 | URL | `https://tool.showall.tw/api/cron/sync-agent-stats?months=6` |
-| Schedule | Every day · `07:30` |
-| Timezone | `Asia/Taipei` |
-| Advanced → Headers | `x-cron-secret` = 你的 `CRON_SECRET` |
+| Schedule | Every day → 加入 **3 個時間**：`07:30`、`12:30`、`17:30` |
+| Timezone | `Asia/Taipei` ← 一定要手動改，預設是 UTC（忘了改，你設的 07:30 會變成台北 15:30） |
+| Advanced → Headers | `x-cron-secret: <你的 CRON_SECRET>`（**只放 Header，不要放進 URL query**，URL 會被各層 log 記下來） |
 
-1. 登入 cron-job.org → **Create cronjob** → 照上表填 → 儲存。
+1. 登入 cron-job.org → **Create cronjob** → 照上表填（時間欄可按 **＋** 逐個加入 07:30 / 12:30 / 17:30）→ 儲存。
 2. 存檔後按 **TEST RUN**：回應應為 `{"ok":true,"months":6,"rows":N,"syncedAt":"…"}`。
-3. ⚠️ secret **只放 Header，不要放進 URL query**——URL 會被排程服務與各層 log 記錄下來。
+3. 之後在該 job 的 **History** 可看每次執行的 HTTP 狀態；建議開啟 email 失敗通知（排程掛掉才不會無聲無息）。
 
-- 建議**每天一次**（07:30 台北，非整點避開壅塞）。
-- `months` 預設 6、上限 24（用來回溯補齊歷史月份；每次都是 upsert，重跑安全）。
+- 為什麼一天 3 次？「我的實績」是月度統計：早班、午休、收班各同步一次，白天記的行程最慢約 4~5 小時就會出現在本站（每天只跑 07:30 的話最壞要等近 24 小時）。
+- `months` 預設 6、上限 24（回溯補齊歷史月份；每次都是 upsert，**重跑安全**，跑幾次都不會重複計算）。
 - `rows` 是**所有月份加總的寫入列數**；`0` 代表那些月份沒有可匯出的記事（正常）。
 
-> 為什麼不直接用 Vercel Cron？Vercel 的請求只會帶 `Authorization: Bearer $CRON_SECRET`、
-> **不會**帶 `x-cron-secret`。要改走 Vercel Cron 得先改
-> `app/api/cron/sync-agent-stats/route.ts` 讓它接受該標頭，再新增 `vercel.json` 的 `crons` 設定；
-> 目前刻意維持外部排程，**不必改程式**。
+**不想點 UI？用 API 一次建好**（cron-job.org → Settings → **API key**；官方文件 <https://docs.cron-job.org/rest-api.html>）：
+
+```powershell
+$key    = '<cron-job.org API key>'      # 等同帳密，建議加 IP 限制、用完撤銷
+$secret = '<你的 CRON_SECRET>'
+
+$body = @{
+  job = @{
+    title         = '保顧+ 實績同步'
+    url           = 'https://tool.showall.tw/api/cron/sync-agent-stats?months=6'
+    enabled       = $true
+    saveResponses = $true
+    requestMethod = 0                        # 0 = GET
+    schedule      = @{
+      timezone  = 'Asia/Taipei'
+      expiresAt = 0                          # 0 = 永不過期
+      hours     = @(7, 12, 17)               # ← 一天三次
+      minutes   = @(30)                      # 搭配上面 = 07:30 / 12:30 / 17:30
+      mdays     = @(-1)                      # -1 = 每天
+      months    = @(-1)                      # -1 = 每月
+      wdays     = @(-1)                      # -1 = 每週每一天
+    }
+    extendedData  = @{ headers = @{ 'x-cron-secret' = $secret } }
+  }
+} | ConvertTo-Json -Depth 6
+
+# 建立：注意是 PUT /jobs（不是 POST），成功回 {"jobId":12345}
+Invoke-RestMethod -Method Put -Uri 'https://api.cron-job.org/jobs' `
+  -Headers @{ Authorization = "Bearer $key" } -ContentType 'application/json' -Body $body
+
+# 驗證建出來的內容（schedule.hours 應為 [7,12,17]）
+Invoke-RestMethod -Uri 'https://api.cron-job.org/jobs' -Headers @{ Authorization = "Bearer $key" } |
+  Select-Object -ExpandProperty jobs |
+  Select-Object jobId, title, enabled, @{ n = 'schedule'; e = { $_.schedule | ConvertTo-Json -Compress } }
+```
+
+> ⚠️ cron-job.org 的 API 預設每天 100 次請求配額（本用途一天 0~3 次，遠低於上限）；建立 job 的端點速率限制為 1 次/秒、5 次/分。
+
+> **為什麼不用 Vercel 內建的 Vercel Cron？**
+> 1. **免費的 Hobby 方案「一天只能執行一次」**——排程寫成一天多次（如 `30 7,12,17 * * *`）**會在部署時就失敗**
+>    （官方限制：Hobby＝Once per day；Pro 才支援 Once per minute）。要一天 3 次就得升級 Pro。
+> 2. 就算升級，Vercel Cron 的請求只帶 `Authorization: Bearer $CRON_SECRET`、**不會**帶 `x-cron-secret`，
+>    還得改 `app/api/cron/sync-agent-stats/route.ts` 並新增 `vercel.json`。
+> 所以維持外部排程（cron-job.org）：**不必改程式、不必付費、時間要調隨時可調**。
+
+> 補充：GitHub Actions 也能排程（`on: schedule`，一天 3 次沒問題），但公開 repo 的排程 workflow
+> **閒置 60 天會被自動停用**，觸發時間也常延遲數分鐘；除非你不想用第三方服務，否則 cron-job.org 較省事。
 
 ---
 
@@ -232,7 +276,8 @@ notify pgrst, 'reload schema';
 → 不會。`agent_stats` 以 `unique(email, stat_month)` 為鍵做 upsert，重跑只會覆蓋成最新值。
 
 **Q7. 一天要跑幾次？**
-→ 一天一次就很夠（實績是月累計，不是即時看板）。想更即時可縮到每小時，成本仍極低。
+→ **目前設定一天 3 次**（07:30／12:30／17:30 台北）。實績是月累計、不是即時看板，不需要每分鐘同步；
+   3 次已讓白天記的行程最慢 4~5 小時內出現在本站。想更即時（例如每小時）只要改 cron-job.org 的排程，成本仍極低。
 
 **Q8. 在 SQL Editor 執行 `supabase-schema-agent-stats.sql` 時出現
 `42P01 relation "public.profiles" does not exist`**
