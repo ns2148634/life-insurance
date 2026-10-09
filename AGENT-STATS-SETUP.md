@@ -150,6 +150,8 @@ curl.exe -i -H "x-cron-secret: <你的 CRON_SECRET>" "https://tool.showall.tw/ap
 
 - 檔案在**保顧+ 的 repo** `insurance-tools`：`.github/workflows/sync-agent-stats.yml`。
   repo 是私有的，所以 workflow 設定與執行紀錄都不公開。
+- 執行紀錄（頁面右上角有 **Next run**，每個 run 的 **Summary** 有該次網址／HTTP 碼／回應 JSON）：
+  <https://github.com/ns2148634/insurance-tools/actions/workflows/sync-agent-stats.yml>
 - **為什麼放私有 repo**：公開 repo 的排程 workflow **閒置 60 天會被 GitHub 自動停用**
   （官方原文：In a public repository, scheduled workflows are automatically disabled when no repository
   activity has occurred in 60 days），私有 repo 不受此限。代價是私有 repo 的 Actions 會計分鐘數：
