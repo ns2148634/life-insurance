@@ -191,6 +191,10 @@ Invoke-RestMethod -Uri 'https://api.cron-job.org/jobs' -Headers @{ Authorization
 ```
 
 > ⚠️ cron-job.org 的 API 預設每天 100 次請求配額（本用途一天 0~3 次，遠低於上限）；建立 job 的端點速率限制為 1 次/秒、5 次/分。
+>
+> 若手邊有 `C:\insurance-tools` 專案，也可直接跑 `scripts\setup-cronjob.ps1`：`-DryRun` 先預覽 payload（secret 會遮蔽），
+> 不加 `-DryRun` 即建立並回讀驗證（API key 與 `CRON_SECRET` 用隱藏輸入詢問，不會進指令歷史）。
+> 預設就是每天 3 次 07:30／12:30／17:30；改時間用 `-Hours 8,13,18 -Minutes 0`、改回溯月數用 `-Months 12`、更新既有 job 用 `-JobId <id>`。
 
 > **為什麼不用 Vercel 內建的 Vercel Cron？**
 > 1. **免費的 Hobby 方案「一天只能執行一次」**——排程寫成一天多次（如 `30 7,12,17 * * *`）**會在部署時就失敗**
