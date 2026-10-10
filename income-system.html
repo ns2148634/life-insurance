@@ -117,6 +117,40 @@ td.num{font-variant-numeric:tabular-nums}
   .three-pillars, .sources, .calc, .medals{grid-template-columns:1fr}
   .brand{display:none}
 }
+
+/* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+@media (min-width:768px){
+  .bar{padding:12px 24px;}
+  .nav-link{font-size:16px;padding:7px 16px;min-height:44px;display:inline-flex;align-items:center;}
+  .title{font-size:18px;}
+  nav button, nav a.nav-btn{font-size:17.5px;padding:14px 18px;}
+  main{padding:106px 28px 56px;}
+  .eyebrow{font-size:14.5px;}
+  h2 .en{font-size:14.5px;}
+  .lead{font-size:18px;}
+  .note{font-size:16px;}
+  .pillar-card .tag-p{font-size:16px;}
+  .pillar-card .sub-p{font-size:17.5px;}
+  .pillar-card p{font-size:16.5px;}
+  .yaxis{font-size:16.5px;}
+  .yaxis::before{font-size:13.5px;}
+  .xaxis{font-size:16.5px;}
+  .s3 p{font-size:16px;}
+  .s3 .from{font-size:14.5px;}
+  .fld label{font-size:16px;}
+  .fld .hint{font-size:14.5px;}
+  .fld input,.fld select{font-size:17.5px;padding:10px 12px;min-height:48px;}
+  .sumline{font-size:16.5px;}
+  .bigsum .k{font-size:14.5px;}
+  .bigsum .s{font-size:16px;}
+  table{font-size:16.5px;}
+  th,td{padding:11px 14px;}
+  .medal .when{font-size:14.5px;}
+  .medal p{font-size:16px;}
+  .hook{font-size:16.5px;}
+  .nav-card-link .ld{font-size:16px;}
+}
+
 </style>
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>

@@ -202,3 +202,19 @@ label.check input { width: auto; margin: 0; }
   padding-left: 12px;
   margin-bottom: 14px;
 }
+
+/* ===== 平板（≥768px，含 iPad 直向）：rem 字級整體放大 ≈ +18% =====
+   本檔版面間距皆為 px，因此只影響文字大小；手機與桌機外觀不變。 */
+@media (min-width: 768px) {
+  html { font-size: 19px; }
+  button, .btn { padding: 12px 22px; }
+  button.small, .btn.small { padding: 9px 14px; }
+  .chip { padding: 4px 11px; }
+}
+
+/* 平板直向（768–900px）：字級變大後，工具列三欄會擠壓，改為兩列 */
+@media (min-width: 768px) and (max-width: 900px) {
+  .toolbar { grid-template-columns: 1fr 1fr; }
+  .toolbar input { grid-column: 1 / -1; }
+}
+

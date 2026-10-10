@@ -82,7 +82,7 @@
   .node.selected{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft),var(--shadow);}
 
   .grid{display:grid;grid-template-columns:1fr;gap:16px;}
-  @media(min-width:840px){.grid{grid-template-columns:1.05fr .95fr;align-items:start;}}
+  @media(min-width:900px){.grid{grid-template-columns:1.05fr .95fr;align-items:start;}}
   .bkHero{background:var(--ink);color:#fff;padding:18px 18px 16px;}
   .bkHero .who{font-size:12.5px;color:#9FB2C6;font-weight:700;letter-spacing:.5px;}
   .bkHero .who b{color:#fff;font-size:15px;}
@@ -110,6 +110,44 @@
   .note{font-size:12px;color:var(--ink-soft);line-height:1.75;padding:14px 16px;}
   .note b{color:var(--ink);}
   .note ul{margin:6px 0 0;padding-left:18px;}
+
+  /* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+  @media (min-width:768px){
+    .wrap{padding:24px 20px 70px;}
+    header h1{font-size:26px;}
+    header .sub{font-size:15px;}
+    header .home-link{font-size:15px;padding:10px 18px;min-height:44px;display:inline-flex;align-items:center;}
+    .card .head{padding:15px 18px;}
+    .card .head h2{font-size:17.5px;}
+    .card .head .hint{font-size:14.5px;}
+    .unify span{font-size:15.5px;}
+    .unify input.amt{font-size:17.5px;padding:8px 11px;min-height:44px;}
+    .node .tag{font-size:12.5px;}
+    .node .gen{font-size:12px;}
+    .node .rm{width:30px;height:30px;font-size:18px;}
+    .node select.role,.node select.sen{font-size:15px;padding:8px 24px 8px 10px;min-height:40px;}
+    .node input.name{font-size:15.5px;padding:8px 10px;}
+    .node .fld span{font-size:13px;}
+    .node input.fyc{font-size:16.5px;padding:8px 10px;}
+    .node .od{font-size:13px;}
+    .node .inc{font-size:13.5px;}
+    .node .inc b{font-size:16.5px;}
+    .node .addbtns button{font-size:13px;padding:9px 4px;}
+    .bkHero .who{font-size:15px;}
+    .bkHero .who b{font-size:17.5px;}
+    .bkHero .amtlabel{font-size:13.5px;}
+    .bkHero .annual{font-size:15.5px;}
+    .bkHero .annual b{font-size:21px;}
+    .bkHero .unit{font-size:14.5px;}
+    .bkWarn{font-size:13.5px;}
+    .items .nm{font-size:15.5px;}
+    .items .nm small{font-size:13.5px;}
+    .items .val{font-size:16.5px;}
+    .items li.sec .nm{font-size:13.5px;}
+    .items li.total .val{font-size:19px;}
+    .note{font-size:14.5px;padding:16px 18px;}
+  }
+
 </style>
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>

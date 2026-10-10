@@ -196,6 +196,50 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
 .deck-controls button{appearance:none; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.08); color:#fff; border-radius:99px; padding:7px 18px; font:inherit; cursor:pointer}
 .deck-controls button:hover{background:rgba(255,255,255,.16)}
 .deck-controls button:disabled{opacity:.3; cursor:default}
+
+/* 原本的行內字級改為 class，以便平板層放大（基礎值＝原行內樣式，手機／桌機外觀不變） */
+.fs-note{font-size:12.5px;}
+.fs-sub{font-size:14px;}
+
+/* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+@media (min-width:768px){
+  .bar{padding:12px 24px;}
+  .nav-link{font-size:16px;padding:7px 16px;min-height:44px;display:inline-flex;align-items:center;}
+  .title{font-size:18px;}
+  nav button, nav a.nav-btn{font-size:17.5px;padding:14px 18px;}
+  main{padding:106px 28px 56px;}
+  .eyebrow{font-size:14.5px;}
+  h2 .en{font-size:14.5px;}
+  .lead{font-size:18px;}
+  .note{font-size:16px;}
+  .hero-card p{font-size:18px;}
+  .trait-card p{font-size:16.5px;}
+  .path-node .desc{font-size:16.5px;}
+  .gate{font-size:14.5px;padding:5px 12px;}
+  .rank ul{font-size:16px;}
+  .pillar-card .tag-p{font-size:16px;}
+  .pillar-card .sub-p{font-size:17.5px;}
+  .pillar-card p{font-size:16.5px;}
+  .yaxis{font-size:16.5px;}
+  .xaxis{font-size:16.5px;}
+  .core-card .tag-c{font-size:14.5px;}
+  .core-card p{font-size:16.5px;}
+  .val-card p{font-size:16px;}
+  .gc-pillar p{font-size:16.5px;}
+  .tl-item p{font-size:16px;}
+  details.mod-card summary{font-size:17.5px;padding:16px 20px;}
+  details.mod-card summary .num{font-size:14.5px;}
+  details.mod-card .mod-body{font-size:16px;}
+  .sys-node .desc{font-size:16.5px;}
+  .persona-card .sub-title{font-size:17.5px;}
+  .persona-card p{font-size:16px;}
+  .cta-box .cta-stage{font-size:16.5px;}
+  .cta-box .cta-btn{font-size:18px;padding:14px 36px;}
+  .nav-card-link .ld{font-size:16px;}
+  .fs-note{font-size:16px;}
+  .fs-sub{font-size:16.5px;}
+}
+
 </style>
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>
@@ -293,7 +337,7 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
     <div class="step"><div class="gate">3～9 個月</div><div class="rank r2"><h3>業務主任</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="new">單位津貼</li><li class="new">業績獎金</li><li class="new">超額獎金</li><li class="new">晉陞津貼</li><li class="new">特別津貼</li></ul></div></div>
     <div class="step"><div class="gate">12 個月</div><div class="rank r3"><h3>業務襄理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="new">輔導津貼</li></ul></div></div>
     <div class="step"><div class="gate">15 個月</div><div class="rank r4"><h3>區經理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="base">輔導津貼</li><li class="new">區成長獎金</li></ul></div></div>
-    <div class="step"><div class="gate">2 年</div><div class="rank r5"><h3>處經理</h3><p style="font-size:12.5px;opacity:.85;margin:8px 0 0">經營獨立事業體。<br>委任條件依公司處級制度辦法。</p></div></div>
+    <div class="step"><div class="gate">2 年</div><div class="rank r5"><h3>處經理</h3><p class="fs-note" style="opacity:.85;margin:8px 0 0">經營獨立事業體。<br>委任條件依公司處級制度辦法。</p></div></div>
   </div>
 
   <a class="nav-card-link" href="./promotion-system.html">
@@ -440,7 +484,7 @@ body.deck-mode{background:#111b1d; overflow-x:hidden}
 
   <h2>宸功系統：長期成長的底層架構<span class="en">Page 4: Architecture</span></h2>
   <div class="card">
-    <p style="margin:0;font-size:16px;line-height:1.8"><b>90 天，是你進入這個行業的起點；宸功系統，才是你長期成長的底層架構。</b><br><span style="color:var(--muted);font-size:14px">一套貫穿業務能力、管理能力與組織經營的完整傳承系統。</span></p>
+    <p style="margin:0;font-size:16px;line-height:1.8"><b>90 天，是你進入這個行業的起點；宸功系統，才是你長期成長的底層架構。</b><br><span class="fs-sub" style="color:var(--muted)">一套貫穿業務能力、管理能力與組織經營的完整傳承系統。</span></p>
   </div>
   <div class="sys-flow">
     <div class="sys-node"><div class="label">新人階段</div><div class="desc">接受「宸功出擊 90 天」訓練，扎實基礎。</div></div>

@@ -73,6 +73,18 @@ button:disabled{opacity:.55;cursor:default;}
 .hint{margin-top:18px;font-size:12.5px;color:var(--hint);line-height:1.8;}
 .hint b{color:var(--muted);font-weight:600;}
 @media (max-width:420px){ .card{padding:28px 20px 24px;} }
+
+/* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+@media (min-width:768px){
+  .card{max-width:460px;padding:40px 34px 34px;}
+  h1{font-size:26px;}
+  .sub{font-size:16px;}
+  input{font-size:17.5px;padding:15px 16px;min-height:52px;}
+  button{font-size:17.5px;padding:15px 22px;min-height:52px;}
+  .msg{font-size:16px;}
+  .hint{font-size:14.5px;}
+}
+
 </style>
 </head>
 

@@ -97,6 +97,37 @@ tbody tr:nth-child(even) td{background:#fbf7ea}
   .routes, .def-grid{grid-template-columns:1fr}
   .brand{display:none}
 }
+
+/* 原本的行內字級改為 class，以便平板層放大（基礎值＝原行內樣式，手機／桌機外觀不變） */
+.fs-note{font-size:12.5px;}
+.fs-src{font-size:12.5px;}
+
+/* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+@media (min-width:768px){
+  .bar{padding:12px 24px;}
+  .nav-link{font-size:16px;padding:7px 16px;min-height:44px;display:inline-flex;align-items:center;}
+  main{padding:106px 28px 56px;}
+  .eyebrow{font-size:14.5px;}
+  h2 .en{font-size:14.5px;}
+  .lead{font-size:18px;}
+  .gate{font-size:14.5px;padding:5px 12px;}
+  .rank ul{font-size:16px;}
+  .std summary{padding:16px 20px;}
+  .std summary h3{font-size:20px;}
+  .std summary::after{font-size:14.5px;}
+  .std .in{padding:22px;}
+  .route h4{font-size:17.5px;}
+  .route p{font-size:16px;}
+  .reqs{font-size:16.5px;}
+  table{font-size:16.5px;}
+  th,td{padding:11px 14px;}
+  .def-card h4{font-size:17.5px;}
+  .def-card p{font-size:16px;}
+  .nav-card-link .ld{font-size:16px;}
+  .fs-note{font-size:16px;}
+  .fs-src{font-size:16px;}
+}
+
 </style>
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>
@@ -124,7 +155,7 @@ tbody tr:nth-child(even) td{background:#fbf7ea}
     <div class="step"><div class="gate">3～9 個月</div><div class="rank r2"><h3>業務主任</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="new">單位津貼</li><li class="new">業績獎金</li><li class="new">超額獎金</li><li class="new">晉陞津貼</li><li class="new">特別津貼</li></ul></div></div>
     <div class="step"><div class="gate">12 個月</div><div class="rank r3"><h3>業務襄理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="new">輔導津貼</li></ul></div></div>
     <div class="step"><div class="gate">15 個月</div><div class="rank r4"><h3>區經理</h3><ul><li class="base">首年度津貼</li><li class="base">續年度津貼</li><li class="base">年終獎金</li><li class="base">單位津貼</li><li class="base">業績獎金</li><li class="base">超額獎金</li><li class="base">晉陞津貼</li><li class="base">特別津貼</li><li class="base">輔導津貼</li><li class="new">區成長獎金</li></ul></div></div>
-    <div class="step"><div class="gate">2 年</div><div class="rank r5"><h3>處經理</h3><p style="font-size:12.5px;opacity:.85;margin:8px 0 0">經營獨立事業體。<br>委任條件依公司處級制度辦法。</p></div></div>
+    <div class="step"><div class="gate">2 年</div><div class="rank r5"><h3>處經理</h3><p class="fs-note" style="opacity:.85;margin:8px 0 0">經營獨立事業體。<br>委任條件依公司處級制度辦法。</p></div></div>
   </div>
 
   <h2>各職級委任標準細節<span class="en">Appointment Standards</span></h2>
@@ -337,7 +368,7 @@ tbody tr:nth-child(even) td{background:#fbf7ea}
     <span class="ar">→</span>
   </a>
 
-  <p style="margin:22px 0 0;font-size:12.5px;color:var(--muted);line-height:1.85">資料來源：南山人壽《各級業務主管合約委任及業務主任回任辦法》（南壽業單字第 1150004212 號，115 年 7 月 2 日公布），自 115 年 7 月 1 日起實施。本頁為條件節錄，各項條件之完整條文、註釋與認定方式均以公司公文為準。</p>
+  <p class="fs-src" style="margin:22px 0 0;color:var(--muted);line-height:1.85">資料來源：南山人壽《各級業務主管合約委任及業務主任回任辦法》（南壽業單字第 1150004212 號，115 年 7 月 2 日公布），自 115 年 7 月 1 日起實施。本頁為條件節錄，各項條件之完整條文、註釋與認定方式均以公司公文為準。</p>
 </main>
 
 </body>

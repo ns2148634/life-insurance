@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d1a26">
@@ -192,6 +192,35 @@ footer{
   main{padding:8px 20px 60px;}
   footer{padding:0 20px 40px;}
 }
+
+/* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+@media (min-width:768px){
+  .brand{font-size:16px;}
+  .sub{font-size:17.5px;}
+  .section-label{font-size:14.5px;margin:52px 0 22px;}
+  .card{padding:30px 28px 28px;}
+  .card h2{font-size:23px;}
+  .card p{font-size:16px;}
+  .tag{font-size:13px;padding:5px 12px;}
+  .num{font-size:17px;}
+  .card-foot{font-size:14.5px;}
+  .arrow{font-size:18px;}
+  .ab-title{font-size:13.5px;}
+  .account-form input{font-size:16px;padding:13px 16px;min-height:48px;}
+  .account-form button{font-size:16px;padding:13px 26px;min-height:48px;}
+  .account-msg{font-size:15px;}
+  .hint-line{font-size:14.5px;}
+  .ab-user{font-size:16px;}
+  .ab-badge{font-size:13px;}
+  .ab-link{font-size:15px;padding:9px 16px;min-height:44px;display:inline-flex;align-items:center;}
+  .gb-title{font-size:13.5px;}
+  .gb-l{font-size:14px;}
+  .gb-k{font-size:14.5px;}
+  .gb-v b{font-size:21px;}
+  .gb-link{font-size:15px;}
+  footer{font-size:14px;}
+}
+
 </style>
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>

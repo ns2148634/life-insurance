@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="守護計畫">
@@ -419,6 +419,49 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
   #botnav{margin-bottom:calc(6px + env(safe-area-inset-bottom));padding-top:8px;padding-bottom:8px;}
   .btn-next,.btn-back{padding-top:10px;padding-bottom:10px;}
 }
+/* 保費摘要小卡（原為行內樣式，改為 class 以便依裝置放大；數值與原樣式完全相同） */
+.pm-l{font-size:13px;color:var(--muted);margin-bottom:4px;}
+.pm-v{font-size:25px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;}
+.pm-v.sm{font-size:21px;}
+.pm-u{font-size:12px;color:var(--hint);}
+.pm-u.gap{margin-bottom:8px;}
+
+/* 7. 平板（≥768px，含 iPad 直向）：剩餘固定小字級放大（其餘文字已由第 3 節流體字級處理） */
+@media (min-width:768px){
+  .page-title{font-size:22px;}
+  .slbl{font-size:15px;}
+  .tb-name{font-size:19px;}
+  .tb-home{font-size:15px;padding:9px 16px;min-height:44px;display:inline-flex;align-items:center;}
+  .ts{font-size:14.5px;padding:9px 14px;}
+  .ts i{width:24px;height:24px;font-size:13px;}
+  .stage-chip{font-size:15px;}
+  .tap-hint{font-size:14.5px;}
+  .nsbadge{font-size:14.5px;padding:6px 14px;}
+  .scunit{font-size:15px;}
+  .scamt{min-width:150px;}
+  .scval-input{width:150px;}
+  .qerr{font-size:15.5px;}
+  .rprev{font-size:17.5px;}
+  .edit-hint{font-size:16px;}
+  .ntbl th{font-size:14.5px;}
+  .pri{font-size:13.5px;}
+  .nprod{font-size:14.5px;}
+  .ptlbl{font-size:16px;}
+  .ptunit{font-size:15px;}
+  .prd{font-size:15px;}
+  .prunit{font-size:14.5px;}
+  .dttitle{font-size:14.5px;}
+  .warn{font-size:16.5px;}
+  .s4label{font-size:14.5px;}
+  .psel-lbl{font-size:14.5px;}
+  .psel-opts label{font-size:16px;}
+  .psel-note{font-size:14.5px;}
+  .pm-l{font-size:15px;}
+  .pm-v{font-size:27px;}
+  .pm-v.sm{font-size:23px;}
+  .pm-u{font-size:14.5px;}
+}
+
 </style>
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>
@@ -630,12 +673,12 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
         <div class="ptunit">元 / 年</div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">月均保費</div>
-        <div style="font-size:25px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="monthp">0</div>
-        <div style="font-size:12px;color:var(--hint);margin-bottom:8px;">元 / 月</div>
-        <div style="font-size:13px;color:var(--muted);">每日保費</div>
-        <div style="font-size:21px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);font-weight:600;" id="dayp">0</div>
-        <div style="font-size:12px;color:var(--hint);">元 / 日</div>
+        <div class="pm-l">月均保費</div>
+        <div class="pm-v" id="monthp">0</div>
+        <div class="pm-u gap">元 / 月</div>
+        <div class="pm-l">每日保費</div>
+        <div class="pm-v sm" id="dayp">0</div>
+        <div class="pm-u">元 / 日</div>
       </div>
     </div>
     <div id="premrows"></div>

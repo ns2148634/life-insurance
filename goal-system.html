@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d1a26">
@@ -116,6 +116,41 @@ h1 span{color:var(--gold);}
   header.top{padding:34px 0 22px;}
   .panel{padding:20px 18px 22px;}
 }
+
+/* 原本的行內字級改為 class，以便平板層放大（基礎值＝原行內樣式，手機／桌機外觀不變） */
+.go-set-link{font-size:14px;}
+
+/* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+@media (min-width:768px){
+  .wrap{padding:0 32px 80px;}
+  .brand{font-size:15px;}
+  .lead{font-size:17.5px;}
+  .who{font-size:16.5px;}
+  .ghost{font-size:15px;padding:9px 16px;min-height:44px;}
+  .panel{padding:28px 28px 30px;}
+  .panel-head h2{font-size:21px;}
+  .dim{font-size:14.5px;}
+  .fl{font-size:14.5px;}
+  .field > input{font-size:17.5px;padding:13px 16px;min-height:48px;}
+  .inp .unit{font-size:14.5px;}
+  .inp input{font-size:17.5px;padding:13px 14px;min-height:48px;}
+  .actions button{font-size:16.5px;padding:13px 28px;min-height:48px;}
+  .save-status{font-size:14.5px;}
+  .msg{font-size:16px;}
+  .calc-note{font-size:16px;}
+  .stat .sl{font-size:14.5px;}
+  .stat .su{font-size:13.5px;}
+  .mini{font-size:16px;}
+  .mini th,.mini td{padding:12px 14px;}
+  .mini thead th{font-size:14.5px;}
+  .mini tbody td:last-child{font-size:14.5px;}
+  .foot-hint{font-size:16px;}
+  .kv .row{padding:12px 0;}
+  .kv .k{font-size:16px;}
+  .kv .v small{font-size:14.5px;}
+  .go-set-link{font-size:16.5px;}
+}
+
 </style>
 <script src="./auth-guard.js"></script>
 </head>
@@ -343,7 +378,7 @@ function recalc(){
 function renderMine(row){
   if(!row){
     el.mineBox.innerHTML = '<div class="row"><span class="k">本月尚未設定目標</span>'
-      + '<span class="v"><a href="#" id="goSet" style="color:var(--gold-lt);font-size:14px;">立即設定 ↑</a></span></div>';
+      + '<span class="v"><a href="#" id="goSet" class="go-set-link" style="color:var(--gold-lt);">立即設定 ↑</a></span></div>';
     const go = document.getElementById('goSet');
     if(go) go.addEventListener('click', function(e){
       e.preventDefault();

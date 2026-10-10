@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>宸功出擊90天｜業務員啟動手冊</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -684,6 +684,89 @@ footer b{color:var(--bronze-light);}
   display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:39;
 }
 .overlay.show{display:block;}
+
+/* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
+@media (min-width:768px){
+  #pbSyncStatus{font-size:13.5px;}
+  .brand .mark{font-size:15px;}
+  .brand h1{font-size:24px;}
+  .brand p{font-size:14.5px;}
+  .brand .back-home{font-size:14.5px;padding:9px 16px;min-height:44px;display:inline-flex;align-items:center;}
+  nav.toc .grp-label{font-size:13.5px;}
+  nav.toc a{font-size:16px;padding:12px 24px;}
+  nav.toc a .n{font-size:13.5px;}
+  .menu-toggle{width:48px;height:48px;font-size:20px;}
+  .home-fab{height:48px;padding:0 18px;font-size:15px;}
+  .hero .eyebrow{font-size:14.5px;}
+  .hero .lede{font-size:17.5px;}
+  .hero .credit{font-size:14.5px;}
+  .pb-inner{font-size:15px;}
+  .pb-inner .pb-icon{font-size:16px;}
+  .pb-actions select,.pb-actions input{font-size:15px;padding:9px 11px;min-height:44px;}
+  .pb-actions button{font-size:15px;padding:10px 18px;min-height:44px;}
+  #pbStatus{font-size:13.5px;}
+  .ribbon-head .t{font-size:15px;}
+  .ribbon-head .h{font-size:14.5px;}
+  .ribbon .wk{padding:12px 5px 10px;}
+  .ribbon .wk .num{font-size:18px;}
+  .ribbon .wk .lab{font-size:12px;}
+  .kicker .idx{font-size:17px;width:38px;height:38px;}
+  .kicker .sub{font-size:15px;}
+  .section-intro{font-size:16.5px;}
+  p.body-text{font-size:17.5px;}
+  blockquote{font-size:17.5px;}
+  .pill{font-size:15px;}
+  .letter p{font-size:16.5px;}
+  .step .num{font-size:22px;}
+  .step .txt{font-size:16.5px;}
+  .note-card{font-size:16px;}
+  .vm-card .tag{font-size:13.5px;}
+  .vm-card ul{font-size:16px;}
+  .philo-list b{font-size:17px;}
+  .philo-list span{font-size:15px;}
+  .philo-sub li{font-size:15px;}
+  .goal-card .m{font-size:16px;}
+  .goal-field label{font-size:14.5px;}
+  .goal-field .inp span{font-size:14.5px;}
+  .goal-field input{font-size:16.5px;padding:11px 12px;}
+  .goal-field .hint{font-size:13.5px;}
+  .goal-stats .gs b{font-size:19px;}
+  .goal-stats .gs span{font-size:13.5px;}
+  .mandala .cell{font-size:15px;}
+  .mandala .cell small{font-size:12.5px;}
+  .mandala .cell.center{font-size:17px;}
+  .mandala-note{font-size:16px;}
+  .week-grid{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));}
+  .week-card .wc-head .wname{font-size:17.5px;}
+  .week-card .wc-head .wprog{font-size:13.5px;}
+  .week-card table{font-size:16px;}
+  .week-card td{padding:11px 14px;}
+  .week-card td.goal{font-size:14.5px;}
+  .script-tabs button{font-size:16px;padding:11px 20px;min-height:44px;}
+  .talk-card .th{font-size:16.5px;}
+  .talk-card .tb ul{font-size:16px;}
+  .talk-card .tb .say{font-size:16px;}
+  .mini-table{font-size:16px;}
+  .mini-table td{padding:9px 12px;}
+  .tt-card > p{font-size:16px;}
+  .tm-card h5{font-size:16.5px;}
+  .tm-card ul{font-size:16px;}
+  .mod-card .mh{font-size:16.5px;}
+  .mod-card .mh .cnt{font-size:13.5px;}
+  .mod-card .row .rt b{font-size:15.5px;}
+  .mod-card .row .rt span{font-size:14.5px;}
+  .pr-card h5{font-size:17.5px;}
+  .pr-card ul{font-size:15.5px;}
+  .pr-card .man span{font-size:13.5px;}
+  .badge{font-size:16.5px;}
+  .badge span{font-size:12.5px;}
+  footer{font-size:14.5px;}
+}
+/* 平板直向（768–900px）：目錄抽屜加寬，文字放大後仍好點擊 */
+@media (min-width:768px) and (max-width:900px){
+  .sidebar{width:min(84%,360px);max-width:360px;}
+}
+
 </style>
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>
