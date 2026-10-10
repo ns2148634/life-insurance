@@ -1,6 +1,15 @@
 # 一定要宸功專區 — 設定說明（goal-system.html）
 
-「一定要宸功專區」讓每位業務同仁設定**自己的每月目標**：
+「一定要宸功專區」分成兩個分區（頁面上方可切換，預設顯示「個人專區」）：
+
+| 分區 | 內容 | 資料來源 |
+|------|------|----------|
+| **個人專區** | 我的每月目標（輸入＋摘要）、每週行動計畫、我的實績（個人） | `goal_targets`、`agent_stats`（本人） |
+| **通訊處專區** | 整個通訊處**總目標**、整個通訊處**合計實績**（只顯示合計，不列個人明細） | `get_unit_goal_totals()`、`get_unit_agent_stats_totals()` |
+
+### 個人專區
+
+讓每位業務同仁設定**自己的每月目標**：
 
 | 欄位 | 說明 |
 |------|------|
@@ -15,6 +24,13 @@
 - 約訪 = 件數 × 10
 
 換算週數固定以 **每月 4 週**計，每週件數採**無條件進位**（例如 6 件／月 → 每週 2 件 → 每週接觸 10 人、面談 6 人、約訪 20 人）。
+
+### 通訊處專區
+
+集結**全體同仁**，只顯示合計、不揭露任何個人明細：
+
+- **整個通訊處總目標**：以 `get_unit_goal_totals()` 加總 FYC／保費／件數與已設定人數。
+- **整個通訊處合計實績**：以 `get_unit_agent_stats_totals()` 加總全體同仁（保顧+ 同步）的記事筆數，並對照目標合計算達成率。
 
 首頁（`index.html`）會多一列「本月目標 Monthly Targets」，同時顯示**我的目標**與**整個通訊處的加總**。
 
@@ -37,7 +53,11 @@
 | `public.goal_targets` | 每月目標（一人一月一筆，`unique(user_id, period_month)`） |
 | `trg_goal_targets_updated` | 更新時自動寫 `updated_at` |
 | RLS 政策 | 每人只能讀／寫自己的那一筆；管理員可讀全部 |
-| `public.get_unit_goal_totals(date)` | 以 `security definer` 回傳**加總**（FYC／保費／件數／人數），供首頁顯示「整個通訊處」 |
+| `public.get_unit_goal_totals(date)` | 以 `security definer` 回傳**加總**（FYC／保費／件數／人數），供顯示「整個通訊處總目標」 |
+
+> **通訊處專區的「合計實績」需要另外兩支 SQL**（依序執行）：
+> `supabase-schema-agent-stats.sql`（建立 `public.agent_stats`）→ `supabase-schema-unit-stats.sql`
+> （建立 `public.get_unit_agent_stats_totals(date)`，只回傳全體合計）。詳細說明見 `AGENT-STATS-SETUP.md`。
 
 ### 資料表結構
 
@@ -74,10 +94,13 @@ public.goal_targets
 2. 選擇月份 → 填入 FYC／保費／件數 → 按「儲存本月目標」，看到綠色「已儲存 ✓」。
 3. 下方「每週行動計畫」數字應隨件數即時變動（例如件數 4 → 每週成交 1、接觸 5、面談 3、約訪 10）。
 4. 回到 `index.html`，「本月目標」摘要列應顯示你的數字；「整個通訊處」為全體同仁加總。
-5. 在 SQL Editor 交叉檢查：
+5. 切到「通訊處專區」：應顯示「一、整個通訊處總目標」與「二、整個通訊處合計實績」；
+   後者需要另外兩支 SQL（`supabase-schema-agent-stats.sql` → `supabase-schema-unit-stats.sql`）已執行。
+6. 在 SQL Editor 交叉檢查：
    ```sql
    select * from public.goal_targets order by period_month desc, updated_at desc;
    select * from public.get_unit_goal_totals(date_trunc('month', now())::date);
+   select * from public.get_unit_agent_stats_totals(date_trunc('month', now())::date);
    ```
 
 ---
@@ -98,11 +121,17 @@ notify pgrst, 'reload schema';
 → `user_id` 必須等於自己的 `auth.uid()`。本頁一律以登入者身分寫入，若自行用 SQL 塞資料請以**該同仁的 uid** 為 `user_id`。
 
 **Q3. 「整個通訊處」的數字是什麼範圍？**
-→ 目前 `profiles` 沒有「單位／通訊處」欄位，因此 `get_unit_goal_totals()` 是**全體已設定目標的同仁加總**。
-若未來要分通訊處，需先在 `profiles` 增加 `unit` 欄位，再於函式加入 `where p.unit = <我的 unit>` 的過濾。
+→ 目前 `profiles` 沒有「單位／通訊處」欄位，因此 `get_unit_goal_totals()`（目標）與
+`get_unit_agent_stats_totals()`（合計實績）都是**全體同仁加總**。
+若未來要分通訊處，需先在 `profiles` 增加 `unit` 欄位，再於兩支函式加入 `where p.unit = <我的 unit>` 的過濾。
 
 **Q4. 每月要重新設定嗎？**
 → 不用「重新設定」，但**每個月是一筆獨立資料**；換到新月份時表單會是空的，填一次即可。舊月份資料會保留，可切換月份回查。
 
 **Q5. 為什麼每月算 4 週？**
 → 為了讓每週目標是乾淨的整數、方便排行程（沿用 90 天手冊的簡化方式）。若想改成以實際週數計算，調整 `goal-system.html` 最上方的 `WEEK_PER_MONTH` 即可。
+
+**Q6. 「通訊處專區」的實績為什麼看不到個人名字？**
+→ 這是刻意的隱私界線。一般同仁只能讀 `agent_stats` 自己那一列（RLS），
+所以通訊處專區改走 `security definer` 的 `get_unit_agent_stats_totals()`，只回傳**合計**與同步時間，
+不會揭露任何個人明細；「已設定人數」也只看得到總數。

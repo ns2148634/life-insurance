@@ -111,6 +111,21 @@ h1 span{color:var(--gold);}
 .kv .v small{font-size:12px;color:var(--hint);font-family:'Noto Sans TC',sans-serif;font-weight:400;margin-left:4px;}
 .kv .big{font-size:24px;color:var(--gold-lt);}
 
+/* ---------- 分區切換（個人專區 / 通訊處專區） ---------- */
+.zone-tabs{display:flex;gap:8px;margin-top:22px;padding:5px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.025);}
+.zone-tab{
+  flex:1 1 0;padding:11px 16px;border:none;border-radius:9px;background:transparent;
+  color:var(--muted);font-family:inherit;font-size:14.5px;font-weight:600;letter-spacing:0.5px;
+  cursor:pointer;transition:background .2s ease,color .2s ease;
+}
+.zone-tab:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.zone-tab.active{background:var(--gold-dim);color:var(--gold-lt);box-shadow:inset 0 0 0 1px var(--gold-line);}
+.zone{display:none;}
+.zone.active{display:block;animation:zoneIn .25s ease;}
+@keyframes zoneIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.zone-intro{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.9;}
+.zone-intro b{color:var(--gold-lt);}
+
 @media (max-width:640px){
   .wrap{padding:0 18px 60px;}
   header.top{padding:34px 0 22px;}
@@ -148,6 +163,8 @@ h1 span{color:var(--gold);}
   .kv .row{padding:12px 0;}
   .kv .k{font-size:16px;}
   .kv .v small{font-size:14.5px;}
+  .zone-tab{font-size:16.5px;padding:13px 18px;min-height:48px;}
+  .zone-intro{font-size:16.5px;}
   .go-set-link{font-size:16.5px;}
 }
 
@@ -162,7 +179,7 @@ h1 span{color:var(--gold);}
       <div class="brand">Chenggong Insurance</div>
     </div>
     <h1>一定要<span>宸功</span>專區</h1>
-    <p class="lead">填寫自己的每月目標（FYC、目標保費、目標件數），系統會用件數自動換算每週該做的接觸、面談與約訪量。目標填得越清楚，每週的行動就越明確。</p>
+    <p class="lead">分為「個人專區」與「通訊處專區」：個人專區設定自己的每月目標、換算每週行動量，並對照個人實績；通訊處專區彙整全體同仁的目標與實績合計（只顯示合計，不列個人明細）。</p>
     <div class="who">
       <a href="./index.html">← 回主畫面</a>
       <span id="whoami">載入中…</span>
@@ -172,6 +189,15 @@ h1 span{color:var(--gold);}
   </header>
 
   <div id="pageMsg" class="msg" style="display:none;"></div>
+
+  <nav class="zone-tabs" id="zoneTabs" role="tablist">
+    <button type="button" class="zone-tab active" data-zone="personal" role="tab" aria-selected="true">個人專區</button>
+    <button type="button" class="zone-tab" data-zone="unit" role="tab" aria-selected="false">通訊處專區</button>
+  </nav>
+
+  <!-- ========== 個人專區 ========== -->
+  <div class="zone active" id="zonePersonal">
+  <p class="zone-intro">設定自己的每月目標（FYC、目標保費、目標件數），系統會換算每週該做的接觸、面談與約訪量，並對照你從「保顧+」同步過來的個人實績。</p>
 
   <section class="panel">
     <div class="panel-head">
@@ -252,19 +278,53 @@ h1 span{color:var(--gold);}
     <p class="foot-hint" id="perfHint"></p>
   </section>
 
-  <section class="grid2">
-    <div class="panel">
-      <div class="panel-head"><h2>我的當月目標</h2></div>
-      <div class="kv" id="mineBox"><div class="dim">載入中…</div></div>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>四、我的當月目標</h2>
+      <span class="dim">與上方設定同步</span>
     </div>
-    <div class="panel">
-      <div class="panel-head">
-        <h2>整個通訊處總目標</h2>
-        <span class="dim">全體同仁加總</span>
-      </div>
-      <div class="kv" id="unitBox"><div class="dim">載入中…</div></div>
-    </div>
+    <div class="kv" id="mineBox"><div class="dim">載入中…</div></div>
   </section>
+  </div><!-- /個人專區 -->
+
+  <!-- ========== 通訊處專區 ========== -->
+  <div class="zone" id="zoneUnit">
+  <p class="zone-intro">彙整<b>全體同仁</b>的目標與實績。這一區只顯示合計，不會列出任何個人明細。</p>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>一、整個通訊處總目標</h2>
+      <span class="dim">全體同仁加總</span>
+    </div>
+    <div class="kv" id="unitBox"><div class="dim">載入中…</div></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>二、整個通訊處合計實績（來自保顧+）</h2>
+      <span class="dim" id="unitSync">同步時間：—</span>
+    </div>
+    <p class="calc-note">全體同仁的實績由「保顧+」自動同步後加總，只取<b>記事筆數</b>，不含客戶姓名與記事內容。</p>
+    <div class="stat-grid">
+      <div class="stat"><span class="sl">新客戶</span><b class="sv" id="upNew">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">約訪聯繫</span><b class="sv" id="upVisit">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">複訪</span><b class="sv" id="upFollow">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">遞送建議書</span><b class="sv" id="upTalk">–</b><span class="su">筆</span></div>
+      <div class="stat gold"><span class="sl">簽約</span><b class="sv" id="upSigned">–</b><span class="su">筆</span></div>
+      <div class="stat"><span class="sl">本月總計</span><b class="sv" id="upTotal">–</b><span class="su">筆</span></div>
+    </div>
+    <table class="mini">
+      <thead><tr><th>項目</th><th>目標合計</th><th>實績合計</th><th>達成率</th></tr></thead>
+      <tbody>
+        <tr><th>約訪聯繫</th><td id="ugVisitTarget">0</td><td id="ugVisitActual">–</td><td id="ugVisitRate" style="color:var(--gold-lt);">—</td></tr>
+        <tr><th>接觸（新客戶＋複訪）</th><td id="ugContactTarget">0</td><td id="ugContactActual">–</td><td id="ugContactRate" style="color:var(--gold-lt);">—</td></tr>
+        <tr><th>面談（遞送建議書）</th><td id="ugTalkTarget">0</td><td id="ugTalkActual">–</td><td id="ugTalkRate" style="color:var(--gold-lt);">—</td></tr>
+        <tr><th>成交（簽約）</th><td id="ugCaseTarget">0</td><td id="ugCaseActual">–</td><td id="ugCaseRate" style="color:var(--gold-lt);">—</td></tr>
+      </tbody>
+    </table>
+    <p class="foot-hint" id="unitHint"></p>
+  </section>
+  </div><!-- /通訊處專區 -->
 </div>
 
 <script>
@@ -272,7 +332,8 @@ h1 span{color:var(--gold);}
    一定要宸功專區 — 每月目標（Supabase public.goal_targets）
    - 每月目標：FYC（首年度佣金）、目標保費、目標件數
    - 件數自動換算每週行動量（比例沿用 90day.html：接觸 ×5、面談 ×3、約訪 ×10）
-   - 顯示「我的當月目標」與「整個通訊處加總」
+   - 分為「個人專區」（我的目標／每週行動／我的實績）與
+     「通訊處專區」（整個通訊處總目標／合計實績，只顯示合計、不列個人明細）
    ========================================================= */
 const WEEK_PER_MONTH = 4;              // 每月以 4 週估算（整數好排行程）
 const RATIO = { contact: 5, talk: 3, visit: 10 };
@@ -322,11 +383,34 @@ const el = {
   gapTalkRate: document.getElementById('gapTalkRate'),
   gapCaseTarget: document.getElementById('gapCaseTarget'),
   gapCaseActual: document.getElementById('gapCaseActual'),
-  gapCaseRate: document.getElementById('gapCaseRate')
+  gapCaseRate: document.getElementById('gapCaseRate'),
+  /* 通訊處專區 */
+  unitSync: document.getElementById('unitSync'),
+  upNew: document.getElementById('upNew'),
+  upVisit: document.getElementById('upVisit'),
+  upFollow: document.getElementById('upFollow'),
+  upTalk: document.getElementById('upTalk'),
+  upSigned: document.getElementById('upSigned'),
+  upTotal: document.getElementById('upTotal'),
+  ugVisitTarget: document.getElementById('ugVisitTarget'),
+  ugVisitActual: document.getElementById('ugVisitActual'),
+  ugVisitRate: document.getElementById('ugVisitRate'),
+  ugContactTarget: document.getElementById('ugContactTarget'),
+  ugContactActual: document.getElementById('ugContactActual'),
+  ugContactRate: document.getElementById('ugContactRate'),
+  ugTalkTarget: document.getElementById('ugTalkTarget'),
+  ugTalkActual: document.getElementById('ugTalkActual'),
+  ugTalkRate: document.getElementById('ugTalkRate'),
+  ugCaseTarget: document.getElementById('ugCaseTarget'),
+  ugCaseActual: document.getElementById('ugCaseActual'),
+  ugCaseRate: document.getElementById('ugCaseRate'),
+  unitHint: document.getElementById('unitHint')
 };
 
 let client = null;
 let user = null;
+let unitGoalRow = null;   // 整個通訊處總目標（get_unit_goal_totals）
+let unitPerfRow = null;   // 整個通訊處合計實績（get_unit_agent_stats_totals）
 
 function money(n){
   const v = Math.max(0, Math.round(Number(n) || 0));
@@ -393,9 +477,31 @@ function renderMine(row){
     + '<div class="row"><span class="k">目標件數</span><span class="v">' + money(row.case_target) + '<small>件</small></span></div>';
 }
 
+/* 通訊處專區：目標合計（件數合計 → 各項目標），並在已有實績時一起算達成率 */
+function renderUnitRates(){
+  const cases = unitGoalRow ? Math.max(0, Math.round(Number(unitGoalRow.cases) || 0)) : 0;
+  const t = { cases: cases, visit: cases * RATIO.visit, contact: cases * RATIO.contact, talk: cases * RATIO.talk };
+
+  el.ugVisitTarget.textContent = t.visit;
+  el.ugContactTarget.textContent = t.contact;
+  el.ugTalkTarget.textContent = t.talk;
+  el.ugCaseTarget.textContent = t.cases;
+
+  if(unitPerfRow){
+    const n = function(k){ return Number(unitPerfRow[k]) || 0; };
+    el.ugVisitRate.textContent = rateText(n('first_visit'), t.visit);
+    el.ugContactRate.textContent = rateText(n('new_client') + n('follow_up'), t.contact);
+    el.ugTalkRate.textContent = rateText(n('discuss_case'), t.talk);
+    el.ugCaseRate.textContent = rateText(n('signed'), t.cases);
+  }
+  return t;
+}
+
 function renderUnit(row){
-  if(!row || !row.members){
+  unitGoalRow = (row && row.members) ? row : null;
+  if(!unitGoalRow){
     el.unitBox.innerHTML = '<div class="dim">這個月還沒有人設定目標。</div>';
+    renderUnitRates();
     return;
   }
   el.unitBox.innerHTML =
@@ -403,6 +509,7 @@ function renderUnit(row){
     + '<div class="row"><span class="k">目標保費合計</span><span class="v big">' + money(row.premium) + '<small>元</small></span></div>'
     + '<div class="row"><span class="k">目標件數合計</span><span class="v">' + money(row.cases) + '<small>件</small></span></div>'
     + '<div class="row"><span class="k">已設定人數</span><span class="v">' + money(row.members) + '<small>人</small></span></div>';
+  renderUnitRates();
 }
 /* ---------- 面板：我的實績（來自保顧+ 的 agent_stats） ----------
    - 只讀取自己那一列（RLS 保底：user_id = auth.uid()），資料由「保顧+」的排程寫入。
@@ -410,6 +517,8 @@ function renderUnit(row){
    - 目標欄沿用「二、每週行動計畫」的換算：接觸 ×5、面談 ×3、約訪 ×10。 */
 const GAP_ACTUAL_KEYS = ['gapVisitActual', 'gapContactActual', 'gapTalkActual', 'gapCaseActual'];
 const GAP_RATE_KEYS = ['gapVisitRate', 'gapContactRate', 'gapTalkRate', 'gapCaseRate'];
+const UNIT_ACTUAL_KEYS = ['ugVisitActual', 'ugContactActual', 'ugTalkActual', 'ugCaseActual'];
+const UNIT_RATE_KEYS = ['ugVisitRate', 'ugContactRate', 'ugTalkRate', 'ugCaseRate'];
 
 function setText(keys, text){
   keys.forEach(function(k){ el[k].textContent = text; });
@@ -496,6 +605,58 @@ async function loadPerf(period){
   renderPerf(row, period.slice(0, 7));
 }
 
+/* ---------- 面板：整個通訊處合計實績（agent_stats 全體加總） ----------
+   - 走 security definer 函式 get_unit_agent_stats_totals，只回傳「合計」，
+     不揭露任何個人那一列（與 get_unit_goal_totals 同一套隱私界線）。 */
+function renderUnitPerf(row){
+  unitPerfRow = row || null;
+  const n = function(k){ return row ? (Number(row[k]) || 0) : 0; };
+
+  el.upNew.textContent    = row ? n('new_client')   : '–';
+  el.upVisit.textContent  = row ? n('first_visit')  : '–';
+  el.upFollow.textContent = row ? n('follow_up')    : '–';
+  el.upTalk.textContent   = row ? n('discuss_case') : '–';
+  el.upSigned.textContent = row ? n('signed')       : '–';
+  el.upTotal.textContent  = row ? n('total')        : '–';
+
+  if(!row){
+    setText(UNIT_ACTUAL_KEYS, '–');
+    setText(UNIT_RATE_KEYS, '—');
+  } else {
+    el.ugVisitActual.textContent = n('first_visit');
+    el.ugContactActual.textContent = n('new_client') + n('follow_up');
+    el.ugTalkActual.textContent = n('discuss_case');
+    el.ugCaseActual.textContent = n('signed');
+  }
+
+  renderUnitRates();
+}
+
+async function loadUnitPerf(period){
+  const { data, error } = await client.rpc('get_unit_agent_stats_totals', { p_month: period });
+  if(error){
+    el.unitSync.textContent = '同步時間：—';
+    renderUnitPerf(null);
+    el.unitHint.textContent = '讀取通訊處合計實績失敗：' + error.message
+      + '（若尚未建立函式，請先在 Supabase 執行 supabase-schema-unit-stats.sql）';
+    return;
+  }
+
+  const row = (Array.isArray(data) && data.length) ? data[0] : (data || null);
+  const has = !!(row && ((Number(row.members) || 0) > 0 || (Number(row.total) || 0) > 0));
+
+  el.unitSync.textContent = (has && row.synced_at)
+    ? '資料更新：' + new Date(row.synced_at).toLocaleString('zh-TW',
+        { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : '同步時間：—';
+
+  renderUnitPerf(has ? row : null);
+
+  el.unitHint.textContent = has
+    ? '這是全體同仁的合計（' + money(row.members) + ' 人有資料）。達成率＝實績合計 ÷ 目標合計；「接觸」＝新客戶＋複訪。'
+    : '本月尚無通訊處合計實績資料。若同仁已在保顧+ 記錄行程，請等下一次同步，或確認已執行 supabase-schema-unit-stats.sql。';
+}
+
 /* ---------- 讀取某月資料 ---------- */
 async function loadMonth(month){
   const period = monthToDate(month);
@@ -516,6 +677,7 @@ async function loadMonth(month){
   }
   recalc();
   await loadUnitTotals(period);
+  await loadUnitPerf(period);
   await loadPerf(period);
 }
 
@@ -553,6 +715,26 @@ async function save(){
   await loadMonth(month);
 }
 
+/* ---------- 分區切換（個人專區 / 通訊處專區） ---------- */
+function showZone(name){
+  if(['personal', 'unit'].indexOf(name) < 0) name = 'personal';
+
+  document.querySelectorAll('.zone-tab').forEach(function(b){
+    const on = b.dataset.zone === name;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.getElementById('zonePersonal').classList.toggle('active', name === 'personal');
+  document.getElementById('zoneUnit').classList.toggle('active', name === 'unit');
+}
+
+document.querySelectorAll('.zone-tab').forEach(function(b){
+  b.addEventListener('click', function(){ location.hash = b.dataset.zone; });
+});
+window.addEventListener('hashchange', function(){
+  showZone((location.hash || '').replace('#', ''));
+});
+
 /* ---------- 事件 ---------- */
 [el.fycInput, el.premiumInput, el.caseInput].forEach(function(i){ i.addEventListener('input', recalc); });
 el.monthInput.addEventListener('change', function(){ clearMsg(); loadMonth(el.monthInput.value); });
@@ -565,6 +747,7 @@ el.logoutBtn.addEventListener('click', async function(){
 /* ---------- boot ---------- */
 (async function boot(){
   el.monthInput.value = currentMonth();
+  showZone((location.hash || '').replace('#', ''));
   recalc();
 
   if(!window.authGuard || !window.authGuard.ready){

@@ -76,14 +76,15 @@ npm run dev
 | `index.html` | ✅ | 工具總覽；需登入。登入區塊仍需連得到 Supabase |
 | `insurance-needs.html` 等試算工具 | ✅ | 需登入；計算本身是純前端（`html2pdf` 已放在 `libs/`） |
 | `90day.html`（90 天手冊） | ✅ | 需登入；進度**跟著登入帳號**存（Firebase RTDB `cg90/users/<uid>` + 本機 mirror），連不到雲端時會自動退回「僅本機儲存」，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」（見「四之二」） |
-| `goal-system.html`（一定要宸功專區） | ✅ | 需登入；每月目標存在 Supabase `public.goal_targets`（一人一月一筆），下方「我的實績」讀 `public.agent_stats`（由保顧+ 的 cron 寫入，見下方註記）。**第一次使用前需先在 SQL Editor 執行 `supabase-schema-goals.sql` 與 `supabase-schema-agent-stats.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`、`AGENT-STATS-SETUP.md`） |
+| `goal-system.html`（一定要宸功專區） | ✅ | 需登入；分「個人專區」與「通訊處專區」。個人區的每月目標存在 Supabase `public.goal_targets`（一人一月一筆）、個人實績讀 `public.agent_stats`（由保顧+ 的 cron 寫入，見下方註記）；通訊處區顯示全體目標加總與**合計實績**（只顯示合計、不列個人明細）。**第一次使用前需先在 SQL Editor 依序執行 `supabase-schema-goals.sql`、`supabase-schema-agent-stats.sql`、`supabase-schema-unit-stats.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`、`AGENT-STATS-SETUP.md`） |
 | `accounts.html` | ✅ | 需管理員帳號登入，且該帳號 `profiles.is_admin = true` |
 | `video-training/*` | ✅ | 需登入；影片為 YouTube 內嵌，需網路 |
 | `sharing/*` | ✅ | 需登入 |
 
-> **`goal-system.html` 的「三、我的實績」是跨系統同步**：資料來自「保顧+」（另一個 Supabase 專案），
+> **`goal-system.html` 的實績是跨系統同步**：資料來自「保顧+」（另一個 Supabase 專案），
 > 由保顧+ 的 cron 以 service role 寫入本站 `public.agent_stats`；本站前端**沒有任何寫入權限**
-> （RLS 只有 `select`），只會讀自己那一列。本機測試時若還沒同步過，該區塊會顯示
+> （RLS 只有 `select`），個人專區只會讀自己那一列，通訊處專區則走 `security definer` 的
+> `get_unit_agent_stats_totals()` 只取**全體合計**。本機測試時若還沒同步過，該區塊會顯示
 > 「本月尚無保顧+ 實績資料」，屬正常現象。設定與驗證步驟見 **[AGENT-STATS-SETUP.md](./AGENT-STATS-SETUP.md)**。
 
 ---

@@ -2,6 +2,7 @@
 
 `goal-system.html` 的「三、我的實績」會顯示你在**「ShowAll 保顧+」**的行程實績
 （新客戶／約訪聯繫／複訪／遞送建議書／簽約的**筆數**），並與本站設定的「每月目標」對照達成率。
+同頁的「通訊處專區」則顯示**全體同仁的合計實績**（見文末說明）。
 
 資料流（單向、由保顧+ 推過來）：
 
@@ -68,6 +69,10 @@
 | `public.agent_stats` | 每人每月一筆實績計數（`unique(email, stat_month)`，重跑同步不會重複累加） |
 | RLS 政策 | 本人只能讀自己的列；管理員（`private.is_admin()`）可讀全部；**沒有任何寫入政策** |
 | `public.ingest_agent_stats(jsonb)` | **只給 service_role** 的寫入函式（upsert，並由 email 解析 `user_id`） |
+
+> **通訊處專區的「合計實績」需要再執行一支 SQL**：`supabase-schema-unit-stats.sql`
+> （建立 `public.get_unit_agent_stats_totals(date)`，以 `security definer` 只回傳全體合計＋同步時間）。
+> 它**不改變本章的 RLS**：一般同仁仍只看得到自己那一列；通訊處專區拿到的是加總後的數字，不含個人明細。
 
 ### 資料表結構
 
@@ -288,8 +293,9 @@ Invoke-RestMethod -Uri 'https://api.cron-job.org/jobs' -Headers @{ Authorization
    from public.agent_stats order by stat_month desc, email;
    ```
    - `user_id` 應有你自己的帳號；若為 `null` 就是 email 對不上（見 Q2）。
-5. **前端**：登入後開 `goal-system.html` → 選本月 → 「三、我的實績」應顯示數字與「資料更新：…」。
+5. **前端**：登入後開 `goal-system.html` → **個人專區** → 選本月 → 「三、我的實績」應顯示數字與「資料更新：…」。
    切到沒有資料的月份應顯示「本月尚無保顧+ 實績資料」，而不是錯誤訊息。
+   再切到**通訊處專區** → 「二、整個通訊處合計實績」應顯示全體加總（需先執行 `supabase-schema-unit-stats.sql`）。
 6. **與保顧+ 對帳**：在保顧+ 的 `/stats/team` 看同一月份、同一位成員的計數是否一致。
    本站採半開區間 `[該月1號, 次月1號)` 切月；與保顧+ 舊版 RPC 的「含頭含尾」在**月初／月底邊界**可能差 1 筆。
 7. **權限回歸**：
@@ -332,6 +338,7 @@ notify pgrst, 'reload schema';
 **Q5. 可以看同仁的實績嗎？**
 → 不行（除非你是管理員）。前端只查 `user_id = 自己`，資料庫 RLS 也只放行自己那一列；
    管理員帳號（`profiles.is_admin = true`）則可讀全部（方便核對同步是否正常）。
+   至於「通訊處專區」顯示的是全體**合計**（走 `get_unit_agent_stats_totals()`），不是個人明細。
 
 **Q6. 重跑 cron 會不會把數字加兩倍？**
 → 不會。`agent_stats` 以 `unique(email, stat_month)` 為鍵做 upsert，重跑只會覆蓋成最新值。
