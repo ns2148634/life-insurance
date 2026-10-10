@@ -8,9 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- Firebase SDK（compat 全域版，確保同步可用） -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
 :root{
   --ink:#17343a;
@@ -1416,9 +1413,10 @@ tocLinks.forEach(a=>a.addEventListener('click', closeSidebar));
 /* ---------------- progress saving（進度跟著登入帳號） ----------------
    <head> 的 auth-guard.js 已確保「未登入會被導向 login.html」，
    這裡只負責把進度存到「目前登入者」：
-     雲端 Firebase  cg90/users/<uid>
+     雲端 Supabase  public.cg90_progress（user_id 為主鍵，一人一筆，RLS 保護）
      本機 mirror    cg90_progress_<uid>（離線或快速載入用）
-   沒有取得登入者時（例如守衛正在導向登入頁）一律不寫入任何資料。 */
+   沒有取得登入者時（例如守衛正在導向登入頁）一律不寫入任何資料。
+   資料表由 supabase-schema-90day-progress.sql 建立。 */
 const LS_OK = (()=>{ try{ const k='__cg90_test__'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; } })();
 
 const pbName = document.getElementById('pbName');
@@ -1426,38 +1424,12 @@ const pbStatus = document.getElementById('pbStatus');
 const pbSyncStatus = document.getElementById('pbSyncStatus');
 
 let account = { uid:'', name:'', email:'' };  // 目前登入者
+let sb = null;             // Supabase client（由 auth-guard.js 提供）
+let cloudChannel = null;   // Realtime 訂閱：同一帳號的其他裝置更新時即時帶入
 let saveTimer = null;
 let savedAt = 0;           // 畫面上這份進度的儲存時間，用來判斷雲端資料是否較新
 let firstCloudSnap = true; // 第一次收到雲端快照時，才決定要不要把本機推上去
 
-/* ---------- Firebase compat 初始化 ---------- */
-const FB_CONFIG = {
-  apiKey: "AIzaSyC2dv48GBd4kWZM2Xh9-4EorqETdG3LIEA",
-  authDomain: "day-1c687.firebaseapp.com",
-  databaseURL: "https://day-1c687-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "day-1c687",
-  storageBucket: "day-1c687.firebasestorage.app",
-  messagingSenderId: "214310395755",
-  appId: "1:214310395755:web:73695ad3e6fe0cd940762e",
-  measurementId: "G-CSS0QSBD8T"
-};
-let fbApp = null, fbDB = null;
-if (window.firebase && window.firebase.apps && window.firebase.apps.length === 0) {
-  try {
-    fbApp = window.firebase.initializeApp(FB_CONFIG);
-    fbDB = window.firebase.database();
-  } catch(e) { console.warn('Firebase init failed:', e); }
-} else if (window.firebase && window.firebase.apps && window.firebase.apps.length > 0) {
-  try { fbDB = window.firebase.database(); } catch(e) { console.warn('Firebase db failed:', e); }
-}
-const FB = fbDB ? {
-  db: fbDB,
-  ref: (p) => fbDB.ref(p),
-  set: (r, v) => r.set(v),
-  update: (r, v) => r.update(v),
-  remove: (r) => r.remove(),
-  onValue: (r, cb, err) => r.on('value', snap => cb(snap), err)
-} : null;
 function syncStatus(text, cls){
   if(!pbSyncStatus) return;
   pbSyncStatus.innerHTML = cls ? `<span class="cloud-dot ${cls}"></span>${text}` : text;
@@ -1472,32 +1444,30 @@ function localWrite(state){
   if(!LS_OK) return false;
   try{ localStorage.setItem(acctKey(), JSON.stringify(state)); return true; }catch(e){ return false; }
 }
-/* 雲端：cg90/users/<uid>，只寫自己那一份 */
-function cloudWrite(state){
-  if(!FB || !account.uid) return;
-  FB.set(FB.ref('cg90/users/' + account.uid), {
-    uid: account.uid,
-    name: account.name,
-    email: account.email,
-    updatedAt: Date.now(),
-    progress: state
-  })
-    .then(()=>{ syncStatus('☁️ 雲端已同步', 'ok'); updateStatus('已儲存：' + formatTime(state.savedAt)); })
-    .catch(err=>{ console.warn('cloud write fail', err); syncStatus('⚠️ 雲端同步失敗，僅本機儲存', 'err'); });
-}
-/* 舊版是「一位學員一筆」（cg90/students），改成跟著帳號之後，
-   若這個帳號還沒有任何紀錄，就沿用姓名相同的舊紀錄，避免先前填過的進度消失。 */
-async function legacyImport(){
-  if(!FB || !account.name) return null;
+/* 雲端：public.cg90_progress，只寫自己那一份（RLS 會再擋一次） */
+async function cloudWrite(state){
+  if(!sb || !account.uid) return;
   try{
-    const snap = await FB.ref('cg90/students').once('value');
-    const hit = Object.values(snap.val() || {})
-      .find(s=>s && s.name === account.name && s.progress && s.progress.savedAt);
-    return hit ? hit.progress : null;
+    const { error } = await sb.from('cg90_progress').upsert({
+      user_id: account.uid,
+      state: state,
+      saved_at: state.savedAt || 0
+    }, { onConflict: 'user_id' });
+    if(error) throw error;
+    syncStatus('☁️ 雲端已同步', 'ok');
+    updateStatus('已儲存：' + formatTime(state.savedAt));
   }catch(err){
-    console.warn('[90day] 讀取舊學員紀錄失敗', err);
-    return null;
+    console.warn('cloud write fail', err);
+    syncStatus('⚠️ 雲端同步失敗，僅本機儲存', 'err');
   }
+}
+/* 雲端讀取自己那一份（載入時和本機比對 savedAt，取較新者） */
+async function cloudRead(){
+  if(!sb || !account.uid) return null;
+  const { data, error } = await sb.from('cg90_progress')
+    .select('state, saved_at').eq('user_id', account.uid).maybeSingle();
+  if(error) throw error;
+  return (data && data.state) ? data.state : null;
 }
 function formatTime(ts){
   const d = new Date(ts);
@@ -1554,7 +1524,7 @@ function scheduleSave(){
     const state = collectState();
     savedAt = state.savedAt;
     const okLocal = localWrite(state);
-    if(FB){
+    if(sb){
       cloudWrite(state);           // 成功／失敗會更新右側的雲端狀態
     }else if(okLocal){
       updateStatus('已儲存（本機）：' + formatTime(state.savedAt));
@@ -1564,28 +1534,55 @@ function scheduleSave(){
     }
   }, 450);
 }
-/* 監聽自己那一份雲端進度（其他裝置更新過時，自動帶入較新的版本） */
-function startCloudListen(){
-  if(!FB || !account.uid) return;
+/* 監聽自己那一份雲端進度：
+   1. 載入時先讀一次，和本機比對 savedAt，取較新者（本機較新時推上去）
+   2. 再用 Realtime 訂閱同一列，其他裝置更新時即時帶入 */
+function applyRemote(remote){
+  if(firstCloudSnap && (!remote || (remote.savedAt || 0) < savedAt)){
+    // 雲端還沒有資料、或比本機舊 → 把本機這份推上去，避免只留在這台裝置
+    if(savedAt > 0) cloudWrite(collectState());
+  }
+  firstCloudSnap = false;
+  if(remote && remote.savedAt && remote.savedAt > savedAt){
+    applyState(remote);            // applyState 內會更新 savedAt
+    localWrite(remote);
+    updateStatus('☁️ 已載入雲端進度：' + formatTime(remote.savedAt));
+  }
+}
+async function startCloudListen(){
+  if(!sb || !account.uid) return;
   syncStatus('☁️ 連線中…');
-  FB.onValue(FB.ref('cg90/users/' + account.uid), snap=>{
-    const data = snap.val();
-    const remote = data && data.progress ? data.progress : null;
-    if(firstCloudSnap && (!remote || (remote.savedAt || 0) < savedAt)){
-      // 雲端還沒有資料、或比本機舊 → 把本機這份推上去，避免只留在這台裝置
-      if(savedAt > 0) cloudWrite(collectState());
-    }
-    firstCloudSnap = false;
-    if(remote && remote.savedAt && remote.savedAt > savedAt){
-      applyState(remote);            // applyState 內會更新 savedAt
-      localWrite(remote);
-      updateStatus('☁️ 已載入雲端進度：' + formatTime(remote.savedAt));
-    }
+  try{
+    const remote = await cloudRead();   // 沒有資料時會是 null
+    applyRemote(remote);
     syncStatus('☁️ 雲端已連線', 'ok');
-  }, err=>{
-    console.warn('cloud listen error', err);
+  }catch(err){
+    console.warn('[90day] 讀取雲端進度失敗', err);
     syncStatus('⚠️ 雲端連線失敗，使用本機', 'err');
-  });
+    return;
+  }
+  // Realtime：同一帳號的其他裝置儲存後，會收到這筆變更
+  try{
+    if(cloudChannel){ sb.removeChannel(cloudChannel); cloudChannel = null; }
+    cloudChannel = sb.channel('cg90_progress_' + account.uid)
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'cg90_progress', filter: 'user_id=eq.' + account.uid },
+        payload=>{
+          const row = payload && payload.new ? payload.new : null;
+          const remote = row && row.state ? row.state : null;
+          if(remote && remote.savedAt && remote.savedAt > savedAt){
+            applyState(remote);
+            localWrite(remote);
+            updateStatus('☁️ 已載入雲端進度：' + formatTime(remote.savedAt));
+          }
+          syncStatus('☁️ 雲端已連線', 'ok');
+        })
+      .subscribe(status=>{
+        if(status === 'SUBSCRIBED') syncStatus('☁️ 雲端已連線', 'ok');
+      });
+  }catch(err){
+    console.warn('[90day] Realtime 訂閱失敗（仍可用載入／儲存同步）', err);
+  }
 }
 
 /* ---------- boot：先向守衛確認登入者，再把進度綁到這個帳號 ---------- */
@@ -1602,9 +1599,9 @@ async function currentUser(){
 }
 async function currentName(user){
   try{
-    const sb = window.authGuard && window.authGuard.sb;
-    if(sb){
-      const { data } = await sb.from('profiles').select('full_name, email').eq('id', user.id).maybeSingle();
+    const client = window.authGuard && window.authGuard.sb;
+    if(client){
+      const { data } = await client.from('profiles').select('full_name, email').eq('id', user.id).maybeSingle();
       const n = data && (data.full_name || data.email);
       if(n) return n;
     }
@@ -1621,23 +1618,17 @@ async function boot(){
   }
   account.uid = user.id;
   account.email = user.email || '';
+  sb = (window.authGuard && window.authGuard.sb) || null;
   account.name = await currentName(user);
   pbName.textContent = account.name;
   pbName.title = account.email;
 
   // 先套用本機紀錄；雲端若有更新的版本，startCloudListen 會自動覆蓋
-  let state = localRead();
-  let fromLegacy = false;
-  if(!state){
-    state = await legacyImport();     // 沿用舊版以姓名建立的紀錄（沒有則回 null）
-    fromLegacy = !!state;
-  }
-  applyState(state || defaultState());
-  if(fromLegacy) updateStatus('已帶入舊版先前的紀錄');
-  else if(!LS_OK) updateStatus('此瀏覽器無法使用本機儲存，進度只會存在雲端');
+  applyState(localRead() || defaultState());
+  if(!LS_OK) updateStatus('此瀏覽器無法使用本機儲存，進度只會存在雲端');
 
-  if(FB) startCloudListen();
-  else syncStatus('☁️ 未設定雲端，僅本機儲存');
+  if(sb) startCloudListen();
+  else syncStatus('☁️ 未連線雲端，僅本機儲存');
 }
 boot();
 </script>

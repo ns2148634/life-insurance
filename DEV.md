@@ -75,7 +75,7 @@ npm run dev
 | `login.html`（根目錄） | ✅ | 全站共用登入頁；本身不需登入即可開 |
 | `index.html` | ✅ | 工具總覽；需登入。登入區塊仍需連得到 Supabase |
 | `insurance-needs.html` 等試算工具 | ✅ | 需登入；計算本身是純前端（`html2pdf` 已放在 `libs/`） |
-| `90day.html`（90 天手冊） | ✅ | 需登入；進度**跟著登入帳號**存（Firebase RTDB `cg90/users/<uid>` + 本機 mirror），連不到雲端時會自動退回「僅本機儲存」，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」（見「四之二」） |
+| `90day.html`（90 天手冊） | ✅ | 需登入；進度**跟著登入帳號**存（Supabase `public.cg90_progress` + 本機 mirror），連不到雲端時會自動退回「僅本機儲存」，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」（見「四之二」）。**第一次使用前需先在 SQL Editor 執行 `supabase-schema-90day-progress.sql`**，否則讀寫會失敗 |
 | `goal-system.html`（一定要宸功專區） | ✅ | 需登入；分「個人專區」與「通訊處專區」。個人區的每月目標存在 Supabase `public.goal_targets`（一人一月一筆）、個人實績讀 `public.agent_stats`（由保顧+ 的 cron 寫入，見下方註記）；通訊處區顯示全體目標加總與**合計實績**（只顯示合計、不列個人明細）。**第一次使用前需先在 SQL Editor 依序執行 `supabase-schema-goals.sql`、`supabase-schema-agent-stats.sql`、`supabase-schema-unit-stats.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`、`AGENT-STATS-SETUP.md`） |
 | `accounts.html` | ✅ | 需管理員帳號登入，且該帳號 `profiles.is_admin = true` |
 | `video-training/*` | ✅ | 需登入；影片為 YouTube 內嵌，需網路 |
@@ -136,21 +136,25 @@ const { sb, session, user } = await window.authGuard.ready;
 **2026-10 修訂**：移除「🔑 主管解鎖」密碼、移除「切換查看學員」下拉，並一併移除主管管理面板
 （新增學員／刪除／點卡片切換）。90 天的進度**直接綁定登入帳號**，不必再選「這是哪一位學員的」。
 
+**2026-10 修訂（二）**：雲端儲存由 Firebase RTDB 改為 **Supabase `public.cg90_progress`**
+（`auth.uid()` + RLS），與全站其他功能統一。資料表由
+**[`supabase-schema-90day-progress.sql`](./supabase-schema-90day-progress.sql)** 建立，
+**第一次使用前需先執行過一次**（沿用 `video-training/supabase-schema.sql` 的帳號與 helper）。
+
 | 位置 | 內容 |
 | --- | --- |
-| 雲端 Firebase RTDB `cg90/users/<登入者 uid>` | `{ uid, name, email, updatedAt, progress }`；`name` 取自 `profiles.full_name`，沒填就退成 email |
+| 雲端 Supabase `public.cg90_progress`（`user_id` 為主鍵，一人一筆） | `state`（原樣的 `{goals,weeks,modules}`）+ `saved_at`（前端 `Date.now()`）+ `updated_at`（trigger 自動） |
 | 本機 `localStorage` `cg90_progress_<uid>` | 同一份進度的 mirror；雲端連不上時仍會保存（狀態列顯示「☁️ 未連線雲端，僅本機儲存」） |
-| 舊版資料 `cg90/students/<隨機 id>` | **保留不動**。只有在「這個帳號完全沒有紀錄」且姓名相同時，才會自動沿用一次，避免舊進度消失 |
+| 舊版 Firebase 資料 `cg90/users`、`cg90/students` | **保留不動**（前端不再讀取）。若要沿用，請匯出 JSON 後以 schema 檔末的 SQL 匯入 `cg90_progress` |
 
-- 同步判定：比 `progress.savedAt`，**雲端較新就覆蓋畫面**（在別台裝置更新過也會帶入）。
+- 同步判定：比 `state.savedAt`，**雲端較新就覆蓋畫面**（在別台裝置更新過也會帶入）。
 - 反過來，本機比雲端新（或雲端還沒有資料）時，第一次連線會把本機推上去。
+- 僅在載入時 `select` 一次做比對；另外用 **Realtime `postgres_changes`** 訂閱自己那一列，
+  同一帳號的其他裝置儲存後會即時帶入（需 schema 檔第 4 段已把表加入 `supabase_realtime`；
+  即使 Realtime 沒訂到，仍可靠載入比對與儲存同步運作）。
 - 沒有取得登入者時（守衛正在導向 `login.html`）**完全不寫入**任何資料。
-- 頁面只讀寫「自己那一份」，但 ⚠️ **Firebase Realtime Database 的讀寫權限以 Firebase 規則為準**
-  （與 Supabase 的 RLS 無關）。要真的保護資料，請到 Firebase Console → Realtime Database → Rules
-  限制成「只有登入者能存取自己的節點」；前端守衛本身沒有任何祕密可言。
-- 目前全站只有這一頁用 Firebase，其餘（影片研習、業務分享）都走 Supabase。
-  若日後想統一，把這頁改成 Supabase 資料表（`auth.uid()` + RLS）會更一致，
-  但需要在 SQL Editor 執行一次新增資料表的 SQL。
+- 頁面只讀寫「自己那一份」，且 ⚠️ **保護來自 Supabase 的 RLS**（`auth.uid() = user_id`，
+  另有管理員 `select` 政策），與全站其他資料表同一套機制；不再需要另外維護 Firebase 規則。
 
 ---
 
