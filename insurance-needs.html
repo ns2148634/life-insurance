@@ -632,14 +632,14 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
 
   <div class="caption-box"><div class="caption-text" id="captionText">這張人生收支曲線，藏著 8 個關鍵點。點圖「右半」開始一站一站看，「左半」可以回上一步。</div></div>
 
-  <div class="rank-head" id="rankHead">您最擔心的是？ — 走完 8 個階段後，即可依擔心程度點選排序</div>
+  <div class="rank-head" id="rankHead">您最擔心的是？ — 走完 9 個階段後，即可依擔心程度點選排序</div>
   <div class="rank-row" id="rankRow">
     <div class="rtile" data-id="death" data-stage="4" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🕊</div><div class="rlab">活的太短</div></div>
     <div class="rtile" data-id="interrupt" data-stage="6" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">⏸</div><div class="rlab">收入中斷</div></div>
     <div class="rtile" data-id="disability" data-stage="7" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">♿</div><div class="rlab">失能長年病</div></div>
     <div class="rtile" data-id="medical" data-stage="8" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🏥</div><div class="rlab">醫療費用</div></div>
   </div>
-  <div class="rprev" id="rprev">尚未選擇。走完 8 個階段後，依序點選最擔心的四項風險。</div>
+  <div class="rprev" id="rprev">尚未選擇。走完 9 個階段後，依序點選最擔心的四項風險。</div>
 
 </div>
 
@@ -735,7 +735,7 @@ var rankOrder=['interrupt','death','disability','medical'];   // 由 rankPicked 
 var rankPicked=[];                                            // 使用者點選順序（風險 id）
 var RNAMES={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
 var riskStage=0;
-var TOTAL_RISK_STAGES=8;
+var TOTAL_RISK_STAGES=9;   // 前 8 站＝曲線上的關鍵點，第 9 站＝收尾提問並開放排序
 var STEPS=[
   {lbl:'',next:'了解人生風險 →',title:''},
   {lbl:'01 / 03',next:'查看方法與選擇 →',title:'風險確認'},
@@ -752,7 +752,8 @@ var CAPTIONS=[
   '活的太長不是問題，擔心的是<strong>「活的太長」</strong>，錢卻不夠用。',
   '在我們努力為夢想、家人打拼時，如果因為疾病或意外讓收入暫時中斷半年、一年的話，會不會是問題？——這是<strong>「收入中斷」</strong>。',
   '甚至嚴重到永遠失去工作能力，還需要別人來照顧我們…——這是<strong>「失能長年病」</strong>。',
-  '而前面每一道風險，都可能拖著同一筆<strong>難以預期的醫療開銷</strong>——住院、手術、病房差額，動輒數萬到數十萬元。這就是<strong>「醫療費用」</strong>：它沒有固定的登場時間，橫跨整條人生曲線，隨時可能瞬間侵蝕我們一生的積蓄。<br><br>其中<strong>「活的太長」</strong>以長期照護與年金規劃處理；以下四項風險，請依您<strong>最擔心</strong>的程度點選排序，我們將依此順序逐一為您規劃保障。',
+  '而前面每一道風險，都可能拖著同一筆<strong>難以預期的醫療開銷</strong>——住院、手術、病房差額，動輒數萬到數十萬元。這就是<strong>「醫療費用」</strong>：它沒有固定的登場時間，橫跨整條人生曲線，隨時可能瞬間侵蝕我們一生的積蓄。',
+  '除了<strong>活的太長</strong>不會突然發生外，您最擔心的是一陣子沒有收入、永遠沒有收入、永遠沒有收入還要家人照顧我們，還是醫療費用？',
 ];
 
 function fmtN(n){return Math.round(n).toLocaleString('zh-TW');}
@@ -953,7 +954,7 @@ function renderRiskStage(){
   updateMainBtn();
 }
 
-// 排序列：前 7 站淡化，對應風險的卡片隨故事陸續亮起；第 8 站（醫療費用）才開放點選
+// 排序列：前 7 站淡化，對應風險的卡片隨故事陸續亮起；走完 9 個階段（含最後提問）才開放點選
 function syncRankRow(){
   var row=document.getElementById('rankRow');
   if(row){
@@ -966,7 +967,7 @@ function syncRankRow(){
   var head=document.getElementById('rankHead');
   if(head)head.innerHTML=(riskStage>=TOTAL_RISK_STAGES)
     ? '<b>請依最擔心的程度，依序點選四張卡片</b>（再點一次可取消，號碼自動往前遞補）'
-    : '您最擔心的是？ — 走完 8 個階段後，即可依擔心程度點選排序';
+    : '您最擔心的是？ — 走完 9 個階段後，即可依擔心程度點選排序';
   var th=document.getElementById('tapHint');
   if(th)th.innerHTML=(riskStage>=TOTAL_RISK_STAGES)
     ? '<span>◀ <b>左半：回上一步</b></span><span><b>選好順序後請按下方按鈕</b></span>'
@@ -999,7 +1000,7 @@ function syncCalc(){
 
 // ── 風險排序（點選；再點已選＝取消，號碼自動往前遞補） ──
 function toggleRank(rid){
-  if(riskStage<TOTAL_RISK_STAGES){nudgeRankRow();return;}   // 還沒走完 8 個階段，先提示
+  if(riskStage<TOTAL_RISK_STAGES){nudgeRankRow();return;}   // 還沒走完所有階段，先提示
   var i=rankPicked.indexOf(rid);
   if(i>=0){rankPicked.splice(i,1);}
   else if(rankPicked.length<4){rankPicked.push(rid);}
