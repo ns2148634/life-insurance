@@ -98,18 +98,21 @@ html,body{
 .rstage{opacity:0;transition:opacity .5s ease;}
 .rstage.show{opacity:1;}
 
-/* ── S2 風險衡量 ── */
-.rlist{display:flex;flex-direction:column;gap:14px;margin-bottom:18px;}
-.rcard{display:flex;align-items:center;gap:18px;background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--rl);padding:22px 24px;cursor:grab;user-select:none;-webkit-user-select:none;transition:all .2s;}
-.rcard.dragging{opacity:.3;}
-.rcard.dover{border-color:var(--gold);background:rgba(194,151,79,.1);transform:scale(1.015);}
-.rnum{width:42px;height:42px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.06);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--muted);transition:all .3s;}
-.rcard.ranked .rnum{background:var(--gold);color:#1a1208;font-weight:700;border-color:var(--gold);}
-.rico{font-size:27px;flex-shrink:0;}
-.rbody{flex:1;min-width:0;}
-.rname{font-size:19px;font-weight:600;margin-bottom:4px;font-family:'Noto Serif TC',serif;}
-.rdesc{font-size:14px;color:var(--muted);line-height:1.5;}
-.dh{color:var(--hint);font-size:21px;flex-shrink:0;letter-spacing:-2px;}
+/* ── S1 風險排序列（人生曲線最後一站，點選排序） ── */
+.rank-head{font-size:13.5px;letter-spacing:.4px;color:var(--hint);margin:16px 2px 10px;line-height:1.6;}
+.rank-head b{color:var(--gold-lt);font-weight:600;}
+.rank-row{display:flex;gap:10px;margin-bottom:14px;}
+.rtile{position:relative;flex:1 1 0;min-width:0;min-height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--ink-card);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 6px 10px;text-align:center;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;opacity:.42;transition:opacity .3s,border-color .2s,background .2s,transform .12s;}
+.rank-row.ready .rtile{opacity:1;}
+.rank-row.ready .rtile:active{transform:scale(.97);}
+.rtile.lit{border-color:rgba(194,151,79,.4);}
+.rtile.on{border-color:var(--gold);background:var(--gold-dim);}
+.rtile .ricon{font-size:22px;line-height:1;margin-bottom:7px;}
+.rtile .rlab{font-size:15px;font-family:'Noto Serif TC',serif;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.rtile .rbadge{display:none;position:absolute;top:-9px;left:-9px;width:27px;height:27px;border-radius:50%;background:var(--gold);color:#1a1208;font-size:14.5px;font-weight:700;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.4);}
+.rtile.on .rbadge{display:flex;}
+@keyframes rshake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px);}40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+.rank-row.shake{animation:rshake .42s ease;}
 .rprev{background:var(--gold-dim);border:1.5px solid var(--gold-line);border-radius:var(--r);padding:16px 20px;font-size:15px;color:var(--gold-lt);line-height:1.7;}
 
 /* ── S3 方法與選擇 ── */
@@ -220,8 +223,8 @@ html,body{
   .nprod{font-size:13.5px;}
   .dtl{font-size:16px;}
   .dtr{font-size:17px;}
-  .rname{font-size:21px;}
-  .rdesc{font-size:15.5px;}
+  .rtile .rlab{font-size:17px;}
+  .rtile .ricon{font-size:25px;}
   .caption-text{font-size:18px;}
 }
 @media (min-width:1100px) and (orientation:landscape){
@@ -269,9 +272,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield;}
 /* 卡片質感 */
 .qcard,.scard{position:relative;overflow:hidden;}
 .qcard::before,.scard::before{content:'';position:absolute;top:0;left:20px;right:20px;height:2px;background:linear-gradient(90deg,var(--gold-deep),var(--gold),transparent 75%);opacity:.5;}
-.rcard{position:relative;}
-.rcard .dh{color:var(--gold);opacity:.55;}
-.rcard.ranked{border-color:rgba(194,151,79,.35);}
+.rtile.lit .rlab{color:#fff;}
+.rtile.on .rlab{color:var(--gold-lt);}
 
 /* S4 雙欄容器 */
 .s4grid{display:flex;flex-direction:column;gap:18px;margin-top:8px;}
@@ -285,12 +287,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield;}
 .psel-opts label:has(input:checked){border-color:var(--gold-line);background:var(--gold-dim);color:var(--gold-lt);}
 .psel-opts input{accent-color:var(--gold);width:16px;height:16px;flex-shrink:0;}
 .psel-note{font-size:12.5px;color:var(--hint);line-height:1.65;margin-top:10px;}
-#s4 .pdfbtn{margin-top:8px;}
-#s4 .warn,#s4 .sintro{margin-bottom:16px;}
+#s3 .pdfbtn{margin-top:8px;}
+#s3 .warn,#s3 .sintro{margin-bottom:16px;}
 
 /* 底部浮動導覽 */
 #botnav{border:none;background:rgba(16,28,41,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);margin:0 26px calc(12px + env(safe-area-inset-bottom));border-radius:24px;border:1px solid rgba(194,151,79,.14);box-shadow:0 12px 34px rgba(0,0,0,.38);padding:12px 14px;gap:12px;}
 .btn-next{box-shadow:0 6px 20px rgba(194,151,79,.25);}
+.btn-next.gate{opacity:.55;filter:saturate(.45);cursor:not-allowed;}
 
 /* 平板橫向 & 寬螢幕 */
 @media (min-width:900px){
@@ -299,8 +302,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield;}
   .screen{max-width:1000px;}
   .diagram-shell{padding:22px 20px 10px;}
   .qdate input{font-size:28px;}
-  .rlist{gap:16px;}
-  .rcard{padding:24px 26px;gap:20px;}
+  .rank-row{gap:14px;}
+  .rtile{min-height:92px;}
+  .rtile .rlab{font-size:16.5px;}
 }
 @media (min-width:1180px){
   .screen{max-width:1120px;}
@@ -334,6 +338,18 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
 .tap-hint b{color:var(--gold-lt);font-weight:600;}
 .hl-tap{color:var(--gold-lt);font-weight:600;}
 @media (max-width:640px){.tap-hint{font-size:11.5px;margin-top:-4px;}}
+/* 風險排序列：窄螢幕壓縮，極窄改 2×2，避免「失能長年病」被截斷 */
+@media (max-width:520px){
+  .rank-row{gap:7px;}
+  .rtile{padding:11px 4px 9px;min-height:72px;}
+  .rtile .ricon{font-size:19px;margin-bottom:5px;}
+  .rtile .rlab{font-size:12.5px;}
+  .rtile .rbadge{width:23px;height:23px;font-size:12.5px;top:-8px;left:-8px;}
+}
+@media (max-width:380px){
+  .rank-row{flex-wrap:wrap;}
+  .rtile{flex:1 1 44%;}
+}
 
 /* ═══════════════════════════════════════════════════════
    自適應強化（置於樣式表最後，覆蓋前面所有固定斷點）
@@ -362,9 +378,8 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
 .qresult{font-size:clamp(26px,0.5vw + 24.1px,30px);}
 .isb-t{font-size:clamp(14px,0.15vw + 13.4px,16px);}
 .caption-text{font-size:clamp(15.5px,0.25vw + 14.6px,18px);}
-.rcard{padding:clamp(16px,1.2vw + 11px,22px) clamp(16px,1.4vw + 12px,24px);}
-.rname{font-size:clamp(18px,0.35vw + 16.7px,21px);}
-.rdesc{font-size:clamp(13px,0.3vw + 11.9px,15.5px);}
+.rtile .ricon{font-size:clamp(19px,0.45vw + 17.2px,24px);}
+.rtile .rlab{font-size:clamp(12.5px,0.35vw + 11.2px,16.5px);}
 .scard{padding:clamp(15px,1vw + 11px,19px) clamp(16px,1.3vw + 11px,21px);}
 .nstit{font-size:clamp(20px,0.35vw + 18.7px,23px);}
 .scn{font-size:clamp(16.5px,0.3vw + 15.4px,19px);}
@@ -613,29 +628,25 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
     </svg>
   </div>
 
-  <div class="tap-hint"><span>◀ <b>左半：回上一步</b></span><span><b>右半：下一步</b> ▶</span></div>
+  <div class="tap-hint" id="tapHint"><span>◀ <b>左半：回上一步</b></span><span><b>右半：下一步</b> ▶</span></div>
 
   <div class="caption-box"><div class="caption-text" id="captionText">這張人生收支曲線，藏著 8 個關鍵點。點圖「右半」開始一站一站看，「左半」可以回上一步。</div></div>
 
-</div>
-
-<!-- ══ S2 風險衡量 ══ -->
-<div class="screen" id="s2">
-  <div class="stitle">您最擔心的是？</div>
-  <div class="ssub">請依照您<strong style="color:#fff;font-weight:700;">最擔心</strong>的程度，長按拖曳排列順序。我們將依您的順序逐一規劃保障。</div>
-  <div class="rlist" id="rlist">
-    <div class="rcard" draggable="true" data-id="interrupt"><div class="rnum">?</div><div class="rico">⏸</div><div class="rbody"><div class="rname">收入中斷</div><div class="rdesc">住院或意外，造成數個月收入中斷</div></div><div class="dh">⋮⋮</div></div>
-    <div class="rcard" draggable="true" data-id="death"><div class="rnum">?</div><div class="rico">🕊</div><div class="rbody"><div class="rname">活的太短</div><div class="rdesc">提早離開，家人失去經濟支撐</div></div><div class="dh">⋮⋮</div></div>
-    <div class="rcard" draggable="true" data-id="disability"><div class="rnum">?</div><div class="rico">♿</div><div class="rbody"><div class="rname">失能長年病</div><div class="rdesc">永遠沒有收入，還需要長期照護</div></div><div class="dh">⋮⋮</div></div>
-    <div class="rcard" draggable="true" data-id="medical"><div class="rnum">?</div><div class="rico">🏥</div><div class="rbody"><div class="rname">醫療費用</div><div class="rdesc">可能發生在人生任何階段的龐大開銷</div></div><div class="dh">⋮⋮</div></div>
+  <div class="rank-head" id="rankHead">您最擔心的是？ — 走完 8 個階段後，即可依擔心程度點選排序</div>
+  <div class="rank-row" id="rankRow">
+    <div class="rtile" data-id="death" data-stage="4" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🕊</div><div class="rlab">活的太短</div></div>
+    <div class="rtile" data-id="interrupt" data-stage="6" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">⏸</div><div class="rlab">收入中斷</div></div>
+    <div class="rtile" data-id="disability" data-stage="7" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">♿</div><div class="rlab">失能長年病</div></div>
+    <div class="rtile" data-id="medical" data-stage="8" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🏥</div><div class="rlab">醫療費用</div></div>
   </div>
-  <div class="rprev" id="rprev">拖曳上方卡片，依您最擔心的順序排列</div>
+  <div class="rprev" id="rprev">尚未選擇。走完 8 個階段後，依序點選最擔心的四項風險。</div>
+
 </div>
 
-<!-- ══ S3 方法與選擇 ══ -->
-<div class="screen" id="s3">
+<!-- ══ S2 方法與選擇 ══ -->
+<div class="screen" id="s2">
   <div class="stitle">方法與選擇</div>
-  <div class="ssub" id="s3sub">依照您的擔心順序，以下是各項風險的保障建議。</div>
+  <div class="ssub" id="plansub">依照您的擔心順序，以下是各項風險的保障建議。</div>
   <div class="edit-hint" id="edit-hint">
     <span style="font-size:21px;">✏️</span>
     <span>金額已自動計算，可直接點擊<strong style="color:var(--gold);">金色數字</strong>修改。</span>
@@ -643,8 +654,8 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
   <div id="planbox"></div>
 </div>
 
-<!-- ══ S4 總表與保費 ══ -->
-<div class="screen" id="s4">
+<!-- ══ S3 總表與保費 ══ -->
+<div class="screen" id="s3">
   <div class="stitle">需求總表與保費試算</div>
   <div class="gdeco"></div>
   <div class="warn" id="warn">請先在「基本資料」填入出生年月日，才能計算保費。</div>
@@ -720,15 +731,16 @@ function getHSA(a){for(var i=0;i<HSA.length;i++){if(a<=HSA[i].max)return HSA[i];
 
 // ── 狀態 ──
 var step=0;
-var rankOrder=['interrupt','death','disability','medical'];
+var rankOrder=['interrupt','death','disability','medical'];   // 由 rankPicked 同步，供方法與選擇／總表／PDF 使用
+var rankPicked=[];                                            // 使用者點選順序（風險 id）
+var RNAMES={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
 var riskStage=0;
 var TOTAL_RISK_STAGES=8;
 var STEPS=[
   {lbl:'',next:'了解人生風險 →',title:''},
-  {lbl:'01 / 04',next:'前往風險衡量 →',title:'風險確認'},
-  {lbl:'02 / 04',next:'查看方法與選擇 →',title:'風險衡量'},
-  {lbl:'03 / 04',next:'查看總表與保費 →',title:'方法與選擇'},
-  {lbl:'04 / 04',next:'重新開始',title:'總表與保費'}
+  {lbl:'01 / 03',next:'查看方法與選擇 →',title:'風險確認'},
+  {lbl:'02 / 03',next:'查看總表與保費 →',title:'方法與選擇'},
+  {lbl:'03 / 03',next:'重新開始',title:'總表與保費'}
 ];
 
 var CAPTIONS=[
@@ -740,7 +752,7 @@ var CAPTIONS=[
   '活的太長不是問題，擔心的是<strong>「活的太長」</strong>，錢卻不夠用。',
   '在我們努力為夢想、家人打拼時，如果因為疾病或意外讓收入暫時中斷半年、一年的話，會不會是問題？——這是<strong>「收入中斷」</strong>。',
   '甚至嚴重到永遠失去工作能力，還需要別人來照顧我們…——這是<strong>「失能長年病」</strong>。',
-  '而前面每一道風險，都可能拖著同一筆<strong>難以預期的醫療開銷</strong>——住院、手術、病房差額，動輒數萬到數十萬元。這就是<strong>「醫療費用」</strong>：它沒有固定的登場時間，橫跨整條人生曲線，隨時可能瞬間侵蝕我們一生的積蓄。',
+  '而前面每一道風險，都可能拖著同一筆<strong>難以預期的醫療開銷</strong>——住院、手術、病房差額，動輒數萬到數十萬元。這就是<strong>「醫療費用」</strong>：它沒有固定的登場時間，橫跨整條人生曲線，隨時可能瞬間侵蝕我們一生的積蓄。<br><br>其中<strong>「活的太長」</strong>以長期照護與年金規劃處理；以下四項風險，請依您<strong>最擔心</strong>的程度點選排序，我們將依此順序逐一為您規劃保障。',
 ];
 
 function fmtN(n){return Math.round(n).toLocaleString('zh-TW');}
@@ -851,7 +863,7 @@ function getUserVals(s){
   };
 }
 
-var TOP_TABS=['基本資料','風險確認','風險衡量','方法與選擇','總表與保費'];
+var TOP_TABS=['基本資料','風險確認','方法與選擇','總表與保費'];
 function renderTop(){
   var wrap=document.getElementById('tbSteps');
   if(!wrap)return;
@@ -869,25 +881,39 @@ function go(n){
   document.getElementById('s'+n).classList.add('on');
   document.getElementById('canvas').scrollTop=0;
   step=n;
-  document.getElementById('pfill').style.width=(n===0?0:Math.round(n/4*100))+'%';
+  document.getElementById('pfill').style.width=(n===0?0:Math.round(n/3*100))+'%';
   renderTop();
   document.getElementById('gbtn').classList.toggle('show',n>0);
-  if(n===1){riskStage=0;renderRiskStage();}
-  if(n===2)updateRank();
-  if(n===3)buildPlan();
-  if(n===4)buildSummary();
+  if(n===1){riskStage=rankPicked.length?TOTAL_RISK_STAGES:0;renderRiskStage();renderRankRow();}
+  if(n===2)buildPlan();
+  if(n===3)buildSummary();
   updateMainBtn();
 }
 function goBack(){if(step>0)go(step-1);}
 
+// 風險排序列：四項都排完才能前往下一頁
+function rankReady(){return rankPicked.length>=4;}
 function updateMainBtn(){
   var btn=document.getElementById('mbtn');
+  if(!btn)return;
+  if(step===1&&riskStage>=TOTAL_RISK_STAGES&&!rankReady()){
+    btn.textContent='請先排完 4 項（'+rankPicked.length+'/4）';
+    btn.classList.add('gate');
+    return;
+  }
+  btn.classList.remove('gate');
   btn.textContent=STEPS[step].next;
 }
 
 function handleNext(){
   if(step===0&&!birthCheck()){return;}
-  if(step===4){go(0);return;}
+  if(step===1&&!rankReady()){
+    if(riskStage<TOTAL_RISK_STAGES){jumpRisk(TOTAL_RISK_STAGES);}   // 先帶到最後一站
+    else{nudgeRankRow();}
+    requestFit();
+    return;
+  }
+  if(step===3){go(0);return;}
   go(step+1);
 }
 
@@ -923,7 +949,35 @@ function renderRiskStage(){
   }
   dotsWrap.innerHTML=dotsHtml;
   
+  syncRankRow();
   updateMainBtn();
+}
+
+// 排序列：前 7 站淡化，對應風險的卡片隨故事陸續亮起；第 8 站（醫療費用）才開放點選
+function syncRankRow(){
+  var row=document.getElementById('rankRow');
+  if(row){
+    row.classList.toggle('ready',riskStage>=TOTAL_RISK_STAGES);
+    row.querySelectorAll('.rtile').forEach(function(el){
+      var need=parseInt(el.dataset.stage,10)||TOTAL_RISK_STAGES;
+      el.classList.toggle('lit',riskStage>=need);
+    });
+  }
+  var head=document.getElementById('rankHead');
+  if(head)head.innerHTML=(riskStage>=TOTAL_RISK_STAGES)
+    ? '<b>請依最擔心的程度，依序點選四張卡片</b>（再點一次可取消，號碼自動往前遞補）'
+    : '您最擔心的是？ — 走完 8 個階段後，即可依擔心程度點選排序';
+  var th=document.getElementById('tapHint');
+  if(th)th.innerHTML=(riskStage>=TOTAL_RISK_STAGES)
+    ? '<span>◀ <b>左半：回上一步</b></span><span><b>選好順序後請按下方按鈕</b></span>'
+    : '<span>◀ <b>左半：回上一步</b></span><span><b>右半：下一步</b> ▶</span>';
+}
+function nudgeRankRow(){
+  var row=document.getElementById('rankRow');
+  if(!row)return;
+  row.classList.remove('shake');
+  void row.offsetWidth;
+  row.classList.add('shake');
 }
 
 // ── syncCalc ──
@@ -943,28 +997,40 @@ function syncCalc(){
   }
 }
 
-// ── 拖曳 ──
-var dragSrc=null,touchItem=null,touchClone=null,touchOffX=0,touchOffY=0,dragInit=false;
-function initDrag(){
-  if(dragInit)return;
-  dragInit=true;
-  var list=document.getElementById('rlist');
-  list.querySelectorAll('.rcard').forEach(function(el){
-    el.addEventListener('dragstart',function(){dragSrc=el;el.classList.add('dragging');});
-    el.addEventListener('dragend',function(){el.classList.remove('dragging');list.querySelectorAll('.rcard').forEach(function(c){c.classList.remove('dover');});updateRank();});
-    el.addEventListener('dragover',function(e){e.preventDefault();el.classList.add('dover');});
-    el.addEventListener('dragleave',function(){el.classList.remove('dover');});
-    el.addEventListener('drop',function(e){e.preventDefault();el.classList.remove('dover');if(dragSrc&&dragSrc!==el){var arr=Array.from(list.children);var si=arr.indexOf(dragSrc),ti=arr.indexOf(el);if(si<ti)list.insertBefore(dragSrc,el.nextSibling);else list.insertBefore(dragSrc,el);}updateRank();});
-    el.addEventListener('touchstart',function(e){touchItem=el;var t=e.touches[0];var r=el.getBoundingClientRect();touchOffX=t.clientX-r.left;touchOffY=t.clientY-r.top;touchClone=el.cloneNode(true);var __sc=window.__fitScale||1;touchClone.style.cssText='position:fixed;z-index:999;width:'+(r.width/__sc)+'px;transform-origin:top left;transform:scale('+__sc+');opacity:.8;pointer-events:none;transition:none;left:'+(t.clientX-touchOffX)+'px;top:'+(t.clientY-touchOffY)+'px;';document.body.appendChild(touchClone);el.classList.add('dragging');},{passive:true});
-    el.addEventListener('touchmove',function(e){if(!touchClone)return;e.preventDefault();var t=e.touches[0];touchClone.style.left=(t.clientX-touchOffX)+'px';touchClone.style.top=(t.clientY-touchOffY)+'px';touchClone.style.display='none';var below=document.elementFromPoint(t.clientX,t.clientY);touchClone.style.display='';var target=below?below.closest('.rcard'):null;list.querySelectorAll('.rcard').forEach(function(c){c.classList.remove('dover');});if(target&&target!==touchItem)target.classList.add('dover');},{passive:false});
-    el.addEventListener('touchend',function(e){if(touchClone){document.body.removeChild(touchClone);touchClone=null;}el.classList.remove('dragging');list.querySelectorAll('.rcard').forEach(function(c){c.classList.remove('dover');});var t=e.changedTouches[0];var below=document.elementFromPoint(t.clientX,t.clientY);var target=below?below.closest('.rcard'):null;if(target&&target!==touchItem){var arr=Array.from(list.children);var si=arr.indexOf(touchItem),ti=arr.indexOf(target);if(si<ti)list.insertBefore(touchItem,target.nextSibling);else list.insertBefore(touchItem,target);}touchItem=null;updateRank();});
-  });
+// ── 風險排序（點選；再點已選＝取消，號碼自動往前遞補） ──
+function toggleRank(rid){
+  if(riskStage<TOTAL_RISK_STAGES){nudgeRankRow();return;}   // 還沒走完 8 個階段，先提示
+  var i=rankPicked.indexOf(rid);
+  if(i>=0){rankPicked.splice(i,1);}
+  else if(rankPicked.length<4){rankPicked.push(rid);}
+  else{nudgeRankRow();}
+  renderRankRow();
 }
-function updateRank(){
-  rankOrder=[];
-  var names={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
-  document.querySelectorAll('#rlist .rcard').forEach(function(el,i){el.querySelector('.rnum').textContent=i+1;el.classList.add('ranked');rankOrder.push(el.dataset.id);});
-  document.getElementById('rprev').textContent='您的擔心順序：'+rankOrder.map(function(r,i){return(i+1)+'. '+names[r];}).join(' ');
+function renderRankRow(){
+  rankOrder=rankPicked.slice();    // 同步給「方法與選擇」／「需求總表」／PDF
+  var row=document.getElementById('rankRow');
+  if(row)row.querySelectorAll('.rtile').forEach(function(el){
+    var i=rankPicked.indexOf(el.dataset.id);
+    el.classList.toggle('on',i>=0);
+    el.setAttribute('aria-pressed',i>=0?'true':'false');
+    el.querySelector('.rbadge').textContent=i>=0?(i+1):'';
+  });
+  var rp=document.getElementById('rprev');
+  if(rp)rp.textContent=rankPicked.length
+    ? '您的擔心順序：'+rankPicked.map(function(r,i){return(i+1)+'. '+RNAMES[r];}).join('　')
+    : '尚未選擇。請依序點選您最擔心的四項風險。';
+  updateMainBtn();
+}
+function initRank(){
+  var row=document.getElementById('rankRow');
+  if(!row)return;
+  row.querySelectorAll('.rtile').forEach(function(el){
+    el.addEventListener('click',function(){toggleRank(el.dataset.id);});
+    el.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleRank(el.dataset.id);}
+    });
+  });
+  renderRankRow();
 }
 
 // ── PLAN 定義 ──
@@ -992,7 +1058,7 @@ var PLANS={
 
 function buildPlan(){
   var s=getState();
-  document.getElementById('s3sub').textContent=(s.name?s.name+'，根據':'根據')+'您的擔心順序，以下是各項風險的保障建議。';
+  document.getElementById('plansub').textContent=(s.name?s.name+'，根據':'根據')+'您的擔心順序，以下是各項風險的保障建議。';
   var html='';
   rankOrder.forEach(function(rid,idx){
     var pd=PLANS[rid];
@@ -1281,16 +1347,19 @@ calcPremium=function(){
 setAppH();
 
 // ── INIT ──
-initDrag();
+initRank();
 renderTop();
 renderRiskStage();
 
-  // 點圖控制：左半＝上一步、右半＝下一步
+  // 點圖控制：左半＝上一步、右半＝下一步；走到最後一站後改為「排好順序才前進」
   var ds=document.getElementById('diagramShell');
   if(ds)ds.addEventListener('click',function(e){
     var r=ds.getBoundingClientRect();
     var x=e.clientX-r.left;
-    if(x<r.width/2){prevRisk();}else{advanceRisk();}
+    if(x<r.width/2){prevRisk();return;}
+    if(riskStage<TOTAL_RISK_STAGES){advanceRisk();return;}
+    if(!rankReady()){nudgeRankRow();return;}
+    go(2);
   });
 
   // 點擊圓點可跳回任一階段
