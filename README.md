@@ -7,8 +7,8 @@
 - `insurance-needs.html`／`career-system.html`／`income-system.html`／`manager-income.html`／`promotion-system.html`／`90day.html` 各項諮詢與訓練工具
 - `90day.html`（宸功出擊90天）的個人進度（目標設定、週次與模組打勾）跟著登入帳號存在 Supabase `public.cg90_progress`（一人一筆，RLS 保護），並在本機留一份 mirror
   - 相關 SQL：`supabase-schema-90day-progress.sql`（**第一次使用前需先在 SQL Editor 執行**）
-- `goal-system.html` 一定要宸功專區（分「個人專區」與「通訊處專區」：個人區設定每月目標 FYC／保費／件數 → 自動換算每週行動量，並對照個人實績；通訊處區彙整全體同仁的目標總額與合計實績，只顯示合計、不列個人明細；首頁顯示個人與通訊處目標總額）
-  - 相關 SQL：`supabase-schema-goals.sql`（目標）、`supabase-schema-agent-stats.sql`（個人實績）、`supabase-schema-unit-stats.sql`（通訊處合計實績）
+- `goal-system.html` 一定要宸功專區（分「個人專區」、「通訊處專區」與「通訊處排行」：個人區設定每月目標 FYC／保費／件數 → 自動換算每週行動量，並對照個人實績；通訊處區彙整全體同仁的目標總額與合計實績，只顯示合計、不列個人明細；排行區列出各項實績指標的前 10 名與數值；首頁顯示個人與通訊處目標總額）
+  - 相關 SQL：`supabase-schema-goals.sql`（目標）、`supabase-schema-agent-stats.sql`（個人實績）、`supabase-schema-unit-stats.sql`（通訊處合計實績）、`supabase-schema-unit-ranking.sql`（通訊處排行）
 - `accounts.html` 帳號管理（限管理員）
 - `video-training/` 影片研習系統（Supabase 登入／觀看進度）
 - `sharing/` 業務分享專區（Supabase）

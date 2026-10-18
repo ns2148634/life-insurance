@@ -2,7 +2,8 @@
 
 `goal-system.html` 的「三、我的實績」會顯示你在**「ShowAll 保顧+」**的行程實績
 （新客戶／約訪聯繫／複訪／遞送建議書／簽約的**筆數**），並與本站設定的「每月目標」對照達成率。
-同頁的「通訊處專區」則顯示**全體同仁的合計實績**（見文末說明）。
+同頁的「通訊處專區」則顯示**全體同仁的合計實績**；「通訊處排行」則列出
+**各項實績指標的前 10 名與數值**（見文末說明）。
 
 資料流（單向、由保顧+ 推過來）：
 
@@ -73,6 +74,13 @@
 > **通訊處專區的「合計實績」需要再執行一支 SQL**：`supabase-schema-unit-stats.sql`
 > （建立 `public.get_unit_agent_stats_totals(date)`，以 `security definer` 只回傳全體合計＋同步時間）。
 > 它**不改變本章的 RLS**：一般同仁仍只看得到自己那一列；通訊處專區拿到的是加總後的數字，不含個人明細。
+>
+> **「通訊處排行」需要再執行一支 SQL**：`supabase-schema-unit-ranking.sql`
+> （建立 `public.get_unit_agent_stats_ranking(date, text, integer)`，只回傳名次、顯示名稱、
+> 該指標數值與同步時間）。
+> ⚠️ 這是隱私界線的**刻意例外**：排行會顯示同仁姓名與數值（依需求開放），
+> 但仍**不會輸出完整 email、客戶姓名或記事內容**。若之後只想給管理員看，
+> 可把該檔尾端的 `grant execute ... to authenticated` 改為只給管理員，或在函式內將名稱遮罩。
 
 ### 資料表結構
 
@@ -94,6 +102,8 @@ public.agent_stats
 
 > 本站畫面只取其中五項：新客戶、約訪聯繫（`first_visit`）、複訪、遞送建議書（`discuss_case`）、簽約。
 > 「接觸」＝ 新客戶 ＋ 複訪（對應 `goal-system.html` 每週行動計畫的「接觸 ×5」）。
+> 「通訊處排行」則可取用全部十項（含 `service`／`claim`／`recruit`／`clients_count`），
+> 其中 `clients_count` 是名下客戶的**客戶總數（該月同步的現況值）**，不是本月新增。
 
 ---
 
@@ -296,6 +306,8 @@ Invoke-RestMethod -Uri 'https://api.cron-job.org/jobs' -Headers @{ Authorization
 5. **前端**：登入後開 `goal-system.html` → **個人專區** → 選本月 → 「三、我的實績」應顯示數字與「資料更新：…」。
    切到沒有資料的月份應顯示「本月尚無保顧+ 實績資料」，而不是錯誤訊息。
    再切到**通訊處專區** → 「二、整個通訊處合計實績」應顯示全體加總（需先執行 `supabase-schema-unit-stats.sql`）。
+   再切到**通訊處排行** → 選月份與指標 → 應顯示前 10 名與數值（需先執行 `supabase-schema-unit-ranking.sql`）；
+   若該月該指標都是 0，應顯示「尚無大於 0 的資料」。
 6. **與保顧+ 對帳**：在保顧+ 的 `/stats/team` 看同一月份、同一位成員的計數是否一致。
    本站採半開區間 `[該月1號, 次月1號)` 切月；與保顧+ 舊版 RPC 的「含頭含尾」在**月初／月底邊界**可能差 1 筆。
 7. **權限回歸**：
@@ -303,6 +315,7 @@ Invoke-RestMethod -Uri 'https://api.cron-job.org/jobs' -Headers @{ Authorization
    - 一般同仁讀 `agent_stats` → 只會拿到自己那一列。
    - 用一般登入身分呼叫 `ingest_agent_stats` → `42501`（只有 service_role 能寫）。
    - 用一般登入身分呼叫保顧+ 的 `export_agent_stats` → `permission denied`。
+   - 一般登入者可呼叫 `get_unit_agent_stats_ranking` 取得排行（刻意開放）；未登入（anon）呼叫 → `permission denied`。
 8. **目標模組回歸**：`goal-system.html` 的「一、我的目標」「二、每週行動計畫」「整個通訊處加總」
    與 `index.html` 的「本月目標」都應照常運作（本次未動 `goal_targets` 與 `get_unit_goal_totals`）。
 
@@ -336,9 +349,11 @@ notify pgrst, 'reload schema';
    目標欄數字跟著「二、每週行動計畫」的件數即時變動（接觸 ×5、面談 ×3、約訪 ×10）。
 
 **Q5. 可以看同仁的實績嗎？**
-→ 不行（除非你是管理員）。前端只查 `user_id = 自己`，資料庫 RLS 也只放行自己那一列；
+→ **個人完整明細**仍不行（除非你是管理員）。前端只查 `user_id = 自己`，資料庫 RLS 也只放行自己那一列；
    管理員帳號（`profiles.is_admin = true`）則可讀全部（方便核對同步是否正常）。
-   至於「通訊處專區」顯示的是全體**合計**（走 `get_unit_agent_stats_totals()`），不是個人明細。
+   「通訊處專區」顯示的是全體**合計**（走 `get_unit_agent_stats_totals()`），不是個人明細。
+   「通訊處排行」是**刻意的例外**：只回傳各指標前 10 名的姓名、數值與同步時間
+   （不含完整 email、客戶姓名或記事內容），供團隊激勵使用。若不需要開放，可收回函式授權或在函式內遮罩名稱。
 
 **Q6. 重跑 cron 會不會把數字加兩倍？**
 → 不會。`agent_stats` 以 `unique(email, stat_month)` 為鍵做 upsert，重跑只會覆蓋成最新值。

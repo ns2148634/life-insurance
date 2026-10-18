@@ -111,7 +111,7 @@ h1 span{color:var(--gold);}
 .kv .v small{font-size:12px;color:var(--hint);font-family:'Noto Sans TC',sans-serif;font-weight:400;margin-left:4px;}
 .kv .big{font-size:24px;color:var(--gold-lt);}
 
-/* ---------- 分區切換（個人專區 / 通訊處專區） ---------- */
+/* ---------- 分區切換（個人專區 / 通訊處專區 / 通訊處排行） ---------- */
 .zone-tabs{display:flex;gap:8px;margin-top:22px;padding:5px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.025);}
 .zone-tab{
   flex:1 1 0;padding:11px 16px;border:none;border-radius:9px;background:transparent;
@@ -126,10 +126,41 @@ h1 span{color:var(--gold);}
 .zone-intro{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.9;}
 .zone-intro b{color:var(--gold-lt);}
 
+/* ---------- 通訊處排行 ---------- */
+.rank-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;margin-bottom:4px;}
+.rank-month{flex:0 0 auto;width:200px;}
+.rank-chips{display:flex;flex-wrap:wrap;gap:8px;flex:1 1 320px;}
+.rank-chip{
+  padding:7px 13px;border-radius:999px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);color:var(--muted);
+  font-family:inherit;font-size:13px;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.rank-chip:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.rank-chip.active{background:var(--gold-dim);border-color:var(--gold-line);color:var(--gold-lt);font-weight:600;}
+.rank-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13.5px;}
+.rank-table th,.rank-table td{padding:11px 12px;border-bottom:1px solid var(--border);text-align:left;}
+.rank-table thead th{font-size:12px;color:var(--hint);font-weight:500;letter-spacing:0.5px;}
+.rank-table thead th:nth-child(3),.rank-table tbody td:nth-child(3){text-align:right;}
+.rank-table thead th:last-child,.rank-table tbody td:last-child{width:28%;}
+.rank-table tbody tr:last-child td{border-bottom:none;}
+.rank-no{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--muted);white-space:nowrap;}
+.rank-name{color:#fff;font-weight:500;line-height:1.5;word-break:break-word;}
+.rank-value{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--gold-lt);letter-spacing:0.5px;}
+.rank-bar{display:block;height:8px;border-radius:999px;background:rgba(255,255,255,0.07);overflow:hidden;}
+.rank-bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold-deep),var(--gold-lt));}
+.rank-row.top1 .rank-no,.rank-row.top1 .rank-name{color:var(--gold-lt);}
+.rank-row.top1 .rank-no{font-size:22px;}
+.rank-row.top2 .rank-no,.rank-row.top2 .rank-name{color:#d7dce3;}
+.rank-row.top3 .rank-no,.rank-row.top3 .rank-name{color:#d3a27a;}
+.rank-empty{text-align:center !important;color:var(--hint);padding:24px 12px !important;}
+
 @media (max-width:640px){
   .wrap{padding:0 18px 60px;}
   header.top{padding:34px 0 22px;}
   .panel{padding:20px 18px 22px;}
+  .zone-tab{padding:10px 8px;font-size:13px;}
+  .rank-table th,.rank-table td{padding:10px 8px;}
+  .rank-table thead th:last-child,.rank-table tbody td:last-child{width:24%;}
 }
 
 /* 原本的行內字級改為 class，以便平板層放大（基礎值＝原行內樣式，手機／桌機外觀不變） */
@@ -166,6 +197,14 @@ h1 span{color:var(--gold);}
   .zone-tab{font-size:16.5px;padding:13px 18px;min-height:48px;}
   .zone-intro{font-size:16.5px;}
   .go-set-link{font-size:16.5px;}
+  .rank-month{width:220px;}
+  .rank-chip{font-size:15px;padding:9px 15px;min-height:44px;}
+  .rank-table{font-size:15.5px;}
+  .rank-table th,.rank-table td{padding:13px 14px;}
+  .rank-table thead th{font-size:14px;}
+  .rank-no,.rank-value{font-size:21px;}
+  .rank-row.top1 .rank-no{font-size:24px;}
+  .rank-empty{font-size:15.5px;}
 }
 
 </style>
@@ -179,7 +218,7 @@ h1 span{color:var(--gold);}
       <div class="brand">Chenggong Insurance</div>
     </div>
     <h1>一定要<span>宸功</span>專區</h1>
-    <p class="lead">分為「個人專區」與「通訊處專區」：個人專區設定自己的每月目標、換算每週行動量，並對照個人實績；通訊處專區彙整全體同仁的目標與實績合計（只顯示合計，不列個人明細）。</p>
+    <p class="lead">分為「個人專區」、「通訊處專區」與「通訊處排行」：個人專區設定自己的每月目標、換算每週行動量，並對照個人實績；通訊處專區彙整全體同仁的目標與實績合計（只顯示合計，不列個人明細）；通訊處排行則列出各項實績指標的前 10 名與數值。</p>
     <div class="who">
       <a href="./index.html">← 回主畫面</a>
       <span id="whoami">載入中…</span>
@@ -193,6 +232,7 @@ h1 span{color:var(--gold);}
   <nav class="zone-tabs" id="zoneTabs" role="tablist">
     <button type="button" class="zone-tab active" data-zone="personal" role="tab" aria-selected="true">個人專區</button>
     <button type="button" class="zone-tab" data-zone="unit" role="tab" aria-selected="false">通訊處專區</button>
+    <button type="button" class="zone-tab" data-zone="ranking" role="tab" aria-selected="false">通訊處排行</button>
   </nav>
 
   <!-- ========== 個人專區 ========== -->
@@ -325,6 +365,44 @@ h1 span{color:var(--gold);}
     <p class="foot-hint" id="unitHint"></p>
   </section>
   </div><!-- /通訊處專區 -->
+
+  <!-- ========== 通訊處排行 ========== -->
+  <div class="zone" id="zoneRanking">
+  <p class="zone-intro">以「保顧+」同步的實績，列出<b>全體同仁</b>在單一指標的前 10 名與數值。這一區會顯示同仁姓名（依需求開放），但仍不含完整 email、客戶姓名與記事內容。</p>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>一、通訊處指標排行（Top 10）</h2>
+      <span class="dim" id="rankSync">同步時間：—</span>
+    </div>
+    <div class="rank-toolbar">
+      <label class="field rank-month">
+        <span class="fl">月份</span>
+        <input type="month" id="rankMonth">
+      </label>
+      <div class="rank-chips" id="rankChips" role="tablist" aria-label="排行指標">
+        <button type="button" class="rank-chip active" data-metric="total" role="tab" aria-selected="true">本月總計</button>
+        <button type="button" class="rank-chip" data-metric="signed" role="tab" aria-selected="false">簽約</button>
+        <button type="button" class="rank-chip" data-metric="discuss_case" role="tab" aria-selected="false">遞送建議書</button>
+        <button type="button" class="rank-chip" data-metric="first_visit" role="tab" aria-selected="false">約訪聯繫</button>
+        <button type="button" class="rank-chip" data-metric="new_client" role="tab" aria-selected="false">新客戶</button>
+        <button type="button" class="rank-chip" data-metric="follow_up" role="tab" aria-selected="false">複訪</button>
+        <button type="button" class="rank-chip" data-metric="service" role="tab" aria-selected="false">服務</button>
+        <button type="button" class="rank-chip" data-metric="claim" role="tab" aria-selected="false">理賠</button>
+        <button type="button" class="rank-chip" data-metric="recruit" role="tab" aria-selected="false">增員</button>
+        <button type="button" class="rank-chip" data-metric="clients_count" role="tab" aria-selected="false">名下客戶</button>
+      </div>
+    </div>
+    <p class="calc-note" id="rankNote">目前指標：本月總計（當月記事總筆數）。只列出數值大於 0 的前 10 名；同分依姓名排序。</p>
+    <table class="rank-table">
+      <thead><tr><th>名次</th><th>同仁</th><th id="rankValueHead">本月總計</th><th>比例</th></tr></thead>
+      <tbody id="rankBody">
+        <tr><td colspan="4" class="rank-empty">載入中…</td></tr>
+      </tbody>
+    </table>
+    <p class="foot-hint" id="rankHint"></p>
+  </section>
+  </div><!-- /通訊處排行 -->
 </div>
 
 <script>
@@ -332,11 +410,26 @@ h1 span{color:var(--gold);}
    一定要宸功專區 — 每月目標（Supabase public.goal_targets）
    - 每月目標：FYC（首年度佣金）、目標保費、目標件數
    - 件數自動換算每週行動量（比例沿用 90day.html：接觸 ×5、面談 ×3、約訪 ×10）
-   - 分為「個人專區」（我的目標／每週行動／我的實績）與
+   - 分為「個人專區」（我的目標／每週行動／我的實績）、
      「通訊處專區」（整個通訊處總目標／合計實績，只顯示合計、不列個人明細）
+     與「通訊處排行」（各指標前 10 名與數值，走 get_unit_agent_stats_ranking）
    ========================================================= */
 const WEEK_PER_MONTH = 4;              // 每月以 4 週估算（整數好排行程）
 const RATIO = { contact: 5, talk: 3, visit: 10 };
+
+/* 通訊處排行可選指標（key 必須與 supabase-schema-unit-ranking.sql 的白名單一致） */
+const RANK_METRICS = [
+  { key: 'total',         label: '本月總計',   hint: '當月記事總筆數' },
+  { key: 'signed',        label: '簽約',       hint: '簽約記事筆數' },
+  { key: 'discuss_case',  label: '遞送建議書', hint: '遞送建議書記事筆數' },
+  { key: 'first_visit',   label: '約訪聯繫',   hint: '約訪聯繫記事筆數' },
+  { key: 'new_client',    label: '新客戶',     hint: '新客戶記事筆數' },
+  { key: 'follow_up',     label: '複訪',       hint: '複訪記事筆數' },
+  { key: 'service',       label: '服務',       hint: '服務記事筆數' },
+  { key: 'claim',         label: '理賠',       hint: '理賠記事筆數' },
+  { key: 'recruit',       label: '增員',       hint: '增員記事筆數' },
+  { key: 'clients_count', label: '名下客戶',   hint: '名下客戶總數，非本月新增' }
+];
 
 const el = {
   whoami: document.getElementById('whoami'),
@@ -404,17 +497,33 @@ const el = {
   ugCaseTarget: document.getElementById('ugCaseTarget'),
   ugCaseActual: document.getElementById('ugCaseActual'),
   ugCaseRate: document.getElementById('ugCaseRate'),
-  unitHint: document.getElementById('unitHint')
+  unitHint: document.getElementById('unitHint'),
+  /* 通訊處排行 */
+  rankMonth: document.getElementById('rankMonth'),
+  rankChips: document.getElementById('rankChips'),
+  rankSync: document.getElementById('rankSync'),
+  rankValueHead: document.getElementById('rankValueHead'),
+  rankBody: document.getElementById('rankBody'),
+  rankNote: document.getElementById('rankNote'),
+  rankHint: document.getElementById('rankHint')
 };
 
 let client = null;
 let user = null;
 let unitGoalRow = null;   // 整個通訊處總目標（get_unit_goal_totals）
 let unitPerfRow = null;   // 整個通訊處合計實績（get_unit_agent_stats_totals）
+let rankMetric = 'total'; // 通訊處排行：目前選取的指標
+let rankLoadedKey = '';   // 已載入的「月份|指標」，切換分區時避免重複呼叫
+let rankRequestSeq = 0;   // 避免慢速回來的舊查詢覆蓋新結果
 
 function money(n){
   const v = Math.max(0, Math.round(Number(n) || 0));
   return v.toLocaleString('zh-TW');
+}
+function escapeHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
 }
 function currentMonth(){
   const d = new Date();
@@ -657,6 +766,109 @@ async function loadUnitPerf(period){
     : '本月尚無通訊處合計實績資料。若同仁已在保顧+ 記錄行程，請等下一次同步，或確認已執行 supabase-schema-unit-stats.sql。';
 }
 
+/* ---------- 面板：通訊處排行（單一指標 Top 10） ----------
+   - 走 security definer 函式 get_unit_agent_stats_ranking，
+     只回傳名次、顯示名稱、該指標數值與同步時間；
+     不輸出 email、客戶姓名或記事內容。
+   - 只納入該指標 > 0 的同仁；同分由 SQL 端依姓名排序。 */
+function rankMetricInfo(key){
+  for(let i = 0; i < RANK_METRICS.length; i++){
+    if(RANK_METRICS[i].key === key) return RANK_METRICS[i];
+  }
+  return RANK_METRICS[0];
+}
+
+function setRankMetric(key){
+  const info = rankMetricInfo(key);
+  rankMetric = info.key;
+
+  el.rankChips.querySelectorAll('.rank-chip').forEach(function(b){
+    const on = b.dataset.metric === rankMetric;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+
+  el.rankValueHead.textContent = info.label;
+  el.rankNote.textContent = '目前指標：' + info.label + '（' + info.hint
+    + '）。只列出數值大於 0 的前 10 名；同分依姓名排序。';
+}
+
+function renderRanking(rows){
+  const list = Array.isArray(rows) ? rows : [];
+  if(!list.length){
+    el.rankBody.innerHTML = '<tr><td colspan="4" class="rank-empty">本月這個指標尚無資料（或所有同仁都是 0）。</td></tr>';
+    return;
+  }
+
+  const max = Math.max.apply(null, list.map(function(r){
+    return Number(r.metric_value) || 0;
+  })) || 1;
+
+  el.rankBody.innerHTML = list.map(function(r){
+    const rk = Number(r.rk) || 0;
+    const val = Number(r.metric_value) || 0;
+    const pct = Math.max(2, Math.round(val / max * 100));
+    const medal = rk === 1 ? '🥇' : (rk === 2 ? '🥈' : (rk === 3 ? '🥉' : ''));
+    const cls = rk <= 3 ? ' top' + rk : '';
+
+    return '<tr class="rank-row' + cls + '">'
+      + '<td class="rank-no">' + (medal ? medal + ' ' : '') + rk + '</td>'
+      + '<td class="rank-name">' + escapeHtml(r.display_name || '未具名同仁') + '</td>'
+      + '<td class="rank-value">' + money(val) + '</td>'
+      + '<td><span class="rank-bar"><span style="width:' + pct + '%"></span></span></td>'
+      + '</tr>';
+  }).join('');
+}
+
+async function loadRanking(month){
+  if(!client || !user) return;
+
+  const period = monthToDate(month || el.rankMonth.value || currentMonth());
+  const info = rankMetricInfo(rankMetric);
+  const seq = ++rankRequestSeq;
+
+  el.rankSync.textContent = '同步時間：—';
+  el.rankBody.innerHTML = '<tr><td colspan="4" class="rank-empty">載入中…</td></tr>';
+  el.rankHint.textContent = '';
+
+  const { data, error } = await client.rpc('get_unit_agent_stats_ranking', {
+    p_month: period,
+    p_metric: rankMetric,
+    p_limit: 10
+  });
+
+  // 已經有更新的查詢（快速切換指標／月份）→ 丟棄這次的結果
+  if(seq !== rankRequestSeq) return;
+
+  if(error){
+    rankLoadedKey = '';
+    el.rankBody.innerHTML = '<tr><td colspan="4" class="rank-empty">讀取排行失敗。</td></tr>';
+    el.rankHint.textContent = '讀取排行失敗：' + error.message
+      + '（若尚未建立函式，請先在 Supabase 執行 supabase-schema-unit-ranking.sql）';
+    return;
+  }
+
+  const rows = Array.isArray(data) ? data : [];
+  rankLoadedKey = period + '|' + rankMetric;
+  renderRanking(rows);
+
+  const latest = rows.reduce(function(m, r){
+    if(!r.synced_at) return m;
+    return (!m || new Date(r.synced_at) > new Date(m)) ? r.synced_at : m;
+  }, '');
+
+  el.rankSync.textContent = latest
+    ? '資料更新：' + new Date(latest).toLocaleString('zh-TW',
+        { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : '同步時間：—';
+
+  el.rankHint.textContent = rows.length
+    ? '顯示 ' + period.slice(0, 7) + ' 的「' + info.label + '」前 ' + rows.length + ' 名。'
+      + (rankMetric === 'clients_count' ? '名下客戶是該月同步的客戶總數，不是本月新增數。' : '')
+      + '排行只使用記事筆數與顯示名稱，不含客戶姓名或記事內容。'
+    : '本月「' + info.label + '」尚無大於 0 的資料。若同仁已在保顧+ 記錄行程，請等下一次同步。';
+}
+
 /* ---------- 讀取某月資料 ---------- */
 async function loadMonth(month){
   const period = monthToDate(month);
@@ -715,9 +927,9 @@ async function save(){
   await loadMonth(month);
 }
 
-/* ---------- 分區切換（個人專區 / 通訊處專區） ---------- */
+/* ---------- 分區切換（個人專區 / 通訊處專區 / 通訊處排行） ---------- */
 function showZone(name){
-  if(['personal', 'unit'].indexOf(name) < 0) name = 'personal';
+  if(['personal', 'unit', 'ranking'].indexOf(name) < 0) name = 'personal';
 
   document.querySelectorAll('.zone-tab').forEach(function(b){
     const on = b.dataset.zone === name;
@@ -726,6 +938,13 @@ function showZone(name){
   });
   document.getElementById('zonePersonal').classList.toggle('active', name === 'personal');
   document.getElementById('zoneUnit').classList.toggle('active', name === 'unit');
+  document.getElementById('zoneRanking').classList.toggle('active', name === 'ranking');
+
+  // 排行只在切到該分區時才查詢，避免每次載入頁面都多打一次 API
+  if(name === 'ranking'){
+    const key = monthToDate(el.rankMonth.value || currentMonth()) + '|' + rankMetric;
+    if(key !== rankLoadedKey) loadRanking(el.rankMonth.value);
+  }
 }
 
 document.querySelectorAll('.zone-tab').forEach(function(b){
@@ -739,6 +958,21 @@ window.addEventListener('hashchange', function(){
 [el.fycInput, el.premiumInput, el.caseInput].forEach(function(i){ i.addEventListener('input', recalc); });
 el.monthInput.addEventListener('change', function(){ clearMsg(); loadMonth(el.monthInput.value); });
 el.saveBtn.addEventListener('click', save);
+
+/* 通訊處排行：指標 chips 與月份 */
+el.rankChips.querySelectorAll('.rank-chip').forEach(function(b){
+  b.addEventListener('click', function(){
+    const next = b.dataset.metric;
+    const changed = next !== rankMetric;
+    setRankMetric(next);
+    if(changed) loadRanking(el.rankMonth.value);
+  });
+});
+el.rankMonth.addEventListener('change', function(){
+  rankLoadedKey = '';
+  loadRanking(el.rankMonth.value);
+});
+
 el.logoutBtn.addEventListener('click', async function(){
   try { if(client) await client.auth.signOut(); } catch(e){}
   location.replace('./login.html');
@@ -747,6 +981,7 @@ el.logoutBtn.addEventListener('click', async function(){
 /* ---------- boot ---------- */
 (async function boot(){
   el.monthInput.value = currentMonth();
+  el.rankMonth.value = currentMonth();
   showZone((location.hash || '').replace('#', ''));
   recalc();
 
@@ -768,6 +1003,11 @@ el.logoutBtn.addEventListener('click', async function(){
   } catch(e){ el.whoami.textContent = user.email || '同仁'; }
 
   await loadMonth(el.monthInput.value);
+
+  // 若網址直接帶 #ranking，登入與資料表就緒後補載排行
+  if((location.hash || '').replace('#', '') === 'ranking'){
+    await loadRanking(el.rankMonth.value);
+  }
 })();
 </script>
 </body>

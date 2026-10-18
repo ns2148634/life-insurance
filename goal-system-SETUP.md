@@ -1,11 +1,12 @@
 # 一定要宸功專區 — 設定說明（goal-system.html）
 
-「一定要宸功專區」分成兩個分區（頁面上方可切換，預設顯示「個人專區」）：
+「一定要宸功專區」分成三個分區（頁面上方可切換，預設顯示「個人專區」）：
 
 | 分區 | 內容 | 資料來源 |
 |------|------|----------|
 | **個人專區** | 我的每月目標（輸入＋摘要）、每週行動計畫、我的實績（個人） | `goal_targets`、`agent_stats`（本人） |
 | **通訊處專區** | 整個通訊處**總目標**、整個通訊處**合計實績**（只顯示合計，不列個人明細） | `get_unit_goal_totals()`、`get_unit_agent_stats_totals()` |
+| **通訊處排行** | 各項實績指標的**前 10 名與數值**（可切換 10 個指標、可選月份） | `get_unit_agent_stats_ranking()` |
 
 ### 個人專區
 
@@ -32,6 +33,19 @@
 - **整個通訊處總目標**：以 `get_unit_goal_totals()` 加總 FYC／保費／件數與已設定人數。
 - **整個通訊處合計實績**：以 `get_unit_agent_stats_totals()` 加總全體同仁（保顧+ 同步）的記事筆數，並對照目標合計算達成率。
 
+### 通訊處排行
+
+以「保顧+」同步的實績，列出**全體同仁**在單一指標的前 10 名：
+
+- 可切換月份，以及 10 個指標：本月總計、簽約、遞送建議書、約訪聯繫、新客戶、複訪、服務、理賠、增員、名下客戶。
+- 名次、同仁姓名、數值與比例條；前三名以金／銀／銅標示。
+- 只納入該指標 **> 0** 的同仁；同分依姓名排序（SQL 端 `row_number()` 固定結果）。
+- `clients_count`（名下客戶）是該月同步的**客戶總數（現況值）**，不是本月新增。
+
+> **隱私說明**：這是「不列個人明細」的**刻意例外**。排行需要顯示同仁姓名才能發揮激勵效果，
+> 但函式只回傳名次、顯示名稱、該指標數值與同步時間，**不會輸出完整 email、客戶姓名或記事內容**。
+> 若之後要改成遮罩姓名或只給管理員看，修改 `supabase-schema-unit-ranking.sql` 即可。
+
 首頁（`index.html`）會多一列「本月目標 Monthly Targets」，同時顯示**我的目標**與**整個通訊處的加總**。
 
 ---
@@ -57,7 +71,10 @@
 
 > **通訊處專區的「合計實績」需要另外兩支 SQL**（依序執行）：
 > `supabase-schema-agent-stats.sql`（建立 `public.agent_stats`）→ `supabase-schema-unit-stats.sql`
-> （建立 `public.get_unit_agent_stats_totals(date)`，只回傳全體合計）。詳細說明見 `AGENT-STATS-SETUP.md`。
+> （建立 `public.get_unit_agent_stats_totals(date)`，只回傳全體合計）。
+> **「通訊處排行」再一支**：`supabase-schema-unit-ranking.sql`
+> （建立 `public.get_unit_agent_stats_ranking(date, text, integer)`，回傳各指標前 10 名）。
+> 詳細說明見 `AGENT-STATS-SETUP.md`。
 
 ### 資料表結構
 
@@ -96,11 +113,14 @@ public.goal_targets
 4. 回到 `index.html`，「本月目標」摘要列應顯示你的數字；「整個通訊處」為全體同仁加總。
 5. 切到「通訊處專區」：應顯示「一、整個通訊處總目標」與「二、整個通訊處合計實績」；
    後者需要另外兩支 SQL（`supabase-schema-agent-stats.sql` → `supabase-schema-unit-stats.sql`）已執行。
-6. 在 SQL Editor 交叉檢查：
+6. 切到「通訊處排行」：選月份與指標，應顯示前 10 名與數值；
+   需先執行 `supabase-schema-unit-ranking.sql`。沒有資料時應顯示「尚無大於 0 的資料」。
+7. 在 SQL Editor 交叉檢查：
    ```sql
    select * from public.goal_targets order by period_month desc, updated_at desc;
    select * from public.get_unit_goal_totals(date_trunc('month', now())::date);
    select * from public.get_unit_agent_stats_totals(date_trunc('month', now())::date);
+   select * from public.get_unit_agent_stats_ranking(date_trunc('month', now())::date, 'signed', 10);
    ```
 
 ---
@@ -135,3 +155,8 @@ notify pgrst, 'reload schema';
 → 這是刻意的隱私界線。一般同仁只能讀 `agent_stats` 自己那一列（RLS），
 所以通訊處專區改走 `security definer` 的 `get_unit_agent_stats_totals()`，只回傳**合計**與同步時間，
 不會揭露任何個人明細；「已設定人數」也只看得到總數。
+
+**Q7. 那「通訊處排行」為什麼看得到名字？**
+→ 排行是上述隱私界線的**刻意例外**（依團隊需求開放）。它走另一支 `security definer` 函式
+`get_unit_agent_stats_ranking()`，只回傳「名次、顯示名稱、該指標數值、同步時間」，
+不包含完整 email、客戶姓名或記事內容。若不想開放，可在函式內遮罩名稱，或把執行權限收回給管理員。
