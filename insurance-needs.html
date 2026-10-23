@@ -127,6 +127,9 @@ html,body{
 .scamt{text-align:right;flex-shrink:0;min-width:128px;}
 .scval-input{font-size:25px;font-weight:600;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);background:rgba(194,151,79,0.1);border:1.5px solid var(--gold-line);border-radius:10px;padding:8px 12px;text-align:right;width:128px;outline:none;transition:all .2s;-webkit-appearance:none;display:block;}
 .scval-input:focus{background:rgba(194,151,79,0.18);border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,151,79,0.15);}
+/* 有限選項（例如意外門診醫療 3／4／5 萬）改用下拉 */
+.scval-select{background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%23c2974f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-size:14px 14px;padding-right:30px;text-align:left;text-align-last:left;cursor:pointer;}
+.scval-select option{background:#101c29;color:#f3e7d3;}
 .scunit{font-size:13px;color:var(--muted);margin-top:5px;text-align:right;}
 .edit-hint{display:none;align-items:center;gap:10px;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:14px;color:var(--gold-lt);}
 
@@ -842,22 +845,35 @@ function updateAccHosp(){
   if(el)el.value=fmtN(h+w);
 }
 
+// 取得輸入框狀態：exists=是否已建立；empty=使用者清空（視為不需要）
+function inputState(rid,si){
+  var el=document.getElementById('inp-'+rid+'-'+si);
+  if(!el)return{exists:false,empty:false,raw:null};
+  var raw=String(el.value).replace(/^\s+|\s+$/g,'');
+  return{exists:true,empty:raw==='',raw:raw};
+}
+
 function getUserVals(s){
-  function v(rid,si,def){var r=getInputRaw(rid,si);return r!==null?r:def;}
+  // 元素不存在（尚未建立）→用預設值；使用者清空→回傳 ''（後續一律以 0 視為不需要）
+  function v(rid,si,def){
+    var st=inputState(rid,si);
+    if(!st.exists)return def;
+    return st.empty?'':st.raw;
+  }
   var hospRaw=v('interrupt',0,s.mi);
   var workRaw=v('interrupt',1,s.mi);
   var medHospRaw=v('medical',0,'20-40');
   var medRoomRaw=v('medical',1,'3000-6000');
   var medAccRaw=v('medical',2,3);
   return{
-    hospMonth: pf(hospRaw)||s.mi,
-    accWork:   pf(workRaw)||s.mi,
-    accHosp:   (pf(hospRaw)||s.mi)+(pf(workRaw)||s.mi),
-    deathGen:  pf(v('death',0,Math.round(s.ai*10)))||Math.round(s.ai*10),
-    deathAcc:  pf(v('death',1,Math.round(s.ai*20)))||Math.round(s.ai*20),
-    disability:pf(v('disability',0,Math.round(s.ai*10)))||Math.round(s.ai*10),
-    critical:  pf(v('disability',1,Math.round(s.ai*3)))||Math.round(s.ai*3),
-    ltc:       pf(v('disability',2,3))||3,
+    hospMonth: pf(hospRaw),
+    accWork:   pf(workRaw),
+    accHosp:   pf(hospRaw)+pf(workRaw),
+    deathGen:  pf(v('death',0,Math.round(s.ai*10))),
+    deathAcc:  pf(v('death',1,Math.round(s.ai*20))),
+    disability:pf(v('disability',0,Math.round(s.ai*10))),
+    critical:  pf(v('disability',1,Math.round(s.ai*3))),
+    ltc:       pf(v('disability',2,3)),
     medHosp:   medHospRaw,
     medRoom:   medRoomRaw,
     medAcc:    medAccRaw
@@ -1039,7 +1055,7 @@ var PLANS={
   interrupt:{title:'收入中斷',ico:'⏸',subs:[
     {name:'一般住院',      why:'住院期間公司多半停薪。不論疾病或意外需要住院，每月可領補貼彌補薪資缺口，讓家庭現金流不中斷。',    defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
     {name:'意外無法工作',     why:'骨折等傷況可能只住院三天，但在家休養三個月甚至半年。在家休養期間同樣有補貼，每月約 3 萬元。', defFn:function(s){return fmtN(s.mi);},        unit:'元/月'},
-    {name:'意外住院（綜合）', why:'意外到需要住院，同時觸發前兩項保障，合計給付，最嚴重情況下保障最充足。',                    defFn:function(s){var h=pf(getInputVal('interrupt',0))||s.mi;var w=pf(getInputVal('interrupt',1))||s.mi;return fmtN(h+w);},  unit:'元/月'}
+    {name:'意外住院（綜合）', why:'意外到需要住院，同時觸發前兩項保障，合計給付，最嚴重情況下保障最充足。',                    defFn:function(s){function cur(si,def){var st=inputState('interrupt',si);return st.exists?pf(st.raw):pf(def);}return fmtN(cur(0,s.mi)+cur(1,s.mi));},  unit:'元/月'}
   ]},
   death:{title:'活的太短',ico:'🕊',subs:[
     {name:'一般身故', why:'依雙十原則，保障至少為年收入的 10 倍，讓家人在失去收入來源後，生活 10 年不成問題。', defFn:function(s){return Math.round(s.ai*10)+'';},  unit:'萬元'},
@@ -1053,7 +1069,7 @@ var PLANS={
   medical:{title:'醫療費用',ico:'🏥',subs:[
     {name:'住院醫療（實支實付）',why:'國人一次住院平均約 10 萬。自費手術材料動輒數十萬。花多少賠多少，解決最大的醫療費用風險。入住加護病房額度加倍。',defFn:function(s){return '20-40';},        unit:'萬/次'},
     {name:'病房費差額',          why:'健保房常沒空床。雙人房每日 1,500–2,500 元，單人房 3,000–6,000 元。讓你安心選擇適合的病房。',                          defFn:function(s){return '3000-6000';},     unit:'元/日'},
-    {name:'意外門診醫療',        why:'因意外受傷不需住院，連門診都可實支實付。含中醫復健，一次意外最高理賠 3 萬元。',                                        defFn:function(s){return '3';},             unit:'萬/次'}
+    {name:'意外門診醫療',        why:'因意外受傷不需住院，連門診都可實支實付。含中醫復健，可選 3／4／5 萬計劃，一次意外最高理賠 3～5 萬元。',            defFn:function(s){return '3';},             unit:'萬/次', options:[3,4,5]}
   ]}
 };
 
@@ -1068,13 +1084,24 @@ function buildPlan(){
       var defVal=sub.defFn(s);
       var isAutoSum=(rid==='interrupt'&&si===2);
       var el=document.getElementById('inp-'+rid+'-'+si);
-      var curVal=isAutoSum?defVal:((el&&el.value!=='')?el.value:defVal);
-      var inputAttrs=isAutoSum?'readonly style="opacity:.6;cursor:default;"':'onclick="this.select()" inputmode="numeric"';
-      var inputEvt=isAutoSum?'':' oninput="updateAccHosp()"';
+      // 元素已存在就保留目前值（含清空），清空＝不需要，不能被還原成預設值
+      var curVal=isAutoSum?defVal:(el?el.value:defVal);
+      var fieldHTML;
+      if(isAutoSum){
+        fieldHTML='<input class="scval-input" id="inp-'+rid+'-'+si+'" value="'+curVal+'" readonly style="opacity:.6;cursor:default;">';
+      }else if(sub.options){
+        var opts='';
+        sub.options.forEach(function(o){
+          opts+='<option value="'+o+'"'+(String(curVal)===String(o)?' selected':'')+'>'+o+'</option>';
+        });
+        fieldHTML='<select class="scval-input scval-select" id="inp-'+rid+'-'+si+'">'+opts+'</select>';
+      }else{
+        fieldHTML='<input class="scval-input" id="inp-'+rid+'-'+si+'" value="'+curVal+'" onclick="this.select()" inputmode="numeric" oninput="updateAccHosp()">';
+      }
       html+='<div class="scard">'
         +'<div><div class="scn">'+sub.name+'</div><div class="scw">'+sub.why+'</div></div>'
         +'<div class="scamt">'
-        +'<input class="scval-input" id="inp-'+rid+'-'+si+'" value="'+curVal+'" '+inputAttrs+inputEvt+'>'
+        +fieldHTML
         +'<div class="scunit">'+sub.unit+'</div>'
         +'</div></div>';
     });
@@ -1104,6 +1131,7 @@ function buildSummary(){
   rows.sort(function(a,b){return(ordMap[a.cat]||9)-(ordMap[b.cat]||9);});
   var html='<tr><th>優先</th><th>保障項目</th><th>建議需求</th><th>建議商品</th></tr>';
   rows.forEach(function(r){html+='<tr><td><span class="pri">'+picons[r.cat]+' '+ordMap[r.cat]+'</span></td><td class="nv">'+r.name+'</td><td class="nv">'+r.need+'</td><td class="nprod">'+r.prod+'</td></tr>';});
+  if(!rows.length)html+='<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:18px;">目前沒有需要的保障項目（可回「方法與選擇」填寫金額）</td></tr>';
   document.getElementById('ntbl').innerHTML=html;
   document.getElementById('dt1').textContent=s.ai+' 萬元';
   document.getElementById('dt2').textContent=Math.round(s.ai*0.1*10)/10+' 萬元/年';
@@ -1114,23 +1142,34 @@ function buildSummary(){
   document.getElementById('calcbtn').style.display='block';
 }
 
+// ── PAMR（意外門診實支實付）：計劃3／4／5＝3／4／5 萬/次，固定年繳保費 ──
+var PAMR_RATE={3:3260,4:3466,5:3665};
+function pamrPlan(v){
+  var n=Math.round(pf(v));
+  if(n<3)return 3;
+  return n>5?5:n;
+}
+
 // ── 共用：需求列（S4「保障需求總覽」與 PDF 報告共用同一份，確保與前一頁一致） ──
+// 使用者把某項金額清空（＝不需要）時，該列不輸出；總表與保費一起同步
 function buildNeedRows(s,uv,critProd){
   var critPlan=(critProd==='TDD')?uv.critical:Math.round(uv.critical/4*10)/10;
   function m(v,u){return needText(v,u);}
-  return[
-    {cat:'interrupt', name:'一般住院補貼',     need:fmtN(uv.hospMonth)+' 元/月',  plan:fmtN(uv.hospMonth)+' 元/月',  prod:'1HIR 住院日額'},
-    {cat:'interrupt', name:'意外無法工作',     need:fmtN(uv.accWork)+' 元/月',    plan:fmtN(uv.accWork)+' 元/月',    prod:'NAI 意外附約'},
-    {cat:'interrupt', name:'意外住院（綜合）', need:fmtN(uv.accHosp)+' 元/月',    plan:fmtN(uv.accHosp)+' 元/月',    prod:'1HIR + NAI'},
-    {cat:'disability',name:'意外失能',         need:fmtN(uv.disability)+' 萬元',  plan:fmtN(uv.disability)+' 萬元',  prod:'NAI + PAMR + YPAR'},
-    {cat:'disability',name:'重大疾病/癌症',    need:fmtN(uv.critical)+' 萬元',    plan:critPlan+' 萬元',             prod:(critProd==='TDD'?'10TDD':'10TSDD')},
-    {cat:'disability',name:'長期照護',         need:fmtN(uv.ltc)+' 萬/月',        plan:fmtN(uv.ltc)+' 萬/月',        prod:'10TLTC'},
-    {cat:'death',     name:'一般身故',         need:fmtN(uv.deathGen)+' 萬元',    plan:fmtN(uv.deathGen)+' 萬元',    prod:'N1TR 定期壽險'},
-    {cat:'death',     name:'意外身故',         need:fmtN(uv.deathAcc)+' 萬元',    plan:fmtN(uv.deathAcc)+' 萬元',    prod:'N1TR + NAI + YPAR'},
-    {cat:'medical',   name:'住院醫療',         need:m(uv.medHosp,' 萬/次'),       plan:m(uv.medHosp,' 萬/次'),       prod:'1HS A型'},
-    {cat:'medical',   name:'病房費差額',       need:m(uv.medRoom,' 元/日'),       plan:m(uv.medRoom,' 元/日'),       prod:'1HS A型（含）'},
-    {cat:'medical',   name:'意外門診',         need:m(uv.medAcc,' 萬/次'),        plan:m(uv.medAcc,' 萬/次'),        prod:'PAMR 計劃3'}
-  ];
+  var rows=[];
+  function addRow(cat,name,need,plan,prod){rows.push({cat:cat,name:name,need:need,plan:plan,prod:prod});}
+  function has(v){return pf(v)>0;}
+  if(has(uv.hospMonth))addRow('interrupt','一般住院補貼',fmtN(uv.hospMonth)+' 元/月',fmtN(uv.hospMonth)+' 元/月','1HIR 住院日額');
+  if(has(uv.accWork))addRow('interrupt','意外無法工作',fmtN(uv.accWork)+' 元/月',fmtN(uv.accWork)+' 元/月','NAI 意外附約');
+  if(has(uv.accHosp))addRow('interrupt','意外住院（綜合）',fmtN(uv.accHosp)+' 元/月',fmtN(uv.accHosp)+' 元/月','1HIR + NAI');
+  if(has(uv.disability))addRow('disability','意外失能',fmtN(uv.disability)+' 萬元',fmtN(uv.disability)+' 萬元','NAI + YPAR');
+  if(has(uv.critical))addRow('disability','重大疾病/癌症',fmtN(uv.critical)+' 萬元',critPlan+' 萬元',(critProd==='TDD'?'10TDD':'10TSDD'));
+  if(has(uv.ltc))addRow('disability','長期照護',fmtN(uv.ltc)+' 萬/月',fmtN(uv.ltc)+' 萬/月','10TLTC');
+  if(has(uv.deathGen))addRow('death','一般身故',fmtN(uv.deathGen)+' 萬元',fmtN(uv.deathGen)+' 萬元','N1TR 定期壽險');
+  if(has(uv.deathAcc))addRow('death','意外身故',fmtN(uv.deathAcc)+' 萬元',fmtN(uv.deathAcc)+' 萬元','N1TR + NAI + YPAR');
+  if(has(uv.medHosp))addRow('medical','住院醫療',m(uv.medHosp,' 萬/次'),m(uv.medHosp,' 萬/次'),'1HS A型');
+  if(has(uv.medRoom))addRow('medical','病房費差額',m(uv.medRoom,' 元/日'),m(uv.medRoom,' 元/日'),'1HS A型（含）');
+  if(has(uv.medAcc))addRow('medical','意外門診',m(uv.medAcc,' 萬/次'),m(uv.medAcc,' 萬/次'),'PAMR 計劃'+pamrPlan(uv.medAcc));
+  return rows;
 }
 
 // ── 共用：保費明細（S4「計算年繳保費」與 PDF 報告共用同一份） ──
@@ -1142,52 +1181,66 @@ function buildPremiumItems(s,uv,critProd){
   var age=s.age,gi=s.gi,items=[];
   function add(name,detail,prem){items.push({name:name,detail:detail,prem:Math.round(prem)});}
   var ageLbl=age+'歲'+(gi===0?'男':'女');
-  var dg=pf(uv.deathGen)||Math.round(s.ai*10);
-  var da=pf(uv.deathAcc)||Math.round(s.ai*20);
-  var disN=pf(uv.disability)||Math.round(s.ai*10);
-  var cn=pf(uv.critical)||Math.round(s.ai*3);
+  // 需求為 0（使用者清空）就不列該商品，總表與保費同步
+  var dg=pf(uv.deathGen);
+  var da=pf(uv.deathAcc);
+  var disN=pf(uv.disability);
+  var cn=pf(uv.critical);
 
   // 1HIR：依「一般住院」編輯值（元/月）換算日額
-  var hm=pf(uv.hospMonth)||s.mi;
+  var hm=pf(uv.hospMonth);
   var hirRate=HIR[Math.min(age,75)];
-  if(hirRate){var hda=Math.ceil(hm/30/100)*100;if(hda<100)hda=100;add('1HIR 住院日額','日額'+fmtN(hda)+'元/日（需求'+fmtN(hm)+'元/月），'+ageLbl,hirRate[gi]*(hda/100));}
+  if(hm>0&&hirRate){var hda=Math.ceil(hm/30/100)*100;if(hda<100)hda=100;add('1HIR 住院日額','日額'+fmtN(hda)+'元/日（需求'+fmtN(hm)+'元/月），'+ageLbl,hirRate[gi]*(hda/100));}
 
   // NAI：意外附約，死殘保額上限 100 萬
   // 意外死殘總需求＝取「意外失能」與「意外身故 - 一般身故」兩者較大者，再依 NAI 上限拆分
   var accNeed=Math.max(disN,Math.max(0,da-dg));
   var naiN=Math.min(100,accNeed);
-  if(naiN>0)add('NAI 意外附約',naiN+'萬保額（上限100萬，意外死殘需求'+accNeed+'萬），意外無法工作月補'+fmtN(uv.accWork)+'元，'+ageLbl,naiN/100*NAI_RATE_PER100);
+  if(naiN>0){
+    var aw=pf(uv.accWork);
+    add('NAI 意外附約',naiN+'萬保額（上限100萬，意外死殘需求'+accNeed+'萬）'+(aw>0?'，意外無法工作月補'+fmtN(aw)+'元':'')+'，'+ageLbl,naiN/100*NAI_RATE_PER100);
+  }
 
-  // PAMR：對應「意外門診醫療」（計劃3 上限 3 萬/次）
-  add('PAMR 計劃3','意外門診實支實付（需求'+needText(uv.medAcc,'萬/次')+(pf(uv.medAcc)>3?'，需求超過計劃3的3萬/次上限，須提高計劃':'')+'），固定費率',3260);
+  // PAMR：對應「意外門診醫療」，計劃3／4／5＝3／4／5 萬/次
+  var accMed=pf(uv.medAcc);
+  if(accMed>0){
+    var pn=pamrPlan(accMed);
+    add('PAMR 計劃'+pn,'意外門診實支實付（'+pn+'萬/次），固定費率',PAMR_RATE[pn]);
+  }
 
   // YPAR：意外死殘需求超過 NAI 上限（100 萬）的部分由 YPAR 補足
   var yN=Math.max(0,accNeed-naiN);
   if(yN>0)add('YPAR 意外傷害附約',yN+'萬保額（意外死殘需求'+accNeed+' - NAI已含'+naiN+'萬），'+ageLbl,yN*YPAR_RATE_PER10K);
 
   // 10TLTC：依「長期照護」（萬/月）
+  var lm=pf(uv.ltc);
   var tltcR=TLTC[Math.min(age,60)];
-  if(tltcR){var lm=pf(uv.ltc)||3;add('10TLTC 長期照顧定期險','保額'+(lm*12)+'萬、月補'+lm+'萬，'+ageLbl,tltcR[gi]*(lm*12));}
+  if(lm>0&&tltcR)add('10TLTC 長期照顧定期險','保額'+(lm*12)+'萬、月補'+lm+'萬，'+ageLbl,tltcR[gi]*(lm*12));
 
   // 重大疾病／癌症：依「重大疾病/癌症」（萬元）
-  if(critProd==='TDD'){
-    var tddR=TDD[Math.min(age,70)];
-    if(tddR)add('10TDD 重大疾病定期險','保額'+cn+'萬，'+ageLbl,tddR[gi]*(cn/10));
-  }else{
-    var tsddR=TSDD[Math.min(age,70)];
-    if(tsddR){var tc=Math.round(cn/4*10)/10;add('10TSDD 重大疾病定期險','投保'+tc+'萬、給付'+cn+'萬，'+ageLbl,tsddR[gi]*(tc/10));}
+  if(cn>0){
+    if(critProd==='TDD'){
+      var tddR=TDD[Math.min(age,70)];
+      if(tddR)add('10TDD 重大疾病定期險','保額'+cn+'萬，'+ageLbl,tddR[gi]*(cn/10));
+    }else{
+      var tsddR=TSDD[Math.min(age,70)];
+      if(tsddR){var tc=Math.round(cn/4*10)/10;add('10TSDD 重大疾病定期險','投保'+tc+'萬、給付'+cn+'萬，'+ageLbl,tsddR[gi]*(tc/10));}
+    }
   }
 
   // N1TR：依「一般身故」
   var n1R=N1TR[Math.min(age,70)];
-  if(n1R)add('N1TR 定期壽險',dg+'萬保額，'+ageLbl,n1R[gi]*dg);
+  if(dg>0&&n1R)add('N1TR 定期壽險',dg+'萬保額，'+ageLbl,n1R[gi]*dg);
 
   // 1HS A型：對應「住院醫療／病房費差額」（A型 20萬/次，需求超過時提示提高計劃）
   var hsR=getHSA(age);
-  if(hsR){
+  if(hsR&&(pf(uv.medHosp)>0||pf(uv.medRoom)>0)){
+    var hsParts=[];
+    if(pf(uv.medHosp)>0)hsParts.push('住院醫療需求'+needText(uv.medHosp,'萬/次'));
+    if(pf(uv.medRoom)>0)hsParts.push('病房差額'+needText(uv.medRoom,'元/日'));
     // 門檻比較用 pf()：pf('20-40')=20（區間下限），只有明確超過計劃上限才提示
     var hsNote=(pf(uv.medHosp)>20)?'，需求超過A型上限20萬/次，須提高計劃':'';
-    add('1HS A型 實支實付','20萬/次、加護病房40萬（住院醫療需求'+needText(uv.medHosp,'萬/次')+'、病房差額'+needText(uv.medRoom,'元/日')+'）'+hsNote+'，'+ageLbl,(gi===0)?hsR.m:hsR.f);
+    add('1HS A型 實支實付','20萬/次、加護病房40萬（'+hsParts.join('、')+'）'+hsNote+'，'+ageLbl,(gi===0)?hsR.m:hsR.f);
   }
 
   return items;
@@ -1230,6 +1283,7 @@ function exportPDF(){
 
   var premRowsHTML='';
   premItems.forEach(function(it){premRowsHTML+='<tr><td class="pp-prname">'+it.name+'</td><td>'+it.detail+'</td><td class="pp-pramt">'+fmtN(it.prem)+' 元</td></tr>';});
+  if(!premRowsHTML)premRowsHTML='<tr><td colspan="3" style="text-align:center;color:#999;">目前沒有選擇任何保障項目</td></tr>';
 
   var needRows=buildNeedRows(s,uv,critProd);
   var grouped={};rankOrder.forEach(function(r,i){grouped[r]={idx:i,rows:[]};});
@@ -1237,9 +1291,11 @@ function exportPDF(){
   var sectHTML='';
   rankOrder.forEach(function(cat){
     var grp=grouped[cat];var rowsHTML='';
+    if(!grp||!grp.rows.length)return;   // 該分類全部清空（＝不需要）就不輸出區塊
     grp.rows.forEach(function(r){rowsHTML+='<tr><td class="pp-rn">'+r.name+'</td><td class="pp-rneed">'+r.need+'</td><td class="pp-rplan">'+r.plan+'</td></tr>';});
     sectHTML+='<div class="pp-sec"><div class="pp-sec-hd"><span class="pp-badge">第'+(grp.idx+1)+'優先</span><span class="pp-sec-name">'+catIco[cat]+' '+catName[cat]+'</span></div><table class="pp-tbl"><thead><tr><th>保障項目</th><th>需求金額</th><th>建議保額</th></tr></thead><tbody>'+rowsHTML+'</tbody></table></div>';
   });
+  if(!sectHTML)sectHTML='<div class="pp-sec"><div style="font-size:11px;color:#999;">目前沒有需要的保障項目（可回「方法與選擇」填寫金額）。</div></div>';
 
   var gLabel=s.gender==='m'?'先生':'小姐';
   var today=new Date();
