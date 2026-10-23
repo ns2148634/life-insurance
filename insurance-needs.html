@@ -259,10 +259,10 @@ html,body{
 .ts.done b::after{content:'✓';margin-left:3px;font-size:11px;}
 
 /* S1 階段頭與說明框 */
-.stage-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:16px;}
-.stage-chip{flex:none;font-family:'Cormorant Garamond',serif;letter-spacing:2px;font-size:13px;color:var(--gold-lt);border:1px solid var(--gold-line);background:var(--gold-dim);border-radius:50px;padding:6px 14px;white-space:nowrap;}
+.stage-head{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:16px;}
+.stage-chip{flex:none;font-family:'Cormorant Garamond',serif;letter-spacing:2px;font-size:13px;color:var(--gold-lt);border:1px solid var(--gold-line);background:var(--gold-dim);border-radius:50px;padding:5px 14px;white-space:nowrap;}
 .stage-dots{margin-bottom:0;}
-.caption-box{position:relative;overflow:hidden;border-color:var(--gold-line);}
+.caption-box{position:relative;overflow:hidden;border-color:var(--gold-line);margin-bottom:14px;}
 .caption-box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--gold-deep),var(--gold-lt));}
 .caption-text{width:100%;}
 
@@ -331,16 +331,19 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
   .tb-home{font-size:11.5px;padding:5px 10px;}
   .ts{padding:6px 8px;}
   .ts b{display:none;}
-  .stage-head{flex-direction:column;align-items:flex-start;gap:10px;}
+  .stage-head{justify-content:center;gap:10px;}
   #botnav{margin:0 12px calc(10px + env(safe-area-inset-bottom));padding:10px;border-radius:20px;}
 }
 /* 圖側點擊導覽 */
 .diagram-shell{cursor:pointer;}
 .diagram-shell:active{opacity:.9;}
-.tap-hint{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-8px 4px 14px;font-size:12.5px;letter-spacing:.5px;color:var(--hint);}
+.tap-hint{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin:0 4px 14px;font-size:12.5px;letter-spacing:.5px;color:var(--hint);}
+.tap-hint>span:first-child{justify-self:start;}
+.tap-hint>#tapNext{justify-self:end;text-align:right;}
+.tap-hint .stage-chip{justify-self:center;}
 .tap-hint b{color:var(--gold-lt);font-weight:600;}
 .hl-tap{color:var(--gold-lt);font-weight:600;}
-@media (max-width:640px){.tap-hint{font-size:11.5px;margin-top:-4px;}}
+@media (max-width:640px){.tap-hint{font-size:11.5px;}.tap-hint .stage-chip{font-size:11px;padding:4px 11px;}}
 /* 風險排序列：窄螢幕壓縮，極窄改 2×2，避免「失能長年病」被截斷 */
 @media (max-width:520px){
   .rank-row{gap:7px;}
@@ -554,13 +557,15 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
 <div class="screen" id="s1">
   <div class="stitle">人生收支曲線</div>
   <div class="stage-head">
-    <div class="stage-chip" id="stageChip">準備開始</div>
     <div class="stage-dots" id="stageDots"></div>
   </div>
 
+  <!-- 提示詞（每一步的話）置於圖的上方 -->
+  <div class="caption-box"><div class="caption-text" id="captionText">天有不測風雲，人有旦夕禍福，面對未知的風險只有事前做好規劃，才能有效的應對風險，而風險的管理第一步就是風險的確認。</div></div>
+
   <!-- 人生圖區塊 (移除了原本 onclick) -->
   <div class="diagram-shell" id="diagramShell">
-    <svg viewBox="0 0 600 230" width="100%" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 248" width="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="arrowhead" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
           <path d="M0,0 L7,3 L0,6 Z" fill="#5b9bd1"/>
@@ -592,38 +597,62 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
         <text id="incomeLabel" x="292" y="35" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="600">收入線</text>
       </g>
 
-      <!-- stage4: 活的太短 -->
+      <!-- stage4: 撫養期 -->
       <g class="rstage" id="rstage4">
+        <line x1="57" y1="222" x2="163" y2="222" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line x1="57" y1="217" x2="57" y2="227" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line x1="163" y1="217" x2="163" y2="227" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <text x="110" y="243" font-size="12.5" fill="#7fb3e0" text-anchor="middle" font-weight="600">撫養期</text>
+      </g>
+
+      <!-- stage5: 奮鬥期 -->
+      <g class="rstage" id="rstage5">
+        <line x1="167" y1="222" x2="418" y2="222" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line x1="167" y1="217" x2="167" y2="227" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line x1="418" y1="217" x2="418" y2="227" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <text x="292" y="243" font-size="12.5" fill="#dcb877" text-anchor="middle" font-weight="600">奮鬥期</text>
+      </g>
+
+      <!-- stage6: 養老期 -->
+      <g class="rstage" id="rstage6">
+        <line x1="422" y1="222" x2="513" y2="222" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line x1="422" y1="217" x2="422" y2="227" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line x1="513" y1="217" x2="513" y2="227" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <text x="467" y="243" font-size="12.5" fill="#b89cda" text-anchor="middle" font-weight="600">養老期</text>
+      </g>
+
+      <!-- stage7: 活的太短 -->
+      <g class="rstage" id="rstage7">
         <line x1="252" y1="180" x2="268" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
         <line x1="268" y1="180" x2="252" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
         <text x="260" y="165" font-size="13" fill="#d6645a" text-anchor="middle" font-weight="700">活的太短</text>
       </g>
 
-      <!-- stage5: 活的太長 -->
-      <g class="rstage" id="rstage5">
+      <!-- stage8: 活的太長 -->
+      <g class="rstage" id="rstage8">
         <line x1="538" y1="180" x2="554" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
         <line x1="554" y1="180" x2="538" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
         <text x="546" y="165" font-size="13" fill="#e0a838" text-anchor="middle" font-weight="700">活的太長</text>
       </g>
 
-      <!-- stage6: 收入中斷 -->
-      <g class="rstage" id="rstage6">
+      <!-- stage9: 收入中斷 -->
+      <g class="rstage" id="rstage9">
         <line x1="217" y1="75" x2="233" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
         <line x1="233" y1="75" x2="217" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
         <line x1="225" y1="75" x2="225" y2="50" stroke="#5b9bd1" stroke-width="1.5" stroke-dasharray="3,2"/>
         <text x="225" y="40" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="700">收入中斷</text>
       </g>
 
-      <!-- stage7: 失能長年病 -->
-      <g class="rstage" id="rstage7">
+      <!-- stage10: 失能長年病 -->
+      <g class="rstage" id="rstage10">
         <line x1="347" y1="69" x2="363" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
         <line x1="363" y1="69" x2="347" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
         <line x1="355" y1="69" x2="355" y2="44" stroke="#9b7bc4" stroke-width="1.5" stroke-dasharray="3,2"/>
         <text x="355" y="34" font-size="13" fill="#b89cda" text-anchor="middle" font-weight="700">失能長年病</text>
       </g>
 
-      <!-- stage8：醫療費用（橫跨各階段的共同風險） -->
-      <g class="rstage" id="rstage8">
+      <!-- stage11：醫療費用（橫跨各階段的共同風險） -->
+      <g class="rstage" id="rstage11">
         <circle cx="100" cy="160" r="13" fill="#d6645a" stroke="#e08a81" stroke-width="1.5"/>
         <text x="100" y="160" dominant-baseline="central" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">$</text>
         <text x="100" y="137" font-size="13" fill="#e08a81" text-anchor="middle" font-weight="700">醫療費用</text>
@@ -631,18 +660,20 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
     </svg>
   </div>
 
-  <div class="tap-hint" id="tapHint"><span>◀ <b>左半：回上一步</b></span><span><b>右半：下一步</b> ▶</span></div>
-
-  <div class="caption-box"><div class="caption-text" id="captionText">這張人生收支曲線，藏著 8 個關鍵點。點圖「右半」開始一站一站看，「左半」可以回上一步。</div></div>
-
-  <div class="rank-head" id="rankHead">您最擔心的是？ — 走完 9 個階段後，即可依擔心程度點選排序</div>
-  <div class="rank-row" id="rankRow">
-    <div class="rtile" data-id="death" data-stage="4" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🕊</div><div class="rlab">活的太短</div></div>
-    <div class="rtile" data-id="interrupt" data-stage="6" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">⏸</div><div class="rlab">收入中斷</div></div>
-    <div class="rtile" data-id="disability" data-stage="7" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">♿</div><div class="rlab">失能長年病</div></div>
-    <div class="rtile" data-id="medical" data-stage="8" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🏥</div><div class="rlab">醫療費用</div></div>
+  <div class="tap-hint" id="tapHint">
+    <span>◀ <b>左半：回上一步</b></span>
+    <span class="stage-chip" id="stageChip">準備開始</span>
+    <span id="tapNext"><b>右半：下一步</b> ▶</span>
   </div>
-  <div class="rprev" id="rprev">尚未選擇。走完 9 個階段後，依序點選最擔心的四項風險。</div>
+
+  <div class="rank-head" id="rankHead">您最擔心的是？ — 走完 12 個階段後，即可依擔心程度點選排序</div>
+  <div class="rank-row" id="rankRow">
+    <div class="rtile" data-id="death" data-stage="7" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🕊</div><div class="rlab">活的太短</div></div>
+    <div class="rtile" data-id="interrupt" data-stage="9" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">⏸</div><div class="rlab">收入中斷</div></div>
+    <div class="rtile" data-id="disability" data-stage="10" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">♿</div><div class="rlab">失能長年病</div></div>
+    <div class="rtile" data-id="medical" data-stage="11" role="button" tabindex="0" aria-pressed="false"><div class="rbadge"></div><div class="ricon">🏥</div><div class="rlab">醫療費用</div></div>
+  </div>
+  <div class="rprev" id="rprev">尚未選擇。走完 12 個階段後，依序點選最擔心的四項風險。</div>
 
 </div>
 
@@ -738,7 +769,7 @@ var rankOrder=['interrupt','death','disability','medical'];   // 由 rankPicked 
 var rankPicked=[];                                            // 使用者點選順序（風險 id）
 var RNAMES={interrupt:'收入中斷',death:'活的太短',disability:'失能長年病',medical:'醫療費用'};
 var riskStage=0;
-var TOTAL_RISK_STAGES=9;   // 前 8 站＝曲線上的關鍵點，第 9 站＝收尾提問並開放排序
+var TOTAL_RISK_STAGES=12;   // 前 11 站＝3 個時期＋8 個關鍵點，第 12 站＝收尾提問並開放排序
 var STEPS=[
   {lbl:'',next:'了解人生風險 →',title:''},
   {lbl:'01 / 03',next:'查看方法與選擇 →',title:'風險確認'},
@@ -747,10 +778,13 @@ var STEPS=[
 ];
 
 var CAPTIONS=[
-  '天有不測風雲，人有旦夕禍福，面對未知的風險只有事前做好規劃，才能有效的應對風險。',
+  '天有不測風雲，人有旦夕禍福，面對未知的風險只有事前做好規劃，才能有效的應對風險，而風險的管理第一步就是風險的確認。',
   '人生是一條<strong>永不回頭的單行道</strong>——我們只會愈來愈老，不會愈來愈年輕。',
   '<strong>支出</strong>，從出生那一刻起就已經開始，直到離開的那一天，從未停止。',
   '但<strong>收入</strong>，只存在於就業到退休這段期間。',
+  '從出生到就業，是<strong>撫養期</strong>：只會花錢、不會賺錢，所有支出都由父母承擔。這個時期的風險，其實落在<strong>大人</strong>身上。',
+  '就業到退休，是<strong>奮鬥期</strong>：收入開始大於支出，是累積資產最精華的二、三十年，卻也是房貸、孩子、父母責任最重的時候。',
+  '退休到身故，是<strong>養老期</strong>：收入停止，支出卻沒有停止。準備得夠是享受人生；準備不夠，只能依靠家人或社會。',
   '如果在這段期間因疾病或意外提早離開——這就是<strong>「活的太短」</strong>，收入瞬間歸零，家人怎麼辦？',
   '活的太長不是問題，擔心的是<strong>「活的太長」</strong>，錢卻不夠用。',
   '在我們努力為夢想、家人打拼時，如果因為疾病或意外讓收入暫時中斷半年、一年的話，會不會是問題？——這是<strong>「收入中斷」</strong>。',
@@ -970,7 +1004,7 @@ function renderRiskStage(){
   updateMainBtn();
 }
 
-// 排序列：前 7 站淡化，對應風險的卡片隨故事陸續亮起；走完 9 個階段（含最後提問）才開放點選
+// 排序列：前 11 站淡化，對應風險的卡片隨故事陸續亮起；走完 12 個階段（含最後提問）才開放點選
 function syncRankRow(){
   var row=document.getElementById('rankRow');
   if(row){
@@ -983,11 +1017,12 @@ function syncRankRow(){
   var head=document.getElementById('rankHead');
   if(head)head.innerHTML=(riskStage>=TOTAL_RISK_STAGES)
     ? '<b>請依最擔心的程度，依序點選四張卡片</b>（再點一次可取消，號碼自動往前遞補）'
-    : '您最擔心的是？ — 走完 9 個階段後，即可依擔心程度點選排序';
-  var th=document.getElementById('tapHint');
+    : '您最擔心的是？ — 走完 12 個階段後，即可依擔心程度點選排序';
+  // 只更新右側提示，中央的 STEP 指示與左側「上一步」保持不動
+  var th=document.getElementById('tapNext');
   if(th)th.innerHTML=(riskStage>=TOTAL_RISK_STAGES)
-    ? '<span>◀ <b>左半：回上一步</b></span><span><b>選好順序後請按下方按鈕</b></span>'
-    : '<span>◀ <b>左半：回上一步</b></span><span><b>右半：下一步</b> ▶</span>';
+    ? '<b>選好順序後請按下方按鈕</b>'
+    : '<b>右半：下一步</b> ▶';
 }
 function nudgeRankRow(){
   var row=document.getElementById('rankRow');
