@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="資產傳承">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d1a26">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>資產傳承三步驟｜宸功保險</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1a26;--ink-mid:#142331;--ink-card:#182a3a;--ink-deep:#0a141f;
+  --amber:#f59e0b;--amber-lt:#fbbf24;--amber-deep:#b45309;
+  --amber-dim:rgba(245,158,11,.10);--amber-line:rgba(245,158,11,.34);
+  --gold:#c2974f;--gold-lt:#dcb877;--gold-line:rgba(194,151,79,.30);
+  --text:rgba(255,255,255,.94);--muted:rgba(255,255,255,.58);--hint:rgba(255,255,255,.34);
+  --border:rgba(255,255,255,.09);--ok:#7fc9a3;--warn:#e8b04b;--bad:#d6645a;
+  --r:14px;--rl:22px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;}
+body{
+  font-family:'Noto Sans TC',sans-serif;color:var(--text);background-color:var(--ink);
+  background-image:
+    radial-gradient(ellipse 900px 520px at 88% -12%, rgba(245,158,11,.10), transparent 62%),
+    radial-gradient(ellipse 720px 460px at -8% 102%, rgba(194,151,79,.07), transparent 58%);
+  background-attachment:fixed;
+  min-height:100dvh;-webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;}
+button{cursor:pointer;}
+a{color:inherit;}
+
+/* ---------- Header ---------- */
+header{max-width:1180px;margin:0 auto;padding:34px 32px 30px;border-bottom:1px solid var(--border);}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:30px;}
+.crest-row{display:flex;align-items:center;gap:13px;}
+.crest{width:38px;height:38px;flex-shrink:0;border-radius:10px;overflow:hidden;
+  border:1px solid var(--gold-line);box-shadow:0 2px 10px rgba(0,0,0,.28);}
+.crest img{width:100%;height:100%;object-fit:cover;display:block;}
+.brand{font-family:'Cormorant Garamond',serif;letter-spacing:5px;color:var(--gold);
+  text-transform:uppercase;font-size:14px;font-weight:600;}
+.back-link{font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--border);
+  border-radius:999px;padding:11px 16px;min-height:44px;display:inline-flex;align-items:center;gap:8px;
+  transition:border-color .2s ease,color .2s ease,background .2s ease;}
+.back-link:hover,.back-link:focus-visible{border-color:var(--amber-line);color:var(--amber-lt);
+  background:var(--amber-dim);outline:none;}
+.kicker{font-size:11.5px;letter-spacing:3.4px;color:var(--amber);text-transform:uppercase;font-weight:600;}
+h1{font-family:'Noto Serif TC',serif;font-weight:900;font-size:clamp(29px,4.6vw,48px);
+  line-height:1.3;letter-spacing:1px;margin:14px 0 14px;}
+h1 span{color:var(--amber);}
+.sub{color:var(--muted);font-size:15px;line-height:1.95;max-width:66ch;}
+.hero-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin-top:26px;}
+.hero-chip{background:rgba(255,255,255,.028);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.hero-chip b{display:block;font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--amber-lt);
+  font-weight:600;letter-spacing:.5px;line-height:1.2;}
+.hero-chip span{display:block;font-size:12.5px;color:var(--hint);letter-spacing:.4px;margin-top:4px;}
+
+/* ---------- Section 共通 ---------- */
+main{max-width:1180px;margin:0 auto;padding:8px 32px 64px;}
+.section{padding-top:54px;scroll-margin-top:20px;}
+.section-head{display:flex;align-items:flex-start;gap:15px;margin-bottom:22px;}
+.s-no{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:2px;color:var(--amber);
+  border:1px solid var(--amber-line);border-radius:999px;padding:6px 12px;flex:0 0 auto;margin-top:3px;
+  background:var(--amber-dim);font-weight:600;}
+.s-title{font-family:'Noto Serif TC',serif;font-size:clamp(21px,2.5vw,27px);font-weight:700;letter-spacing:.5px;}
+.s-sub{font-size:13.5px;color:var(--hint);margin-top:7px;line-height:1.8;}
+/* ---------- A. 三步驟手風琴 ---------- */
+.step{position:relative;background:var(--ink-card);border:1px solid var(--border);border-radius:var(--rl);
+  overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease,background .25s ease;}
+.step::before{content:'';position:absolute;left:22px;right:22px;top:0;height:2px;
+  background:linear-gradient(90deg,var(--amber),rgba(245,158,11,0));opacity:.5;}
+.step.open{border-color:var(--amber-line);box-shadow:0 18px 44px rgba(0,0,0,.32);
+  background:linear-gradient(160deg,rgba(245,158,11,.075),rgba(24,42,58,.92) 44%);}
+.step-head{display:flex;align-items:center;gap:15px;width:100%;background:none;border:none;
+  color:inherit;text-align:left;padding:22px 24px;min-height:74px;}
+.step-head:focus-visible{outline:2px solid var(--amber-line);outline-offset:-4px;}
+.step-no{font-family:'Cormorant Garamond',serif;font-size:28px;color:rgba(255,255,255,.2);
+  letter-spacing:1px;flex:0 0 auto;transition:color .25s ease;}
+.step.open .step-no{color:var(--amber);}
+.step-ico{width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;border-radius:12px;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);
+  transition:color .25s ease,border-color .25s ease,background .25s ease;}
+.step-ico svg{width:22px;height:22px;}
+.step.open .step-ico{border-color:var(--amber-line);background:var(--amber-dim);color:var(--amber);}
+.step-main{display:flex;flex-direction:column;gap:5px;flex:1;min-width:0;}
+.step-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;letter-spacing:.5px;}
+.step-lead{font-size:13px;color:var(--hint);}
+.step-chev{width:20px;height:20px;color:var(--hint);flex:0 0 auto;transition:transform .3s ease,color .3s ease;}
+.step-chev svg{width:20px;height:20px;display:block;}
+.step.open .step-chev{transform:rotate(180deg);color:var(--amber);}
+.step-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s cubic-bezier(.4,0,.2,1);}
+.step.open .step-panel{grid-template-rows:1fr;}
+.step-panel-inner{overflow:hidden;}
+.step-desc{font-size:14.5px;line-height:1.95;color:var(--muted);padding:0 24px 16px;
+  border-bottom:1px dashed rgba(255,255,255,.08);margin-bottom:16px;}
+.step-points{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));
+  gap:12px;padding:0 24px 18px;}
+.step-point{background:rgba(0,0,0,.18);border:1px solid var(--border);border-radius:12px;padding:13px 15px;}
+.sp-t{display:block;font-size:13.5px;font-weight:600;color:var(--amber-lt);margin-bottom:6px;letter-spacing:.4px;}
+.sp-d{display:block;font-size:13px;line-height:1.85;color:var(--muted);}
+.step-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:0 24px 16px;}
+.st-label{font-size:11.5px;letter-spacing:2px;color:var(--hint);text-transform:uppercase;margin-right:4px;}
+.step-tool{font-size:12.5px;padding:5px 12px;border-radius:999px;border:1px solid var(--gold-line);
+  color:var(--gold-lt);background:rgba(194,151,79,.07);}
+.step-warn{margin:0 24px 22px;font-size:12.5px;line-height:1.8;color:#e2ada2;
+  background:rgba(214,100,90,.08);border-left:2px solid rgba(214,100,90,.5);border-radius:0 10px 10px 0;
+  padding:11px 14px;}
+.step-link{height:26px;display:grid;place-items:center;}
+.step-link span{width:1px;height:26px;background:linear-gradient(180deg,var(--amber-line),transparent);}
+.steps-order{margin-top:20px;font-size:13px;line-height:1.9;color:var(--hint);
+  border-left:2px solid var(--amber-line);padding-left:14px;}
+.steps-order b{color:var(--amber-lt);}
+/* ---------- B. 試算器 ---------- */
+.calc{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:20px;align-items:start;}
+.calc-col{display:grid;gap:16px;min-width:0;}
+.calc-output{position:sticky;top:18px;}
+.fcard{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--rl);padding:20px 22px;}
+.fc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.fc-title{font-family:'Noto Serif TC',serif;font-size:16.5px;font-weight:700;letter-spacing:.4px;}
+.fc-hint{font-size:12px;color:var(--hint);margin-top:5px;line-height:1.6;}
+.fc-badge{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:700;color:var(--amber-lt);
+  background:var(--amber-dim);border:1px solid var(--amber-line);border-radius:999px;
+  padding:5px 12px;flex:0 0 auto;white-space:nowrap;letter-spacing:.3px;}
+.fc-badge-dim{color:var(--gold-lt);background:rgba(194,151,79,.08);border-color:var(--gold-line);}
+.money-row{display:flex;align-items:center;gap:16px;}
+.rng{-webkit-appearance:none;appearance:none;flex:1;min-width:0;height:6px;border-radius:999px;
+  background:linear-gradient(90deg,var(--amber) var(--fill,60%),rgba(255,255,255,.10) var(--fill,60%));
+  outline:none;cursor:pointer;margin:14px 0;}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--amber-lt);border:3px solid var(--ink-card);
+  box-shadow:0 0 0 1px var(--amber-line),0 2px 8px rgba(0,0,0,.4);cursor:grab;}
+.rng::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--amber-lt);
+  border:3px solid var(--ink-card);box-shadow:0 0 0 1px var(--amber-line);cursor:grab;}
+.rng:focus-visible{box-shadow:0 0 0 3px rgba(245,158,11,.22);}
+.rng-sm{height:5px;margin:10px 0 2px;}
+.rng-sm::-webkit-slider-thumb{width:18px;height:18px;}
+.money-box{display:flex;align-items:baseline;gap:4px;padding:8px 12px;border-radius:10px;
+  border:1px solid var(--border);background:rgba(0,0,0,.22);flex:0 0 auto;transition:border-color .2s ease;}
+.money-box:focus-within{border-color:var(--amber-line);}
+.money-num{width:82px;background:none;border:none;outline:none;text-align:right;font-size:16px;
+  font-weight:700;color:var(--amber-lt);font-variant-numeric:tabular-nums;-moz-appearance:textfield;}
+.money-num::-webkit-outer-spin-button,.money-num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.money-unit{font-size:11.5px;color:var(--hint);}
+.money-box-sm{padding:5px 10px;}
+.money-box-sm .money-num{width:58px;font-size:14px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+.chip{font-size:12px;padding:7px 13px;min-height:32px;border-radius:999px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--muted);transition:all .18s ease;}
+.chip:hover,.chip:focus-visible{border-color:var(--amber-line);color:var(--amber-lt);
+  background:var(--amber-dim);outline:none;}
+.sub-field{margin-top:16px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.08);}
+.sub-label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);letter-spacing:.3px;}
+.sub-label b{color:var(--amber-lt);font-variant-numeric:tabular-nums;}
+.ded-fixed{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;
+  padding:10px 0 12px;border-bottom:1px dashed rgba(255,255,255,.08);color:var(--muted);}
+.ded-fixed b{color:var(--text);font-weight:600;}
+.ded-row{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px dashed rgba(255,255,255,.08);font-size:13.5px;}
+.ded-row:last-child{border-bottom:none;padding-bottom:2px;}
+.ded-name{color:var(--muted);display:flex;flex-direction:column;gap:2px;}
+.ded-note{font-size:11px;color:var(--hint);}
+.ded-ctrl{display:flex;align-items:center;gap:10px;flex:0 0 auto;}
+.ded-ctrl b{font-size:13.5px;color:var(--text);font-weight:600;}
+.ded-check{cursor:pointer;}
+.ded-check input{appearance:none;-webkit-appearance:none;width:20px;height:20px;border-radius:6px;
+  border:1px solid var(--border);background:rgba(0,0,0,.22);position:relative;cursor:pointer;
+  transition:all .18s ease;flex:0 0 auto;}
+.ded-check input:checked{background:var(--amber);border-color:var(--amber);}
+.ded-check input:checked::after{content:'';position:absolute;left:6px;top:2.5px;width:6px;height:10px;
+  border:2px solid var(--ink);border-top:0;border-left:0;transform:rotate(42deg);}
+.ded-check input:focus-visible{outline:2px solid var(--amber-line);outline-offset:2px;}
+.ded-check input:disabled{opacity:.35;cursor:not-allowed;}
+.stepper{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--border);border-radius:999px;
+  padding:3px;background:rgba(0,0,0,.22);flex:0 0 auto;}
+.stepper button{width:28px;height:28px;border-radius:50%;border:none;background:transparent;
+  color:var(--muted);font-size:16px;line-height:1;display:grid;place-items:center;transition:all .16s ease;}
+.stepper button:hover,.stepper button:focus-visible{background:var(--amber-dim);color:var(--amber);outline:none;}
+.stepper b{min-width:16px;text-align:center;font-size:13.5px;color:var(--amber-lt);
+  font-variant-numeric:tabular-nums;}
+.st-unit{font-size:10.5px;color:var(--hint);margin-right:3px;}
+.premium-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;
+  padding-top:14px;border-top:1px dashed rgba(255,255,255,.08);font-size:13px;color:var(--muted);}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:14px;
+  min-height:44px;padding:11px 16px;border-radius:10px;border:1px solid var(--gold-line);
+  background:rgba(194,151,79,.07);color:var(--gold-lt);font-size:13px;font-weight:500;transition:all .2s ease;}
+.btn-ghost:hover,.btn-ghost:focus-visible{background:rgba(194,151,79,.14);border-color:var(--gold);outline:none;}
+.calc-note{font-size:11.5px;line-height:1.75;color:var(--hint);padding:0 2px;}
+.ins-flags{margin-top:12px;border-top:1px dashed rgba(255,255,255,.08);padding-top:4px;}
+.ins-flags .ded-row{padding:9px 0;font-size:12.5px;}
+.ins-quota{margin-top:14px;margin-bottom:0;padding:12px 14px;border:1px solid var(--border);
+  border-radius:12px;background:rgba(0,0,0,.18);}
+.ins-quota .cover-head b{font-size:17px;}
+.calc-sync-note{font-size:11px;line-height:1.7;color:var(--hint);margin-top:10px;
+  border-left:2px solid var(--amber-line);padding-left:9px;}
+.household-locked .stepper{display:none;}
+.household-locked #tx-spouse{opacity:.45;cursor:not-allowed;}
+.ins-tax{margin-top:16px;}
+/* ---------- B2. 試算結果面板 ---------- */
+.rcard{position:relative;background:linear-gradient(170deg,rgba(245,158,11,.10),var(--ink-card) 38%);
+  border:1px solid var(--amber-line);border-radius:var(--rl);padding:24px 24px 20px;overflow:hidden;}
+.rcard::after{content:'';position:absolute;right:-60px;top:-60px;width:190px;height:190px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,.16),transparent 68%);pointer-events:none;}
+.rc-head{border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:18px;margin-bottom:16px;}
+.rc-kicker{display:block;font-size:11.5px;letter-spacing:2.6px;color:var(--amber);text-transform:uppercase;}
+.rc-tax{display:flex;align-items:baseline;gap:7px;margin:8px 0 4px;}
+.rc-tax span{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5.4vw,52px);font-weight:700;
+  color:#fff;letter-spacing:.5px;line-height:1;font-variant-numeric:tabular-nums;}
+.rc-tax em{font-style:normal;font-size:13px;color:var(--hint);}
+.rc-tax-sub{font-size:12.5px;color:var(--muted);}
+.rc-tax-sub b{color:var(--amber-lt);font-weight:600;}
+.rc-rows{display:grid;gap:9px;margin-bottom:18px;}
+.rc-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13px;color:var(--muted);}
+.rc-row b{font-size:13.5px;color:var(--text);font-weight:600;font-variant-numeric:tabular-nums;text-align:right;}
+.rc-row b.hl{color:var(--amber-lt);font-size:15px;}
+.rc-row.total{border-top:1px dashed rgba(255,255,255,.14);padding-top:10px;margin-top:2px;}
+.tier{margin-bottom:18px;}
+.tier-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--hint);
+  margin-bottom:8px;}
+.tier-note{font-family:'Cormorant Garamond',serif;letter-spacing:1px;color:var(--gold-lt);}
+.tier-bar{display:flex;height:9px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06);}
+.tier-bar i{flex:1 1 0%;min-width:0;transition:flex-grow .45s cubic-bezier(.4,0,.2,1),opacity .3s ease;}
+.tier-bar i:nth-child(1){background:var(--amber);}
+.tier-bar i:nth-child(2){background:var(--gold-lt);}
+.tier-bar i:nth-child(3){background:#e2695b;}
+.tier-bar.is-empty{opacity:.5;}
+.tier-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:9px;}
+.tl-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--hint);}
+.tl-dot{width:7px;height:7px;border-radius:2px;flex:0 0 auto;}
+.tl-dot.d0{background:var(--amber);}
+.tl-dot.d1{background:var(--gold-lt);}
+.tl-dot.d2{background:#e2695b;}
+.cover{margin-bottom:16px;}
+.cover-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--muted);
+  margin-bottom:8px;}
+.cover-head b{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:var(--amber-lt);}
+.cover-head b.warn{color:var(--warn);}
+.cover-head b.bad{color:var(--bad);}
+.cover-head b.ok{color:var(--ok);}
+.cover-track{height:8px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;}
+.cover-track i{display:block;height:100%;width:0;border-radius:999px;background:var(--amber);
+  transition:width .5s cubic-bezier(.4,0,.2,1),background .3s ease;}
+.cover-track i.ok{background:var(--ok);}
+.cover-track i.warn{background:var(--warn);}
+.cover-track i.bad{background:var(--bad);}
+.cover-note{font-size:11.5px;line-height:1.7;color:var(--hint);margin-top:8px;}
+.gap-box{display:grid;gap:4px;border-radius:12px;padding:13px 15px;margin-bottom:18px;font-size:13px;
+  border:1px solid var(--border);background:rgba(0,0,0,.2);}
+.gap-box b{font-size:13.5px;color:var(--text);}
+.gap-box span{font-size:12px;line-height:1.7;color:var(--hint);}
+.gap-box.bad{border-color:rgba(214,100,90,.4);background:rgba(214,100,90,.08);}
+.gap-box.bad b{color:#f0b3a9;}
+.gap-box.ok{border-color:rgba(127,201,163,.35);background:rgba(127,201,163,.07);}
+.gap-box.ok b{color:#a8ddc1;}
+.lever{border-top:1px dashed rgba(255,255,255,.1);padding-top:16px;}
+.lever-title{font-size:12px;letter-spacing:2px;color:var(--gold-lt);text-transform:uppercase;margin-bottom:12px;}
+.lever-grid{display:grid;gap:8px;}
+.lever-item{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px;}
+.lv-l{color:var(--hint);}
+.lv-v{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;color:var(--gold-lt);
+  white-space:nowrap;}
+.lv-v.ok{color:var(--ok);}
+.lv-v.bad{color:var(--bad);}
+.lever-note{font-size:11px;line-height:1.75;color:var(--hint);margin-top:12px;}
+.lever-formula{font-size:12px;line-height:1.7;color:var(--gold-lt);margin-top:11px;padding:8px 11px;
+  border:1px dashed rgba(255,255,255,.12);border-radius:9px;background:rgba(0,0,0,.2);
+  font-variant-numeric:tabular-nums;}
+.cmp-lever{margin-top:16px;}
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;}
+.cmp-col{border:1px solid var(--border);border-radius:10px;padding:11px 12px;background:rgba(0,0,0,.18);}
+.cmp-col.is-good{border-color:rgba(127,201,163,.35);background:rgba(127,201,163,.07);}
+.cmp-tag{display:block;font-size:10.5px;letter-spacing:1.2px;color:var(--hint);}
+.cmp-col b{display:block;margin-top:5px;font-family:'Cormorant Garamond',serif;font-size:20px;
+  color:var(--text);line-height:1.2;font-variant-numeric:tabular-nums;}
+.cmp-col.is-good b{color:#a8ddc1;}
+.cmp-sub{display:block;font-size:10.5px;line-height:1.6;color:var(--hint);margin-top:3px;}
+.cmp-diff{font-size:12.5px;line-height:1.65;color:var(--amber-lt);margin-top:10px;font-weight:600;}
+.btn-ghost:disabled{opacity:.42;cursor:not-allowed;border-color:var(--border);color:var(--hint);
+  background:rgba(255,255,255,.02);}
+.rc-foot{font-size:10.5px;line-height:1.7;color:rgba(255,255,255,.26);margin-top:14px;
+  border-top:1px dashed rgba(255,255,255,.08);padding-top:12px;}
+/* ---------- C. 保險稅務單題 ---------- */
+.plan-q{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--rl);
+  padding:24px 24px 22px;margin-bottom:18px;}
+.plan-q-head{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+.plan-q-kicker{font-size:11px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;}
+.plan-q-title{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;line-height:1.55;letter-spacing:.3px;}
+.plan-q-sub{font-size:12.5px;line-height:1.85;color:var(--hint);max-width:72ch;}
+.q-opts{display:grid;gap:8px;}
+.q-opt{display:flex;align-items:center;gap:11px;width:100%;text-align:left;min-height:46px;
+  padding:11px 14px;border-radius:11px;border:1px solid var(--border);background:rgba(255,255,255,.02);
+  color:var(--muted);font-size:13.5px;line-height:1.6;transition:all .2s ease;}
+.q-opt:hover,.q-opt:focus-visible{border-color:rgba(245,158,11,.28);color:var(--text);outline:none;}
+.qo-mark{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.22);
+  flex:0 0 auto;position:relative;transition:all .2s ease;}
+.q-opt.on{border-color:var(--amber-line);background:var(--amber-dim);color:#fff;}
+.q-opt.on .qo-mark{border-color:var(--amber);background:var(--amber);}
+.q-opt.on .qo-mark::after{content:'';position:absolute;left:5px;top:3px;width:5px;height:9px;
+  border:2px solid var(--ink);border-top:0;border-left:0;transform:rotate(42deg);}
+.qo-label{flex:1;min-width:0;}
+.qo-label b{display:block;font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.q-opt.on .qo-label b{color:#fff;}
+.plan-check{margin-top:14px;border:1px dashed rgba(255,255,255,.12);border-radius:10px;
+  padding:11px 13px;font-size:12px;line-height:1.8;color:var(--muted);background:rgba(0,0,0,.16);}
+.plan-hint{margin-top:10px;font-size:12px;line-height:1.85;color:var(--amber-lt);
+  border-left:2px solid var(--amber-line);padding-left:11px;}
+/* ---------- C2. 指定分配試算 ---------- */
+.step-slot{padding:0 24px 18px;}
+.heir{border:1px solid var(--border);border-radius:14px;background:rgba(0,0,0,.18);padding:18px 18px 16px;}
+.heir-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;}
+.heir-title{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;letter-spacing:.3px;}
+.heir-sub{font-size:12px;line-height:1.75;color:var(--hint);margin-top:5px;max-width:60ch;}
+.heir-base{flex:0 0 auto;text-align:right;font-size:11.5px;color:var(--hint);}
+.heir-base b{display:block;font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--amber-lt);line-height:1.2;}
+.heir-base em{display:block;font-style:normal;font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;}
+.heir-presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px;}
+.heir-presets .chip{font-size:11.5px;padding:6px 11px;min-height:30px;}
+.heir-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:12px;}
+.heir-ctrl{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:rgba(255,255,255,.02);}
+.heir-name{display:flex;flex-direction:column;font-size:12.5px;color:var(--text);}
+.heir-name em{font-style:normal;font-size:10px;color:var(--hint);margin-top:1px;}
+.heir-table-wrap{margin-top:14px;overflow-x:auto;}
+.heir-table{width:100%;min-width:280px;border-collapse:collapse;font-size:12px;}
+.heir-caption{text-align:left;font-size:10.5px;letter-spacing:1.5px;color:var(--hint);padding-bottom:6px;}
+.heir-table th,.heir-table td{padding:8px 8px;text-align:right;border-bottom:1px solid rgba(255,255,255,.07);}
+.heir-table thead th{font-size:10.5px;font-weight:500;letter-spacing:1px;color:var(--hint);
+  border-bottom:1px solid rgba(255,255,255,.14);}
+.heir-table th:first-child,.heir-table td:first-child{text-align:left;}
+.heir-table tbody th{font-weight:500;color:var(--muted);}
+.heir-table tbody td b{display:block;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-lt);line-height:1.25;}
+.heir-table tbody td span{display:block;font-size:11px;color:var(--hint);margin-top:1px;}
+.hr-tag{display:inline-block;font-style:normal;font-size:9.5px;color:#d9a441;border:1px solid rgba(245,158,11,.35);
+  border-radius:999px;padding:1px 6px;margin-left:5px;vertical-align:1px;}
+.hr-empty{text-align:left;color:var(--hint);font-size:11.5px;line-height:1.7;}
+.heir-total th,.heir-total td{border-bottom:none;border-top:1px solid rgba(255,255,255,.16);padding-top:9px;}
+.heir-total td b{color:var(--amber-lt);}
+.heir-free{display:flex;align-items:center;gap:10px;margin-top:12px;padding:11px 13px;border-radius:10px;
+  border:1px solid rgba(245,158,11,.25);background:rgba(245,158,11,.07);}
+.hf-l{flex:1;min-width:0;display:flex;flex-direction:column;}
+.hf-l span{font-size:12px;color:var(--muted);}
+.hf-l em{font-style:normal;font-size:10px;color:var(--hint);margin-top:1px;}
+.heir-free b{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--amber-lt);white-space:nowrap;}
+.heir-free small{font-size:10.5px;color:var(--hint);white-space:nowrap;}
+.heir-warn{margin-top:10px;font-size:11.5px;line-height:1.7;color:#e2ada2;
+  background:rgba(214,100,90,.08);border-left:2px solid rgba(214,100,90,.5);border-radius:0 8px 8px 0;padding:8px 11px;}
+.heir-amend{margin-top:10px;font-size:10.5px;line-height:1.7;color:var(--hint);}
+.heir-note{margin-top:9px;font-size:10.5px;line-height:1.7;color:rgba(255,255,255,.3);}
+.stepper button:disabled{opacity:.28;cursor:not-allowed;}
+.stepper button:disabled:hover{background:transparent;color:var(--muted);}
+/* ---------- D. 諮詢摘要 ---------- */
+.summary-row{display:grid;gap:18px;align-items:start;max-width:680px;}
+.summary{background:linear-gradient(170deg,rgba(194,151,79,.09),var(--ink-card) 46%);
+  border:1px solid var(--gold-line);border-radius:var(--rl);padding:24px 22px;}
+.sm-title{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:var(--gold-lt);
+  letter-spacing:.6px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08);}
+.sm-list{display:grid;gap:11px;margin-top:14px;}
+.sm-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:12.5px;
+  color:var(--hint);}
+.sm-row b{font-size:13.5px;color:var(--text);font-weight:600;text-align:right;font-variant-numeric:tabular-nums;}
+.sm-row b.amber{color:var(--amber-lt);}
+.sm-note{font-size:11px;line-height:1.75;color:rgba(255,255,255,.3);margin-top:16px;
+  border-top:1px dashed rgba(255,255,255,.08);padding-top:12px;}
+.sm-empty{font-size:12px;line-height:1.8;color:var(--hint);margin-top:14px;}
+
+/* ---------- Footer ---------- */
+footer{max-width:1180px;margin:0 auto;padding:26px 32px 40px;border-top:1px solid var(--border);
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:11.5px;color:rgba(255,255,255,.28);
+  line-height:1.8;}
+footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
+
+/* ---------- 列印 / PDF ---------- */
+#printArea{display:none;}
+@media print{
+  @page{size:A4;margin:14mm 13mm;}
+  html,body{background:#fff!important;color:#101820!important;min-height:0!important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  header,main,footer,.no-print{display:none!important;}
+  #printArea{display:block!important;font-family:'Noto Sans TC',sans-serif;color:#101820;}
+  .pp{font-size:11px;line-height:1.6;}
+  .pp-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;
+    border-bottom:2px solid #b45309;padding-bottom:9px;margin-bottom:14px;}
+  .pp-brand{font-size:11px;letter-spacing:3px;color:#b45309;text-transform:uppercase;}
+  .pp-title{font-family:'Noto Serif TC',serif;font-size:21px;font-weight:700;margin-top:4px;}
+  .pp-meta{font-size:10.5px;color:#5a6672;text-align:right;line-height:1.7;}
+  .pp-sec{margin-bottom:13px;page-break-inside:avoid;}
+  .pp-h{font-family:'Noto Serif TC',serif;font-size:13px;font-weight:700;color:#8a5a12;
+    border-left:3px solid #f59e0b;padding-left:8px;margin-bottom:8px;}
+  .pp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+  .pp-item{border:1px solid #e2d8c6;border-radius:6px;padding:8px 10px;background:#fdfbf7;}
+  .pp-k{display:block;font-size:9.5px;color:#6b7280;letter-spacing:.4px;}
+  .pp-v{display:block;font-size:13px;font-weight:700;color:#101820;margin-top:3px;}
+  .pp-v.amber{color:#b45309;}
+  .pp-rows{display:grid;gap:5px;font-size:11px;}
+  .pp-row{display:flex;justify-content:space-between;border-bottom:1px dotted #d8cfc0;padding-bottom:4px;}
+  .pp-row b{font-weight:600;}
+  .pp-table{width:100%;border-collapse:collapse;font-size:10px;}
+  .pp-table th,.pp-table td{border-bottom:1px solid #e2d8c6;padding:4px 6px;text-align:right;}
+  .pp-table th:first-child,.pp-table td:first-child{text-align:left;}
+  .pp-table thead th{color:#6b7280;font-weight:600;font-size:9.5px;}
+  .pp-table tfoot th,.pp-table tfoot td{font-weight:700;color:#b45309;border-bottom:none;
+    border-top:1.5px solid #b45309;}
+  .pp-ul{margin:0;padding-left:16px;font-size:10.5px;line-height:1.8;color:#374151;}
+  .pp-note{font-size:9.5px;line-height:1.7;color:#6b7280;border-top:1px solid #e5e0d6;padding-top:8px;margin-top:10px;}
+  .pp-foot{display:flex;justify-content:space-between;font-size:9.5px;color:#6b7280;margin-top:10px;}
+}
+/* ---------- RWD ---------- */
+@media (max-width:1024px){
+  .calc{grid-template-columns:1fr;}
+  .calc-output{position:static;}
+}
+@media (max-width:860px){
+  header,main,footer{padding-left:22px;padding-right:22px;}
+  .section{padding-top:46px;}
+}
+@media (max-width:640px){
+  header{padding:24px 18px 22px;}
+  main{padding:4px 18px 52px;}
+  footer{padding:22px 18px 32px;flex-direction:column;gap:8px;}
+  h1{font-size:28px;}
+  .sub{font-size:14px;}
+  .hero-meta{grid-template-columns:1fr 1fr;gap:9px;}
+  .hero-chip{padding:11px 13px;}
+  .hero-chip b{font-size:20px;}
+  .section-head{gap:11px;}
+  .s-no{font-size:13px;padding:4px 9px;}
+  .step-head{padding:18px 16px;gap:11px;}
+  .step-no{font-size:22px;}
+  .step-ico{width:38px;height:38px;border-radius:10px;}
+  .step-ico svg{width:19px;height:19px;}
+  .step-title{font-size:17px;}
+  .step-desc{padding:0 16px 14px;font-size:14px;}
+  .step-points{padding:0 16px 16px;grid-template-columns:1fr;}
+  .step-tools{padding:0 16px 14px;}
+  .step-warn{margin:0 16px 18px;}
+  .fcard{padding:18px 16px;}
+  .rcard{padding:20px 18px 18px;}
+  .money-row{flex-wrap:wrap;gap:6px;}
+  .rng{flex:1 1 100%;margin:8px 0 4px;}
+  .money-box{margin-left:auto;}
+  .plan-q{padding:20px 16px 18px;}
+  .q-opt{font-size:13px;padding:11px 12px;}
+  .heir{padding:15px 13px 13px;}
+  .step-slot{padding:0 16px 16px;}
+  .heir-controls{grid-template-columns:1fr;}
+  .heir-table{font-size:11px;min-width:0;table-layout:fixed;}
+  .heir-table th,.heir-table td{padding:7px 5px;}
+  .heir-table th:first-child,.heir-table td:first-child{width:33%;}
+  .heir-table th:nth-child(2),.heir-table td:nth-child(2),
+  .heir-table th:nth-child(3),.heir-table td:nth-child(3){width:33.5%;}
+  .heir-table tbody td b{font-size:14px;}
+  .heir-table tbody td span{font-size:10px;}
+  .hr-tag{display:block;margin:3px 0 0;white-space:normal;line-height:1.5;}
+  .summary{padding:20px 18px;}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;}
+}
+.steps{display:grid;gap:8px;}
+</style>
+<script src="./auth-guard.js"></script>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="crest-row">
+      <div class="crest"><img src="./icon-192.png" alt="宸功保險"></div>
+      <div class="brand">Chenggong Insurance</div>
+    </div>
+    <a class="back-link" href="./index.html">← 回工具總覽</a>
+  </div>
+  <p class="kicker">Estate Planning · 客戶顧問</p>
+  <h1>資產傳承<span>三步驟</span></h1>
+  <p class="sub">傳承不是把錢留下來就好，而是要讓「給的人安心、收的人順利」。先盤點、再試算、最後補上稅源缺口，三步就能把想法變成可執行的安排。</p>
+  <div class="hero-meta">
+    <div class="hero-chip"><b>3 Steps</b><span>盤點 → 試算 → 補缺口</span></div>
+    <div class="hero-chip"><b>10 / 15 / 20%</b><span>遺產稅累進稅率</span></div>
+    <div class="hero-chip"><b>0 元</b><span>指定受益人之身故保險金｜不計入遺產</span></div>
+    <div class="hero-chip"><b>3,740 萬</b><span>每申報戶死亡給付免計入額度</span></div>
+  </div>
+</header>
+
+<main>
+
+  <section class="section" id="steps">
+    <div class="section-head">
+      <span class="s-no">01</span>
+      <div>
+        <h2 class="s-title">傳承三步驟</h2>
+        <p class="s-sub">先看清楚、再算清楚、最後留下來。展開每一步，看實務上要準備哪些事。</p>
+      </div>
+    </div>
+    <div id="stepsMount"></div>
+  </section>
+
+  <section class="section" id="calc">
+    <div class="section-head">
+      <span class="s-no">02</span>
+      <div>
+        <h2 class="s-title">遺產稅與預留稅源試算</h2>
+        <p class="s-sub">家庭成員同步自 01 指定分配；拉動滑桿或直接輸入金額，即時算出遺產稅、保險金覆蓋率與 3,740 萬最低稅負（受益人≠要保人時適用）。</p>
+      </div>
+    </div>
+    <div id="taxCalcMount"></div>
+  </section>
+  <section class="section" id="consult">
+    <div class="section-head">
+      <span class="s-no">03</span>
+      <div>
+        <h2 class="s-title">下一步：把數字變成安排</h2>
+        <p class="s-sub">先確認一個關鍵問題。顧問會帶著這份分配與稅額試算，討論保額、受益人與稅源配置。</p>
+      </div>
+    </div>
+
+    <div class="plan-q" id="insPlan">
+      <div class="plan-q-head">
+        <span class="plan-q-kicker">保險稅務 · 一題確認</span>
+        <h3 class="plan-q-title">保險的免稅額，您安排了嗎？</h3>
+        <p class="plan-q-sub">身故給付留給指定受益人，遺產稅原則上不計入（保險法 §112）；受益人≠要保人時，所得稅另有每一申報戶 3,740 萬的死亡給付額度。先確認您現在的位置。</p>
+      </div>
+      <div class="q-opts" role="radiogroup" aria-label="保險的免稅額是否已安排">
+        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="arranged">
+          <span class="qo-mark" aria-hidden="true"></span>
+          <span class="qo-label"><b>已安排</b>保額對準稅源，受益人姓名、順位、比例都已指定</span>
+        </button>
+        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="partial">
+          <span class="qo-mark" aria-hidden="true"></span>
+          <span class="qo-label"><b>部分安排</b>有保單，但額度或受益人還沒確認</span>
+        </button>
+        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="none">
+          <span class="qo-mark" aria-hidden="true"></span>
+          <span class="qo-label"><b>尚未安排</b>還沒有保單，或不確定受益人怎麼填</span>
+        </button>
+        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="unknown">
+          <span class="qo-mark" aria-hidden="true"></span>
+          <span class="qo-label"><b>不知道有這條</b>沒聽過 3,740 萬與 750 萬的差別</span>
+        </button>
+      </div>
+      <div class="plan-check" id="insPlanCheck">—</div>
+      <p class="plan-hint" id="insPlanHint" hidden></p>
+    </div>
+
+    <div class="summary-row">
+      <aside class="summary">
+        <h3 class="sm-title">諮詢摘要</h3>
+        <div class="sm-list" id="smList">
+          <p class="sm-empty">調整上方分配與試算後，這裡會自動彙整成一份摘要，方便您與顧問討論。</p>
+        </div>
+        <button type="button" class="btn-ghost" id="printBtn">列印／存成 PDF</button>
+        <p class="sm-note">摘要僅保存在本機瀏覽器，重新整理不會消失，也不會上傳。</p>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div><b>宸功保險</b>　資產傳承三步驟 · Estate Planning</div>
+  <div>本頁試算僅供諮詢參考，實際稅額與核保條件以主管機關及保險公司核定為準。</div>
+</footer>
+
+<div id="printArea" aria-hidden="true"></div>
+
+<script src="./components/inheritance-steps.js"></script>
+<script src="./components/tax-calculator.js"></script>
+<script src="./components/heir-allocator.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var ANSWER_KEY = 'estate_planning_answer_v1';
+
+  var el = {
+    steps: document.getElementById('stepsMount'),
+    calc: document.getElementById('taxCalcMount'),
+    smList: document.getElementById('smList'),
+    printBtn: document.getElementById('printBtn'),
+    printArea: document.getElementById('printArea'),
+    plan: document.getElementById('insPlan'),
+    planCheck: document.getElementById('insPlanCheck'),
+    planHint: document.getElementById('insPlanHint')
+  };
+
+  var calcApi = null;
+  var heirApi = null;
+  var planAnswer = null;
+
+  var PLAN_TEXT = {
+    arranged: {
+      label: '已安排',
+      hint:
+        '已安排：每年確認受益人名單與 3,740 萬額度；若保額超過 4,490 萬，先試算基本稅額，必要時調整保額或分散申報戶。'
+    },
+    partial: {
+      label: '部分安排',
+      hint:
+        '部分安排：先做保單健檢，確認要保人、被保險人、受益人與保額是否對準稅源；缺口可用定期壽險補足，成本較低。'
+    },
+    none: {
+      label: '尚未安排',
+      hint:
+        '尚未安排：先用 02 算出稅源缺口，再以壽險補足；受益人務必寫明姓名、順位、比例，不要只寫「法定繼承人」。'
+    },
+    unknown: {
+      label: '不知道有這條',
+      hint:
+        '先記兩個數字：身故給付每一申報戶全年 3,740 萬內免計入基本所得額，再扣 750 萬基本所得額免稅額（全戶共用），' +
+        '保額 4,490 萬以內通常沒有基本稅額。回 02 看您的保額落在哪一段，並確認受益人≠要保人，保險金才不會回到遺產課稅。'
+    }
+  };
+
+  /* ---------- 小工具 ---------- */
+  function readJSON(key, fallback) {
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function writeJSON(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      /* 無痕模式 → 僅存於記憶體 */
+    }
+  }
+
+  function wn(amount) {
+    var v = Math.round((Number(amount) || 0) / 1000) / 10;
+    return v.toLocaleString('zh-TW') + ' 萬';
+  }
+
+  function pctText(ratio) {
+    var v = (Number(ratio) || 0) * 100;
+    if (v >= 100) return v.toFixed(0) + '%';
+    return v.toFixed(1).replace(/\.0$/, '') + '%';
+  }
+
+  function amtQuotaText(r) {
+    if (r.inputs.amtApplies) return pctText(r.amtQuotaRate);
+    return r.inputs.beneficiaryNamed
+      ? '不適用（受益人＝要保人）'
+      : '不適用（未指定受益人）';
+  }
+
+  function row(k, v, amber) {
+    return (
+      '<div class="sm-row"><span>' + k + '</span>' +
+      '<b' + (amber ? ' class="amber"' : '') + '>' + v + '</b></div>'
+    );
+  }
+
+  /* ---------- 諮詢摘要 ---------- */
+  function renderSummary() {
+    if (!el.smList || !calcApi) return;
+    var r = calcApi.getResult();
+    var html = '';
+
+    html += row('計入遺產總額', wn(r.estateAssets), true);
+    html += row('遺產稅', wn(r.tax), true);
+    html += row('基本稅額（估算）', wn(r.amtTax));
+    html += row('合計稅負', wn(r.totalTax), true);
+    html += row('保額預留', wn(r.insurance));
+    html += row('稅源覆蓋率', pctText(r.coverage), true);
+    if (r.totalTax > 0) {
+      if (r.gap > 0) html += row('稅源缺口', wn(r.gap));
+      else if (r.surplus > 0) html += row('稅源餘裕', wn(r.surplus), true);
+      else html += row('稅源檢視', '剛好足額');
+    }
+    html += row('3,740 萬額度', amtQuotaText(r));
+
+    if (heirApi) {
+      var h = heirApi.getResult();
+      html += row('法定繼承人', h.totals.heirsCount + ' 人');
+      html += row(
+        '特留分合計',
+        wn(h.totals.reservedAmount) + '（' + pctText(h.totals.reservedRate) + '）',
+        true
+      );
+      html += row('超出特留分', wn(h.totals.freeAmount));
+    }
+
+    html += row(
+      '保險免稅額安排',
+      planAnswer ? PLAN_TEXT[planAnswer].label : '尚未確認',
+      true
+    );
+
+    el.smList.innerHTML = html;
+  }
+
+  /* ---------- 單題：保險免稅額 ---------- */
+  function savePlanAnswer() {
+    writeJSON(ANSWER_KEY, { answer: planAnswer, updatedAt: new Date().toISOString() });
+  }
+
+  function renderPlanCheck() {
+    if (!el.planCheck) return;
+    if (!calcApi) {
+      el.planCheck.textContent = '—';
+      return;
+    }
+    var r = calcApi.getResult();
+    if (r.insurance <= 0) {
+      el.planCheck.textContent = '目前保額 0 萬：先回到 02 設定保額，才能檢視 3,740 萬額度與稅源缺口。';
+      return;
+    }
+    var text =
+      '目前保額 ' +
+      wn(r.insurance) +
+      '｜3,740 萬額度已用 ' +
+      amtQuotaText(r) +
+      '｜計入遺產 ' +
+      (r.insuranceInEstate > 0 ? wn(r.insuranceInEstate) : '0 元') +
+      '｜遺產稅 ' +
+      wn(r.tax) +
+      '＋基本稅額 ' +
+      wn(r.amtTax) +
+      '＝合計 ' +
+      wn(r.totalTax) +
+      '。';
+    if (r.inputs.amtApplies && r.amtIncluded > 0) {
+      text += ' 超過額度 ' + wn(r.amtIncluded) + ' 計入基本所得額。';
+    } else if (!r.inputs.amtApplies) {
+      text += r.inputs.beneficiaryNamed
+        ? ' 受益人與要保人同一人，死亡給付不計入基本所得額。'
+        : ' 尚未指定受益人，死亡給付計入遺產，不適用 3,740 萬額度。';
+    }
+    el.planCheck.textContent = text;
+  }
+
+  function paintPlanAnswer() {
+    if (!el.plan) return;
+    Array.prototype.forEach.call(el.plan.querySelectorAll('[data-plan]'), function (btn) {
+      var on = btn.getAttribute('data-plan') === planAnswer;
+      btn.classList.toggle('on', on);
+      btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+    if (el.planHint) {
+      if (planAnswer) {
+        el.planHint.hidden = false;
+        el.planHint.textContent = PLAN_TEXT[planAnswer].hint;
+      } else {
+        el.planHint.hidden = true;
+        el.planHint.textContent = '';
+      }
+    }
+    renderPlanCheck();
+  }
+
+  if (el.plan) {
+    el.plan.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('[data-plan]') : null;
+      if (!btn || !el.plan.contains(btn)) return;
+      planAnswer = btn.getAttribute('data-plan');
+      savePlanAnswer();
+      paintPlanAnswer();
+      renderSummary();
+    });
+  }
+
+  /* ---------- 事件 ---------- */
+  document.addEventListener('estate:tax-change', function (e) {
+    renderSummary();
+    renderPlanCheck();
+    if (heirApi && e.detail) heirApi.setBase(e.detail.estateAssets);
+  });
+
+  document.addEventListener('estate:heirs-change', function (e) {
+    if (calcApi && e.detail) {
+      calcApi.setHeirs({
+        spouse: !!e.detail.counts.spouse,
+        children: e.detail.counts.children,
+        parents: e.detail.counts.parents
+      });
+    }
+    renderSummary();
+  });
+  /* ---------- 共用工具 ---------- */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---------- 列印／存成 PDF ---------- */
+  function todayText() {
+    var d = new Date();
+    var p = function (n) {
+      return (n < 10 ? '0' : '') + n;
+    };
+    return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate());
+  }
+
+  function ppItem(k, v, amber) {
+    return (
+      '<div class="pp-item"><span class="pp-k">' + k + '</span>' +
+      '<span class="pp-v' + (amber ? ' amber' : '') + '">' + v + '</span></div>'
+    );
+  }
+
+  function ppRow(k, v) {
+    return '<div class="pp-row"><span>' + k + '</span><b>' + v + '</b></div>';
+  }
+
+  function buildPrintHTML() {
+    var r = calcApi.getResult();
+
+    var h = heirApi ? heirApi.getResult() : null;
+    var heirHTML = '';
+    if (h && h.hasHeirs) {
+      var heirRows = h.rows
+        .map(function (s) {
+          return (
+            '<tr><th>' + esc(s.label) + '</th>' +
+            '<td>' + pctText(s.sharePct) + '</td>' +
+            '<td>' + wn(s.shareAmount) + '</td>' +
+            '<td>' + pctText(s.reservedPct) + '</td>' +
+            '<td>' + wn(s.reservedAmount) + '</td>' +
+            '<td>' + wn(Math.max(0, s.shareAmount - s.reservedAmount)) + '</td></tr>'
+          );
+        })
+        .join('');
+      heirHTML =
+        '<table class="pp-table">' +
+        '<thead><tr><th>繼承人</th><th>分配比例</th><th>分配金額</th>' +
+        '<th>特留分</th><th>保障金額</th><th>超出特留分</th></tr></thead><tbody>' +
+        heirRows +
+        '</tbody><tfoot><tr><th>合計</th><td>' + pctText(h.totals.shareRate) + '</td>' +
+        '<td>' + wn(h.base) + '</td><td>—</td>' +
+        '<td>' + wn(h.totals.reservedAmount) + '</td>' +
+        '<td>' + wn(h.totals.freeAmount) + '</td></tr></tfoot></table>' +
+        '<p style="font-size:9.5px;line-height:1.7;color:#6b7280;margin-top:4px">' +
+        '以遺產總額 ' + wn(h.base) + ' 試算；特留分依民法 §1223，配偶與子女並存時配偶特留分為應繼分 1/2。' +
+        '</p>';
+    } else {
+      heirHTML =
+        '<p style="font-size:10.5px;line-height:1.8;color:#374151">尚未設定法定繼承人（本頁 01 指定分配）。</p>';
+    }
+
+    var insHTML =
+      '<div class="pp-rows">' +
+      ppRow(
+        '計入遺產總額（保險）',
+        r.insuranceInEstate > 0
+          ? wn(r.insuranceInEstate)
+          : r.inputs.beneficiaryNamed
+            ? '0 元（指定受益人）'
+            : '0 元'
+      ) +
+      ppRow(
+        '超過 3,740 萬計入基本所得額',
+        r.inputs.amtApplies ? wn(r.amtIncluded) : '不適用'
+      ) +
+      ppRow('基本稅額（估算）', wn(r.amtTax)) +
+      ppRow('指定受益人少繳遺產稅', wn(r.estateTaxSaving)) +
+      ppRow('3,740 萬額度使用', amtQuotaText(r)) +
+      '</div>' +
+      '<p style="font-size:9.5px;line-height:1.7;color:#6b7280;margin-top:4px">' +
+      '受益人與要保人非同一人時，死亡給付每一申報戶全年 3,740 萬內免計入基本所得額；超過部分先扣 750 萬基本所得額免稅額' +
+      '（全戶共用），再按 20% 計算，且僅就高於一般所得稅額的差額補繳。滿期金、生存金、解約金全額計入。</p>';
+
+    var answerHTML =
+      '<div class="pp-rows">' +
+      ppRow('保險免稅額安排', planAnswer ? esc(PLAN_TEXT[planAnswer].label) : '尚未確認') +
+      '</div>' +
+      (planAnswer
+        ? '<p style="font-size:10.5px;line-height:1.8;color:#374151;margin-top:5px">' +
+          esc(PLAN_TEXT[planAnswer].hint) + '</p>'
+        : '');
+
+    var contactHTML =
+      '<div class="pp-rows" style="margin-top:6px">' +
+      ppRow('客戶稱呼', '____________') +
+      ppRow('聯絡電話', '____________') +
+      ppRow('方便時段', '____________') +
+      '</div>';
+
+    return (
+      '<div class="pp">' +
+      '<div class="pp-head">' +
+      '<div><div class="pp-brand">Chenggong Insurance</div>' +
+      '<div class="pp-title">資產傳承三步驟 · 諮詢摘要</div></div>' +
+      '<div class="pp-meta">' + todayText() + '<br>諮詢顧問：____________</div>' +
+      '</div>' +
+
+      '<div class="pp-sec"><div class="pp-h">一、資產與稅額</div><div class="pp-grid">' +
+      ppItem('計入遺產總額', wn(r.estateAssets)) +
+      ppItem('免稅額 ＋ 扣除額', wn(r.exempt + r.deduction)) +
+      ppItem('課稅遺產淨額', wn(r.net)) +
+      ppItem('遺產稅', wn(r.tax), true) +
+      ppItem('基本稅額（估算）', wn(r.amtTax)) +
+      ppItem('合計稅負', wn(r.totalTax), true) +
+      ppItem('有效稅率', r.net > 0 ? pctText(r.effectiveRate) : '—') +
+      ppItem('人壽保險預留', wn(r.insurance)) +
+      ppItem('稅源覆蓋率', pctText(r.coverage)) +
+      '</div>' +
+      '<div class="pp-rows" style="margin-top:6px">' +
+      (r.gap > 0
+        ? ppRow('稅源缺口', wn(r.gap))
+        : r.surplus > 0
+          ? ppRow('稅源餘裕', wn(r.surplus))
+          : ppRow('稅源檢視', '剛好足額')) +
+      ppRow('變賣不動產成本（6%）', wn(r.saleCost)) +
+      ppRow('保額 ÷ 年繳保費', r.leverage > 0 ? r.leverage.toFixed(1).replace(/\.0$/, '') + ' 倍' : '—') +
+      '</div></div>' +
+
+      '<div class="pp-sec"><div class="pp-h">二、法定繼承人分配</div>' + heirHTML + '</div>' +
+
+      '<div class="pp-sec"><div class="pp-h">三、保險三層稅務檢視</div>' + insHTML + '</div>' +
+
+      '<div class="pp-sec"><div class="pp-h">四、諮詢資訊與單題答案</div>' + answerHTML + contactHTML + '</div>' +
+
+      '<p class="pp-note">本摘要依現行遺產稅率、定額扣除額與所得基本稅額條例試算' +
+      '（死亡給付 3,740 萬、基本所得額免稅額 750 萬、稅率 20%；死亡給付額度以受益人≠要保人為前提），不含農地、公共設施保留地、' +
+      '債務與實物抵繳等個案調整；基本稅額僅就高於一般所得稅額的差額補繳。' +
+      '實際稅額以國稅局核定為準，保費與核保條件依各保險公司規定。</p>' +
+      '<div class="pp-foot"><span>宸功保險 · 客戶顧問工具</span><span>客戶簽名：____________</span></div>' +
+      '</div>'
+    );
+  }
+
+  var printTimer = 0;
+
+  function cleanupPrint() {
+    document.body.classList.remove('is-printing');
+    if (el.printArea) {
+      el.printArea.innerHTML = '';
+      el.printArea.setAttribute('aria-hidden', 'true');
+    }
+    window.removeEventListener('afterprint', cleanupPrint);
+    if (printTimer) {
+      window.clearTimeout(printTimer);
+      printTimer = 0;
+    }
+  }
+
+  function doPrint() {
+    if (!calcApi || !el.printArea) return;
+    el.printArea.innerHTML = buildPrintHTML();
+    el.printArea.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-printing');
+    window.addEventListener('afterprint', cleanupPrint);
+    printTimer = window.setTimeout(cleanupPrint, 60000);
+    window.setTimeout(function () {
+      window.print();
+    }, 60);
+  }
+
+  if (el.printBtn) el.printBtn.addEventListener('click', doPrint);
+
+  /* ---------- 初始化 ---------- */
+  var savedAnswer = readJSON(ANSWER_KEY, null);
+  planAnswer = savedAnswer && PLAN_TEXT[savedAnswer.answer] ? savedAnswer.answer : null;
+
+  var stepsApi = null;
+  if (window.EstateSteps) stepsApi = window.EstateSteps.mount(el.steps, { openIndex: 0 });
+  if (window.EstateTaxCalculator) {
+    calcApi = window.EstateTaxCalculator.mount(el.calc, { householdFrom: true });
+  }
+
+  if (window.EstateHeirs && calcApi) {
+    var heirSlot =
+      (stepsApi && stepsApi.slots && stepsApi.slots.heir) ||
+      el.steps.querySelector('[data-slot="heir"]');
+    heirApi = window.EstateHeirs.mount(heirSlot, {
+      base: calcApi.getResult().estateAssets
+    });
+    if (heirApi) {
+      var counts = heirApi.getCounts();
+      calcApi.setHeirs({
+        spouse: !!counts.spouse,
+        children: counts.children,
+        parents: counts.parents
+      });
+    }
+  }
+
+  paintPlanAnswer();
+  renderSummary();
+
+})();
+</script>
+
+</body>
+</html>
