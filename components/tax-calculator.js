@@ -27,7 +27,7 @@
     RATE2: 0.15,
     RATE3: 0.2,
     SALE_COST_RATE: 0.06, // 不動產處分成本假設：仲介＋代書＋稅費約 6%
-    AMT_DEATH_EXEMPT: 37400000, // 所得基本稅額條例 §12：每申報戶全年死亡給付 3,740 萬
+    AMT_DEATH_EXEMPT: 37400000, // 所得基本稅額條例 §12：每申報戶全年死亡給付 3,740 萬（額度依申報戶數計算）
     AMT_BASE_EXEMPT: 7500000, // 所得基本稅額條例 §13：基本所得額免稅額 750 萬
     AMT_RATE: 0.2 // 基本稅額稅率 20%
   };
@@ -41,6 +41,7 @@
     funeral: true,
     insurance: 3000000, // 300 萬
     premium: 150000, // 年繳保費 15 萬
+    households: 1, // 受益人申報戶數（預設＝法定繼承人數），每戶 3,740 萬額度
     beneficiaryNamed: true, // 受益人已指定（姓名、順位、比例）
     amtApplies: true // 受益人≠要保人 → 死亡給付計入基本所得額，適用 3,740 萬額度
   };
@@ -102,6 +103,8 @@
     var beneficiaryNamed = s.beneficiaryNamed !== false;
     /* 未指定受益人時，死亡給付歸入遺產，無「受益人≠要保人」適用問題 */
     var amtApplies = beneficiaryNamed && s.amtApplies !== false;
+    /* 3,740 萬是「每一申報戶」的額度：受益人各自成一申報戶時，額度按戶數計算 */
+    var households = clamp(Math.round(toNumber(s.households, DEFAULTS.households)), 1, 10);
     var insuranceInEstate = beneficiaryNamed ? 0 : insurance;
     var estateAssets = assets + insuranceInEstate;
 
@@ -132,16 +135,14 @@
     var parts = main.tiers;
     var estateTaxSaving = unnamedOn.tax - namedOn.tax;
 
-    /* 最低稅負：受益人≠要保人時，死亡給付每申報戶 3,740 萬內免計入基本所得額 */
-    var amtIncluded = amtApplies
-      ? Math.max(0, insurance - CONST.AMT_DEATH_EXEMPT)
-      : 0;
-    var amtBase = Math.max(0, amtIncluded - CONST.AMT_BASE_EXEMPT);
+    /* 最低稅負：每戶死亡給付超過 3,740 萬的部分才計入基本所得額，再超過每戶 750 萬才課稅 */
+    var amtDeathExempt = CONST.AMT_DEATH_EXEMPT * households;
+    var amtBaseExempt = CONST.AMT_BASE_EXEMPT * households;
+    var amtIncluded = amtApplies ? Math.max(0, insurance - amtDeathExempt) : 0;
+    var amtBase = Math.max(0, amtIncluded - amtBaseExempt);
     var amtTax = amtBase * CONST.AMT_RATE;
-    var amtQuotaRate = amtApplies ? insurance / CONST.AMT_DEATH_EXEMPT : 0;
-    var amtRemain = amtApplies
-      ? Math.max(0, CONST.AMT_DEATH_EXEMPT - insurance)
-      : 0;
+    var amtQuotaRate = amtApplies ? insurance / amtDeathExempt : 0;
+    var amtRemain = amtApplies ? Math.max(0, amtDeathExempt - insurance) : 0;
 
     /* 稅源覆蓋以「合計稅負＝遺產稅＋基本稅額」計算，否則會低估實際缺口 */
     var totalTax = tax + amtTax;
@@ -165,6 +166,7 @@
         parents: parentsCount,
         funeral: !!s.funeral,
         realEstateRatio: ratio,
+        households: households,
         beneficiaryNamed: beneficiaryNamed,
         amtApplies: amtApplies
       },
@@ -191,8 +193,13 @@
       amtTax: amtTax,
       amtQuotaRate: amtQuotaRate,
       amtRemain: amtRemain,
-      amtDeathExempt: CONST.AMT_DEATH_EXEMPT,
-      amtBaseExempt: CONST.AMT_BASE_EXEMPT,
+      amtDeathExempt: amtDeathExempt,
+      amtHouseholds: households,
+      /* 死亡給付在「額度 ＋ 每戶 750 萬」以內不會產生基本稅額 */
+      amtTaxFree: amtDeathExempt + amtBaseExempt,
+      /* 750 萬亦每戶各自計算：amtBaseExempt 為「750 萬 × 戶數」合計 */
+      amtBaseExempt: amtBaseExempt,
+      amtBaseExemptPerHousehold: CONST.AMT_BASE_EXEMPT,
       amtRate: CONST.AMT_RATE,
       /* 基本稅額公式拆解，供畫面顯示（超額 → 扣 750 萬 → ×20%） */
       amtFormula: { excess: amtIncluded, base: amtBase, rate: CONST.AMT_RATE },
@@ -316,8 +323,16 @@
     '<span class="ded-ctrl"><input type="checkbox" id="tx-amt" checked></span>' +
     '</label>' +
     '</div>' +
+    '<div class="ded-row">' +
+    '<span class="ded-name">受益人申報戶數<span class="ded-note">預設＝繼承人數，每戶 3,740 萬＋750 萬</span></span>' +
+    '<span class="stepper">' +
+    '<button type="button" data-step="households" data-delta="-1" aria-label="減少受益人申報戶數">−</button>' +
+    '<b id="tx-householdsVal" aria-live="polite">1</b><span class="st-unit">戶</span>' +
+    '<button type="button" data-step="households" data-delta="1" aria-label="增加受益人申報戶數">＋</button>' +
+    '</span>' +
+    '</div>' +
     '<div class="cover ins-quota">' +
-    '<div class="cover-head"><span>3,740 萬死亡給付額度</span><b id="tx-amtQuota">—</b></div>' +
+    '<div class="cover-head"><span id="tx-amtQuotaLabel">3,740 萬死亡給付額度</span><b id="tx-amtQuota">—</b></div>' +
     '<div class="cover-track"><i id="tx-amtQuotaBar"></i></div>' +
     '<p class="cover-note" id="tx-amtNote">—</p>' +
     '</div>' +
@@ -357,7 +372,7 @@
     '<div class="lever-grid">' +
     '<div class="lever-item"><span class="lv-l">計入遺產總額</span>' +
     '<span class="lv-v ok" id="tx-insEstate">—</span></div>' +
-    '<div class="lever-item"><span class="lv-l">超過 3,740 萬計入基本所得額</span>' +
+    '<div class="lever-item"><span class="lv-l">超過額度計入基本所得額</span>' +
     '<span class="lv-v" id="tx-amtOver">—</span></div>' +
     '<div class="lever-item"><span class="lv-l">基本稅額（估算，20%）</span>' +
     '<span class="lv-v" id="tx-amtTax">—</span></div>' +
@@ -365,9 +380,9 @@
     '<span class="lv-v ok" id="tx-estateSaving">—</span></div>' +
     '</div>' +
     '<p class="lever-formula" id="tx-amtFormula">—</p>' +
-    '<p class="lever-note">身故給付每一申報戶全年 3,740 萬內免計入基本所得額；超過部分先扣 750 萬基本所得額免稅額，' +
-    '再按 20% 計算，且僅就高於一般所得稅額的差額補繳。750 萬為全戶共用，若還有薪資、租金等其他所得，' +
-    '實際金額會更高。受益人與要保人同一人時不適用 3,740 萬額度；滿期金、生存金、解約金全額計入。</p>' +
+    '<p class="lever-note">死亡給付每戶超過 3,740 萬的部分才計入基本所得額，且再超過 750 萬後才計算所得稅；' +
+    '滿期金、生存金、解約金則全額計入。受益人各自一申報戶時，3,740 萬與 750 萬都按戶數各自計算（預設＝繼承人數）；' +
+    '受益人與要保人同一人時不適用。實際金額還需加計薪資、租金等其他所得。</p>' +
     '</div>' +
     '<div class="lever">' +
     '<div class="lever-title">槓桿效益分析</div>' +
@@ -394,7 +409,7 @@
     '</div>' +
     '<p class="cmp-diff" id="tx-cmpDiff">—</p>' +
     '<p class="lever-note">以同一筆金額比較（未計保費成本）。身故保險金給付指定受益人時不計入遺產' +
-    '（保險法 §112），這是保險與現金最大的差別；超過 3,740 萬的部分才可能產生基本稅額。' +
+    '（保險法 §112），這是保險與現金最大的差別；超過每戶 3,740 萬的部分才可能產生基本稅額。' +
     '未指定受益人時，保險金回到遺產課稅，節稅效果等於 0。</p>' +
     '</div>' +
     '<p class="rc-foot">※ 本試算依現行遺產稅率與定額扣除額估算，不含農地、公共設施保留地、' +
@@ -432,6 +447,7 @@
     s.premium = clamp(toNumber(s.premium, DEFAULTS.premium), 0, MAX.premium * 10000);
     s.realEstateRatio = clamp(toNumber(s.realEstateRatio, DEFAULTS.realEstateRatio), 0, 100);
     s.children = clamp(Math.round(toNumber(s.children, 0)), 0, 10);
+    s.households = clamp(Math.round(toNumber(s.households, 1)), 1, 10);
     s.parents = clamp(Math.round(toNumber(s.parents, 0)), 0, 2);
     s.spouse = !!s.spouse;
     s.funeral = !!s.funeral;
@@ -497,6 +513,7 @@
       spouse: q('tx-spouse'),
       childrenVal: q('tx-childrenVal'),
       parentsVal: q('tx-parentsVal'),
+      householdsVal: q('tx-householdsVal'),
       funeral: q('tx-funeral'),
       dedBadge: q('tx-dedBadge'),
       ins: q('tx-ins'),
@@ -506,6 +523,7 @@
       beneficiary: q('tx-beneficiary'),
       amt: q('tx-amt'),
       amtQuota: q('tx-amtQuota'),
+      amtQuotaLabel: q('tx-amtQuotaLabel'),
       amtQuotaBar: q('tx-amtQuotaBar'),
       amtNote: q('tx-amtNote'),
       insEstate: q('tx-insEstate'),
@@ -617,8 +635,9 @@
       if (result.totalTax <= 0) {
         el.gapBox.className = 'gap-box ok';
         el.gapBox.innerHTML =
-          '<b>目前試算無遺產稅與基本稅額</b><span>資產未超過免稅額與扣除額，且身故給付在 3,740 萬額度內；' +
-          '仍建議每年檢視一次。</span>';
+          '<b>目前試算無遺產稅與基本稅額</b><span>資產未超過免稅額與扣除額，且身故給付在' +
+          quotaText() +
+          '額度內；仍建議每年檢視一次。</span>';
       } else if (result.gap > 0) {
         el.gapBox.className = 'gap-box bad';
         el.gapBox.innerHTML =
@@ -633,6 +652,20 @@
       }
     }
 
+    /* 額度文字：戶數 > 1 時標明「3,740 萬 × N 戶」 */
+    function quotaText() {
+      return result.inputs.households > 1
+        ? '每戶 3,740 萬 × ' + result.inputs.households + ' 戶'
+        : '每戶 3,740 萬';
+    }
+
+    /* 基本所得額免稅額文字：750 萬亦每戶各自計算 */
+    function baseText() {
+      return result.inputs.households > 1
+        ? '每戶 750 萬 × ' + result.inputs.households + ' 戶＝' + fmtWan(result.amtBaseExempt) + ' 萬'
+        : '750 萬';
+    }
+
     function renderAmt() {
       if (!el.amtQuota) return;
       var q = result.amtQuotaRate;
@@ -642,14 +675,14 @@
 
       if (result.insurance <= 0) {
         el.amtQuota.textContent = '—';
-        el.amtNote.textContent = '尚未預留身故給付；先設定保額，再檢視 3,740 萬額度。';
+        el.amtNote.textContent = '尚未預留身故給付；先設定保額，再檢視' + quotaText() + '的死亡給付額度。';
         return;
       }
       if (!result.inputs.amtApplies) {
         el.amtQuota.textContent = '不適用';
         el.amtNote.textContent = result.inputs.beneficiaryNamed
-          ? '受益人與要保人同一人時，死亡給付不計入基本所得額，3,740 萬額度不適用。'
-          : '尚未指定受益人，死亡給付計入遺產，3,740 萬額度不適用。';
+          ? '受益人與要保人同一人時，死亡給付不計入基本所得額，' + quotaText() + '額度不適用。'
+          : '尚未指定受益人，死亡給付計入遺產，' + quotaText() + '額度不適用。';
         return;
       }
 
@@ -665,11 +698,15 @@
           fmtWan(result.amtIncluded) +
           ' 萬計入基本所得額；' +
           (result.amtTax > 0
-            ? '基本稅額約 ' + fmtWan(result.amtTax) + ' 萬（已扣 750 萬）。'
-            : '未超過 750 萬免稅額，基本稅額為 0。');
+            ? '再超過基本所得額免稅額（' + baseText() + '），基本稅額約 ' + fmtWan(result.amtTax) + ' 萬。'
+            : '未超過基本所得額免稅額（' + baseText() + '），基本稅額為 0。');
       } else {
         el.amtNote.textContent =
-          '死亡給付在 3,740 萬額度內；連同 750 萬免稅額（全戶共用），保額 4,490 萬以內的死亡給付通常不會產生基本稅額。';
+          '死亡給付在' +
+          quotaText() +
+          '額度內；超過的部分才計入基本所得額，再超過基本所得額免稅額（' +
+          baseText() +
+          '）才按 20% 計算。';
       }
     }
 
@@ -696,18 +733,33 @@
       if (el.amtFormula) {
         if (!result.inputs.amtApplies) {
           el.amtFormula.textContent = result.inputs.beneficiaryNamed
-            ? '受益人＝要保人 → 3,740 萬額度不適用，死亡給付不計入基本所得額。'
-            : '未指定受益人 → 死亡給付計入遺產，3,740 萬額度不適用。';
+            ? '受益人＝要保人 → 死亡給付不計入基本所得額，' + quotaText() + '額度不適用。'
+            : '未指定受益人 → 死亡給付計入遺產，' + quotaText() + '額度不適用。';
         } else if (result.amtIncluded <= 0) {
           el.amtFormula.textContent =
-            '身故給付 ' + fmtWan(result.insurance) + ' 萬 ＜ 3,740 萬 → 基本所得額增加 0 元。';
+            '身故給付 ' +
+            fmtWan(result.insurance) +
+            ' 萬 ＜ 額度 ' +
+            fmtWan(result.amtDeathExempt) +
+            ' 萬 → 不計入基本所得額。';
         } else if (result.amtBase <= 0) {
           el.amtFormula.textContent =
-            '超額 ' + fmtWan(result.amtIncluded) + ' 萬 − 750 萬 ＜ 0 → 基本稅額 0 元。';
+            '超過額度 ' +
+            fmtWan(result.amtIncluded) +
+            ' 萬 − 免稅額 ' +
+            fmtWan(result.amtBaseExempt) +
+            ' 萬 ＜ 0 → 基本稅額 0 元。';
         } else {
           el.amtFormula.textContent =
-            '（' + fmtWan(result.insurance) + ' − 3,740 − 750）萬 × 20% ＝ ' +
-            fmtWan(result.amtTax) + ' 萬';
+            '（' +
+            fmtWan(result.insurance) +
+            ' − ' +
+            fmtWan(result.amtDeathExempt) +
+            ' − ' +
+            fmtWan(result.amtBaseExempt) +
+            '）萬 × 20% ＝ ' +
+            fmtWan(result.amtTax) +
+            ' 萬';
         }
       }
     }
@@ -728,6 +780,13 @@
       el.amt.disabled = !state.beneficiaryNamed;
       el.childrenVal.textContent = state.children;
       el.parentsVal.textContent = state.parents;
+      if (el.householdsVal) el.householdsVal.textContent = result.inputs.households;
+      if (el.amtQuotaLabel) {
+        el.amtQuotaLabel.textContent =
+          result.inputs.households > 1
+            ? '3,740 萬 × ' + result.inputs.households + ' 戶死亡給付額度'
+            : '3,740 萬死亡給付額度';
+      }
       el.reRatioVal.textContent = state.realEstateRatio + '%';
 
       paintRange(el.assets);
@@ -885,8 +944,9 @@
       btn.addEventListener('click', function () {
         var key = btn.getAttribute('data-step');
         var delta = Number(btn.getAttribute('data-delta')) || 0;
-        var max = key === 'children' ? 10 : 2;
-        state[key] = clamp((Number(state[key]) || 0) + delta, 0, max);
+        var max = key === 'children' || key === 'households' ? 10 : 2;
+        var min = key === 'households' ? 1 : 0;
+        state[key] = clamp((Number(state[key]) || 0) + delta, min, max);
         refresh();
       });
     });
@@ -944,6 +1004,9 @@
         }
         if (patch.parents !== undefined) {
           state.parents = clamp(Math.round(toNumber(patch.parents, 0)), 0, 2);
+        }
+        if (patch.households !== undefined) {
+          state.households = clamp(Math.round(toNumber(patch.households, 1)), 1, 10);
         }
         refresh();
       },

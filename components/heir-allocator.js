@@ -23,12 +23,22 @@
   var DEFAULTS = { spouse: 1, children: 2, parents: 0, siblings: 0, grandparents: 0 };
   var BASE_DEFAULT = 60000000;
 
+  /* 民法第1223條：115/8/17 修正公布、116/2/17 施行 → 施行後兄弟姊妹不再有特留分 */
+  var AMEND_EFFECTIVE = new Date(2027, 1, 17, 0, 0, 0);
+
+  function amendmentInForce(now) {
+    var t = now instanceof Date ? now.getTime() : typeof now === 'number' ? now : Date.now();
+    return t >= AMEND_EFFECTIVE.getTime();
+  }
+
   var LAW = {
     share: '民法第1144條',
     reserved: '民法第1223條',
     base: '民法第1224條',
     amendment:
-      '民法第1223條已於 115/8/17 修正公布、116/2/17 施行；施行後兄弟姊妹不再有特留分，本表依現行有效條文試算。'
+      '民法第1223條已於 115/8/17 修正公布、116/2/17 施行；施行後兄弟姊妹不再有特留分，本表依現行有效條文試算。',
+    amendmentAfter:
+      '民法第1223條修正條文已於 116/2/17 施行，兄弟姊妹不再有特留分，本表依新法試算（配偶、子女、父母、祖父母之特留分不變）。'
   };
 
   var PRESETS = [
@@ -108,11 +118,16 @@
   }
 
   /* ---------- 應繼分／特留分 ---------- */
-  function calculate(counts, base) {
+  function calculate(counts, base, now) {
     var c = normalize(counts);
     var amount = Math.max(0, Number(base) || 0);
     var rows = [];
     var reservedTotal = 0;
+    /* 116/2/17 施行後兄弟姊妹的特留分為 0（修法前為應繼分 1/3） */
+    var inForce = amendmentInForce(now);
+    var sibRateNum = inForce ? 0 : 1;
+    var sibRateDen = inForce ? 1 : 3;
+    var sibNote = inForce ? '116/2/17 起已取消特留分' : '116/2/17 起取消特留分';
 
     function add(key, label, group, num, den, rateNum, rateDen, note) {
       var share = den > 0 ? num / den : 0;
@@ -164,9 +179,9 @@
           'siblings',
           1,
           si * 2,
-          1,
-          3,
-          i === 1 ? '116/2/17 起取消特留分' : ''
+          sibRateNum,
+          sibRateDen,
+          i === 1 ? sibNote : ''
         );
       }
     } else if (sp && gr) {
@@ -198,9 +213,9 @@
           'siblings',
           1,
           si,
-          1,
-          3,
-          i === 1 ? '116/2/17 起取消特留分' : ''
+          sibRateNum,
+          sibRateDen,
+          i === 1 ? sibNote : ''
         );
       }
     } else if (gr) {
@@ -221,7 +236,13 @@
         reservedAmount: reservedAmount,
         freeAmount: Math.max(0, amount - reservedAmount)
       },
-      law: LAW
+      law: {
+        share: LAW.share,
+        reserved: LAW.reserved,
+        base: LAW.base,
+        amendment: inForce ? LAW.amendmentAfter : LAW.amendment,
+        siblingsNoReserved: inForce
+      }
     };
   }
 
@@ -303,9 +324,7 @@
       '<small id="heirFreePct">—</small>' +
       '</div>' +
       '<p class="heir-warn" id="heirWarn" hidden>目前沒有法定繼承人，遺產依法歸屬國庫，特留分為 0。</p>' +
-      '<p class="heir-amend" id="heirAmend" hidden>' +
-      escapeHTML(LAW.amendment) +
-      '</p>' +
+      '<p class="heir-amend" id="heirAmend" hidden></p>' +
       '<p class="heir-note">※ 依 ' +
       LAW.base +
       '，特留分以應繼財產扣除債務後計算；本表未計入債務、稅費、代位繼承、拋棄繼承、歸扣與胎兒。指定受益人之保險金不列入遺產，故不進分配表。</p>' +
@@ -426,6 +445,7 @@
       el.freePct.textContent = base > 0 ? '占遺產 ' + pct(t.freeAmount / base, 1) : '—';
       el.warn.hidden = result.hasHeirs;
       el.amend.hidden = !result.hasSiblings;
+      el.amend.textContent = result.law.amendment;
     }
 
     function emit() {
@@ -516,6 +536,8 @@
     HEIRS: HEIRS,
     PRESETS: PRESETS,
     LAW: LAW,
+    AMEND_EFFECTIVE: AMEND_EFFECTIVE,
+    amendmentInForce: amendmentInForce,
     DEFAULTS: DEFAULTS,
     STORE_KEY: STORE_KEY,
     BASE_DEFAULT: BASE_DEFAULT,

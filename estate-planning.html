@@ -289,13 +289,19 @@ main{max-width:1180px;margin:0 auto;padding:8px 32px 64px;}
   background:rgba(255,255,255,.02);}
 .rc-foot{font-size:10.5px;line-height:1.7;color:rgba(255,255,255,.26);margin-top:14px;
   border-top:1px dashed rgba(255,255,255,.08);padding-top:12px;}
-/* ---------- C. 保險稅務單題 ---------- */
+/* ---------- C. 保險稅務三題 ---------- */
 .plan-q{background:var(--ink-card);border:1px solid var(--border);border-radius:var(--rl);
   padding:24px 24px 22px;margin-bottom:18px;}
 .plan-q-head{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
 .plan-q-kicker{font-size:11px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;}
 .plan-q-title{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;line-height:1.55;letter-spacing:.3px;}
 .plan-q-sub{font-size:12.5px;line-height:1.85;color:var(--hint);max-width:72ch;}
+.q-item + .q-item{margin-top:16px;}
+.q-text{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;line-height:1.7;
+  color:var(--text);margin-bottom:9px;}
+.q-no{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  width:19px;height:19px;margin-top:2px;border-radius:50%;background:rgba(245,158,11,.14);
+  border:1px solid var(--amber-line);color:var(--amber);font-size:11px;font-weight:700;}
 .q-opts{display:grid;gap:8px;}
 .q-opt{display:flex;align-items:center;gap:11px;width:100%;text-align:left;min-height:46px;
   padding:11px 14px;border-radius:11px;border:1px solid var(--border);background:rgba(255,255,255,.02);
@@ -486,7 +492,7 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
     <div class="hero-chip"><b>3 Steps</b><span>盤點 → 試算 → 補缺口</span></div>
     <div class="hero-chip"><b>10 / 15 / 20%</b><span>遺產稅累進稅率</span></div>
     <div class="hero-chip"><b>0 元</b><span>指定受益人之身故保險金｜不計入遺產</span></div>
-    <div class="hero-chip"><b>3,740 萬</b><span>每申報戶死亡給付免計入額度</span></div>
+    <div class="hero-chip"><b>3,740 萬</b><span>每戶死亡給付額度｜依繼承人數</span></div>
   </div>
 </header>
 
@@ -508,7 +514,7 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
       <span class="s-no">02</span>
       <div>
         <h2 class="s-title">遺產稅與預留稅源試算</h2>
-        <p class="s-sub">家庭成員同步自 01 指定分配；拉動滑桿或直接輸入金額，即時算出遺產稅、保險金覆蓋率與 3,740 萬最低稅負（受益人≠要保人時適用）。</p>
+        <p class="s-sub">家庭成員同步自 01 指定分配；拉動滑桿或直接輸入金額，即時算出遺產稅、保險金覆蓋率與最低稅負（每戶 3,740 萬死亡給付額度，受益人≠要保人時適用）。</p>
       </div>
     </div>
     <div id="taxCalcMount"></div>
@@ -518,34 +524,75 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
       <span class="s-no">03</span>
       <div>
         <h2 class="s-title">下一步：把數字變成安排</h2>
-        <p class="s-sub">先確認一個關鍵問題。顧問會帶著這份分配與稅額試算，討論保額、受益人與稅源配置。</p>
+        <p class="s-sub">三題確認，約 30 秒。顧問會帶著這份分配、稅額試算與健康度分數，討論保額、受益人與稅源配置。</p>
       </div>
     </div>
 
     <div class="plan-q" id="insPlan">
       <div class="plan-q-head">
-        <span class="plan-q-kicker">保險稅務 · 一題確認</span>
-        <h3 class="plan-q-title">保險的免稅額，您安排了嗎？</h3>
-        <p class="plan-q-sub">身故給付留給指定受益人，遺產稅原則上不計入（保險法 §112）；受益人≠要保人時，所得稅另有每一申報戶 3,740 萬的死亡給付額度。先確認您現在的位置。</p>
+        <span class="plan-q-kicker">保險稅務 · 三題確認</span>
+        <h3 class="plan-q-title">三個問題，找出保險稅務的破口</h3>
+        <p class="plan-q-sub">身故給付留給指定受益人，遺產稅原則上不計入（保險法 §112）；受益人≠要保人時，所得稅另看每戶 3,740 萬的死亡給付額度。三題約 30 秒，答完會在摘要帶出健康度與補強建議。</p>
       </div>
-      <div class="q-opts" role="radiogroup" aria-label="保險的免稅額是否已安排">
-        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="arranged">
-          <span class="qo-mark" aria-hidden="true"></span>
-          <span class="qo-label"><b>已安排</b>保額對準稅源，受益人姓名、順位、比例都已指定</span>
-        </button>
-        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="partial">
-          <span class="qo-mark" aria-hidden="true"></span>
-          <span class="qo-label"><b>部分安排</b>有保單，但額度或受益人還沒確認</span>
-        </button>
-        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="none">
-          <span class="qo-mark" aria-hidden="true"></span>
-          <span class="qo-label"><b>尚未安排</b>還沒有保單，或不確定受益人怎麼填</span>
-        </button>
-        <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="unknown">
-          <span class="qo-mark" aria-hidden="true"></span>
-          <span class="qo-label"><b>不知道有這條</b>沒聽過 3,740 萬與 750 萬的差別</span>
-        </button>
+
+      <div class="q-item" data-q="beneficiary">
+        <p class="q-text"><span class="q-no">1</span>身故保險金有指定受益人，姓名、順位、比例都寫清楚了嗎？</p>
+        <div class="q-opts" role="radiogroup" aria-label="受益人是否指定">
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="full" data-score="2">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>都已寫清楚</b>姓名、順位、比例都指定，且每年確認名單</span>
+          </button>
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="partial" data-score="1">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>只寫了一部分</b>有指定受益人，但比例或順位還沒確認</span>
+          </button>
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="none" data-score="0">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>只寫法定繼承人</b>或保單還沒填受益人</span>
+          </button>
+        </div>
       </div>
+
+      <div class="q-item" data-q="gap">
+        <p class="q-text"><span class="q-no">2</span>保額對得上 02 算出的稅源缺口嗎？</p>
+        <div class="q-opts" role="radiogroup" aria-label="保額是否對上稅源缺口">
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="full" data-score="2">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>已足額</b>保額不低於合計稅負，稅源不靠變賣資產</span>
+          </button>
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="partial" data-score="1">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>只補一部分</b>有保單，但保額低於缺口</span>
+          </button>
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="none" data-score="0">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>還沒試算</b>不確定要繳多少稅、缺口多大</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-item" data-q="quota">
+        <p class="q-text"><span class="q-no">3</span>保險的免稅額，您安排了嗎？</p>
+        <div class="q-opts" role="radiogroup" aria-label="保險的免稅額是否已安排">
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="arranged" data-score="2">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>已安排</b>保額對準稅源，受益人姓名、順位、比例都已指定</span>
+          </button>
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="partial" data-score="1">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>部分安排</b>有保單，但額度或受益人還沒確認</span>
+          </button>
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="none" data-score="0">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>尚未安排</b>還沒有保單，或不確定受益人怎麼填</span>
+          </button>
+          <button type="button" class="q-opt" role="radio" aria-checked="false" data-plan="unknown" data-score="0">
+            <span class="qo-mark" aria-hidden="true"></span>
+            <span class="qo-label"><b>不知道有這條</b>沒聽過 3,740 萬與 750 萬的差別</span>
+          </button>
+        </div>
+      </div>
+
       <div class="plan-check" id="insPlanCheck">—</div>
       <p class="plan-hint" id="insPlanHint" hidden></p>
     </div>
@@ -595,11 +642,24 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
   var heirApi = null;
   var planAnswer = null;
 
+  /* §03 三題確認：beneficiary / gap / quota；每題 0–2 分 → 健康度 0–100 */
+  var answers = { beneficiary: null, gap: null, quota: null };
+  var QUIZ_ITEMS = {
+    beneficiary: {
+      label: '受益人指定',
+      advice: '受益人寫明姓名、順位、比例，不要只寫「法定繼承人」；名單每年更新一次。'
+    },
+    gap: {
+      label: '稅源對得上',
+      advice: '回到 02 看合計稅負，保額至少對上缺口；預算有限可先用定期壽險補足。'
+    }
+  };
+
   var PLAN_TEXT = {
     arranged: {
       label: '已安排',
       hint:
-        '已安排：每年確認受益人名單與 3,740 萬額度；若保額超過 4,490 萬，先試算基本稅額，必要時調整保額或分散申報戶。'
+        '已安排：每年確認受益人名單與每戶 3,740 萬額度；保額超過每戶「額度＋750 萬」時，先試算基本稅額，必要時調整保額或分散申報戶。'
     },
     partial: {
       label: '部分安排',
@@ -614,8 +674,8 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
     unknown: {
       label: '不知道有這條',
       hint:
-        '先記兩個數字：身故給付每一申報戶全年 3,740 萬內免計入基本所得額，再扣 750 萬基本所得額免稅額（全戶共用），' +
-        '保額 4,490 萬以內通常沒有基本稅額。回 02 看您的保額落在哪一段，並確認受益人≠要保人，保險金才不會回到遺產課稅。'
+        '先記兩個數字：死亡給付每戶超過 3,740 萬的部分才計入基本所得額，再超過 750 萬才按 20% 計算（750 萬也每戶各自計算）。' +
+        '回 02 看保額落在哪一段，並確認受益人≠要保人，保險金才不會回到遺產課稅。'
     }
   };
 
@@ -679,7 +739,7 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
       else if (r.surplus > 0) html += row('稅源餘裕', wn(r.surplus), true);
       else html += row('稅源檢視', '剛好足額');
     }
-    html += row('3,740 萬額度', amtQuotaText(r));
+    html += row('3,740 萬額度（' + r.amtHouseholds + ' 戶）', amtQuotaText(r));
 
     if (heirApi) {
       var h = heirApi.getResult();
@@ -698,12 +758,73 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
       true
     );
 
+    var quiz = quizInfo();
+    html += row(
+      '傳承健康度',
+      quiz && quiz.complete ? quiz.score + ' 分 · ' + quiz.title : '尚未完成三題',
+      !!(quiz && quiz.complete)
+    );
+
     el.smList.innerHTML = html;
   }
 
-  /* ---------- 單題：保險免稅額 ---------- */
-  function savePlanAnswer() {
-    writeJSON(ANSWER_KEY, { answer: planAnswer, updatedAt: new Date().toISOString() });
+  /* ---------- §03 三題：保險稅務確認 ---------- */
+  function quizInfo() {
+    if (!el.plan) return null;
+    var total = 0;
+    var answered = 0;
+    var weak = [];
+    Object.keys(answers).forEach(function (key) {
+      var val = answers[key];
+      if (!val) return;
+      var opt = el.plan.querySelector('.q-item[data-q="' + key + '"] [data-plan="' + val + '"]');
+      if (!opt) return;
+      answered++;
+      var score = Number(opt.getAttribute('data-score')) || 0;
+      total += score;
+      if (score < 2) weak.push(key);
+    });
+    if (!answered) return null;
+    var score100 = Math.round((total / (answered * 2)) * 100);
+    var title =
+      score100 >= 84 ? '穩固，可再優化' : score100 >= 50 ? '部分到位，建議補強' : '高風險，先補稅源';
+    return {
+      score: score100,
+      title: title,
+      answered: answered,
+      weak: weak,
+      complete: answered === Object.keys(answers).length
+    };
+  }
+
+  function quizAdvice(key) {
+    if (key === 'quota') return answers.quota ? PLAN_TEXT[answers.quota].hint : '';
+    return (QUIZ_ITEMS[key] && QUIZ_ITEMS[key].advice) || '';
+  }
+
+  function quizHintText() {
+    var quiz = quizInfo();
+    if (!quiz) return '';
+    if (!quiz.weak.length) {
+      return '三題都在位：每年再確認受益人名單、保額與 3,740 萬 × 戶數的額度。';
+    }
+    return quiz.weak
+      .slice(0, 2)
+      .map(quizAdvice)
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  function saveQuiz() {
+    writeJSON(ANSWER_KEY, {
+      answer: planAnswer,
+      answers: {
+        beneficiary: answers.beneficiary,
+        gap: answers.gap,
+        quota: answers.quota
+      },
+      updatedAt: new Date().toISOString()
+    });
   }
 
   function renderPlanCheck() {
@@ -714,13 +835,18 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
     }
     var r = calcApi.getResult();
     if (r.insurance <= 0) {
-      el.planCheck.textContent = '目前保額 0 萬：先回到 02 設定保額，才能檢視 3,740 萬額度與稅源缺口。';
+      el.planCheck.textContent =
+        '目前保額 0 萬：先回到 02 設定保額，才能檢視 3,740 萬 × ' + r.amtHouseholds + ' 戶額度與稅源缺口。';
       return;
     }
     var text =
       '目前保額 ' +
       wn(r.insurance) +
-      '｜3,740 萬額度已用 ' +
+      '｜死亡給付額度 ' +
+      wn(r.amtDeathExempt) +
+      '（3,740 萬 × ' +
+      r.amtHouseholds +
+      ' 戶）已用 ' +
       amtQuotaText(r) +
       '｜計入遺產 ' +
       (r.insuranceInEstate > 0 ? wn(r.insuranceInEstate) : '0 元') +
@@ -741,21 +867,23 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
     el.planCheck.textContent = text;
   }
 
-  function paintPlanAnswer() {
+  function paintQuiz() {
     if (!el.plan) return;
-    Array.prototype.forEach.call(el.plan.querySelectorAll('[data-plan]'), function (btn) {
-      var on = btn.getAttribute('data-plan') === planAnswer;
-      btn.classList.toggle('on', on);
-      btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    Array.prototype.forEach.call(el.plan.querySelectorAll('.q-item'), function (item) {
+      var key = item.getAttribute('data-q');
+      var val = answers[key];
+      Array.prototype.forEach.call(item.querySelectorAll('[data-plan]'), function (btn) {
+        var on = !!val && btn.getAttribute('data-plan') === val;
+        btn.classList.toggle('on', on);
+        btn.setAttribute('aria-checked', on ? 'true' : 'false');
+      });
     });
+    planAnswer = PLAN_TEXT[answers.quota] ? answers.quota : null;
+
     if (el.planHint) {
-      if (planAnswer) {
-        el.planHint.hidden = false;
-        el.planHint.textContent = PLAN_TEXT[planAnswer].hint;
-      } else {
-        el.planHint.hidden = true;
-        el.planHint.textContent = '';
-      }
+      var hint = quizHintText();
+      el.planHint.hidden = !hint;
+      el.planHint.textContent = hint;
     }
     renderPlanCheck();
   }
@@ -764,9 +892,12 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
     el.plan.addEventListener('click', function (e) {
       var btn = e.target && e.target.closest ? e.target.closest('[data-plan]') : null;
       if (!btn || !el.plan.contains(btn)) return;
-      planAnswer = btn.getAttribute('data-plan');
-      savePlanAnswer();
-      paintPlanAnswer();
+      var item = btn.closest('.q-item');
+      var key = item ? item.getAttribute('data-q') : null;
+      if (!key || !(key in answers)) return;
+      answers[key] = btn.getAttribute('data-plan');
+      saveQuiz();
+      paintQuiz();
       renderSummary();
     });
   }
@@ -780,10 +911,13 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
 
   document.addEventListener('estate:heirs-change', function (e) {
     if (calcApi && e.detail) {
+      var heirsCount = e.detail.totals ? e.detail.totals.heirsCount : 0;
       calcApi.setHeirs({
         spouse: !!e.detail.counts.spouse,
         children: e.detail.counts.children,
-        parents: e.detail.counts.parents
+        parents: e.detail.counts.parents,
+        /* 3,740 萬是每一申報戶的額度 → 預設依繼承人數（至少 1 戶） */
+        households: Math.max(1, heirsCount || 0)
       });
     }
     renderSummary();
@@ -860,25 +994,38 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
             ? '0 元（指定受益人）'
             : '0 元'
       ) +
-      ppRow(
-        '超過 3,740 萬計入基本所得額',
-        r.inputs.amtApplies ? wn(r.amtIncluded) : '不適用'
-      ) +
+      ppRow('死亡給付額度（3,740 萬 × ' + r.amtHouseholds + ' 戶）', wn(r.amtDeathExempt)) +
+      ppRow('免基本稅額上限（＋750 萬 × ' + r.amtHouseholds + ' 戶）', wn(r.amtTaxFree)) +
+      ppRow('超過額度計入基本所得額', r.inputs.amtApplies ? wn(r.amtIncluded) : '不適用') +
       ppRow('基本稅額（估算）', wn(r.amtTax)) +
       ppRow('指定受益人少繳遺產稅', wn(r.estateTaxSaving)) +
       ppRow('3,740 萬額度使用', amtQuotaText(r)) +
       '</div>' +
       '<p style="font-size:9.5px;line-height:1.7;color:#6b7280;margin-top:4px">' +
-      '受益人與要保人非同一人時，死亡給付每一申報戶全年 3,740 萬內免計入基本所得額；超過部分先扣 750 萬基本所得額免稅額' +
-      '（全戶共用），再按 20% 計算，且僅就高於一般所得稅額的差額補繳。滿期金、生存金、解約金全額計入。</p>';
+      '死亡給付每戶超過 3,740 萬的部分才計入基本所得額，且再超過 750 萬後才計算所得稅' +
+      '（750 萬亦每戶各自計算，僅就高於一般所得稅額的差額補繳）；滿期金、生存金、解約金則全額計入。' +
+      '額度依受益人申報戶數計算，預設＝法定繼承人數。</p>';
+
+    var quiz = quizInfo();
+    var answerLabel = function (key) {
+      var val = answers[key];
+      if (!val || !el.plan) return '未回答';
+      var opt = el.plan.querySelector(
+        '.q-item[data-q="' + key + '"] [data-plan="' + val + '"] .qo-label b'
+      );
+      return opt ? opt.textContent : '未回答';
+    };
 
     var answerHTML =
       '<div class="pp-rows">' +
-      ppRow('保險免稅額安排', planAnswer ? esc(PLAN_TEXT[planAnswer].label) : '尚未確認') +
+      ppRow('傳承健康度', quiz ? quiz.score + ' 分 · ' + quiz.title : '尚未完成三題') +
+      ppRow('① ' + QUIZ_ITEMS.beneficiary.label, esc(answerLabel('beneficiary'))) +
+      ppRow('② ' + QUIZ_ITEMS.gap.label, esc(answerLabel('gap'))) +
+      ppRow('③ 保險免稅額安排', esc(answerLabel('quota'))) +
       '</div>' +
-      (planAnswer
+      (quizHintText()
         ? '<p style="font-size:10.5px;line-height:1.8;color:#374151;margin-top:5px">' +
-          esc(PLAN_TEXT[planAnswer].hint) + '</p>'
+          esc(quizHintText()) + '</p>'
         : '');
 
     var contactHTML =
@@ -921,10 +1068,11 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
 
       '<div class="pp-sec"><div class="pp-h">三、保險三層稅務檢視</div>' + insHTML + '</div>' +
 
-      '<div class="pp-sec"><div class="pp-h">四、諮詢資訊與單題答案</div>' + answerHTML + contactHTML + '</div>' +
+      '<div class="pp-sec"><div class="pp-h">四、諮詢資訊與三題答案</div>' + answerHTML + contactHTML + '</div>' +
 
       '<p class="pp-note">本摘要依現行遺產稅率、定額扣除額與所得基本稅額條例試算' +
-      '（死亡給付 3,740 萬、基本所得額免稅額 750 萬、稅率 20%；死亡給付額度以受益人≠要保人為前提），不含農地、公共設施保留地、' +
+      '（死亡給付每戶 3,740 萬、基本所得額免稅額每戶 750 萬、稅率 20%；死亡給付額度以受益人≠要保人為前提，' +
+      '並依受益人申報戶數計算），不含農地、公共設施保留地、' +
       '債務與實物抵繳等個案調整；基本稅額僅就高於一般所得稅額的差額補繳。' +
       '實際稅額以國稅局核定為準，保費與核保條件依各保險公司規定。</p>' +
       '<div class="pp-foot"><span>宸功保險 · 客戶顧問工具</span><span>客戶簽名：____________</span></div>' +
@@ -963,7 +1111,16 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
 
   /* ---------- 初始化 ---------- */
   var savedAnswer = readJSON(ANSWER_KEY, null);
-  planAnswer = savedAnswer && PLAN_TEXT[savedAnswer.answer] ? savedAnswer.answer : null;
+  if (savedAnswer && savedAnswer.answers) {
+    answers.beneficiary = savedAnswer.answers.beneficiary || null;
+    answers.gap = savedAnswer.answers.gap || null;
+    answers.quota = savedAnswer.answers.quota || null;
+  }
+  /* 舊版只存單題答案 → 回填第 3 題 */
+  if (!answers.quota && savedAnswer && PLAN_TEXT[savedAnswer.answer]) {
+    answers.quota = savedAnswer.answer;
+  }
+  planAnswer = answers.quota;
 
   var stepsApi = null;
   if (window.EstateSteps) stepsApi = window.EstateSteps.mount(el.steps, { openIndex: 0 });
@@ -980,15 +1137,17 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
     });
     if (heirApi) {
       var counts = heirApi.getCounts();
+      var heirResult = heirApi.getResult();
       calcApi.setHeirs({
         spouse: !!counts.spouse,
         children: counts.children,
-        parents: counts.parents
+        parents: counts.parents,
+        households: Math.max(1, (heirResult && heirResult.totals.heirsCount) || 0)
       });
     }
   }
 
-  paintPlanAnswer();
+  paintQuiz();
   renderSummary();
 
 })();
