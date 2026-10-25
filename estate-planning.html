@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-cg-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="資產傳承">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d1a26">
-<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#f7f4ea">
+<link rel="manifest" href="./manifest-estate.json">
+<script src="./assets/client-theme.js"></script>
 <link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="icon" href="./icon-192.png">
 <title>資產傳承三步驟｜宸功保險</title>
@@ -474,6 +475,9 @@ footer b{color:var(--gold-lt);font-weight:500;letter-spacing:1px;}
 }
 .steps{display:grid;gap:8px;}
 </style>
+<!-- 客戶端顧問模式：tokens 與淺色覆寫必須在頁面 inline style 之後載入 -->
+<link rel="stylesheet" href="./assets/cg-tokens.css">
+<link rel="stylesheet" href="./assets/client-theme.css">
 <script src="./auth-guard.js"></script>
 </head>
 <body>

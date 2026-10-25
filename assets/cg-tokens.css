@@ -1,0 +1,84 @@
+/*!
+ * assets/cg-tokens.css — 宸功保險客戶端主題 tokens
+ * ---------------------------------------------------------------------------
+ * 這一支只負責「顏色 / 對比」的設計變數，不含版面。
+ *   1. 預設完全不改內頁（內頁仍用各頁自己的深色 :root）。
+ *   2. 客戶頁的 <html data-cg-theme="light"> 會覆寫成紙張淺色。
+ *   3. 客戶頁切回深色時，只把原本偏低對比的 --hint / --muted 提高。
+ *
+ * 對比基準（paper #F7F4EA）：
+ *   --text  #10222E  14.79:1
+ *   --muted #4E5A60   6.46:1
+ *   --hint  #5E6A70   5.06:1
+ *   --gold  #7A5A28   5.75:1
+ *   --brand #0B5FA5   5.97:1
+ *   #C2974F 只有 2.44:1 → 僅供裝飾（線條、光暈），不可當小字。
+ */
+
+:root {
+  /* 淺色顧問模式（只給客戶頁使用） */
+  --cg-paper: #f7f4ea;
+  --cg-paper-deep: #f1ecdf;
+  --cg-surface: #fffdf8;
+  --cg-surface-alt: #faf7ef;
+  --cg-ink: #10222e;
+  --cg-muted: #4e5a60;
+  --cg-hint: #5e6a70;
+  --cg-gold: #c2974f;          /* 裝飾用 */
+  --cg-gold-text: #7a5a28;     /* 文字用 */
+  --cg-gold-line: #d9c9a6;
+  --cg-gold-dim: rgba(194, 151, 79, .14);
+  --cg-brand: #0b5fa5;
+  --cg-brand-dark: #084b82;
+  --cg-brand-dim: rgba(11, 95, 165, .10);
+  --cg-danger: #a33a2b;
+  --cg-ok: #1f6b4a;
+  --cg-warn: #8a5a00;
+  --cg-shadow-sm: 0 1px 2px rgba(16, 34, 46, .04), 0 6px 18px rgba(16, 34, 46, .05);
+  --cg-shadow-md: 0 10px 30px rgba(16, 34, 46, .10);
+  --cg-focus: 0 0 0 3px rgba(11, 95, 165, .20);
+}
+
+/* 淺色：把兩頁原本的深色變數直接換成紙張色。
+   兩頁的 inline <style> 會先載入，因此這一段必須在後面載入。 */
+html[data-cg-theme="light"] {
+  color-scheme: light;
+
+  --ink: #f7f4ea;
+  --ink-mid: #f1ecdf;
+  --ink-card: #fffdf8;
+  --ink-deep: #efe8d8;
+
+  --gold: #7a5a28;
+  --gold-lt: #6b4a16;
+  --gold-deep: #5a3d10;
+  --gold-line: #d9c9a6;
+  --gold-dim: rgba(194, 151, 79, .14);
+
+  --text: #10222e;
+  --muted: #4e5a60;
+  --hint: #5e6a70;
+  --border: #d8d2c2;
+  --danger: #a33a2b;
+  --blue: #0b5fa5;
+
+  /* estate-planning.html 的琥珀色系 */
+  --amber: #8a5a00;
+  --amber-lt: #6b4a16;
+  --amber-deep: #5a3d10;
+  --amber-dim: rgba(183, 121, 31, .13);
+  --amber-line: #d8c49a;
+  --ok: #1f6b4a;
+  --warn: #8a5a00;
+  --bad: #a33a2b;
+}
+
+/* 深色：保留原本氣質，只修低對比。 */
+html[data-cg-theme="dark"] {
+  color-scheme: dark;
+
+  --text: rgba(255, 255, 255, .96);
+  --muted: rgba(255, 255, 255, .66);
+  --hint: rgba(255, 255, 255, .48);
+  --border: rgba(255, 255, 255, .12);
+}

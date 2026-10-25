@@ -60,8 +60,9 @@
   root.setAttribute("data-auth-guard", "pending");
 
   var style = document.createElement("style");
+  var pendingBg = root.getAttribute("data-cg-theme") === "light" ? "#f7f4ea" : "#0d1a26";
   style.textContent =
-    'html[data-auth-guard="pending"]{background:#0d1a26;}' +
+    'html[data-auth-guard="pending"]{background:' + pendingBg + ';}' +
     'html[data-auth-guard="pending"] body{visibility:hidden !important;}';
   (document.head || root).appendChild(style);
 

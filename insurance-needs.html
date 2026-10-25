@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-cg-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="守護計畫">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d1a26">
-<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#f7f4ea">
+<link rel="manifest" href="./manifest-insurance.json">
+<script src="./assets/client-theme.js"></script>
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>經濟支柱守護計畫｜宸功保險</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
@@ -484,6 +485,9 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
 }
 
 </style>
+<!-- 客戶端顧問模式：tokens 與淺色覆寫必須在頁面 inline style 之後載入 -->
+<link rel="stylesheet" href="./assets/cg-tokens.css">
+<link rel="stylesheet" href="./assets/client-theme.css">
 <!-- 全站登入守衛：未登入會自動導向 login.html -->
 <script src="./auth-guard.js"></script>
 
@@ -568,94 +572,94 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
     <svg viewBox="0 0 600 248" width="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="arrowhead" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L7,3 L0,6 Z" fill="#5b9bd1"/>
+          <path class="svg-arrow" d="M0,0 L7,3 L0,6 Z" fill="#5b9bd1"/>
         </marker>
       </defs>
 
       <!-- stage1: 出生點/身故點/單向箭頭 -->
       <g class="rstage" id="rstage1">
-        <line x1="55" y1="188" x2="568" y2="188" stroke="#5b9bd1" stroke-width="2" marker-end="url(#arrowhead)"/>
-        <circle cx="55" cy="188" r="5" fill="#fff"/>
-        <circle cx="515" cy="188" r="5" fill="#fff"/>
-        <text x="55" y="208" font-size="12" fill="rgba(255,255,255,.55)" text-anchor="middle">出生</text>
-        <text x="515" y="208" font-size="12" fill="rgba(255,255,255,.55)" text-anchor="middle">身故</text>
+        <line class="svg-axis-line" x1="55" y1="188" x2="568" y2="188" stroke="#5b9bd1" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <circle class="svg-axis-dot" cx="55" cy="188" r="5" fill="#fff"/>
+        <circle class="svg-axis-dot" cx="515" cy="188" r="5" fill="#fff"/>
+        <text class="svg-axis-label" x="55" y="208" font-size="12" fill="rgba(255,255,255,.55)" text-anchor="middle">出生</text>
+        <text class="svg-axis-label" x="515" y="208" font-size="12" fill="rgba(255,255,255,.55)" text-anchor="middle">身故</text>
       </g>
 
       <!-- stage2: 支出弧線 -->
       <g class="rstage" id="rstage2">
-        <path d="M55,188 Q285,30 515,188" fill="none" stroke="#c2974f" stroke-width="2.5"/>
-        <text id="expenseLabel" x="285" y="118" font-size="13" fill="#dcb877" text-anchor="middle" font-weight="600">支出線</text>
+        <path class="svg-expense-line" d="M55,188 Q285,30 515,188" fill="none" stroke="#c2974f" stroke-width="2.5"/>
+        <text class="svg-expense-label" id="expenseLabel" x="285" y="118" font-size="13" fill="#dcb877" text-anchor="middle" font-weight="600">支出線</text>
       </g>
 
       <!-- stage3: 就業點/退休點/收入線 -->
       <g class="rstage" id="rstage3">
-        <path d="M165,188 Q292,-104 420,188" fill="rgba(91,155,209,0.14)" stroke="#5b9bd1" stroke-width="2.5"/>
-        <circle cx="165" cy="188" r="5" fill="#5b9bd1"/>
-        <circle cx="420" cy="188" r="5" fill="#5b9bd1"/>
-        <text x="165" y="208" font-size="12" fill="#5b9bd1" text-anchor="middle">就業</text>
-        <text x="420" y="208" font-size="12" fill="#5b9bd1" text-anchor="middle">退休</text>
-        <text id="incomeLabel" x="292" y="35" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="600">收入線</text>
+        <path class="svg-income-area svg-income-line" d="M165,188 Q292,-104 420,188" fill="rgba(91,155,209,0.14)" stroke="#5b9bd1" stroke-width="2.5"/>
+        <circle class="svg-income-dot" cx="165" cy="188" r="5" fill="#5b9bd1"/>
+        <circle class="svg-income-dot" cx="420" cy="188" r="5" fill="#5b9bd1"/>
+        <text class="svg-income-label" x="165" y="208" font-size="12" fill="#5b9bd1" text-anchor="middle">就業</text>
+        <text class="svg-income-label" x="420" y="208" font-size="12" fill="#5b9bd1" text-anchor="middle">退休</text>
+        <text class="svg-income-label" id="incomeLabel" x="292" y="35" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="600">收入線</text>
       </g>
 
       <!-- stage4: 撫養期 -->
       <g class="rstage" id="rstage4">
-        <line x1="57" y1="222" x2="163" y2="222" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <line x1="57" y1="217" x2="57" y2="227" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <line x1="163" y1="217" x2="163" y2="227" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <text x="110" y="243" font-size="12.5" fill="#7fb3e0" text-anchor="middle" font-weight="600">撫養期</text>
+        <line class="svg-care-line" x1="57" y1="222" x2="163" y2="222" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line class="svg-care-line" x1="57" y1="217" x2="57" y2="227" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line class="svg-care-line" x1="163" y1="217" x2="163" y2="227" stroke="#7fb3e0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <text class="svg-care-label" x="110" y="243" font-size="12.5" fill="#7fb3e0" text-anchor="middle" font-weight="600">撫養期</text>
       </g>
 
       <!-- stage5: 奮鬥期 -->
       <g class="rstage" id="rstage5">
-        <line x1="167" y1="222" x2="418" y2="222" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <line x1="167" y1="217" x2="167" y2="227" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <line x1="418" y1="217" x2="418" y2="227" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <text x="292" y="243" font-size="12.5" fill="#dcb877" text-anchor="middle" font-weight="600">奮鬥期</text>
+        <line class="svg-struggle-line" x1="167" y1="222" x2="418" y2="222" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line class="svg-struggle-line" x1="167" y1="217" x2="167" y2="227" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line class="svg-struggle-line" x1="418" y1="217" x2="418" y2="227" stroke="#dcb877" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <text class="svg-struggle-label" x="292" y="243" font-size="12.5" fill="#dcb877" text-anchor="middle" font-weight="600">奮鬥期</text>
       </g>
 
       <!-- stage6: 養老期 -->
       <g class="rstage" id="rstage6">
-        <line x1="422" y1="222" x2="513" y2="222" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <line x1="422" y1="217" x2="422" y2="227" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <line x1="513" y1="217" x2="513" y2="227" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
-        <text x="467" y="243" font-size="12.5" fill="#b89cda" text-anchor="middle" font-weight="600">養老期</text>
+        <line class="svg-retire-line" x1="422" y1="222" x2="513" y2="222" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line class="svg-retire-line" x1="422" y1="217" x2="422" y2="227" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <line class="svg-retire-line" x1="513" y1="217" x2="513" y2="227" stroke="#b89cda" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+        <text class="svg-retire-label" x="467" y="243" font-size="12.5" fill="#b89cda" text-anchor="middle" font-weight="600">養老期</text>
       </g>
 
       <!-- stage7: 活的太短 -->
       <g class="rstage" id="rstage7">
-        <line x1="252" y1="180" x2="268" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="268" y1="180" x2="252" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
-        <text x="260" y="165" font-size="13" fill="#d6645a" text-anchor="middle" font-weight="700">活的太短</text>
+        <line class="svg-risk-short" x1="252" y1="180" x2="268" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
+        <line class="svg-risk-short" x1="268" y1="180" x2="252" y2="196" stroke="#d6645a" stroke-width="3.5" stroke-linecap="round"/>
+        <text class="svg-risk-short-label" x="260" y="165" font-size="13" fill="#d6645a" text-anchor="middle" font-weight="700">活的太短</text>
       </g>
 
       <!-- stage8: 活的太長 -->
       <g class="rstage" id="rstage8">
-        <line x1="538" y1="180" x2="554" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="554" y1="180" x2="538" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
-        <text x="546" y="165" font-size="13" fill="#e0a838" text-anchor="middle" font-weight="700">活的太長</text>
+        <line class="svg-risk-long" x1="538" y1="180" x2="554" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
+        <line class="svg-risk-long" x1="554" y1="180" x2="538" y2="196" stroke="#e0a838" stroke-width="3.5" stroke-linecap="round"/>
+        <text class="svg-risk-long-label" x="546" y="165" font-size="13" fill="#e0a838" text-anchor="middle" font-weight="700">活的太長</text>
       </g>
 
       <!-- stage9: 收入中斷 -->
       <g class="rstage" id="rstage9">
-        <line x1="217" y1="75" x2="233" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="233" y1="75" x2="217" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="225" y1="75" x2="225" y2="50" stroke="#5b9bd1" stroke-width="1.5" stroke-dasharray="3,2"/>
-        <text x="225" y="40" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="700">收入中斷</text>
+        <line class="svg-income-line svg-risk-interrupt" x1="217" y1="75" x2="233" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
+        <line class="svg-income-line svg-risk-interrupt" x1="233" y1="75" x2="217" y2="91" stroke="#5b9bd1" stroke-width="3.5" stroke-linecap="round"/>
+        <line class="svg-income-line svg-risk-interrupt" x1="225" y1="75" x2="225" y2="50" stroke="#5b9bd1" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text class="svg-income-risk-label" x="225" y="40" font-size="13" fill="#7fb3e0" text-anchor="middle" font-weight="700">收入中斷</text>
       </g>
 
       <!-- stage10: 失能長年病 -->
       <g class="rstage" id="rstage10">
-        <line x1="347" y1="69" x2="363" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="363" y1="69" x2="347" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="355" y1="69" x2="355" y2="44" stroke="#9b7bc4" stroke-width="1.5" stroke-dasharray="3,2"/>
-        <text x="355" y="34" font-size="13" fill="#b89cda" text-anchor="middle" font-weight="700">失能長年病</text>
+        <line class="svg-risk-disability" x1="347" y1="69" x2="363" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
+        <line class="svg-risk-disability" x1="363" y1="69" x2="347" y2="85" stroke="#9b7bc4" stroke-width="3.5" stroke-linecap="round"/>
+        <line class="svg-risk-disability" x1="355" y1="69" x2="355" y2="44" stroke="#9b7bc4" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text class="svg-risk-disability-label" x="355" y="34" font-size="13" fill="#b89cda" text-anchor="middle" font-weight="700">失能長年病</text>
       </g>
 
       <!-- stage11：醫療費用（橫跨各階段的共同風險） -->
       <g class="rstage" id="rstage11">
-        <circle cx="100" cy="160" r="13" fill="#d6645a" stroke="#e08a81" stroke-width="1.5"/>
-        <text x="100" y="160" dominant-baseline="central" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">$</text>
-        <text x="100" y="137" font-size="13" fill="#e08a81" text-anchor="middle" font-weight="700">醫療費用</text>
+        <circle class="svg-risk-medical-fill" cx="100" cy="160" r="13" fill="#d6645a" stroke="#e08a81" stroke-width="1.5"/>
+        <text class="svg-medical-symbol" x="100" y="160" dominant-baseline="central" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">$</text>
+        <text class="svg-risk-medical-label" x="100" y="137" font-size="13" fill="#e08a81" text-anchor="middle" font-weight="700">醫療費用</text>
       </g>
     </svg>
   </div>

@@ -11,7 +11,7 @@ const BASE = new URL('./', self.location.href).pathname;
 // 直接把自己卸載，避免「改了檔案重新整理卻還是舊版」的鬼打牆。
 const IS_LOCAL_DEV = /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)$/.test(self.location.hostname);
 
-const CACHE = 'guardian-v22';
+const CACHE = 'guardian-v23';
 const ASSETS = [
   BASE,
   BASE + 'config.js',
@@ -21,6 +21,11 @@ const ASSETS = [
   BASE + 'goal-system.html',
   BASE + 'insurance-needs.html',
   BASE + 'estate-planning.html',
+  BASE + 'manifest-insurance.json',
+  BASE + 'manifest-estate.json',
+  BASE + 'assets/cg-tokens.css',
+  BASE + 'assets/client-theme.css',
+  BASE + 'assets/client-theme.js',
   BASE + 'components/inheritance-steps.js',
   BASE + 'components/tax-calculator.js',
   BASE + 'components/heir-allocator.js',

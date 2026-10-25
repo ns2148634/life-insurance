@@ -4,7 +4,7 @@
   "description": "南山人壽業務與客戶諮詢工具集",
   "start_url": "./",
   "scope": "./",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "any",
   "background_color": "#0c1520",
   "theme_color": "#0c1520",
