@@ -270,7 +270,7 @@ footer{
         <span class="num">★</span>
       </div>
       <h2>一定要宸功專區</h2>
-      <p>輸入每月 FYC、目標保費與目標件數，系統自動換算每週需接觸、面談、約訪的人數，並彙整整個通訊處的目標總額；同時對照你從「保顧+」自動同步過來的行程實績。</p>
+      <p>輸入每月 FYC、目標保費與目標件數，系統自動換算每週需接觸、面談、約訪的人數，並彙整整個通訊處的目標總額；同時對照你從「保顧+」自動同步過來的行程實績。另有「歷史資料」可回查月／季／年的目標與實績、通訊處合計與排行歷史（含我的名次）。</p>
       <div class="card-foot"><span>goal-system.html</span><span class="arrow">→</span></div>
     </a>
 
@@ -285,7 +285,7 @@ footer{
         <span class="num">01</span>
       </div>
       <h2>人生收支曲線圖</h2>
-      <p>三步驟人壽保障需求分析：先以人生收支曲線圖了解是否有保險需求，再依風險優先順序規劃保障，最後試算需求總表與保費。</p>
+      <p>三步驟人壽保障需求分析：先以人生收支曲線圖了解是否有保險需求，再依風險優先順序規劃保障，最後試算需求總表與保費；第 3 頁可「儲存客戶資料」，之後在「人生圖資料」搜尋與回看每次規劃。</p>
       <div class="card-foot"><span>insurance-needs.html</span><span class="arrow">→</span></div>
     </a>
 
@@ -307,6 +307,16 @@ footer{
       <h2>資產傳承三步驟</h2>
       <p>從指定分配、降低稅賦到預留稅源，內建遺產稅、3,740 萬最低稅負與保額槓桿試算，並可列印成客戶諮詢摘要。</p>
       <div class="card-foot"><span>estate-planning.html</span><span class="arrow">→</span></div>
+    </a>
+
+    <a class="card" href="./client-plans.html">
+      <div class="card-top">
+        <span class="tag">客戶資料</span>
+        <span class="num">09</span>
+      </div>
+      <h2>人生圖資料</h2>
+      <p>集中保管你在人生收支曲線圖儲存的客戶規劃：人生圖第 2 頁的風險優先順序、各項保障建議與月收入，可用客戶姓名或保障項目關鍵字搜尋，隨時回看歷次規劃。</p>
+      <div class="card-foot"><span>client-plans.html</span><span class="arrow">→</span></div>
     </a>
 
   </div>
@@ -481,6 +491,7 @@ async function renderAccount() {
     <div class="ab-user">
       <span>已登入：<b>${esc(name)}</b>${isAdmin ? ' <span class="ab-badge">管理員</span>' : ""}</span>
       <a class="ab-link" href="./video-training/profile.html">我的帳號</a>
+      <a class="ab-link" href="./client-plans.html">人生圖資料</a>
       <a class="ab-link" href="./sharing/share.html">業務分享專區</a>
       ${isAdmin ? '<a class="ab-link" href="./accounts.html">帳號管理</a>' : ""}
       <button type="button" class="ab-link plain" id="homeLogout">登出</button>

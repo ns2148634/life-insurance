@@ -154,11 +154,53 @@ h1 span{color:var(--gold);}
 .rank-row.top3 .rank-no,.rank-row.top3 .rank-name{color:#d3a27a;}
 .rank-empty{text-align:center !important;color:var(--hint);padding:24px 12px !important;}
 
+/* ---------- 歷史資料（月／季／年） ---------- */
+.hist-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.hist-toolbar .rank-chips{flex:0 1 auto;}
+.hist-range{font-size:12px;color:var(--hint);line-height:1.6;}
+.hist-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:14px;border-radius:12px;}
+.hist-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px;}
+.hist-table th,.hist-table td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap;}
+.hist-table thead th{font-size:12px;color:var(--hint);font-weight:500;letter-spacing:0.4px;line-height:1.5;}
+.hist-table tbody td{font-family:'Cormorant Garamond',serif;font-size:16px;color:#fff;letter-spacing:0.3px;}
+.hist-table th:first-child,.hist-table td:first-child{
+  text-align:left;position:sticky;left:0;z-index:1;background:var(--ink-card);
+  font-family:'Noto Sans TC',sans-serif;font-size:13px;color:var(--muted);letter-spacing:0;
+}
+.hist-table thead th:first-child{color:var(--hint);}
+.hist-table tbody tr:last-child td{border-bottom:none;}
+.hist-table tbody tr.cur td{background:rgba(194,151,79,0.07);}
+.hist-table tbody tr.cur td:first-child{background:#1f3143;color:var(--gold-lt);}
+.hist-table .tgt{font-family:'Noto Sans TC',sans-serif;font-size:11px;color:var(--hint);letter-spacing:0;}
+.hist-table .rate{display:block;font-family:'Noto Sans TC',sans-serif;font-size:11.5px;color:var(--hint);margin-top:2px;letter-spacing:0;}
+.hist-table .rate.ok{color:var(--gold-lt);}
+.hist-table .rate.miss{color:var(--vermilion-lt);}
+.hist-empty{
+  text-align:center !important;color:var(--hint) !important;padding:22px 12px !important;
+  font-family:'Noto Sans TC',sans-serif !important;font-size:13px !important;white-space:normal !important;
+}
+.myrank{margin:14px 0 0;padding:13px 16px;border:1px solid var(--gold-line);border-radius:12px;background:var(--gold-dim);font-size:13.5px;color:var(--gold-lt);line-height:1.7;}
+.myrank b{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;margin:0 4px;}
+.myrank .sub{display:block;font-size:12px;color:var(--muted);margin-top:4px;}
+.hist-select{
+  width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:10px;
+  background:#0a141f;color:var(--text);font-family:inherit;font-size:15px;
+}
+.hist-select:focus{outline:none;border-color:var(--gold-line);}
+.hist-period{flex:0 0 auto;width:190px;}
+.rank-row.me td{background:rgba(194,151,79,0.07);}
+.me-tag{
+  display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;
+  border:1px solid var(--gold-line);background:var(--gold-dim);
+  color:var(--gold-lt);font-size:11px;font-family:'Noto Sans TC',sans-serif;vertical-align:middle;
+}
+
 @media (max-width:640px){
   .wrap{padding:0 18px 60px;}
   header.top{padding:34px 0 22px;}
   .panel{padding:20px 18px 22px;}
-  .zone-tab{padding:10px 8px;font-size:13px;}
+  .zone-tabs{flex-wrap:wrap;}
+  .zone-tab{flex:1 1 calc(50% - 4px);padding:10px 8px;font-size:13.5px;}
   .rank-table th,.rank-table td{padding:10px 8px;}
   .rank-table thead th:last-child,.rank-table tbody td:last-child{width:24%;}
 }
@@ -205,6 +247,19 @@ h1 span{color:var(--gold);}
   .rank-no,.rank-value{font-size:21px;}
   .rank-row.top1 .rank-no{font-size:24px;}
   .rank-empty{font-size:15.5px;}
+  .hist-table{font-size:15px;}
+  .hist-table th,.hist-table td{padding:13px 14px;}
+  .hist-table thead th{font-size:14px;}
+  .hist-table tbody td{font-size:18px;}
+  .hist-table th:first-child,.hist-table tbody td:first-child{font-size:15px;}
+  .hist-table .tgt,.hist-table .rate{font-size:12.5px;}
+  .hist-empty{font-size:15px !important;}
+  .myrank{font-size:15.5px;}
+  .myrank b{font-size:25px;}
+  .hist-select{font-size:17px;padding:13px 16px;min-height:48px;}
+  .hist-period{width:220px;}
+  .hist-range{font-size:14px;}
+  .me-tag{font-size:12px;}
 }
 
 </style>
@@ -232,6 +287,7 @@ h1 span{color:var(--gold);}
     <button type="button" class="zone-tab active" data-zone="personal" role="tab" aria-selected="true">個人專區</button>
     <button type="button" class="zone-tab" data-zone="unit" role="tab" aria-selected="false">通訊處專區</button>
     <button type="button" class="zone-tab" data-zone="ranking" role="tab" aria-selected="false">通訊處排行</button>
+    <button type="button" class="zone-tab" data-zone="history" role="tab" aria-selected="false">歷史資料</button>
   </nav>
 
   <!-- ========== 個人專區 ========== -->
@@ -402,6 +458,62 @@ h1 span{color:var(--gold);}
     <p class="foot-hint" id="rankHint"></p>
   </section>
   </div><!-- /通訊處排行 -->
+
+  <!-- ========== 歷史資料 ========== -->
+  <div class="zone" id="zoneHistory">
+  <p class="zone-intro">回查<b>自己的</b>目標與保顧+ 實績、<b>通訊處合計</b>與<b>排行</b>的歷史（月／季／年）。個人歷史只會顯示你自己的資料；通訊處區只有合計；排行會顯示同仁姓名與數值（既有的刻意例外），仍不含客戶個資。客戶規劃歷程已獨立到首頁的「人生圖資料」。</p>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>一、我的歷史（目標 vs 保顧+ 實績）</h2>
+      <span class="dim" id="histMineSync">同步時間：—</span>
+    </div>
+    <div class="hist-toolbar">
+      <div class="rank-chips" id="histGranChips" role="tablist" aria-label="歷史期間">
+        <button type="button" class="rank-chip active" data-gran="month" role="tab" aria-selected="true">月</button>
+        <button type="button" class="rank-chip" data-gran="quarter" role="tab" aria-selected="false">季</button>
+        <button type="button" class="rank-chip" data-gran="year" role="tab" aria-selected="false">年</button>
+      </div>
+      <span class="hist-range" id="histRangeNote">—</span>
+    </div>
+    <p class="calc-note">目標＝當期目標件數換算（約訪 ×10、接觸 ×5、面談 ×3、成交 ×1）；實績全部來自「保顧+」同步的記事筆數。季／年為期內月加總。</p>
+    <div class="hist-scroll"><table class="hist-table" id="histMineAct"></table></div>
+    <div class="hist-scroll"><table class="hist-table" id="histMineSum"></table></div>
+    <p class="foot-hint" id="histMineHint"></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>二、通訊處統計歷史（合計）</h2>
+      <span class="dim" id="histUnitSync">同步時間：—</span>
+    </div>
+    <p class="calc-note">只有全體合計、不列個人明細。季／年為期內月加總；「名下客戶」取期內最新月份（現況值），不是相加。</p>
+    <div class="hist-scroll"><table class="hist-table" id="histUnitAct"></table></div>
+    <div class="hist-scroll"><table class="hist-table" id="histUnitSum"></table></div>
+    <p class="foot-hint" id="histUnitHint"></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>三、通訊處排行歷史（Top 10 ＋我的名次）</h2>
+      <span class="dim" id="histRankSync">同步時間：—</span>
+    </div>
+    <div class="hist-toolbar">
+      <div class="rank-chips" id="histRankChips" role="tablist" aria-label="排行指標"></div>
+      <label class="field hist-period">
+        <span class="fl">期別</span>
+        <select class="hist-select" id="histRankPeriod"></select>
+      </label>
+    </div>
+    <p class="calc-note" id="histRankNote"></p>
+    <div class="myrank" id="histMyRank">—</div>
+    <table class="rank-table">
+      <thead><tr><th>名次</th><th>同仁</th><th id="histRankValueHead">數值</th><th>比例</th></tr></thead>
+      <tbody id="histRankBody"><tr><td colspan="4" class="rank-empty">載入中…</td></tr></tbody>
+    </table>
+    <p class="foot-hint" id="histRankHint"></p>
+  </section>
+  </div><!-- /歷史資料 -->
 </div>
 
 <script>
@@ -410,8 +522,10 @@ h1 span{color:var(--gold);}
    - 每月目標：FYC（首年度佣金）、目標保費、目標件數
    - 件數自動換算每週行動量（比例沿用 90day.html：接觸 ×5、面談 ×3、約訪 ×10）
    - 分為「個人專區」（我的目標／每週行動／我的實績）、
-     「通訊處專區」（整個通訊處總目標／合計實績，只顯示合計、不列個人明細）
-     與「通訊處排行」（各指標前 10 名與數值，走 get_unit_agent_stats_ranking）
+     「通訊處專區」（整個通訊處總目標／合計實績，只顯示合計、不列個人明細）、
+     「通訊處排行」（各指標前 10 名與數值，走 get_unit_agent_stats_ranking）
+     與「歷史資料」（月／季／年回查；走 get_unit_history 與
+     get_unit_agent_stats_ranking_range）
    ========================================================= */
 const WEEK_PER_MONTH = 4;              // 每月以 4 週估算（整數好排行程）
 const RATIO = { contact: 5, talk: 3, visit: 10 };
@@ -504,7 +618,26 @@ const el = {
   rankValueHead: document.getElementById('rankValueHead'),
   rankBody: document.getElementById('rankBody'),
   rankNote: document.getElementById('rankNote'),
-  rankHint: document.getElementById('rankHint')
+  rankHint: document.getElementById('rankHint'),
+  /* 歷史資料 */
+  histGranChips: document.getElementById('histGranChips'),
+  histRangeNote: document.getElementById('histRangeNote'),
+  histMineSync: document.getElementById('histMineSync'),
+  histMineAct: document.getElementById('histMineAct'),
+  histMineSum: document.getElementById('histMineSum'),
+  histMineHint: document.getElementById('histMineHint'),
+  histUnitSync: document.getElementById('histUnitSync'),
+  histUnitAct: document.getElementById('histUnitAct'),
+  histUnitSum: document.getElementById('histUnitSum'),
+  histUnitHint: document.getElementById('histUnitHint'),
+  histRankChips: document.getElementById('histRankChips'),
+  histRankPeriod: document.getElementById('histRankPeriod'),
+  histRankNote: document.getElementById('histRankNote'),
+  histRankValueHead: document.getElementById('histRankValueHead'),
+  histRankBody: document.getElementById('histRankBody'),
+  histRankSync: document.getElementById('histRankSync'),
+  histRankHint: document.getElementById('histRankHint'),
+  histMyRank: document.getElementById('histMyRank')
 };
 
 let client = null;
@@ -514,6 +647,14 @@ let unitPerfRow = null;   // 整個通訊處合計實績（get_unit_agent_stats_
 let rankMetric = 'total'; // 通訊處排行：目前選取的指標
 let rankLoadedKey = '';   // 已載入的「月份|指標」，切換分區時避免重複呼叫
 let rankRequestSeq = 0;   // 避免慢速回來的舊查詢覆蓋新結果
+
+/* ---------- 歷史資料（月／季／年） ---------- */
+const HIST_COUNT = { month: 12, quarter: 8, year: 5 };
+const HIST_GRAN_TEXT = { month: '最近 12 個月', quarter: '最近 8 季', year: '最近 5 年' };
+let histGran = 'month';        // month | quarter | year
+let histLoaded = false;        // 第一次切到歷史分區才查（避免每次開頁都多打 API）
+let histRankMetric = 'total';  // 排行歷史：目前指標
+let histRankSeq = 0;           // 避免慢速回來的舊查詢覆蓋新結果
 
 function money(n){
   const v = Math.max(0, Math.round(Number(n) || 0));
@@ -901,6 +1042,460 @@ async function loadUnitTotals(period){
   renderUnit(Array.isArray(data) ? data[0] : data);
 }
 
+/* =========================================================
+   歷史資料（月／季／年）
+   - 個人：goal_targets + agent_stats（RLS 只讀自己）
+   - 通訊處：rpc get_unit_history（只回全體合計）
+   - 排行：rpc get_unit_agent_stats_ranking_range（Top 10 ＋我的名次）
+   ========================================================= */
+function pad2(n){ return String(n).padStart(2, '0'); }
+function monthKey(value){ return String(value == null ? '' : value).slice(0, 7); }
+
+/* 依「月／季／年」建立期間桶（舊→新），每個桶帶自己所屬的月份清單 */
+function buildHistBuckets(gran){
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const buckets = [];
+
+  if(gran === 'quarter'){
+    const cq = Math.floor((m - 1) / 3) + 1;
+    for(let i = HIST_COUNT.quarter - 1; i >= 0; i--){
+      const idx = (y * 4 + (cq - 1)) - i;
+      const qy = Math.floor(idx / 4);
+      const q = (idx % 4) + 1;
+      const months = [];
+      for(let j = 0; j < 3; j++) months.push(qy + '-' + pad2((q - 1) * 3 + j + 1));
+      buckets.push({ key: qy + '-Q' + q, label: qy + ' 年 Q' + q, months: months, cur: i === 0 });
+    }
+  } else if(gran === 'year'){
+    for(let i = HIST_COUNT.year - 1; i >= 0; i--){
+      const yy = y - i;
+      const months = [];
+      for(let mm = 1; mm <= 12; mm++) months.push(yy + '-' + pad2(mm));
+      buckets.push({ key: String(yy), label: yy + ' 年', months: months, cur: i === 0 });
+    }
+  } else {
+    for(let i = HIST_COUNT.month - 1; i >= 0; i--){
+      const d = new Date(y, m - 1 - i, 1);
+      const key = d.getFullYear() + '-' + pad2(d.getMonth() + 1);
+      buckets.push({ key: key, label: key, months: [key], cur: i === 0 });
+    }
+  }
+  return buckets;
+}
+
+function histRange(buckets){
+  const first = buckets[0];
+  const last = buckets[buckets.length - 1];
+  return {
+    from: first.months[0] + '-01',
+    to: last.months[last.months.length - 1] + '-01'
+  };
+}
+
+function emptyHistBucket(b){
+  return {
+    key: b.key, label: b.label, cur: b.cur, hasData: false,
+    fyc: 0, premium: 0, cases: 0,
+    new_client: 0, first_visit: 0, follow_up: 0, claim: 0, service: 0,
+    discuss_case: 0, signed: 0, recruit: 0, total: 0,
+    clients_count: null, clients_month: '', synced_at: '', perf_months: 0
+  };
+}
+
+const PERF_KEYS = [
+  'new_client', 'first_visit', 'follow_up', 'claim',
+  'service', 'discuss_case', 'signed', 'recruit', 'total'
+];
+
+/* 個人：目標與實績都以「自己」的列為準（RLS 已限制） */
+function aggregateMine(buckets, goals, stats){
+  const goalMap = {}, statMap = {};
+  (goals || []).forEach(function(g){ goalMap[monthKey(g.period_month)] = g; });
+  (stats || []).forEach(function(s){ statMap[monthKey(s.stat_month)] = s; });
+
+  return buckets.map(function(b){
+    const out = emptyHistBucket(b);
+    b.months.forEach(function(mk){
+      const g = goalMap[mk];
+      if(g){
+        out.hasData = true;
+        out.fyc += Number(g.fyc_target) || 0;
+        out.premium += Number(g.premium_target) || 0;
+        out.cases += Number(g.case_target) || 0;
+      }
+      const s = statMap[mk];
+      if(!s) return;
+      out.hasData = true;
+      out.perf_months++;
+      PERF_KEYS.forEach(function(k){ out[k] += Number(s[k]) || 0; });
+      // 名下客戶是現況值：取期內最新月份那一筆
+      if(!out.clients_month || mk > out.clients_month){
+        out.clients_month = mk;
+        out.clients_count = Number(s.clients_count) || 0;
+      }
+      if(s.synced_at && (!out.synced_at || new Date(s.synced_at) > new Date(out.synced_at))){
+        out.synced_at = s.synced_at;
+      }
+    });
+    return out;
+  });
+}
+
+/* 通訊處：get_unit_history 已逐月回傳合計，這裡只做期間加總 */
+function aggregateUnit(buckets, rows){
+  const map = {};
+  (Array.isArray(rows) ? rows : []).forEach(function(r){ map[monthKey(r.month)] = r; });
+
+  return buckets.map(function(b){
+    const out = emptyHistBucket(b);
+    b.months.forEach(function(mk){
+      const r = map[mk];
+      if(!r) return;
+      const hasGoal = (Number(r.goal_members) || 0) > 0;
+      const hasPerf = (Number(r.perf_members) || 0) > 0;
+      if(!hasGoal && !hasPerf) return;
+
+      out.hasData = true;
+      out.fyc += Number(r.fyc_target) || 0;
+      out.premium += Number(r.premium_target) || 0;
+      out.cases += Number(r.case_target) || 0;
+      PERF_KEYS.forEach(function(k){ out[k] += Number(r[k]) || 0; });
+      if(hasPerf) out.perf_months++;
+      if(!out.clients_month || mk > out.clients_month){
+        out.clients_month = mk;
+        out.clients_count = Number(r.clients_count) || 0;
+      }
+      if(r.synced_at && (!out.synced_at || new Date(r.synced_at) > new Date(out.synced_at))){
+        out.synced_at = r.synced_at;
+      }
+    });
+    return out;
+  });
+}
+
+/* ---------- 歷史：表格渲染 ---------- */
+function histActHead(){
+  return '<thead><tr><th>期別</th><th>約訪</th><th>接觸（拜訪）</th><th>面談（談 case）</th><th>成交（簽約）</th></tr></thead>';
+}
+
+function histSumHead(){
+  return '<thead><tr><th>期別</th><th>FYC 目標</th><th>目標保費</th><th>目標件數</th><th>實績總計</th>'
+    + '<th>新客戶</th><th>複訪</th><th>服務</th><th>理賠</th><th>增員</th><th>名下客戶（期末）</th></tr></thead>';
+}
+
+function histEmptyRow(cols, text){
+  return '<tbody><tr><td colspan="' + cols + '" class="hist-empty">' + escapeHtml(text) + '</td></tr></tbody>';
+}
+
+/* 一格顯示「實績 / 目標」＋達成率（目標 0 時顯示 —） */
+function histMetricCell(actual, target){
+  const a = Math.round(Number(actual) || 0);
+  const t = Math.round(Number(target) || 0);
+  if(!t){
+    return money(a) + '<span class="tgt"> ／ 目標 —</span><span class="rate">—</span>';
+  }
+  const pct = Math.round(a / t * 100);
+  return money(a) + '<span class="tgt"> / ' + money(t) + '</span>'
+    + '<span class="rate ' + (pct >= 100 ? 'ok' : 'miss') + '">' + pct + '%</span>';
+}
+
+function histLatestSync(list){
+  return list.reduce(function(m, b){
+    if(!b.synced_at) return m;
+    return (!m || new Date(b.synced_at) > new Date(m)) ? b.synced_at : m;
+  }, '');
+}
+
+function fmtDateTime(v){
+  if(!v) return '—';
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return '—';
+  return d.toLocaleString('zh-TW', {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit'
+  });
+}
+
+function histActBody(list){
+  return '<tbody>' + list.map(function(b){
+    return '<tr class="' + (b.cur ? 'cur' : '') + '">'
+      + '<td>' + escapeHtml(b.label) + '</td>'
+      + '<td>' + histMetricCell(b.first_visit, b.cases * RATIO.visit) + '</td>'
+      + '<td>' + histMetricCell(b.new_client + b.follow_up, b.cases * RATIO.contact) + '</td>'
+      + '<td>' + histMetricCell(b.discuss_case, b.cases * RATIO.talk) + '</td>'
+      + '<td>' + histMetricCell(b.signed, b.cases) + '</td>'
+      + '</tr>';
+  }).join('') + '</tbody>';
+}
+
+function histSumBody(list){
+  return '<tbody>' + list.map(function(b){
+    return '<tr class="' + (b.cur ? 'cur' : '') + '">'
+      + '<td>' + escapeHtml(b.label) + '</td>'
+      + '<td>' + money(b.fyc) + '</td>'
+      + '<td>' + money(b.premium) + '</td>'
+      + '<td>' + money(b.cases) + '</td>'
+      + '<td>' + money(b.total) + '</td>'
+      + '<td>' + money(b.new_client) + '</td>'
+      + '<td>' + money(b.follow_up) + '</td>'
+      + '<td>' + money(b.service) + '</td>'
+      + '<td>' + money(b.claim) + '</td>'
+      + '<td>' + money(b.recruit) + '</td>'
+      + '<td>' + (b.clients_count == null
+          ? '—'
+          : money(b.clients_count) + '<span class="tgt"> ' + escapeHtml(b.clients_month.slice(5)) + ' 月</span>')
+      + '</td>'
+      + '</tr>';
+  }).join('') + '</tbody>';
+}
+
+function renderHistMine(rows){
+  const list = rows.filter(function(b){ return b.hasData; }).reverse();
+
+  if(!list.length){
+    el.histMineAct.innerHTML = histActHead() + histEmptyRow(5, '這段期間還沒有你的目標或保顧+ 實績。');
+    el.histMineSum.innerHTML = '';
+    el.histMineSync.textContent = '同步時間：—';
+    el.histMineHint.textContent = '換個月／季／年試試，或先到「個人專區」設定本月目標；若剛同步完，請重新整理。';
+    return;
+  }
+
+  el.histMineAct.innerHTML = histActHead() + histActBody(list);
+  el.histMineSum.innerHTML = histSumHead() + histSumBody(list);
+
+  const latest = histLatestSync(list);
+  el.histMineSync.textContent = latest ? '同步時間：' + fmtDateTime(latest) : '同步時間：—';
+  el.histMineHint.textContent = '季／年為期內月加總；「名下客戶（期末）」取期內最新月份的現況值，不是相加。'
+    + '實績來自保顧+ 的記事筆數，不含客戶姓名與記事內容。';
+}
+
+function renderHistUnit(rows){
+  const list = rows.filter(function(b){ return b.hasData; }).reverse();
+
+  if(!list.length){
+    el.histUnitAct.innerHTML = histActHead() + histEmptyRow(5, '這段期間尚無通訊處的目標或實績資料。');
+    el.histUnitSum.innerHTML = '';
+    el.histUnitSync.textContent = '同步時間：—';
+    el.histUnitHint.textContent = '若同仁已在保顧+ 記錄行程，請等下一次同步；或確認已執行 supabase-schema-history.sql。';
+    return;
+  }
+
+  el.histUnitAct.innerHTML = histActHead() + histActBody(list);
+  el.histUnitSum.innerHTML = histSumHead() + histSumBody(list);
+
+  const latest = histLatestSync(list);
+  el.histUnitSync.textContent = latest ? '資料更新：' + fmtDateTime(latest) : '同步時間：—';
+  el.histUnitHint.textContent = '這是全體同仁的合計（不列個人明細）。季／年為期內月加總；'
+    + '「名下客戶（期末）」取期內最新月份的現況值。達成率＝合計實績 ÷ 合計目標。';
+}
+
+/* ---------- 歷史：通訊處排行（期間彙總＋我的名次） ---------- */
+function initHistRankChips(){
+  el.histRankChips.innerHTML = RANK_METRICS.map(function(m){
+    const on = m.key === histRankMetric;
+    return '<button type="button" class="rank-chip' + (on ? ' active' : '') + '" data-metric="' + m.key
+      + '" role="tab" aria-selected="' + (on ? 'true' : 'false') + '">' + escapeHtml(m.label) + '</button>';
+  }).join('');
+}
+
+function setHistRankMetric(key){
+  const info = rankMetricInfo(key);
+  histRankMetric = info.key;
+
+  el.histRankChips.querySelectorAll('.rank-chip').forEach(function(b){
+    const on = b.dataset.metric === histRankMetric;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  el.histRankValueHead.textContent = info.label;
+  el.histRankNote.textContent = '目前指標：' + info.label + '（' + info.hint
+    + '）。季／年為期內月加總後重新排名；名下客戶取期內最新月份。只列出數值大於 0 的同仁。';
+}
+
+function buildHistRankPeriods(){
+  const buckets = buildHistBuckets(histGran);
+  const prev = el.histRankPeriod.value;
+
+  el.histRankPeriod.innerHTML = buckets.slice().reverse().map(function(b){
+    return '<option value="' + escapeHtml(b.key) + '">' + escapeHtml(b.label)
+      + (b.cur ? '（本期）' : '') + '</option>';
+  }).join('');
+
+  const exists = buckets.some(function(b){ return b.key === prev; });
+  el.histRankPeriod.value = exists ? prev : buckets[buckets.length - 1].key;
+}
+
+function renderHistRanking(rows){
+  if(!rows.length){
+    el.histRankBody.innerHTML = '<tr><td colspan="4" class="rank-empty">這一期這個指標尚無資料（或所有同仁都是 0）。</td></tr>';
+    return;
+  }
+
+  const max = Math.max.apply(null, rows.map(function(r){
+    return Number(r.metric_value) || 0;
+  })) || 1;
+
+  el.histRankBody.innerHTML = rows.map(function(r){
+    const rk = Number(r.rk) || 0;
+    const val = Number(r.metric_value) || 0;
+    const pct = Math.max(2, Math.round(val / max * 100));
+    const medal = rk === 1 ? '🥇' : (rk === 2 ? '🥈' : (rk === 3 ? '🥉' : ''));
+    const cls = 'rank-row' + (rk <= 3 ? ' top' + rk : '') + (r.is_me ? ' me' : '');
+
+    return '<tr class="' + cls + '">'
+      + '<td class="rank-no">' + (medal ? medal + ' ' : '') + rk + '</td>'
+      + '<td class="rank-name">' + escapeHtml(r.display_name || '未具名同仁')
+      + (r.is_me ? '<span class="me-tag">你</span>' : '') + '</td>'
+      + '<td class="rank-value">' + money(val) + '</td>'
+      + '<td><span class="rank-bar"><span style="width:' + pct + '%"></span></span></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function renderHistMyRank(mine, info){
+  if(!mine){
+    el.histMyRank.innerHTML = '本期「' + escapeHtml(info.label)
+      + '」沒有你的資料（數值 0 或尚未同步）。';
+    return;
+  }
+
+  const rk = Number(mine.rk) || 0;
+  const val = Number(mine.metric_value) || 0;
+  el.histMyRank.innerHTML = '你的名次：第 <b>' + rk + '</b> 名（'
+    + escapeHtml(info.label) + ' ' + money(val) + '）'
+    + (rk > 10 ? '<span class="sub">你的名次在前 10 名之外，這裡仍為你單獨列出。</span>' : '');
+}
+
+async function loadHistRanking(){
+  if(!client || !user) return;
+
+  const buckets = buildHistBuckets(histGran);
+  const key = el.histRankPeriod.value || buckets[buckets.length - 1].key;
+  const bucket = buckets.filter(function(b){ return b.key === key; })[0] || buckets[buckets.length - 1];
+  const range = {
+    from: bucket.months[0] + '-01',
+    to: bucket.months[bucket.months.length - 1] + '-01'
+  };
+  const info = rankMetricInfo(histRankMetric);
+  const seq = ++histRankSeq;
+
+  el.histRankSync.textContent = '同步時間：—';
+  el.histMyRank.textContent = '載入中…';
+  el.histRankBody.innerHTML = '<tr><td colspan="4" class="rank-empty">載入中…</td></tr>';
+  el.histRankHint.textContent = '';
+
+  const { data, error } = await client.rpc('get_unit_agent_stats_ranking_range', {
+    p_start: range.from,
+    p_end: range.to,
+    p_metric: histRankMetric,
+    p_limit: 10
+  });
+
+  if(seq !== histRankSeq) return;
+
+  if(error){
+    el.histMyRank.textContent = '讀取失敗。';
+    el.histRankBody.innerHTML = '<tr><td colspan="4" class="rank-empty">讀取排行歷史失敗。</td></tr>';
+    el.histRankHint.textContent = '讀取排行歷史失敗：' + error.message
+      + '（若尚未建立函式，請先在 Supabase 執行 supabase-schema-history.sql）';
+    return;
+  }
+
+  const rows = Array.isArray(data) ? data : [];
+  const top = rows.filter(function(r){ return (Number(r.rk) || 0) <= 10; });
+  const mine = rows.filter(function(r){ return r.is_me; })[0] || null;
+
+  renderHistRanking(top);
+  renderHistMyRank(mine, info);
+
+  const latest = rows.reduce(function(m, r){
+    if(!r.synced_at) return m;
+    return (!m || new Date(r.synced_at) > new Date(m)) ? r.synced_at : m;
+  }, '');
+  el.histRankSync.textContent = latest ? '資料更新：' + fmtDateTime(latest) : '同步時間：—';
+
+  el.histRankHint.textContent = top.length
+    ? '顯示 ' + bucket.label + ' 的「' + info.label + '」前 ' + top.length + ' 名'
+      + (mine && Number(mine.rk) > 10 ? '；你的名次另外標示在上方' : '')
+      + '。排行只使用記事筆數與顯示名稱，不含客戶姓名或記事內容。'
+    : bucket.label + ' 的「' + info.label + '」尚無大於 0 的資料。若同仁已在保顧+ 記錄行程，請等下一次同步。';
+}
+
+/* ---------- 歷史：資料載入 ---------- */
+async function loadHistMine(buckets, range){
+  el.histMineSync.textContent = '同步時間：—';
+  el.histMineAct.innerHTML = histEmptyRow(5, '載入中…');
+  el.histMineSum.innerHTML = '';
+  el.histMineHint.textContent = '';
+
+  const [goalsRes, statsRes] = await Promise.all([
+    client.from('goal_targets')
+      .select('period_month, fyc_target, premium_target, case_target')
+      .eq('user_id', user.id)
+      .gte('period_month', range.from).lte('period_month', range.to)
+      .order('period_month', { ascending: true }),
+    client.from('agent_stats')
+      .select('stat_month, new_client, first_visit, follow_up, claim, service, discuss_case, signed, recruit, total, clients_count, synced_at')
+      .eq('user_id', user.id)
+      .gte('stat_month', range.from).lte('stat_month', range.to)
+      .order('stat_month', { ascending: true })
+  ]);
+
+  const err = goalsRes.error || statsRes.error;
+  if(err){
+    el.histMineAct.innerHTML = histEmptyRow(5, '讀取失敗。');
+    el.histMineSum.innerHTML = '';
+    el.histMineHint.textContent = '讀取我的歷史失敗：' + err.message
+      + '（請確認已執行 supabase-schema-goals.sql 與 supabase-schema-agent-stats.sql）';
+    return;
+  }
+
+  renderHistMine(aggregateMine(buckets, goalsRes.data || [], statsRes.data || []));
+}
+
+async function loadHistUnit(buckets, range){
+  el.histUnitSync.textContent = '同步時間：—';
+  el.histUnitAct.innerHTML = histEmptyRow(5, '載入中…');
+  el.histUnitSum.innerHTML = '';
+  el.histUnitHint.textContent = '';
+
+  const { data, error } = await client.rpc('get_unit_history', {
+    p_start: range.from,
+    p_end: range.to
+  });
+
+  if(error){
+    el.histUnitAct.innerHTML = histEmptyRow(5, '讀取失敗。');
+    el.histUnitSum.innerHTML = '';
+    el.histUnitHint.textContent = '讀取通訊處歷史失敗：' + error.message
+      + '（若尚未建立函式，請先在 Supabase 執行 supabase-schema-history.sql）';
+    return;
+  }
+
+  renderHistUnit(aggregateUnit(buckets, data));
+}
+
+async function refreshHist(){
+  if(!client || !user) return;
+
+  const buckets = buildHistBuckets(histGran);
+  const range = histRange(buckets);
+  el.histRangeNote.textContent = HIST_GRAN_TEXT[histGran] + '：'
+    + buckets[0].label + ' ～ ' + buckets[buckets.length - 1].label;
+
+  buildHistRankPeriods();
+  await Promise.all([loadHistMine(buckets, range), loadHistUnit(buckets, range)]);
+  await loadHistRanking();
+}
+
+async function loadHistory(){
+  if(!client || !user) return;
+  histLoaded = true;
+  await refreshHist();
+}
+
 /* ---------- 儲存 ---------- */
 async function save(){
   if(!client || !user) return;
@@ -928,7 +1523,7 @@ async function save(){
 
 /* ---------- 分區切換（個人專區 / 通訊處專區 / 通訊處排行） ---------- */
 function showZone(name){
-  if(['personal', 'unit', 'ranking'].indexOf(name) < 0) name = 'personal';
+  if(['personal', 'unit', 'ranking', 'history'].indexOf(name) < 0) name = 'personal';
 
   document.querySelectorAll('.zone-tab').forEach(function(b){
     const on = b.dataset.zone === name;
@@ -938,12 +1533,16 @@ function showZone(name){
   document.getElementById('zonePersonal').classList.toggle('active', name === 'personal');
   document.getElementById('zoneUnit').classList.toggle('active', name === 'unit');
   document.getElementById('zoneRanking').classList.toggle('active', name === 'ranking');
+  document.getElementById('zoneHistory').classList.toggle('active', name === 'history');
 
   // 排行只在切到該分區時才查詢，避免每次載入頁面都多打一次 API
   if(name === 'ranking'){
     const key = monthToDate(el.rankMonth.value || currentMonth()) + '|' + rankMetric;
     if(key !== rankLoadedKey) loadRanking(el.rankMonth.value);
   }
+
+  // 歷史資料同理：第一次切到才查（登入完成前會先跳過，boot 會補）
+  if(name === 'history' && !histLoaded) loadHistory();
 }
 
 document.querySelectorAll('.zone-tab').forEach(function(b){
@@ -972,6 +1571,32 @@ el.rankMonth.addEventListener('change', function(){
   loadRanking(el.rankMonth.value);
 });
 
+/* 歷史資料：月／季／年、排行指標、期別 */
+el.histGranChips.querySelectorAll('.rank-chip').forEach(function(b){
+  b.addEventListener('click', function(){
+    const next = b.dataset.gran;
+    if(next === histGran) return;
+
+    histGran = next;
+    el.histGranChips.querySelectorAll('.rank-chip').forEach(function(x){
+      const on = x.dataset.gran === histGran;
+      x.classList.toggle('active', on);
+      x.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    refreshHist();
+  });
+});
+el.histRankChips.addEventListener('click', function(ev){
+  const btn = ev.target && ev.target.closest ? ev.target.closest('.rank-chip') : null;
+  if(!btn || !el.histRankChips.contains(btn)) return;
+
+  const next = btn.dataset.metric;
+  if(next === histRankMetric) return;
+  setHistRankMetric(next);
+  loadHistRanking();
+});
+el.histRankPeriod.addEventListener('change', function(){ loadHistRanking(); });
+
 el.logoutBtn.addEventListener('click', async function(){
   try { if(client) await client.auth.signOut(); } catch(e){}
   location.replace('./login.html');
@@ -981,6 +1606,8 @@ el.logoutBtn.addEventListener('click', async function(){
 (async function boot(){
   el.monthInput.value = currentMonth();
   el.rankMonth.value = currentMonth();
+  initHistRankChips();
+  setHistRankMetric(histRankMetric);
   showZone((location.hash || '').replace('#', ''));
   recalc();
 
@@ -1003,9 +1630,12 @@ el.logoutBtn.addEventListener('click', async function(){
 
   await loadMonth(el.monthInput.value);
 
-  // 若網址直接帶 #ranking，登入與資料表就緒後補載排行
-  if((location.hash || '').replace('#', '') === 'ranking'){
+  // 若網址直接帶 #ranking／#history，登入與資料表就緒後補載
+  const initialHash = (location.hash || '').replace('#', '');
+  if(initialHash === 'ranking'){
     await loadRanking(el.rankMonth.value);
+  } else if(initialHash === 'history'){
+    await loadHistory();
   }
 })();
 </script>

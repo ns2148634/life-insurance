@@ -1,12 +1,13 @@
 # 一定要宸功專區 — 設定說明（goal-system.html）
 
-「一定要宸功專區」分成三個分區（頁面上方可切換，預設顯示「個人專區」）：
+「一定要宸功專區」分成四個分區（頁面上方可切換，預設顯示「個人專區」）：
 
 | 分區 | 內容 | 資料來源 |
 |------|------|----------|
 | **個人專區** | 我的每月目標（輸入＋摘要）、每週行動計畫、我的實績（個人） | `goal_targets`、`agent_stats`（本人） |
 | **通訊處專區** | 整個通訊處**總目標**、整個通訊處**合計實績**（只顯示合計，不列個人明細） | `get_unit_goal_totals()`、`get_unit_agent_stats_totals()` |
 | **通訊處排行** | 各項實績指標的**前 10 名與數值**（可切換 10 個指標、可選月份） | `get_unit_agent_stats_ranking()` |
+| **歷史資料** | 月／季／年回查：我的目標 vs 實績（含達成率）、通訊處合計、排行歷史（Top 10＋**我的名次**） | `goal_targets`、`agent_stats`、`get_unit_history()`、`get_unit_agent_stats_ranking_range()` |
 
 ### 個人專區
 
@@ -46,6 +47,28 @@
 > 但函式只回傳名次、顯示名稱、該指標數值與同步時間，**不會輸出完整 email、客戶姓名或記事內容**。
 > 若之後要改成遮罩姓名或只給管理員看，修改 `supabase-schema-unit-ranking.sql` 即可。
 
+### 歷史資料
+
+同一組「月／季／年」切換（月＝最近 12 個月、季＝最近 8 季、年＝最近 5 年），分成三個面板：
+
+1. **我的歷史（目標 vs 保顧+ 實績）**
+   - 行動量對照：約訪＝`first_visit`、接觸＝`new_client + follow_up`、面談＝`discuss_case`、成交＝`signed`；
+     目標＝當期目標件數 ×10／×5／×3／×1，並顯示達成率（≥100% 金色、<100% 紅字）。
+   - 目標與其他實績：FYC／保費／件數目標、實績總計、新客戶、複訪、服務、理賠、增員、名下客戶（期末）。
+2. **通訊處統計歷史（合計）**：走 `get_unit_history()`，只回全體合計，不列個人明細。
+3. **通訊處排行歷史**：走 `get_unit_agent_stats_ranking_range()`，可切換 10 個指標與期別；
+   除了 Top 10，還會多回一列 `is_me`，因此**即使你的名次在前 10 名之外，也會在上方「我的名次」單獨顯示**。
+
+> **客戶規劃歷程已獨立**：原本在歷史資料區的「客戶規劃歷程」已移到首頁的
+> **「人生圖資料」**（`client-plans.html`），可依姓名／風險／保障項目／金額搜尋與期間篩選，
+> 不再佔用宸功專區的版面。設定與驗證方式見 `client-plans.html` 頁首說明與 `DEV.md`。
+
+> **季／年怎麼算**：目標與實績都是「期內月加總」；`clients_count`（名下客戶）是現況值，
+> 取**期內最新月份**那一列，不是相加（表格下方也有註明）。
+>
+> **隱私**：個人歷史只讀自己的列（RLS）；通訊處只有合計；
+> 排行沿用既有「刻意例外」，只輸出顯示名稱與數值，不含完整 email、客戶姓名或記事內容。
+
 首頁（`index.html`）會多一列「本月目標 Monthly Targets」，同時顯示**我的目標**與**整個通訊處的加總**。
 
 ---
@@ -75,6 +98,15 @@
 > **「通訊處排行」再一支**：`supabase-schema-unit-ranking.sql`
 > （建立 `public.get_unit_agent_stats_ranking(date, text, integer)`，回傳各指標前 10 名）。
 > 詳細說明見 `AGENT-STATS-SETUP.md`。
+>
+> **「歷史資料」需要一支 SQL**（可與上面一起執行）：
+> `supabase-schema-history.sql`（建立 `get_unit_history(date, date)` 期間合計與
+> `get_unit_agent_stats_ranking_range(date, date, text, integer)` 期間排行＋`is_me`）。
+> 只新增物件、可重複執行，結尾同樣會 `notify pgrst, 'reload schema'`。
+>
+> **「人生圖資料」（`client-plans.html`）另需一支**：
+> `supabase-schema-insurance-plans.sql`（建立 `public.insurance_plans`，供
+> `insurance-needs.html` 第 3 頁「儲存客戶資料」與人生圖資料搜尋使用）。
 
 ### 資料表結構
 
@@ -93,15 +125,32 @@ public.goal_targets
 
 > ⚠️ 前端一律用 `period_month = 'YYYY-MM-01'` 讀寫，資料庫也有 `check` 擋掉非 1 號的日期，避免同一個月出現兩筆。
 
+```
+public.insurance_plans          -- 人生圖資料（client-plans.html 讀取；每次儲存新增一筆）
+  id              uuid  pk        default gen_random_uuid()
+  user_id         uuid  not null  → auth.users(id) on delete cascade（RLS 比對 auth.uid()）
+  client_name     text  not null  1–40 字（不含其他個資）
+  monthly_income  numeric(12,0)   >= 0
+  risk_order      jsonb  not null 四項風險 id 陣列（長度必須為 4）
+  coverage        jsonb  not null 保障內容顯示快照（保留「20-40」等原文）
+  created_at      timestamptz     default now()
+  updated_at      timestamptz     default now()
+```
+
+> `coverage` 範例：
+> `[{"cat":"death","title":"活的太短","priority":1,"items":[{"key":"death-0","name":"一般身故","value":"450","unit":"萬元"}]}]`
+> —— 前端只負責顯示，不再重算，因此人生圖資料頁看到的數字與當時儲存的一致。
+
 ---
 
 ## 二、前端設定（無需修改程式）
 
-`goal-system.html` 與 `index.html` 都會自動沿用 `auth-guard.js` 載入的 Supabase client 與 `config.js`，
+`goal-system.html`、`client-plans.html` 與 `index.html` 都會自動沿用 `auth-guard.js` 載入的 Supabase client 與 `config.js`，
 **不需要再填任何金鑰**。只要 SQL 執行完成，重新整理頁面即可使用。
 
-- 新頁面：`goal-system.html`
-- 首頁入口：`index.html` → 最上方「目標管理」分類的 ★ 卡片，以及頁首的「本月目標」摘要列。
+- 頁面：`goal-system.html`（目標與歷史）、`client-plans.html`（人生圖資料）
+- 首頁入口：`index.html` → 最上方「目標管理」分類的 ★ 卡片，以及頁首的「本月目標」摘要列；
+  客戶規劃搜尋則在「客戶顧問」分類的「人生圖資料」卡片（頁首登入區塊也有快捷連結）。
 
 ---
 
@@ -115,12 +164,27 @@ public.goal_targets
    後者需要另外兩支 SQL（`supabase-schema-agent-stats.sql` → `supabase-schema-unit-stats.sql`）已執行。
 6. 切到「通訊處排行」：選月份與指標，應顯示前 10 名與數值；
    需先執行 `supabase-schema-unit-ranking.sql`。沒有資料時應顯示「尚無大於 0 的資料」。
-7. 在 SQL Editor 交叉檢查：
+7. 切到「歷史資料」：
+   - 切「月／季／年」，三張表應跟著換算；季／年的數字＝期內月加總。
+   - 「名下客戶（期末）」旁會標示取用的月份（期內最新月份）。
+   - 排行歷史選「季／年」後，Top 10 與「我的名次」應一起更新；若你排在前 10 名外，
+     上方會出現「你的名次：第 N 名」與「前 10 名之外」的說明。
+8. 開 `insurance-needs.html` 走到第 3 頁，填姓名與月收入 →「儲存客戶資料」→ 看到綠色成功訊息；
+   按 **F5 重新整理後再存一次**，開 `client-plans.html`（人生圖資料）應看到 **2 筆**（每次新增、不覆蓋），
+   在搜尋框輸入客戶姓名或「醫療」等關鍵字，應只剩符合的規劃並自動展開。
+9. 在 SQL Editor 交叉檢查：
    ```sql
    select * from public.goal_targets order by period_month desc, updated_at desc;
    select * from public.get_unit_goal_totals(date_trunc('month', now())::date);
    select * from public.get_unit_agent_stats_totals(date_trunc('month', now())::date);
    select * from public.get_unit_agent_stats_ranking(date_trunc('month', now())::date, 'signed', 10);
+   select * from public.get_unit_history(
+     (date_trunc('month', now()) - interval '11 months')::date,
+     date_trunc('month', now())::date);
+   select * from public.get_unit_agent_stats_ranking_range(
+     date_trunc('quarter', now())::date, date_trunc('month', now())::date, 'signed', 10);
+   select client_name, monthly_income, risk_order, created_at
+     from public.insurance_plans order by created_at desc;
    ```
 
 ---
@@ -160,3 +224,20 @@ notify pgrst, 'reload schema';
 → 排行是上述隱私界線的**刻意例外**（依團隊需求開放）。它走另一支 `security definer` 函式
 `get_unit_agent_stats_ranking()`，只回傳「名次、顯示名稱、該指標數值、同步時間」，
 不包含完整 email、客戶姓名或記事內容。若不想開放，可在函式內遮罩名稱，或把執行權限收回給管理員。
+
+**Q8. 「歷史資料」顯示「讀取通訊處歷史失敗／讀取排行歷史失敗」**
+→ 還沒執行 `supabase-schema-history.sql`，或 PostgREST 的 schema 快取還沒更新。
+先在 SQL Editor 執行該檔（結尾會 `notify pgrst, 'reload schema'`），再重新整理。
+若只是「我的歷史」失敗，通常是 `goal_targets`／`agent_stats` 尚未建立。
+
+**Q9. 「儲存客戶資料」失敗，或人生圖資料顯示讀取失敗**
+→ 先執行 `supabase-schema-insurance-plans.sql`。若訊息含 `row-level security`，
+代表寫入的 `user_id` 不是自己的 `auth.uid()`（本頁一律用登入者身分寫入）。
+人生圖資料（`client-plans.html`）一般同仁只會看到**自己**儲存的資料，換帳號看不到別人的；
+管理員（`profiles.is_admin = true`）可看到全部，這是刻意的。
+
+**Q10. 為什麼「人生圖資料」每次儲存都變成一筆，不會覆蓋？**
+→ 這是需求：保留每次諮詢當下的保障內容快照（含「20-40」這種區間原文），
+方便在 `client-plans.html` 用姓名或保障項目搜尋、回看客戶規劃的變化。
+若要刪除，可在 SQL Editor 以本人身分刪除該列
+（RLS 允許本人 delete），或日後再加「刪除」按鈕。

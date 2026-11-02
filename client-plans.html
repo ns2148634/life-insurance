@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="人生圖資料">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>人生圖資料｜宸功保險</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1a26;--ink-mid:#142331;--ink-card:#182a3a;
+  --gold:#c2974f;--gold-lt:#dcb877;--gold-deep:#8a6a30;
+  --gold-dim:rgba(194,151,79,0.10);--gold-line:rgba(194,151,79,0.30);
+  --vermilion:#c1442d;--vermilion-lt:#d9634a;
+  --text:rgba(255,255,255,0.94);--muted:rgba(255,255,255,0.56);
+  --hint:rgba(255,255,255,0.32);--border:rgba(255,255,255,0.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 85% -10%, rgba(194,151,79,0.08), transparent 60%),
+    radial-gradient(ellipse 700px 400px at -10% 100%, rgba(193,68,45,0.06), transparent 55%),
+    var(--ink);
+  min-height:100dvh;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:0 24px 72px;}
+
+/* ---------- header ---------- */
+header.top{padding:46px 0 26px;border-bottom:1px solid var(--border);}
+.brand-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.crest{width:38px;height:38px;flex-shrink:0;border-radius:10px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+.crest img{width:100%;height:100%;object-fit:cover;display:block;}
+.brand{font-family:'Cormorant Garamond',serif;letter-spacing:5px;color:var(--gold);text-transform:uppercase;font-size:13px;font-weight:600;}
+h1{font-family:'Noto Serif TC',serif;font-weight:900;font-size:clamp(26px,4vw,40px);line-height:1.3;letter-spacing:1px;color:#fff;}
+h1 span{color:var(--gold);}
+.lead{color:var(--muted);font-size:14.5px;line-height:1.9;max-width:60ch;margin-top:8px;}
+.who{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:20px;font-size:14px;color:var(--muted);}
+.who a{color:var(--gold-lt);text-decoration:none;}
+.ghost{padding:7px 14px;border-radius:8px;border:1px solid var(--border);color:var(--muted);background:transparent;font-family:inherit;font-size:13px;cursor:pointer;}
+.ghost:hover{background:rgba(255,255,255,0.05);}
+
+/* ---------- panel ---------- */
+.panel{margin-top:22px;background:var(--ink-card);border:1px solid var(--border);border-radius:16px;padding:24px 24px 26px;}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+.panel-head h2{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;color:#fff;}
+.dim{color:var(--hint);font-size:12.5px;}
+/* ---------- 搜尋列 ---------- */
+.toolbar{display:grid;grid-template-columns:1fr 170px auto;gap:12px;align-items:end;}
+.field{display:block;min-width:0;}
+.fl{display:block;font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:6px;}
+.ipt,.sel{
+  width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:10px;
+  background:#0a141f;color:var(--text);font-family:inherit;font-size:15px;
+}
+.ipt:focus,.sel:focus{outline:none;border-color:var(--gold-line);}
+.tool-actions{display:flex;gap:8px;}
+.tool-actions .ghost{min-height:43px;}
+.calc-note{font-size:13px;color:var(--muted);line-height:1.8;margin-top:14px;}
+.calc-note b{color:var(--gold-lt);}
+.foot-hint{margin-top:14px;font-size:13px;color:var(--gold-lt);line-height:1.8;}
+
+/* ---------- 規劃卡片 ---------- */
+.plan-list{margin-top:18px;display:flex;flex-direction:column;gap:12px;}
+.plan-card{border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.025);padding:15px 17px;}
+.plan-card[open]{border-color:var(--gold-line);background:rgba(194,151,79,0.04);}
+.plan-card summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;cursor:pointer;list-style:none;}
+.plan-card summary::-webkit-details-marker{display:none;}
+.plan-card summary::after{content:'＋';margin-left:auto;color:var(--hint);font-size:13px;}
+.plan-card[open] summary::after{content:'－';}
+.plan-name{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:#fff;letter-spacing:0.5px;}
+.plan-time{font-size:12px;color:var(--hint);}
+.plan-income{font-size:12.5px;color:var(--muted);}
+.plan-cnt{font-size:11.5px;color:var(--gold-lt);border:1px solid var(--gold-line);border-radius:999px;padding:1px 9px;}
+.plan-order{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px;}
+.plan-order span{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted);}
+.plan-order span b{color:var(--gold-lt);margin-right:4px;}
+.plan-detail{margin-top:4px;}
+.plan-sec{margin-top:16px;}
+.plan-sec-hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+.plan-prio{font-size:11px;letter-spacing:0.5px;color:#1a1406;background:var(--gold);border-radius:999px;padding:2px 9px;font-weight:700;}
+.plan-sec-t{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:600;color:var(--gold-lt);}
+.plan-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.plan-tbl th,.plan-tbl td{padding:8px 0;border-bottom:1px dashed var(--border);text-align:left;vertical-align:top;}
+.plan-tbl thead th{font-size:11.5px;font-weight:500;color:var(--hint);border-bottom-style:solid;letter-spacing:0.5px;}
+.plan-tbl tbody th{font-weight:400;color:var(--muted);padding-right:14px;}
+.plan-tbl tbody td{text-align:right;white-space:nowrap;}
+.plan-tbl tr:last-child th,.plan-tbl tr:last-child td{border-bottom:none;}
+.plan-val{color:#fff;font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:0.5px;}
+.plan-val small{font-family:'Noto Sans TC',sans-serif;font-size:11px;color:var(--hint);margin-left:4px;letter-spacing:0;}
+.plan-na{color:var(--hint);font-size:12px;}
+/* ---------- 空狀態／載入 ---------- */
+.plan-empty{margin-top:18px;padding:44px 22px;text-align:center;border:1px dashed var(--border);border-radius:14px;}
+.pe-t{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:#fff;}
+.pe-s{max-width:44ch;margin:10px auto 0;font-size:13.5px;line-height:1.85;color:var(--muted);}
+.plan-empty .btn-gold,.plan-empty .btn-line{margin-top:18px;}
+.plan-loading{margin-top:18px;padding:36px 20px;text-align:center;font-size:14px;color:var(--hint);}
+.btn-gold{display:inline-block;padding:11px 24px;border-radius:10px;border:none;background:var(--gold);color:#1a1406;font-weight:700;font-size:14px;font-family:inherit;text-decoration:none;cursor:pointer;}
+.btn-line{display:inline-block;padding:10px 22px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13.5px;font-family:inherit;text-decoration:none;cursor:pointer;}
+.btn-line:hover{background:rgba(255,255,255,0.05);}
+
+/* ---------- 平板放大 ---------- */
+@media (min-width:768px){
+  .wrap{padding:0 32px 80px;}
+  .brand{font-size:15px;}
+  .lead{font-size:17px;}
+  .who{font-size:16px;}
+  .ghost{font-size:15px;padding:9px 16px;min-height:44px;}
+  .panel{padding:28px 28px 30px;}
+  .panel-head h2{font-size:21px;}
+  .dim{font-size:14.5px;}
+  .fl{font-size:14px;}
+  .ipt,.sel{font-size:17px;padding:13px 16px;min-height:48px;}
+  .calc-note{font-size:15.5px;}
+  .foot-hint{font-size:15px;}
+  .plan-card{padding:17px 20px;}
+  .plan-name{font-size:20px;}
+  .plan-time,.plan-income{font-size:14px;}
+  .plan-cnt{font-size:12.5px;}
+  .plan-order span{font-size:13px;}
+  .plan-sec-t{font-size:17px;}
+  .plan-tbl{font-size:15px;}
+  .plan-tbl thead th{font-size:13px;}
+  .plan-val{font-size:18px;}
+  .pe-t{font-size:20px;}
+  .pe-s{font-size:15.5px;}
+}
+@media (max-width:720px){
+  .toolbar{grid-template-columns:1fr;}
+  .tool-actions{justify-content:flex-end;}
+  .wrap{padding:0 18px 56px;}
+  header.top{padding:34px 0 22px;}
+  .panel{padding:20px 18px 22px;}
+  .plan-tbl tbody td{white-space:normal;}
+}
+</style>
+<!-- 全站登入守衛：未登入會自動導向 login.html -->
+<script src="./auth-guard.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand-row">
+      <div class="crest"><img src="./icon-192.png" alt="宸功保險"></div>
+      <div class="brand">Chenggong Insurance</div>
+    </div>
+    <h1>人生<span>圖</span>資料</h1>
+    <p class="lead">這裡集中保管你在「人生收支曲線圖」儲存的客戶規劃結果：人生圖第 2 頁的風險優先順序、各項保障建議與當時填寫的月收入。可用客戶姓名或保障內容關鍵字搜尋，隨時回看歷次規劃。</p>
+    <div class="who">
+      <a href="./index.html">← 回主畫面</a>
+      <a href="./insurance-needs.html">開啟人生收支曲線圖</a>
+      <span id="whoami">載入中…</span>
+      <a href="./video-training/profile.html">我的帳號</a>
+      <button type="button" class="ghost" id="logoutBtn">登出</button>
+    </div>
+  </header>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>搜尋客戶規劃</h2>
+      <span class="dim" id="planCount" aria-live="polite">載入中…</span>
+    </div>
+
+    <div class="toolbar">
+      <label class="field">
+        <span class="fl">關鍵字</span>
+        <input class="ipt" type="search" id="planQ" placeholder="客戶姓名、風險名稱、保障項目或金額（例：醫療、20-40）" autocomplete="off" enterkeyhint="search">
+      </label>
+      <label class="field">
+        <span class="fl">期間</span>
+        <select class="sel" id="planRange">
+          <option value="all">全部時間</option>
+          <option value="3">近 3 個月</option>
+          <option value="6">近 6 個月</option>
+          <option value="12">近 1 年</option>
+        </select>
+      </label>
+      <div class="tool-actions">
+        <button type="button" class="ghost" id="planReload">↻ 重新整理</button>
+        <button type="button" class="ghost" id="planClear">清除條件</button>
+      </div>
+    </div>
+
+    <p class="calc-note">搜尋會比對<b>客戶姓名、風險順序、保障項目名稱、保障內容與月收入</b>；多個關鍵字以空白分隔，需全部符合（例如「王 醫療」）。資料為儲存當下的快照，數字與當時的規劃一致。</p>
+
+    <div class="plan-list" id="planList"><div class="plan-loading">載入中…</div></div>
+    <p class="foot-hint" id="planHint"></p>
+  </section>
+</div>
+
+<footer style="max-width:1020px;margin:0 auto;padding:0 24px 40px;color:var(--hint);font-size:12px;line-height:1.8;">
+  只會顯示你自己儲存的客戶規劃（資料庫 RLS 保護；管理員可查看全部）。客戶姓名、月收入與保障內容僅供內部諮詢使用，請勿對外提供。
+</footer>
+<script>
+/* =========================================================
+   人生圖資料（client-plans.html）
+   - 來源：Supabase public.insurance_plans（人生收支曲線圖第 3 頁「儲存客戶資料」）
+   - 只存客戶姓名、月收入、四項風險順序與保障內容快照（不含生日、性別、聯絡方式）
+   - RLS：一般同仁只讀得到自己的列；管理員（private.is_admin）可讀全部
+   - 本頁只顯示快照、不重算，因此看到的數字與當時儲存的一致
+   ========================================================= */
+const RISK_TITLES = {
+  interrupt: '收入中斷', death: '活的太短',
+  disability: '失能長年病', medical: '醫療費用'
+};
+const RISK_ICONS = { interrupt: '⏸', death: '🕊', disability: '♿', medical: '🏥' };
+const PLAN_LIMIT = 500;
+
+let planClient = null;      // Supabase client（auth-guard 提供）
+let planUser = null;        // 目前登入者
+let allPlans = [];          // 最近 PLAN_LIMIT 筆（新→舊）
+let filteredPlans = [];     // 套用搜尋／期間後要顯示的資料
+let searchTimer = null;
+
+const el = {
+  whoami: document.getElementById('whoami'),
+  logoutBtn: document.getElementById('logoutBtn'),
+  q: document.getElementById('planQ'),
+  range: document.getElementById('planRange'),
+  reload: document.getElementById('planReload'),
+  clear: document.getElementById('planClear'),
+  count: document.getElementById('planCount'),
+  list: document.getElementById('planList'),
+  hint: document.getElementById('planHint')
+};
+
+function escapeHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function money(n){
+  const v = Math.max(0, Math.round(Number(n) || 0));
+  return v.toLocaleString('zh-TW');
+}
+function pad2(n){ return String(n).padStart(2, '0'); }
+function fmtDateTime(value){
+  if(!value) return '—';
+  const d = new Date(value);
+  if(isNaN(d.getTime())) return String(value);
+  return d.getFullYear() + '/' + pad2(d.getMonth() + 1) + '/' + pad2(d.getDate())
+    + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+}
+// 全形轉半形、統一小寫，讓「２０－４０」也搜得到「20-40」
+function normalizeText(s){
+  return String(s == null ? '' : s).normalize('NFKC').toLowerCase();
+}
+
+/* 把一筆規劃攤平成可搜尋的字串：姓名、日期、月收入、風險名稱、保障項目與金額 */
+function planHaystack(plan){
+  const parts = [
+    plan.client_name, fmtDateTime(plan.created_at),
+    String(plan.created_at || '').slice(0, 10),
+    money(plan.monthly_income), plan.monthly_income
+  ];
+  const order = Array.isArray(plan.risk_order) ? plan.risk_order : [];
+  order.forEach(function(rid){ parts.push(RISK_TITLES[rid] || rid, rid); });
+
+  const coverage = Array.isArray(plan.coverage) ? plan.coverage : [];
+  coverage.forEach(function(sec){
+    if(!sec) return;
+    parts.push(sec.title, RISK_TITLES[sec.cat], sec.cat);
+    const items = Array.isArray(sec.items) ? sec.items : [];
+    items.forEach(function(it){
+      if(!it) return;
+      parts.push(it.name, it.value, it.unit);
+    });
+  });
+  return normalizeText(parts.join(' '));
+}
+
+function itemHtml(it){
+  const val = String(it && it.value != null ? it.value : '').trim();
+  if(!val) return '<span class="plan-na">—</span>';
+  const unit = String(it && it.unit ? it.unit : '').trim();
+  return '<span class="plan-val">' + escapeHtml(val)
+    + (unit ? '<small>' + escapeHtml(unit) + '</small>' : '') + '</span>';
+}
+
+function countItems(plan){
+  const coverage = Array.isArray(plan.coverage) ? plan.coverage : [];
+  let n = 0;
+  coverage.forEach(function(sec){
+    n += Array.isArray(sec && sec.items) ? sec.items.length : 0;
+  });
+  return n;
+}
+/* 一筆規劃的卡片（<details>）：摘要顯示姓名、時間、月收入與保障項目數 */
+function planCard(plan, open){
+  const order = Array.isArray(plan.risk_order) ? plan.risk_order : [];
+  const coverage = Array.isArray(plan.coverage) ? plan.coverage : [];
+  const titles = {};
+  coverage.forEach(function(sec){ if(sec && sec.cat) titles[sec.cat] = sec.title; });
+
+  const chips = order.map(function(rid, i){
+    const title = RISK_TITLES[rid] || titles[rid] || rid;
+    return '<span><b>' + (i + 1) + '</b>' + escapeHtml(title) + '</span>';
+  }).join('');
+
+  const sections = coverage.slice()
+    .sort(function(a, b){ return (Number(a && a.priority) || 99) - (Number(b && b.priority) || 99); })
+    .map(function(sec){
+      if(!sec) return '';
+      const items = Array.isArray(sec.items) ? sec.items : [];
+      const rows = items.map(function(it){
+        return '<tr><th>' + escapeHtml(it && it.name ? it.name : '—') + '</th><td>'
+          + itemHtml(it) + '</td></tr>';
+      }).join('');
+      const title = sec.title || RISK_TITLES[sec.cat] || sec.cat || '保障內容';
+      const icon = RISK_ICONS[sec.cat] || '';
+      return '<div class="plan-sec">'
+        + '<div class="plan-sec-hd">'
+        + (sec.priority ? '<span class="plan-prio">第 ' + escapeHtml(sec.priority) + ' 優先</span>' : '')
+        + '<span class="plan-sec-t">' + (icon ? icon + ' ' : '') + escapeHtml(title) + '</span>'
+        + '</div>'
+        + '<table class="plan-tbl"><thead><tr><th>保障項目</th><th>保障內容</th></tr></thead><tbody>'
+        + (rows || '<tr><td colspan="2" class="plan-na">沒有保障項目</td></tr>')
+        + '</tbody></table></div>';
+    }).join('');
+
+  const n = countItems(plan);
+  return '<details class="plan-card"' + (open ? ' open' : '') + '>'
+    + '<summary>'
+    + '<span class="plan-name">' + escapeHtml(plan.client_name || '未具名') + '</span>'
+    + '<span class="plan-time">' + escapeHtml(fmtDateTime(plan.created_at)) + '</span>'
+    + '<span class="plan-income">月收入 ' + money(plan.monthly_income) + ' 元</span>'
+    + '<span class="plan-cnt">' + n + ' 項保障</span>'
+    + '</summary>'
+    + (chips ? '<div class="plan-order">' + chips + '</div>' : '')
+    + '<div class="plan-detail">' + (sections || '<p class="plan-na">這筆沒有保障內容快照。</p>') + '</div>'
+    + '</details>';
+}
+
+/* subHtml 由呼叫端先跳脫，可放 <b> 等簡單標記 */
+function emptyBlock(title, subHtml, actionHtml){
+  return '<div class="plan-empty"><div class="pe-t">' + escapeHtml(title) + '</div>'
+    + (subHtml ? '<div class="pe-s">' + subHtml + '</div>' : '')
+    + (actionHtml || '') + '</div>';
+}
+
+function render(){
+  const q = el.q.value.trim();
+  const tokens = normalizeText(q).split(/\s+/).filter(Boolean);
+
+  if(!allPlans.length){
+    el.count.textContent = '共 0 筆';
+    el.list.innerHTML = emptyBlock('還沒有儲存的客戶規劃',
+      '到「人生收支曲線圖」完成第 2 頁的風險規劃，並在第 3 頁按「儲存客戶資料」，就會出現在這裡。',
+      '<a class="btn-gold" href="./insurance-needs.html">開啟人生收支曲線圖 →</a>');
+    el.hint.textContent = '';
+    return;
+  }
+
+  if(!filteredPlans.length){
+    el.count.textContent = '顯示 0 / 共 ' + allPlans.length + ' 筆';
+    const reason = q
+      ? '關鍵字：「' + escapeHtml(q) + '」。可試試客戶姓名、風險名稱（如醫療）、保障項目或金額。'
+      : '目前期間沒有資料，試試把「期間」改成全部時間。';
+    el.list.innerHTML = emptyBlock('找不到符合條件的規劃', reason,
+      '<button type="button" class="btn-line" data-act="clear">清除條件</button>');
+    el.hint.textContent = '多個關鍵字以空白分隔，需全部符合；搜尋不分大小寫，全形數字也可比對。';
+    return;
+  }
+
+  // 有搜尋且結果不多時自動展開，省一次點擊
+  const autoOpen = tokens.length > 0 && filteredPlans.length <= 3;
+  el.list.innerHTML = filteredPlans.map(function(plan){ return planCard(plan, autoOpen); }).join('');
+  el.count.textContent = '顯示 ' + filteredPlans.length + ' / 共 ' + allPlans.length + ' 筆';
+  el.hint.textContent = '資料為儲存當下的快照（保留「20-40」這類區間原文）；每次儲存都是獨立一筆，同一位客戶可能有多筆歷程。';
+}
+
+/* 套用關鍵字（AND）與期間，結果放到 filteredPlans 後重畫 */
+function applyFilter(){
+  const months = Number(el.range.value) || 0;
+  let cutoff = null;
+  if(months > 0){
+    cutoff = new Date();
+    cutoff.setHours(0, 0, 0, 0);
+    cutoff.setMonth(cutoff.getMonth() - months);
+  }
+  const tokens = normalizeText(el.q.value).split(/\s+/).filter(Boolean);
+
+  filteredPlans = allPlans.filter(function(plan){
+    if(cutoff){
+      const t = new Date(plan.created_at);
+      if(isNaN(t.getTime()) || t < cutoff) return false;
+    }
+    if(!tokens.length) return true;
+    const hay = plan.__hay || (plan.__hay = planHaystack(plan));
+    return tokens.every(function(tk){ return hay.indexOf(tk) >= 0; });
+  });
+
+  render();
+}
+/* ---------- 載入 ---------- */
+async function loadPlans(){
+  if(!planClient || !planUser) return;
+
+  el.list.innerHTML = '<div class="plan-loading">載入中…</div>';
+  el.count.textContent = '載入中…';
+  el.hint.textContent = '';
+
+  // 不指定 user_id：一般同仁由 RLS 過濾成自己的列，管理員可讀全部
+  const { data, error } = await planClient.from('insurance_plans')
+    .select('id, client_name, monthly_income, risk_order, coverage, created_at')
+    .order('created_at', { ascending: false })
+    .limit(PLAN_LIMIT);
+
+  if(error){
+    allPlans = [];
+    filteredPlans = [];
+    el.count.textContent = '讀取失敗';
+    el.list.innerHTML = emptyBlock('讀取客戶規劃失敗', '資料庫回應：' + escapeHtml(error.message), '');
+    const missing = /does not exist|schema cache|relation|PGRST205|42P01/i.test(error.message || '');
+    el.hint.textContent = missing
+      ? '若尚未建立資料表，請在 Supabase SQL Editor 執行 supabase-schema-insurance-plans.sql，再重新整理。'
+      : '請確認網路連線後按「重新整理」；若持續失敗，請聯絡管理員。';
+    return;
+  }
+
+  allPlans = Array.isArray(data) ? data : [];
+  allPlans.forEach(function(plan){ plan.__hay = planHaystack(plan); });
+  applyFilter();
+
+  if(allPlans.length >= PLAN_LIMIT){
+    el.hint.textContent = '資料量較大，只載入最近 ' + PLAN_LIMIT + ' 筆；可縮小「期間」或輸入關鍵字縮小範圍。';
+  }
+}
+
+/* ---------- 事件 ---------- */
+function clearFilters(){
+  el.q.value = '';
+  el.range.value = 'all';
+  applyFilter();
+}
+
+el.q.addEventListener('input', function(){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(applyFilter, 120);
+});
+el.q.addEventListener('keydown', function(ev){
+  if(ev.key === 'Escape'){ clearFilters(); el.q.focus(); }
+});
+el.range.addEventListener('change', applyFilter);
+el.clear.addEventListener('click', function(){ clearFilters(); el.q.focus(); });
+el.reload.addEventListener('click', function(){ loadPlans(); });
+el.list.addEventListener('click', function(ev){
+  const btn = ev.target && ev.target.closest ? ev.target.closest('[data-act="clear"]') : null;
+  if(!btn) return;
+  clearFilters();
+  el.q.focus();
+});
+el.logoutBtn.addEventListener('click', async function(){
+  try { if(planClient) await planClient.auth.signOut(); } catch(e){}
+  location.replace('./login.html');
+});
+
+/* ---------- boot ---------- */
+(async function boot(){
+  if(!window.authGuard || !window.authGuard.ready){
+    el.count.textContent = '—';
+    el.list.innerHTML = emptyBlock('無法載入登入元件', '請確認網路連線後重新整理。', '');
+    return;
+  }
+  let g;
+  try { g = await window.authGuard.ready; } catch(e){ return; }
+  if(!g || !g.session || !g.user) return;   // 守衛正在導向 login.html
+
+  planClient = g.sb;
+  planUser = g.user;
+  el.whoami.textContent = planUser.email || '同仁';
+
+  try {
+    const { data: profile } = await planClient.from('profiles')
+      .select('full_name, email, is_admin').eq('id', planUser.id).maybeSingle();
+    const name = (profile && (profile.full_name || profile.email)) || planUser.email || '同仁';
+    el.whoami.textContent = name + (profile && profile.is_admin ? '（管理員）' : '');
+  } catch(e){}
+
+  await loadPlans();
+})();
+</script>
+<script>
+// 本機開發（localhost / 127.0.0.1）不註冊 Service Worker，避免快取干擾測試；詳見 DEV.md。
+if ('serviceWorker' in navigator && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
+  navigator.serviceWorker.register('./sw.js').catch(function(err){
+    console.log('SW registration failed (ok in dev):', err);
+  });
+}
+</script>
+</body>
+</html>

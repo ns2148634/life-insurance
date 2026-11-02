@@ -74,9 +74,10 @@ npm run dev
 | --- | --- | --- |
 | `login.html`（根目錄） | ✅ | 全站共用登入頁；本身不需登入即可開 |
 | `index.html` | ✅ | 工具總覽；需登入。登入區塊仍需連得到 Supabase |
-| `insurance-needs.html` 等試算工具 | ✅ | 需登入；計算本身是純前端（`html2pdf` 已放在 `libs/`） |
+| `insurance-needs.html` 等試算工具 | ✅ | 需登入；計算本身是純前端（`html2pdf` 已放在 `libs/`）。`insurance-needs.html` 第 3 頁的「儲存客戶資料」會寫入 Supabase `public.insurance_plans`（每次新增一筆、RLS 只限本人），儲存後可在 `client-plans.html`（人生圖資料）搜尋與回看；**第一次使用前需先執行 `supabase-schema-insurance-plans.sql`** |
+| `client-plans.html`（人生圖資料） | ✅ | 需登入；讀取 `public.insurance_plans`，搜尋自己儲存的客戶人生圖規劃（第 2 頁風險順序與保障建議快照）。關鍵字比對姓名／風險／保障項目／金額（支援全形數字）、可依期間篩選；一般同仁由 RLS 限制只讀自己的列，管理員可讀全部。**第一次使用前需先執行 `supabase-schema-insurance-plans.sql`** |
 | `90day.html`（90 天手冊） | ✅ | 需登入；進度**跟著登入帳號**存（Supabase `public.cg90_progress` + 本機 mirror），連不到雲端時會自動退回「僅本機儲存」，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」（見「四之二」）。**第一次使用前需先在 SQL Editor 執行 `supabase-schema-90day-progress.sql`**，否則讀寫會失敗 |
-| `goal-system.html`（一定要宸功專區） | ✅ | 需登入；分「個人專區」、「通訊處專區」與「通訊處排行」。個人區的每月目標存在 Supabase `public.goal_targets`（一人一月一筆）、個人實績讀 `public.agent_stats`（由保顧+ 的 cron 寫入，見下方註記）；通訊處區顯示全體目標加總與**合計實績**（只顯示合計、不列個人明細）；排行區列出各指標前 10 名與數值（刻意顯示同仁姓名，不含客戶個資）。**第一次使用前需先在 SQL Editor 依序執行 `supabase-schema-goals.sql`、`supabase-schema-agent-stats.sql`、`supabase-schema-unit-stats.sql`、`supabase-schema-unit-ranking.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`、`AGENT-STATS-SETUP.md`） |
+| `goal-system.html`（一定要宸功專區） | ✅ | 需登入；分「個人專區」、「通訊處專區」、「通訊處排行」與「歷史資料」。個人區的每月目標存在 Supabase `public.goal_targets`（一人一月一筆）、個人實績讀 `public.agent_stats`（由保顧+ 的 cron 寫入，見下方註記）；通訊處區顯示全體目標加總與**合計實績**（只顯示合計、不列個人明細）；排行區列出各指標前 10 名與數值（刻意顯示同仁姓名，不含客戶個資）；歷史資料區以月／季／年回查個人目標與實績（含達成率）、通訊處合計與排行歷史（含**我的名次**，即使在前 10 名外也會單獨列出）。客戶規劃歷程已獨立為 `client-plans.html`。**第一次使用前需先在 SQL Editor 依序執行 `supabase-schema-goals.sql`、`supabase-schema-agent-stats.sql`、`supabase-schema-unit-stats.sql`、`supabase-schema-unit-ranking.sql`、`supabase-schema-history.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`、`AGENT-STATS-SETUP.md`） |
 | `accounts.html` | ✅ | 需管理員帳號登入，且該帳號 `profiles.is_admin = true` |
 | `video-training/*` | ✅ | 需登入；影片為 YouTube 內嵌，需網路 |
 | `sharing/*` | ✅ | 需登入 |
@@ -86,6 +87,10 @@ npm run dev
 > （RLS 只有 `select`），個人專區只會讀自己那一列，通訊處專區則走 `security definer` 的
 > `get_unit_agent_stats_totals()` 只取**全體合計**；通訊處排行走
 > `get_unit_agent_stats_ranking()`，只回傳各指標前 10 名的姓名與數值（不含完整 email／客戶資料）。
+> 歷史資料區走 `get_unit_history()`（期間合計）與 `get_unit_agent_stats_ranking_range()`
+> （期間排行，另回 `is_me` 供「我的名次」使用）；個人歷史受 RLS 限制，只讀得到自己的列。
+> 客戶規劃歷程獨立於 `client-plans.html`（人生圖資料），讀 `public.insurance_plans`，同樣由 RLS
+> 限制一般同仁只看得到自己的列、管理員可看全部。
 > 本機測試時若還沒同步過，該區塊會顯示「本月尚無保顧+ 實績資料」，屬正常現象。
 > 設定與驗證步驟見 **[AGENT-STATS-SETUP.md](./AGENT-STATS-SETUP.md)**。
 
@@ -227,7 +232,7 @@ const { sb, session, user } = await window.authGuard.ready;
 | `dev-server.js`（新增） | 零依賴靜態伺服器：專案同時掛在 `/` 與 `/life-insurance/`，預設埠 5500，全站 `no-store` |
 | `package.json` | 新增 `scripts.dev`（`node dev-server.js`）、`name`、`private`；未新增任何依賴 |
 | `sw.js` | `BASE` 改由 `self.location` 推導（不再寫死 `/life-insurance/`）；localhost 自動卸載不快取；離線 fallback 不再回傳 `undefined`；cache 版號 `v8 → v9` |
-| `index.html`、`insurance-needs.html` | 本機（localhost／127.0.0.1）不註冊 Service Worker |
+| `index.html`、`insurance-needs.html`、`client-plans.html` | 本機（localhost／127.0.0.1）不註冊 Service Worker |
 | `README.md`、`DEV.md` | 補上本機測試說明 |
 
 > 以上皆未改動任何 Supabase 邏輯、SQL 或既有頁面行為，正式站功能不受影響。

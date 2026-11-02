@@ -214,6 +214,23 @@ html,body{
 .calcbtn:active{background:var(--gold-dim);}
 .pdfbtn{width:100%;padding:17px;background:transparent;border:1.5px solid var(--gold-line);color:var(--gold);border-radius:var(--rl);font-size:17px;cursor:pointer;font-family:'Noto Serif TC',serif;letter-spacing:1px;font-weight:700;}
 .pdfbtn:active{background:var(--gold-dim);}
+/* ── 第 3 頁：儲存客戶資料（寫入 Supabase insurance_plans，每次新增一筆） ── */
+.savepanel{
+  background:var(--ink-card);border:1px solid var(--gold-line);
+  border-radius:var(--rl);padding:20px 22px;margin:6px 0 16px;
+}
+.savetitle{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.savenote{font-size:13.5px;line-height:1.75;color:var(--muted);}
+.savepanel .calcbtn{margin:14px 0 0;}
+.savemsg{display:none;margin-top:12px;padding:12px 15px;border-radius:var(--r);font-size:14.5px;line-height:1.65;border:1px solid var(--border);}
+.savemsg.ok{display:block;color:#8fd6b0;border-color:rgba(143,214,176,0.38);background:rgba(143,214,176,0.1);}
+.savemsg.err{display:block;color:var(--danger);border-color:rgba(214,100,90,0.38);background:rgba(214,100,90,0.1);}
+.savestatus{font-size:12.5px;color:var(--hint);margin-top:10px;}
+.savelink{display:inline-block;margin-top:12px;font-size:13.5px;color:var(--gold-lt);text-decoration:none;border-bottom:1px dashed var(--gold-line);}
+.savelink:hover{color:var(--gold);}
+html[data-cg-theme="light"] .savelink{color:#8a6a30;}
+html[data-cg-theme="light"] .savemsg.ok{color:#1f6b4a;border-color:rgba(31,107,74,.3);background:rgba(31,107,74,.08);}
+html[data-cg-theme="light"] .savemsg.err{color:#a33a2b;border-color:rgba(163,58,43,.3);background:rgba(163,58,43,.07);}
 .warn{background:rgba(214,100,90,.12);border:1px solid rgba(214,100,90,.3);border-radius:var(--r);padding:14px 18px;font-size:15px;color:var(--danger);margin-bottom:16px;display:none;}
 #printArea{display:none;}
 @media print{
@@ -770,6 +787,15 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
         <div class="dtrow"><span class="dtl">建議重疾保額（3–5年）</span><span class="dtr" id="dt5">—</span></div>
       </div>
     </div>
+  </div>
+
+  <div class="savepanel">
+    <div class="savetitle">Save Client Plan</div>
+    <div class="savenote">把客戶姓名、月收入、四項風險順序與目前的保障內容存成一筆，之後可在首頁「<b>人生圖資料</b>」搜尋與回看。<br>每次儲存都會新增一筆、<b>不會覆蓋</b>舊資料（保留歷程）；不儲存生日、性別或聯絡方式。</div>
+    <button class="calcbtn" type="button" id="savePlanBtn">💾 儲存客戶資料</button>
+    <div class="savemsg" id="saveMsg"></div>
+    <div class="savestatus" id="saveStatus"></div>
+    <a class="savelink" href="./client-plans.html">查看人生圖資料 →</a>
   </div>
 
   <button class="pdfbtn" id="pdfbtn" onclick="exportPDF()">📄 匯出保障規劃報告（PDF）</button>
@@ -1468,6 +1494,101 @@ function exportPDF(){
     .then(function(){pdfDone();})
     .catch(function(){pdfDone();alert('PDF 產生失敗，已改用列印功能。');window.print();});
 }
+
+/* ── 儲存客戶資料（Supabase public.insurance_plans，每次新增一筆） ──
+   - 只存：姓名、月收入、四項風險順序、保障內容顯示快照
+   - 每次儲存都是新的一列（保留歷程），不覆蓋舊資料
+   - 需先登入；RLS 只允許本人讀寫自己的列                       */
+var planSb=null, planUser=null;
+if(window.authGuard&&window.authGuard.ready){
+  window.authGuard.ready.then(function(g){
+    if(g&&g.session&&g.user){ planSb=g.sb; planUser=g.user; }
+  }).catch(function(){});
+}
+
+function setSaveMsg(text,type){
+  var box=document.getElementById('saveMsg');
+  if(!box)return;
+  box.className='savemsg'+(type?' '+type:'');
+  box.textContent=text||'';
+}
+
+// 保障內容快照：保留輸入框原文（例如「20-40」），依風險順序分組
+function collectPlanCoverage(){
+  var s=getState();
+  var list=[];
+  rankOrder.forEach(function(rid,idx){
+    var pd=PLANS[rid];
+    if(!pd)return;
+    var items=[];
+    pd.subs.forEach(function(sub,si){
+      var key=rid+'-'+si;
+      var st=inputState(rid,si);
+      var raw=st.exists
+        ? st.raw
+        : (planDefaults[key]!==undefined?planDefaults[key]:sub.defFn(s));
+      items.push({
+        key:key,
+        name:sub.name,
+        value:String(raw==null?'':raw),
+        unit:sub.unit||''
+      });
+    });
+    list.push({cat:rid,title:pd.title,priority:idx+1,items:items});
+  });
+  return list;
+}
+
+async function saveClientPlan(){
+  var btn=document.getElementById('savePlanBtn');
+  var s=getState();
+  setSaveMsg('');
+
+  if(rankOrder.length<4){
+    setSaveMsg('請先回第 1 頁完成 4 項風險排序，再回來儲存。','err');
+    return;
+  }
+  if(!s.name){
+    setSaveMsg('請先在上方「客戶資料」填寫姓名，人生圖資料才能辨識。','err');
+    var nm=document.getElementById('cname');
+    if(nm&&nm.focus)nm.focus();
+    return;
+  }
+  if(s.name.length>40){
+    setSaveMsg('姓名請縮短至 40 字以內（目前 '+s.name.length+' 字）。','err');
+    return;
+  }
+  if(!s.mi||s.mi<=0){
+    setSaveMsg('請先回第 2 頁填寫月收入（需大於 0），再回來儲存。','err');
+    return;
+  }
+  if(!planUser||!planSb){
+    setSaveMsg('尚未取得登入狀態，無法儲存。請重新整理或重新登入後再試。','err');
+    return;
+  }
+
+  var payload={
+    user_id:planUser.id,
+    client_name:s.name,
+    monthly_income:Math.round(s.mi),
+    risk_order:rankOrder.slice(),
+    coverage:collectPlanCoverage()
+  };
+
+  if(btn){ btn.disabled=true; btn.textContent='儲存中…'; }
+  var res=await planSb.from('insurance_plans').insert(payload);
+  if(btn){ btn.disabled=false; btn.textContent='💾 儲存客戶資料'; }
+
+  if(res.error){
+    setSaveMsg('儲存失敗：'+res.error.message
+      +'（若尚未建立資料表，請先在 Supabase 執行 supabase-schema-insurance-plans.sql）','err');
+    return;
+  }
+
+  setSaveMsg('已儲存「'+s.name+'」的客戶資料 ✓ 可到首頁「人生圖資料」搜尋查看。','ok');
+  var st=document.getElementById('saveStatus');
+  if(st)st.textContent='上次儲存：'+new Date().toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
 // ── 自適應：視窗高度（iOS 鍵盤／動態工具列）＋ 內容輕量縮放（0.85～1） ──
 var __fitScale=1,__fitRaf=0,__appRaf=0;
 function fitScreen(){
@@ -1537,6 +1658,8 @@ setAppH();
 initRiskPicks();
 renderTop();
 renderRiskStage();
+var savePlanBtn=document.getElementById('savePlanBtn');
+if(savePlanBtn)savePlanBtn.addEventListener('click',saveClientPlan);
 // 本機開發（localhost / 127.0.0.1）不註冊 Service Worker，避免快取干擾測試（詳見 DEV.md）
 var isLocalDev = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 if('serviceWorker' in navigator && !isLocalDev){
