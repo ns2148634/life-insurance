@@ -1,7 +1,7 @@
 {
-  "name": "經濟支柱守護計畫｜宸功保險",
-  "short_name": "守護計畫",
-  "description": "客戶保障需求諮詢：人生風險、保障需求總表與保費試算",
+  "name": "人生收支曲線圖｜宸功保險",
+  "short_name": "收支曲線",
+  "description": "透過人生收支曲線圖，了解是否有保險需求；如果有需求，依風險優先順序規劃保障，並試算需求總表與保費。",
   "start_url": "./insurance-needs.html",
   "scope": "./",
   "display": "standalone",
