@@ -546,14 +546,14 @@ body.pdfing #printArea{display:block!important;position:static;left:auto;top:aut
         <text class="svg-axis-label" x="515" y="208" font-size="12" fill="rgba(255,255,255,.55)" text-anchor="middle">身故</text>
       </g>
 
-      <!-- stage2: 支出弧線（第 4 站起與收入線一起淡出） -->
-      <g class="rstage" id="rstage2" data-line-stage="1">
+      <!-- stage2: 支出弧線（線條永久保留；「支出線」文字只在第 2 站顯示） -->
+      <g class="rstage" id="rstage2">
         <path class="svg-expense-line" d="M55,188 Q285,30 515,188" fill="none" stroke="#c2974f" stroke-width="2.5"/>
         <text class="svg-expense-label" id="expenseLabel" x="285" y="118" font-size="13" fill="#dcb877" text-anchor="middle" font-weight="600">支出線</text>
       </g>
 
-      <!-- stage3: 就業點/退休點/收入線（第 4 站起與支出線一起淡出） -->
-      <g class="rstage" id="rstage3" data-line-stage="1">
+      <!-- stage3: 就業點/退休點/收入線（線條永久保留；「收入線」文字只在第 3 站顯示） -->
+      <g class="rstage" id="rstage3">
         <path class="svg-income-area svg-income-line" d="M165,188 Q292,-104 420,188" fill="rgba(91,155,209,0.14)" stroke="#5b9bd1" stroke-width="2.5"/>
         <circle class="svg-income-dot" cx="165" cy="188" r="5" fill="#5b9bd1"/>
         <circle class="svg-income-dot" cx="420" cy="188" r="5" fill="#5b9bd1"/>
@@ -1021,11 +1021,14 @@ function renderRiskStage(){
   for(var i=1;i<=TOTAL_RISK_STAGES;i++){
     var g=document.getElementById('rstage'+i);
     if(!g)continue;
-    var lineStage=g.getAttribute('data-line-stage')==='1';
-    // 收入線／支出線只在前 3 站出現；進入第 4 站後一起淡出
-    var show=i<=riskStage&&!(lineStage&&riskStage>=4);
-    g.classList.toggle('show',show);
+    // 線條一旦出現就持續保留，不隨後續站別消失
+    g.classList.toggle('show',i<=riskStage);
   }
+  // 只隱藏「支出線／收入線」文字，線條本身仍留在圖上
+  var expLbl=document.getElementById('expenseLabel');
+  if(expLbl)expLbl.style.display=(riskStage===2)?'':'none';
+  var incLbl=document.getElementById('incomeLabel');
+  if(incLbl)incLbl.style.display=(riskStage===3)?'':'none';
   var cap=document.getElementById('captionText');
   if(cap)cap.innerHTML=CAPTIONS[riskStage];
   syncRiskPicks();
