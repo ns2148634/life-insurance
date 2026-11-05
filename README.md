@@ -2,7 +2,7 @@
 
 宸功保險的業務工具總覽：純靜態網站（無建置流程），部署於 GitHub Pages 的專案子路徑 `/life-insurance/`。
 
-- `index.html` 工具總覽首頁（含登入區塊；分類依序為客戶顧問、制度、目標管理、訓練）
+- `index.html` 宸功系統首頁（工具總覽；頁首為「帳號膠囊＋下拉選單」我的帳號／帳號管理（管理員）／登出；分類依序為客戶顧問、制度、目標管理、訓練）
 - `login.html` 全站登入頁（**所有頁面都需登入**）＋ `auth-guard.js` 登入守衛
 - `insurance-needs.html`／`career-system.html`／`income-system.html`／`manager-income.html`／`promotion-system.html`／`90day.html` 各項諮詢與訓練工具
   - `insurance-needs.html`（人生收支曲線圖）第 3 頁可把客戶姓名、月收入、風險順序與保障內容「儲存客戶資料」，每次儲存都是新的一筆（保留歷程），存在 Supabase `public.insurance_plans`（RLS 只限本人；不含生日、性別等個資）；儲存後可在「人生圖資料」搜尋與回看
