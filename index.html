@@ -103,10 +103,12 @@ main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
 
 .card-foot{
   margin-top:auto;padding-top:14px;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
   border-top:1px solid var(--border);
-  font-size:12.5px;color:var(--hint);letter-spacing:0.5px;
+  font-size:12.5px;color:var(--hint);
 }
+.card-foot > span:first-child{color:var(--muted);line-height:1.75;letter-spacing:0;}
+.card-foot .arrow{flex:0 0 auto;line-height:1.6;}
 .arrow{color:var(--gold);font-size:16px;transition:transform .25s ease;}
 .card:hover .arrow{transform:translateX(4px);}
 
@@ -155,6 +157,61 @@ main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
 button.ab-link{font-family:inherit;cursor:pointer;background:transparent;}
 button.ab-link:hover{background:rgba(255,255,255,0.05);}
 
+/* ---------- 每日目標提醒（每天第一次載入首頁彈一次） ---------- */
+.daily-goal{
+  position:fixed;inset:0;z-index:80;
+  display:flex;align-items:center;justify-content:center;
+  padding:22px;
+}
+.daily-goal[hidden]{display:none;}
+.dg-bg{position:absolute;inset:0;background:rgba(5,10,16,0.76);}
+.dg-card{
+  position:relative;width:100%;max-width:420px;
+  padding:26px 24px 22px;
+  background:var(--ink-card);
+  border:1px solid var(--gold-line);border-radius:18px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.5);
+}
+.dg-close{
+  position:absolute;top:12px;right:12px;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:1px solid var(--border);border-radius:9px;
+  color:var(--muted);font-size:18px;line-height:1;font-family:inherit;cursor:pointer;
+}
+.dg-close:hover{color:#fff;border-color:var(--gold-line);}
+.dg-eyebrow{
+  font-size:11.5px;letter-spacing:2px;color:var(--gold-lt);
+  text-transform:uppercase;margin-bottom:10px;padding-right:46px;
+}
+.dg-card h2{
+  font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;
+  color:#fff;line-height:1.45;padding-right:44px;
+}
+.dg-rows{margin-top:18px;display:grid;gap:10px;}
+.dg-rows:empty{display:none;}
+.dg-row{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding:11px 15px;border:1px solid var(--border);border-radius:11px;
+  background:rgba(255,255,255,0.02);
+}
+.dg-row span{font-size:12.5px;color:var(--muted);letter-spacing:1px;}
+.dg-row b{
+  font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;
+  color:#fff;line-height:1.2;white-space:nowrap;
+}
+.dg-row b small{font-family:'Noto Sans TC',sans-serif;font-size:12px;color:var(--muted);margin-left:3px;}
+.dg-note{margin-top:14px;font-size:12.5px;color:var(--hint);line-height:1.75;}
+.dg-actions{display:flex;gap:10px;margin-top:20px;}
+.dg-btn{
+  flex:1 1 0;min-width:0;min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:10px;font-size:14px;font-family:inherit;text-decoration:none;cursor:pointer;
+}
+.dg-btn.primary{background:var(--gold);color:#1a1406;font-weight:700;border:none;}
+.dg-btn.primary:hover{background:var(--gold-lt);}
+.dg-btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+.dg-btn.ghost:hover{color:#fff;border-color:var(--gold-line);}
+
 footer{
   max-width:1180px;margin:0 auto;padding:0 32px 48px;
   color:var(--hint);font-size:12px;letter-spacing:0.5px;
@@ -164,6 +221,9 @@ footer{
   header{padding:40px 20px 28px;}
   main{padding:8px 20px 60px;}
   footer{padding:0 20px 40px;}
+  .daily-goal{padding:16px;}
+  .dg-card{padding:22px 18px 18px;border-radius:16px;}
+  .dg-row b{font-size:22px;}
 }
 
 /* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
@@ -184,6 +244,15 @@ footer{
   .ab-badge{font-size:13px;}
   .ab-link{font-size:15px;padding:9px 16px;min-height:44px;display:inline-flex;align-items:center;}
   footer{font-size:14px;}
+
+  .dg-card{max-width:460px;padding:30px 28px 26px;}
+  .dg-close{width:40px;height:40px;font-size:20px;top:14px;right:14px;}
+  .dg-card h2{font-size:22px;padding-right:44px;}
+  .dg-eyebrow{font-size:13px;}
+  .dg-row span{font-size:14px;}
+  .dg-row b{font-size:27px;}
+  .dg-note{font-size:14.5px;}
+  .dg-btn{font-size:16px;min-height:50px;}
 }
 
 </style>
@@ -217,7 +286,7 @@ footer{
         <span class="tag">iPad 諮詢</span>
       </div>
       <h2>人生收支曲線圖</h2>
-      <div class="card-foot"><span>insurance-needs.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>三步驟完成客戶保障需求與保費試算。</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./sharing/login.html">
@@ -225,7 +294,7 @@ footer{
         <span class="tag internal">業務分享</span>
       </div>
       <h2>業務分享專區</h2>
-      <div class="card-foot"><span>sharing/login.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>同仁分享文章連結與可切入的推銷重點。</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./estate-planning.html">
@@ -233,7 +302,7 @@ footer{
         <span class="tag">傳承規劃</span>
       </div>
       <h2>資產傳承三步驟</h2>
-      <div class="card-foot"><span>estate-planning.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>遺產稅、最低稅負與保額槓桿一次試算。</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./client-plans.html">
@@ -241,7 +310,7 @@ footer{
         <span class="tag">客戶資料</span>
       </div>
       <h2>人生圖資料</h2>
-      <div class="card-foot"><span>client-plans.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>集中回看你為客戶儲存的人生圖規劃。</span><span class="arrow">→</span></div>
     </a>
 
   </div>
@@ -254,7 +323,7 @@ footer{
         <span class="tag internal">制度說明</span>
       </div>
       <h2>透明晉陞與委任標準</h2>
-      <div class="card-foot"><span>promotion-system.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>各職級升遷條件與委任門檻白紙黑字。</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./income-system.html">
@@ -262,7 +331,7 @@ footer{
         <span class="tag internal">津貼試算</span>
       </div>
       <h2>協合式三維收入與試算</h2>
-      <div class="card-foot"><span>income-system.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>累積、協合、挑戰三維收入與津貼試算。</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./manager-income.html">
@@ -270,7 +339,7 @@ footer{
         <span class="tag internal">主管工具</span>
       </div>
       <h2>業務組織收入試算</h2>
-      <div class="card-foot"><span>manager-income.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>依獎金規則逐層試算組織與主管收入。</span><span class="arrow">→</span></div>
     </a>
 
   </div>
@@ -283,7 +352,7 @@ footer{
         <span class="tag">每月目標</span>
       </div>
       <h2>一定要宸功專區</h2>
-      <div class="card-foot"><span>goal-system.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>設定每月目標，自動換算每週行動量。</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./members.html">
@@ -291,7 +360,7 @@ footer{
         <span class="tag">組織圖</span>
       </div>
       <h2>宸功人士</h2>
-      <div class="card-foot"><span>members.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>組織圖、個人檔案與年度心願時間軸。</span><span class="arrow">→</span></div>
     </a>
 
   </div>
@@ -304,7 +373,7 @@ footer{
         <span class="tag internal">新人訓練</span>
       </div>
       <h2>宸功出擊 90 天</h2>
-      <div class="card-foot"><span>90day.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>新人 90 天啟動手冊、話術與進度儲存。</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./video-training/login.html">
@@ -312,7 +381,7 @@ footer{
         <span class="tag internal">教育訓練</span>
       </div>
       <h2>影片研習</h2>
-      <div class="card-foot"><span>video-training/login.html</span><span class="arrow">→</span></div>
+      <div class="card-foot"><span>教育訓練影片庫並追蹤個人觀看進度。</span><span class="arrow">→</span></div>
     </a>
 
   </div>
@@ -320,6 +389,22 @@ footer{
 </main>
 
 <footer>宸功保險 · 南山人壽</footer>
+
+<!-- 每日目標提醒：每天第一次載入首頁時彈出（內容由下方 JS 依 goal_targets 產生） -->
+<div class="daily-goal" id="dailyGoal" hidden>
+  <div class="dg-bg" data-dg-close aria-hidden="true"></div>
+  <div class="dg-card" role="dialog" aria-modal="true" aria-labelledby="dgTitle">
+    <button type="button" class="dg-close" data-dg-close aria-label="關閉">×</button>
+    <p class="dg-eyebrow" id="dgMonth"></p>
+    <h2 id="dgTitle"></h2>
+    <div class="dg-rows" id="dgRows"></div>
+    <p class="dg-note" id="dgNote"></p>
+    <div class="dg-actions">
+      <a class="dg-btn primary" id="dgGo" href="./goal-system.html">查看我的目標 →</a>
+      <button type="button" class="dg-btn ghost" data-dg-close>知道了</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const accountBody = document.getElementById("accountBody");
@@ -330,6 +415,114 @@ function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[c]));
+}
+
+/* ---------- 每日目標提醒：每天第一次載入首頁彈一次 ----------
+   資料來源：public.goal_targets（RLS 只讀自己）
+   已看過記在 localStorage：cg_goal_popup_<uid>_<YYYY-MM-DD>
+   localStorage 被封鎖（無痕）時退回 sessionStorage；兩者都失敗就只在本次載入彈一次。
+   ---------------------------------------------------------- */
+let dgShown = false;
+let dgEsc = null;
+
+function dgDate(monthOnly) {
+  const d = new Date();
+  const ym = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+  return monthOnly ? ym + "-01" : ym + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+function dgMonthLabel() {
+  const d = new Date();
+  return d.getFullYear() + " 年 " + (d.getMonth() + 1) + " 月";
+}
+
+function dgSeen(key) {
+  try { if (localStorage.getItem(key) === "1") return true; } catch (e) {}
+  try { if (sessionStorage.getItem(key) === "1") return true; } catch (e) {}
+  return false;
+}
+
+function dgMark(key) {
+  try { localStorage.setItem(key, "1"); return; } catch (e) {}
+  try { sessionStorage.setItem(key, "1"); } catch (e) {}
+}
+
+function dgMoney(n) {
+  return Math.max(0, Math.round(Number(n) || 0)).toLocaleString("zh-TW");
+}
+
+function openDailyGoal(row, name) {
+  const box = document.getElementById("dailyGoal");
+  if (!box) return;
+
+  const rows = document.getElementById("dgRows");
+  const go = document.getElementById("dgGo");
+  document.getElementById("dgMonth").textContent = "本月目標 · " + dgMonthLabel();
+
+  if (row) {
+    document.getElementById("dgTitle").textContent = name + "，這個月的目標";
+    rows.innerHTML =
+      '<div class="dg-row"><span>FYC 目標</span><b>' + dgMoney(row.fyc_target) + '<small> 元</small></b></div>' +
+      '<div class="dg-row"><span>目標保費</span><b>' + dgMoney(row.premium_target) + '<small> 元</small></b></div>' +
+      (Number(row.case_target) > 0
+        ? '<div class="dg-row"><span>目標件數</span><b>' + dgMoney(row.case_target) + '<small> 件</small></b></div>'
+        : "");
+    document.getElementById("dgNote").textContent = "每天看一眼，行動量就不會跑掉。";
+    go.textContent = "查看我的目標 →";
+  } else {
+    document.getElementById("dgTitle").textContent = "本月還沒設定目標";
+    rows.innerHTML = "";
+    document.getElementById("dgNote").textContent =
+      "花 1 分鐘填好 FYC 與目標保費，系統就能幫你換算每週行動量。";
+    go.textContent = "立即設定 →";
+  }
+
+  const lastFocus = document.activeElement;
+  box.hidden = false;
+  document.body.style.overflow = "hidden";
+
+  function shut() {
+    box.hidden = true;
+    document.body.style.overflow = "";
+    if (dgEsc) { document.removeEventListener("keydown", dgEsc); dgEsc = null; }
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  dgEsc = function (e) { if (e.key === "Escape") shut(); };
+  document.addEventListener("keydown", dgEsc);
+  Array.prototype.forEach.call(box.querySelectorAll("[data-dg-close]"), function (n) {
+    n.addEventListener("click", shut);
+  });
+
+  const closeBtn = box.querySelector(".dg-close");
+  if (closeBtn) closeBtn.focus();
+}
+
+async function maybeShowDailyGoal(client, user, name) {
+  if (!client || !user || dgShown) return;
+
+  const seenKey = "cg_goal_popup_" + user.id + "_" + dgDate(false);
+  if (dgSeen(seenKey)) return;
+
+  let row = null;
+  try {
+    const { data, error } = await client.from("goal_targets")
+      .select("fyc_target, premium_target, case_target")
+      .eq("user_id", user.id).eq("period_month", dgDate(true)).maybeSingle();
+    if (error) {
+      // 讀不到就安靜跳過（可能尚未建立資料表或離線），首頁功能不受影響
+      console.warn("[daily-goal] " + error.message);
+      return;
+    }
+    row = data;
+  } catch (e) {
+    console.warn("[daily-goal] " + (e && e.message ? e.message : e));
+    return;
+  }
+
+  dgShown = true;
+  dgMark(seenKey);
+  openDailyGoal(row, name);
 }
 
 // head 的 auth-guard.js 已經確認登入、也載入好 SDK 與 config.js，
@@ -388,6 +581,9 @@ async function renderAccount() {
     // 全站都需登入：登出後直接回到登入頁，避免留在原頁看到內容
     location.replace("./login.html");
   });
+
+  // 每天第一次登入首頁 → 彈出本月目標（不阻塞上方帳號列顯示）
+  void maybeShowDailyGoal(sb, user, name);
 }
 
 function renderLogin() {
