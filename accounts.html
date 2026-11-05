@@ -163,10 +163,11 @@ td.dim{color:var(--hint);font-size:12.5px;white-space:nowrap;}
   <header class="top">
     <div>
       <h1>帳號<span>管理</span></h1>
-      <p class="sub">列出所有已建立的業務同仁帳號，可修正姓名與代為重設密碼。</p>
+      <p class="sub">列出所有已建立的業務同仁帳號，可修正姓名、設定職級與所屬主管，或代為重設密碼。</p>
     </div>
     <div class="who">
       <a href="./index.html">← 回主畫面</a>
+      <a href="./members.html">宸功人士</a>
       <a href="./video-training/profile.html">我的帳號</a>
       <button class="ghost sm" id="logoutBtn">登出</button>
     </div>
@@ -192,6 +193,9 @@ try {
 }
 
 let profiles = [];        // 全部帳號（profiles）
+let ranks = [];           // 職級對照（member_ranks）
+let members = {};         // user_id -> member_profiles
+let membersReady = false; // member_profiles 是否可讀（SQL 是否已執行）
 let editId = null;        // 正在編輯姓名的 profile id
 let resetTarget = null;   // 正在重設密碼的 profile
 let pendingPassword = ""; // 重設面板中的新密碼
@@ -255,25 +259,58 @@ async function init() {
 }
 
 async function loadProfiles() {
-  const { data, error } = await sb.from("profiles")
-    .select("id, full_name, email, is_admin, created_at")
-    .order("is_admin", { ascending: false })
-    .order("created_at", { ascending: true });
+  const [profRes, rankRes, memberRes] = await Promise.all([
+    sb.from("profiles")
+      .select("id, full_name, email, is_admin, created_at")
+      .order("is_admin", { ascending: false })
+      .order("created_at", { ascending: true }),
+    sb.from("member_ranks").select("code, label, sort_order").order("sort_order", { ascending: true }),
+    sb.from("member_profiles").select("user_id, rank_code, supervisor_id")
+  ]);
 
-  if (error) {
-    contentEl.innerHTML = '<p class="error">讀取帳號清單失敗：' + esc(error.message) + "</p>";
+  if (profRes.error) {
+    contentEl.innerHTML = '<p class="error">讀取帳號清單失敗：' + esc(profRes.error.message) + "</p>";
     return;
   }
-  profiles = data || [];
+
+  profiles = profRes.data || [];
+
+  ranks = rankRes.error ? [] : (rankRes.data || []);
+  membersReady = !memberRes.error;
+
+  members = {};
+  (memberRes.data || []).forEach(m => { members[m.user_id] = m; });
+
   render();
 }
 function render() {
   const rows = profiles.map(p => {
     const editing = editId === p.id;
+    const mp = members[p.id] || {};
 
     const nameCell = editing
       ? '<input class="inline-input" id="nameInput" value="' + esc(editDraft) + '" maxlength="40" autocomplete="off">'
       : (p.full_name ? esc(p.full_name) : '<span class="none">（未填寫）</span>');
+
+    const rankList = ranks.length ? ranks : [{ code: "AG", label: "專員" }];
+    const rankCell = membersReady
+      ? '<select class="inline-input" data-act="rank" data-id="' + p.id + '" aria-label="職級">' +
+          rankList.map(r =>
+            '<option value="' + esc(r.code) + '"' + (mp.rank_code === r.code ? " selected" : "") + ">" +
+            esc(r.label) + "</option>"
+          ).join("") +
+        "</select>"
+      : '<span class="none">尚未建立</span>';
+
+    const supCell = membersReady
+      ? '<select class="inline-input" data-act="supervisor" data-id="' + p.id + '" aria-label="所屬主管">' +
+          '<option value="">（未設定）</option>' +
+          profiles.filter(x => x.id !== p.id).map(x =>
+            '<option value="' + x.id + '"' + (mp.supervisor_id === x.id ? " selected" : "") + ">" +
+            esc(x.full_name || x.email || "未具名") + "</option>"
+          ).join("") +
+        "</select>"
+      : '<span class="none">尚未建立</span>';
 
     const ops = editing
       ? '<button class="primary sm" data-act="save" data-id="' + p.id + '">儲存</button>' +
@@ -285,6 +322,8 @@ function render() {
       '<td class="name-cell">' + nameCell + "</td>" +
       '<td class="email-cell">' + esc(p.email || "—") + "</td>" +
       "<td>" + (p.is_admin ? '<span class="badge">管理員</span>' : '<span class="none">業務員</span>') + "</td>" +
+      "<td>" + rankCell + "</td>" +
+      "<td>" + supCell + "</td>" +
       '<td class="dim">' + fmtDate(p.created_at) + "</td>" +
       '<td class="ops">' + ops + "</td>" +
       "</tr>";
@@ -293,10 +332,11 @@ function render() {
   contentEl.innerHTML =
     (flash ? '<div class="msg ' + flash.type + '">' + esc(flash.text) + "</div>" : "") +
     '<div class="table-wrap"><table>' +
-      "<thead><tr><th>姓名</th><th>Email（登入帳號）</th><th>權限</th><th>建立日期</th><th>操作</th></tr></thead>" +
-      "<tbody>" + (rows || '<tr><td colspan="5" class="center">尚無帳號</td></tr>') + "</tbody>" +
+      "<thead><tr><th>姓名</th><th>Email（登入帳號）</th><th>權限</th><th>職級</th><th>所屬主管</th><th>建立日期</th><th>操作</th></tr></thead>" +
+      "<tbody>" + (rows || '<tr><td colspan="7" class="center">尚無帳號</td></tr>') + "</tbody>" +
     "</table></div>" +
-    '<p class="note">共 ' + profiles.length + " 個帳號。姓名修改後會立即套用到影片研習與業務分享專區。</p>" +
+    '<p class="note">共 ' + profiles.length + " 個帳號。姓名修改後會立即套用到影片研習、業務分享專區與「宸功人士」組織圖；職級鏈是 AG 專員 → AS 業務主任 → SAS 業務襄理 → UM 區經理 → AM 處經理，<b>AM 是組織圖的根節點</b>，請先設一位沒有主管的 AM，再從上往下設定主管（未設定主管的人會暫列在 AM 下一層）。同仁也可以自己在 members.html 的「我的檔案 → 編輯」調整職級與所屬主管，只有 AM 保留給管理員設定。</p>" +
+    (membersReady ? "" : '<p class="note">職級／主管欄位尚未建立：請先在 Supabase SQL Editor 執行 supabase-schema-members.sql。</p>') +
     (resetTarget ? resetPanelHtml() : "");
 
   bindEvents();
@@ -327,7 +367,12 @@ function resetPanelHtml() {
 }
 function bindEvents() {
   contentEl.querySelectorAll("[data-act]").forEach(btn => {
+    if (btn.tagName === "SELECT") return;
     btn.addEventListener("click", () => handleAction(btn.dataset.act, btn.dataset.id));
+  });
+
+  contentEl.querySelectorAll('select[data-act="rank"], select[data-act="supervisor"]').forEach(sel => {
+    sel.addEventListener("change", () => saveMemberField(sel.dataset.id, sel.dataset.act, sel.value, sel));
   });
 
   const nameInput = document.getElementById("nameInput");
@@ -406,6 +451,48 @@ async function saveName(id) {
   editId = null;
   editDraft = "";
   flash = { type: "ok", text: "已更新姓名：" + value };
+  render();
+}
+
+async function saveMemberField(id, field, value, sel) {
+  if (!membersReady) return;
+  if (!id) return;
+
+  const patch = field === "rank"
+    ? { rank_code: value }
+    : { supervisor_id: value || null };
+
+  if (sel) sel.disabled = true;
+
+  const query = members[id]
+    ? sb.from("member_profiles").update(patch).eq("user_id", id)
+    : sb.from("member_profiles").upsert(Object.assign({ user_id: id }, patch), { onConflict: "user_id" });
+
+  const { error } = await query;
+
+  if (sel) sel.disabled = false;
+
+  if (error) {
+    flash = {
+      type: "err",
+      text: (field === "rank" ? "職級" : "所屬主管") + "更新失敗：" + error.message
+    };
+    render();
+    return;
+  }
+
+  members[id] = Object.assign({}, members[id], patch);
+
+  const p = profiles.find(x => x.id === id);
+  const who = p ? (p.full_name || p.email || "該同仁") : "該同仁";
+  const rank = ranks.find(r => r.code === value);
+
+  flash = {
+    type: "ok",
+    text: field === "rank"
+      ? "已將 " + who + " 的職級設為 " + ((rank && rank.label) || value)
+      : "已更新 " + who + " 的所屬主管"
+  };
   render();
 }
 

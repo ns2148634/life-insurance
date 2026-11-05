@@ -73,12 +73,13 @@ npm run dev
 | 頁面 | 本機可測 | 說明 |
 | --- | --- | --- |
 | `login.html`（根目錄） | ✅ | 全站共用登入頁；本身不需登入即可開 |
-| `index.html` | ✅ | 工具總覽；需登入。登入區塊仍需連得到 Supabase |
+| `index.html` | ✅ | 工具總覽；需登入。分類順序：客戶顧問 → 制度 → 目標管理 → 訓練（首頁不再顯示「本月目標」摘要，目標請進 `goal-system.html`）。登入區塊仍需連得到 Supabase |
 | `insurance-needs.html` 等試算工具 | ✅ | 需登入；計算本身是純前端（`html2pdf` 已放在 `libs/`）。`insurance-needs.html` 第 3 頁的「儲存客戶資料」會寫入 Supabase `public.insurance_plans`（每次新增一筆、RLS 只限本人），儲存後可在 `client-plans.html`（人生圖資料）搜尋與回看；**第一次使用前需先執行 `supabase-schema-insurance-plans.sql`** |
 | `client-plans.html`（人生圖資料） | ✅ | 需登入；讀取 `public.insurance_plans`，搜尋自己儲存的客戶人生圖規劃（第 2 頁風險順序與保障建議快照）。關鍵字比對姓名／風險／保障項目／金額（支援全形數字）、可依期間篩選；一般同仁由 RLS 限制只讀自己的列，管理員可讀全部。**第一次使用前需先執行 `supabase-schema-insurance-plans.sql`** |
 | `90day.html`（90 天手冊） | ✅ | 需登入；進度**跟著登入帳號**存（Supabase `public.cg90_progress` + 本機 mirror），連不到雲端時會自動退回「僅本機儲存」，狀態列顯示「⚠️ 雲端同步失敗，僅本機儲存」（見「四之二」）。**第一次使用前需先在 SQL Editor 執行 `supabase-schema-90day-progress.sql`**，否則讀寫會失敗 |
-| `goal-system.html`（一定要宸功專區） | ✅ | 需登入；分「個人專區」、「通訊處專區」、「通訊處排行」與「歷史資料」。個人區的每月目標存在 Supabase `public.goal_targets`（一人一月一筆）、個人實績讀 `public.agent_stats`（由保顧+ 的 cron 寫入，見下方註記）；通訊處區顯示全體目標加總與**合計實績**（只顯示合計、不列個人明細）；排行區列出各指標前 10 名與數值（刻意顯示同仁姓名，不含客戶個資）；歷史資料區以月／季／年回查個人目標與實績（含達成率）、通訊處合計與排行歷史（含**我的名次**，即使在前 10 名外也會單獨列出）。客戶規劃歷程已獨立為 `client-plans.html`。**第一次使用前需先在 SQL Editor 依序執行 `supabase-schema-goals.sql`、`supabase-schema-agent-stats.sql`、`supabase-schema-unit-stats.sql`、`supabase-schema-unit-ranking.sql`、`supabase-schema-history.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`、`AGENT-STATS-SETUP.md`） |
-| `accounts.html` | ✅ | 需管理員帳號登入，且該帳號 `profiles.is_admin = true` |
+| `goal-system.html`（一定要宸功專區） | ✅ | 需登入；分「個人專區」、「通訊處專區」、「通訊處排行」與「歷史資料」。個人區的每月目標存在 Supabase `public.goal_targets`（一人一月一筆）、個人實績讀 `public.agent_stats`（由保顧+ 的 cron 寫入，見下方註記）；年度目標存在 `public.goal_annual_targets`，並有「12 個月目標一覽」與「平均帶入 12 個月」（只補空白月份）；通訊處區顯示全體目標加總與**合計實績**（只顯示合計、不列個人明細）；排行區列出各指標前 10 名與數值（刻意顯示同仁姓名，不含客戶個資）；歷史資料區以月／季／年回查個人目標與實績（含達成率）、通訊處合計與排行歷史（含**我的名次**，即使在前 10 名外也會單獨列出）。客戶規劃歷程已獨立為 `client-plans.html`。**第一次使用前需先在 SQL Editor 依序執行 `supabase-schema-goals.sql`、`supabase-schema-agent-stats.sql`、`supabase-schema-unit-stats.sql`、`supabase-schema-unit-ranking.sql`、`supabase-schema-history.sql`、`supabase-schema-members.sql`、`supabase-schema-member-wishes.sql`（年度心願）、`supabase-schema-goal-annual.sql`**，否則讀寫會失敗（見 `goal-system-SETUP.md`、`AGENT-STATS-SETUP.md`、`members-SETUP.md`） |
+| `members.html`（宸功人士） | ✅ | 需登入；分「組織圖」與「我的檔案」。組織圖是傳統組織樹，根節點＝最高職級 `AM`（動態取 `member_ranks.sort_order` 最大值，不再寫死 `CM`），節點顏色代表職級、可 −／＋ 收合，走 `public.get_member_directory()`（`security definer`，只回姓名／職級／主管姓名／照片／簡介／社群連結，不含 email 或 `is_admin`）；點任一節點開個人網頁（版面：上方職級色漸層裝飾帶，左側直式大照片 `pf-photo`、右側姓名／職級／主管／夥伴／簡介／社群連結 `pf-layout`，窄螢幕改單欄、照片置中），心願時間軸走 `public.get_member_wishes(uuid)`。「我的檔案」預設為個人網頁檢視，按「編輯我的檔案」可改姓名（`profiles.full_name`）、照片（Storage `avatars`，public bucket、本人可寫）、簡介、社群連結、**職級與所屬主管**（本人可寫；最高職級 `AM` 只有管理員能設定，主管選單自動排除自己與下屬），並用 `public.save_my_wishes(year, items)` 一次儲存整年的心願。**第一次使用前需先執行 `supabase-schema-members.sql` → `supabase-schema-member-wishes.sql` → `supabase-schema-goal-annual.sql`**（見 `members-SETUP.md`） |
+| `accounts.html` | ✅ | 需管理員帳號登入，且該帳號 `profiles.is_admin = true`；可改姓名、設定**職級**與**所屬主管**（寫入 `member_profiles`，一般同仁無法自行變更），以及代為重設密碼 |
 | `video-training/*` | ✅ | 需登入；影片為 YouTube 內嵌，需網路 |
 | `sharing/*` | ✅ | 需登入 |
 

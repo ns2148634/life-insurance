@@ -39,7 +39,6 @@ body{
 header{
   padding:56px 32px 40px;
   max-width:1180px;margin:0 auto;
-  border-bottom:1px solid var(--border);
 }
 .crest-row{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
 .crest{
@@ -58,7 +57,6 @@ h1{
   margin-bottom:14px;
 }
 h1 span{color:var(--gold);}
-.sub{color:var(--muted);font-size:15px;line-height:1.9;max-width:52ch;}
 
 /* ---------- Directory ---------- */
 main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
@@ -100,10 +98,8 @@ main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
   white-space:nowrap;
 }
 .tag.internal{border-color:rgba(193,68,45,0.4);color:var(--vermilion-lt);}
-.num{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--hint);letter-spacing:1px;}
 
 .card h2{font-family:'Noto Serif TC',serif;font-size:21px;font-weight:700;color:#fff;line-height:1.4;}
-.card p{font-size:13.5px;color:var(--muted);line-height:1.75;}
 
 .card-foot{
   margin-top:auto;padding-top:14px;
@@ -159,29 +155,6 @@ main{max-width:1180px;margin:0 auto;padding:8px 32px 80px;}
 button.ab-link{font-family:inherit;cursor:pointer;background:transparent;}
 button.ab-link:hover{background:rgba(255,255,255,0.05);}
 
-/* ---------- 本月目標摘要 Monthly Targets ---------- */
-.goal-bar{
-  margin-top:14px;padding:16px 20px;
-  border:1px solid var(--gold-line);border-radius:14px;
-  background:var(--gold-dim);
-}
-.gb-title{
-  font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;
-  color:var(--gold-lt);margin-bottom:12px;
-}
-.gb-title span{margin-left:6px;letter-spacing:0.5px;color:var(--muted);text-transform:none;}
-.gb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
-.gb-box{
-  background:rgba(0,0,0,0.18);border:1px solid var(--border);border-radius:11px;
-  padding:12px 15px;
-}
-.gb-l{font-size:12px;color:var(--hint);margin-bottom:8px;letter-spacing:0.5px;}
-.gb-v{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:3px 0;}
-.gb-k{font-size:12.5px;color:var(--muted);}
-.gb-v b{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:700;color:#fff;}
-.gb-link{display:inline-block;margin-top:13px;color:var(--gold-lt);font-size:13px;text-decoration:none;}
-.gb-link:hover{text-decoration:underline;}
-
 footer{
   max-width:1180px;margin:0 auto;padding:0 32px 48px;
   color:var(--hint);font-size:12px;letter-spacing:0.5px;
@@ -196,13 +169,10 @@ footer{
 /* ===== 平板（≥768px，含 iPad 直向）字級與觸控放大 ===== */
 @media (min-width:768px){
   .brand{font-size:16px;}
-  .sub{font-size:17.5px;}
   .section-label{font-size:14.5px;margin:52px 0 22px;}
   .card{padding:30px 28px 28px;}
   .card h2{font-size:23px;}
-  .card p{font-size:16px;}
   .tag{font-size:13px;padding:5px 12px;}
-  .num{font-size:17px;}
   .card-foot{font-size:14.5px;}
   .arrow{font-size:18px;}
   .ab-title{font-size:13.5px;}
@@ -213,11 +183,6 @@ footer{
   .ab-user{font-size:16px;}
   .ab-badge{font-size:13px;}
   .ab-link{font-size:15px;padding:9px 16px;min-height:44px;display:inline-flex;align-items:center;}
-  .gb-title{font-size:13.5px;}
-  .gb-l{font-size:14px;}
-  .gb-k{font-size:14.5px;}
-  .gb-v b{font-size:21px;}
-  .gb-link{font-size:15px;}
   footer{font-size:14px;}
 }
 
@@ -234,47 +199,15 @@ footer{
     <div class="brand">Chenggong Insurance</div>
   </div>
   <h1>宸功保險<span>．</span>工具總覽</h1>
-  <p class="sub">客戶顧問與團隊管理共用的數位工具，依用途分類。點選卡片即可開啟對應頁面。</p>
 
   <section class="account-bar" id="accountBar">
     <div class="ab-title">業務同仁登入 Login</div>
     <div id="accountBody"><div class="ab-user">載入中…</div></div>
   </section>
 
-  <section class="goal-bar" id="goalBar" style="display:none">
-    <div class="gb-title">本月目標 Monthly Targets<span id="gbMonth"></span></div>
-    <div class="gb-grid">
-      <div class="gb-box">
-        <div class="gb-l">我的目標</div>
-        <div class="gb-v"><span class="gb-k">FYC</span><b id="gbMyFyc">—</b></div>
-        <div class="gb-v"><span class="gb-k">目標保費</span><b id="gbMyPremium">—</b></div>
-      </div>
-      <div class="gb-box">
-        <div class="gb-l">整個通訊處</div>
-        <div class="gb-v"><span class="gb-k">FYC 合計</span><b id="gbUnitFyc">—</b></div>
-        <div class="gb-v"><span class="gb-k">保費合計</span><b id="gbUnitPremium">—</b></div>
-      </div>
-    </div>
-    <a class="gb-link" href="./goal-system.html">前往「一定要宸功專區」設定每月目標 →</a>
-  </section>
 </header>
 
 <main>
-
-  <div class="section-label"><b>目標管理</b> Goal Setting</div>
-  <div class="grid">
-
-    <a class="card" href="./goal-system.html">
-      <div class="card-top">
-        <span class="tag">每月目標</span>
-        <span class="num">★</span>
-      </div>
-      <h2>一定要宸功專區</h2>
-      <p>輸入每月 FYC、目標保費與目標件數，系統自動換算每週需接觸、面談、約訪的人數，並彙整整個通訊處的目標總額；同時對照你從「保顧+」自動同步過來的行程實績。另有「歷史資料」可回查月／季／年的目標與實績、通訊處合計與排行歷史（含我的名次）。</p>
-      <div class="card-foot"><span>goal-system.html</span><span class="arrow">→</span></div>
-    </a>
-
-  </div>
 
   <div class="section-label"><b>客戶顧問</b> Client Consultation</div>
   <div class="grid">
@@ -282,66 +215,33 @@ footer{
     <a class="card" href="./insurance-needs.html">
       <div class="card-top">
         <span class="tag">iPad 諮詢</span>
-        <span class="num">01</span>
       </div>
       <h2>人生收支曲線圖</h2>
-      <p>三步驟人壽保障需求分析：先以人生收支曲線圖了解是否有保險需求，再依風險優先順序規劃保障，最後試算需求總表與保費；第 3 頁可「儲存客戶資料」，之後在「人生圖資料」搜尋與回看每次規劃。</p>
       <div class="card-foot"><span>insurance-needs.html</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./sharing/login.html">
       <div class="card-top">
         <span class="tag internal">業務分享</span>
-        <span class="num">07</span>
       </div>
       <h2>業務分享專區</h2>
-      <p>同仁分享值得一看的新聞與文章連結，並寫下可切入的推銷重點。推銷時隨時找得到資料，也能把好素材再分享給其他同仁。</p>
       <div class="card-foot"><span>sharing/login.html</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./estate-planning.html">
       <div class="card-top">
         <span class="tag">傳承規劃</span>
-        <span class="num">08</span>
       </div>
       <h2>資產傳承三步驟</h2>
-      <p>從指定分配、降低稅賦到預留稅源，內建遺產稅、3,740 萬最低稅負與保額槓桿試算，並可列印成客戶諮詢摘要。</p>
       <div class="card-foot"><span>estate-planning.html</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./client-plans.html">
       <div class="card-top">
         <span class="tag">客戶資料</span>
-        <span class="num">09</span>
       </div>
       <h2>人生圖資料</h2>
-      <p>集中保管你在人生收支曲線圖儲存的客戶規劃：人生圖第 2 頁的風險優先順序、各項保障建議與月收入，可用客戶姓名或保障項目關鍵字搜尋，隨時回看歷次規劃。</p>
       <div class="card-foot"><span>client-plans.html</span><span class="arrow">→</span></div>
-    </a>
-
-  </div>
-
-  <div class="section-label"><b>訓練</b> Training</div>
-  <div class="grid">
-
-    <a class="card" href="./90day.html">
-      <div class="card-top">
-        <span class="tag internal">新人訓練</span>
-        <span class="num">02</span>
-      </div>
-      <h2>宸功出擊 90 天</h2>
-      <p>新人啟動手冊：目標試算、名單建立、週次工作計畫與話術手冊，內建個人進度儲存。</p>
-      <div class="card-foot"><span>90day.html</span><span class="arrow">→</span></div>
-    </a>
-
-    <a class="card" href="./video-training/login.html">
-      <div class="card-top">
-        <span class="tag internal">教育訓練</span>
-        <span class="num">03</span>
-      </div>
-      <h2>影片研習</h2>
-      <p>業務員教育訓練影片庫，內建觀看進度追蹤，主管可查看團隊完成度</p>
-      <div class="card-foot"><span>video-training/login.html</span><span class="arrow">→</span></div>
     </a>
 
   </div>
@@ -352,31 +252,67 @@ footer{
     <a class="card" href="./promotion-system.html">
       <div class="card-top">
         <span class="tag internal">制度說明</span>
-        <span class="num">04</span>
       </div>
       <h2>透明晉陞與委任標準</h2>
-      <p>白紙黑字的升遷條件與各職級委任門檻，包含主任 3/6/9 個月考核、襄理、區經理及通訊處成立條件。</p>
       <div class="card-foot"><span>promotion-system.html</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./income-system.html">
       <div class="card-top">
         <span class="tag internal">津貼試算</span>
-        <span class="num">05</span>
       </div>
       <h2>協合式三維收入與試算</h2>
-      <p>累積 × 協合 × 挑戰三維所得結構解析，內建 20 年動態津貼流與首/續年津貼率試算。</p>
       <div class="card-foot"><span>income-system.html</span><span class="arrow">→</span></div>
     </a>
 
     <a class="card" href="./manager-income.html">
       <div class="card-top">
         <span class="tag internal">主管工具</span>
-        <span class="num">06</span>
       </div>
       <h2>業務組織收入試算</h2>
-      <p>組織圖式的主管收入試算，依公司獎金規則逐層計算單位與轄下業務的收入結構。</p>
       <div class="card-foot"><span>manager-income.html</span><span class="arrow">→</span></div>
+    </a>
+
+  </div>
+
+  <div class="section-label"><b>目標管理</b> Goal Setting</div>
+  <div class="grid">
+
+    <a class="card" href="./goal-system.html">
+      <div class="card-top">
+        <span class="tag">每月目標</span>
+      </div>
+      <h2>一定要宸功專區</h2>
+      <div class="card-foot"><span>goal-system.html</span><span class="arrow">→</span></div>
+    </a>
+
+    <a class="card" href="./members.html">
+      <div class="card-top">
+        <span class="tag">組織圖</span>
+      </div>
+      <h2>宸功人士</h2>
+      <div class="card-foot"><span>members.html</span><span class="arrow">→</span></div>
+    </a>
+
+  </div>
+
+  <div class="section-label"><b>訓練</b> Training</div>
+  <div class="grid">
+
+    <a class="card" href="./90day.html">
+      <div class="card-top">
+        <span class="tag internal">新人訓練</span>
+      </div>
+      <h2>宸功出擊 90 天</h2>
+      <div class="card-foot"><span>90day.html</span><span class="arrow">→</span></div>
+    </a>
+
+    <a class="card" href="./video-training/login.html">
+      <div class="card-top">
+        <span class="tag internal">教育訓練</span>
+      </div>
+      <h2>影片研習</h2>
+      <div class="card-foot"><span>video-training/login.html</span><span class="arrow">→</span></div>
     </a>
 
   </div>
@@ -394,57 +330,6 @@ function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[c]));
-}
-
-// 目前月份 → "YYYY-MM-01"（goal_targets.period_month 一律存每月 1 號）
-function currentPeriod() {
-  const d = new Date();
-  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-01";
-}
-
-function fmtMoney(n) {
-  const v = Math.max(0, Math.round(Number(n) || 0));
-  return v.toLocaleString("zh-TW");
-}
-
-// 首頁「本月目標」摘要：我的目標 + 整個通訊處加總
-// 通訊處加總走 Supabase 函式 get_unit_goal_totals()，只回傳加總、不揭露個人明細。
-// 若尚未執行 supabase-schema-goals.sql，這裡會靜靜失敗並保持「—」，不影響首頁其他功能。
-async function loadGoalSummary(user) {
-  const bar = document.getElementById("goalBar");
-  if (!bar || !sb || !user) return;
-
-  const period = currentPeriod();
-  const set = (id, txt) => { const n = document.getElementById(id); if (n) n.textContent = txt; };
-
-  set("gbMonth", "（" + period.slice(0, 7).replace("-", " / ") + "）");
-  set("gbMyFyc", "—");
-  set("gbMyPremium", "—");
-  set("gbUnitFyc", "—");
-  set("gbUnitPremium", "—");
-  bar.style.display = "";
-
-  try {
-    const { data, error } = await sb.from("goal_targets")
-      .select("fyc_target, premium_target")
-      .eq("user_id", user.id).eq("period_month", period).maybeSingle();
-    if (error) throw error;
-    if (data) {
-      set("gbMyFyc", fmtMoney(data.fyc_target));
-      set("gbMyPremium", fmtMoney(data.premium_target));
-    } else {
-      set("gbMyFyc", "未設定");
-      set("gbMyPremium", "未設定");
-    }
-  } catch (e) { /* 資料表尚未建立時保持「—」 */ }
-
-  try {
-    const { data, error } = await sb.rpc("get_unit_goal_totals", { p_month: period });
-    if (error) throw error;
-    const row = Array.isArray(data) ? data[0] : data;
-    set("gbUnitFyc", fmtMoney(row && row.fyc));
-    set("gbUnitPremium", fmtMoney(row && row.premium));
-  } catch (e) { /* 略 */ }
 }
 
 // head 的 auth-guard.js 已經確認登入、也載入好 SDK 與 config.js，
@@ -491,6 +376,7 @@ async function renderAccount() {
     <div class="ab-user">
       <span>已登入：<b>${esc(name)}</b>${isAdmin ? ' <span class="ab-badge">管理員</span>' : ""}</span>
       <a class="ab-link" href="./video-training/profile.html">我的帳號</a>
+      <a class="ab-link" href="./members.html">宸功人士</a>
       <a class="ab-link" href="./client-plans.html">人生圖資料</a>
       <a class="ab-link" href="./sharing/share.html">業務分享專區</a>
       ${isAdmin ? '<a class="ab-link" href="./accounts.html">帳號管理</a>' : ""}
@@ -502,14 +388,9 @@ async function renderAccount() {
     // 全站都需登入：登出後直接回到登入頁，避免留在原頁看到內容
     location.replace("./login.html");
   });
-
-  loadGoalSummary(user);
 }
 
 function renderLogin() {
-  const goalBar = document.getElementById("goalBar");
-  if (goalBar) goalBar.style.display = "none";
-
   accountBody.innerHTML = `
     <form class="account-form" id="homeLoginForm">
       <input type="email" id="homeEmail" placeholder="Email" autocomplete="username" required>

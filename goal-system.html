@@ -76,6 +76,7 @@ h1 span{color:var(--gold);}
   font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;
 }
 .actions button:disabled{opacity:.55;cursor:default;}
+.actions button.ghost{background:transparent;border:1px solid var(--gold-line);color:var(--gold-lt);}
 .save-status{font-size:12.5px;color:var(--hint);}
 
 .msg{margin-top:18px;padding:12px 16px;border-radius:10px;font-size:13.5px;border:1px solid var(--border);background:rgba(255,255,255,0.03);}
@@ -101,6 +102,12 @@ h1 span{color:var(--gold);}
 .mini tbody th{text-align:left;color:var(--muted);font-weight:500;}
 .mini tbody td{font-family:'Cormorant Garamond',serif;font-size:17px;color:#fff;letter-spacing:0.5px;}
 .mini tbody td:last-child{font-family:'Noto Sans TC',sans-serif;font-size:12px;color:var(--hint);}
+.mini tfoot th,.mini tfoot td{
+  padding:11px 12px;border-top:1px solid var(--gold-line);text-align:right;
+  color:var(--gold-lt);font-family:'Noto Sans TC',sans-serif;font-size:12.5px;font-weight:600;
+}
+.mini tfoot th{text-align:left;}
+
 .foot-hint{margin-top:14px;font-size:13px;color:var(--gold-lt);line-height:1.8;}
 
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
@@ -276,6 +283,7 @@ h1 span{color:var(--gold);}
     <div class="who">
       <a href="./index.html">← 回主畫面</a>
       <span id="whoami">載入中…</span>
+      <a href="./members.html">宸功人士</a>
       <a href="./video-training/profile.html">我的帳號</a>
       <button class="ghost" type="button" id="logoutBtn">登出</button>
     </div>
@@ -325,7 +333,60 @@ h1 span{color:var(--gold);}
 
   <section class="panel">
     <div class="panel-head">
-      <h2>二、每週行動計畫</h2>
+      <h2>二、我的年度目標</h2>
+      <span class="dim">選填；用來檢查 12 個月加起來夠不夠</span>
+    </div>
+    <div class="form-grid">
+      <label class="field">
+        <span class="fl">年度</span>
+        <input type="number" id="yearInput" min="2000" max="2100" step="1" inputmode="numeric">
+      </label>
+      <label class="field">
+        <span class="fl">年度 FYC 目標</span>
+        <div class="inp"><span class="unit">NT$</span><input type="number" id="annualFycInput" min="0" step="1000" inputmode="numeric" placeholder="0"></div>
+      </label>
+      <label class="field">
+        <span class="fl">年度目標保費</span>
+        <div class="inp"><span class="unit">NT$</span><input type="number" id="annualPremiumInput" min="0" step="1000" inputmode="numeric" placeholder="0"></div>
+      </label>
+      <label class="field">
+        <span class="fl">年度目標件數</span>
+        <div class="inp"><span class="unit">件</span><input type="number" id="annualCaseInput" min="0" step="1" inputmode="numeric" placeholder="0"></div>
+      </label>
+    </div>
+    <div class="actions">
+      <button type="button" id="saveAnnualBtn">儲存年度目標</button>
+      <button type="button" class="ghost" id="fillMonthsBtn">平均帶入 12 個月</button>
+      <span class="save-status" id="annualStatus"></span>
+    </div>
+    <p class="calc-note" id="annualHint">「平均帶入 12 個月」只會補上<b>尚未設定</b>的月份，不會覆蓋你已經手動調整過的數字。</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>三、12 個月目標一覽</h2>
+      <span class="dim" id="matrixYearLabel">—</span>
+    </div>
+    <p class="calc-note">年度目標是<b>整年規劃</b>，每月目標是<b>執行值</b>，兩者不必相等；這張表讓你一眼看出哪個月還沒排。</p>
+    <table class="mini">
+      <thead><tr><th>月份</th><th>FYC</th><th>保費</th><th>件數</th><th>狀態</th></tr></thead>
+      <tbody id="matrixBody"><tr><td colspan="5">載入中…</td></tr></tbody>
+      <tfoot>
+        <tr>
+          <th>合計</th>
+          <td id="matrixFyc">0</td>
+          <td id="matrixPremium">0</td>
+          <td id="matrixCases">0</td>
+          <td id="matrixSet">0 / 12</td>
+        </tr>
+      </tfoot>
+    </table>
+    <p class="foot-hint" id="matrixHint"></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>四、每週行動計畫</h2>
       <span class="dim">比例依 90 天手冊：接觸 ×5、面談 ×3、約訪 ×10</span>
     </div>
     <p class="calc-note">以「目標件數 <b id="calcCases">0</b> 件／月」換算；每月以 <b>4 週</b>計，每週件數無條件進位。</p>
@@ -349,7 +410,7 @@ h1 span{color:var(--gold);}
 
   <section class="panel">
     <div class="panel-head">
-      <h2>三、我的實績（來自保顧+）</h2>
+      <h2>五、我的實績（來自保顧+）</h2>
       <span class="dim" id="perfSync">同步時間：—</span>
     </div>
     <p class="calc-note">資料由「保顧+」自動同步，只取<b>記事筆數</b>，不含客戶姓名與記事內容。</p>
@@ -375,7 +436,7 @@ h1 span{color:var(--gold);}
 
   <section class="panel">
     <div class="panel-head">
-      <h2>四、我的當月目標</h2>
+      <h2>六、我的當月目標</h2>
       <span class="dim">與上方設定同步</span>
     </div>
     <div class="kv" id="mineBox"><div class="dim">載入中…</div></div>
@@ -554,6 +615,21 @@ const el = {
   caseInput: document.getElementById('caseInput'),
   saveBtn: document.getElementById('saveBtn'),
   saveStatus: document.getElementById('saveStatus'),
+  yearInput: document.getElementById('yearInput'),
+  annualFycInput: document.getElementById('annualFycInput'),
+  annualPremiumInput: document.getElementById('annualPremiumInput'),
+  annualCaseInput: document.getElementById('annualCaseInput'),
+  saveAnnualBtn: document.getElementById('saveAnnualBtn'),
+  fillMonthsBtn: document.getElementById('fillMonthsBtn'),
+  annualStatus: document.getElementById('annualStatus'),
+  annualHint: document.getElementById('annualHint'),
+  matrixYearLabel: document.getElementById('matrixYearLabel'),
+  matrixBody: document.getElementById('matrixBody'),
+  matrixFyc: document.getElementById('matrixFyc'),
+  matrixPremium: document.getElementById('matrixPremium'),
+  matrixCases: document.getElementById('matrixCases'),
+  matrixSet: document.getElementById('matrixSet'),
+  matrixHint: document.getElementById('matrixHint'),
   calcCases: document.getElementById('calcCases'),
   wkCase: document.getElementById('wkCase'),
   wkContact: document.getElementById('wkContact'),
@@ -1519,6 +1595,226 @@ async function save(){
   el.saveStatus.textContent = '上次儲存：' + new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
   showMsg('已儲存 ' + month + ' 的每月目標 ✓', true);
   await loadMonth(month);
+
+  // 本月目標改了，12 個月一覽也要跟著更新（只更新同一年）
+  const y = Number(String(month).slice(0, 4));
+  if(String(y) === String(el.yearInput.value)) await loadMatrix(y);
+}
+
+/* ---------- 年度目標 + 12 個月一覽 ----------
+   - 年度目標存在 goal_annual_targets（一人一年一筆）
+   - 「平均帶入 12 個月」只補沒設定的月份，不覆蓋既有數字
+   - 每月目標與年度目標是兩個獨立概念，不強制相等 */
+let annualRow = null;
+
+function currentYear(){ return new Date().getFullYear(); }
+function signedMoney(n){
+  const v = Math.round(Number(n) || 0);
+  return (v > 0 ? '+' : (v < 0 ? '−' : '±')) + money(Math.abs(v));
+}
+function splitAnnual(total, index){
+  const v = Math.max(0, Math.round(Number(total) || 0));
+  const base = Math.floor(v / 12);
+  return base + (index < (v - base * 12) ? 1 : 0);
+}
+function selectedYear(){
+  const y = Math.round(Number(el.yearInput.value) || 0);
+  return (y >= 2000 && y <= 2100) ? y : currentYear();
+}
+
+async function loadAnnual(year){
+  const { data, error } = await client.from('goal_annual_targets')
+    .select('fyc_target, premium_target, case_target')
+    .eq('user_id', user.id).eq('target_year', year).maybeSingle();
+
+  if(error){
+    annualRow = null;
+    showMsg('讀取年度目標失敗：' + error.message
+      + '（若尚未建立資料表，請先執行 supabase-schema-goal-annual.sql）', false);
+    el.annualFycInput.value = '';
+    el.annualPremiumInput.value = '';
+    el.annualCaseInput.value = '';
+    return;
+  }
+
+  annualRow = data ? {
+    fyc_target: Number(data.fyc_target) || 0,
+    premium_target: Number(data.premium_target) || 0,
+    case_target: Number(data.case_target) || 0
+  } : null;
+
+  el.annualFycInput.value = annualRow ? (annualRow.fyc_target || '') : '';
+  el.annualPremiumInput.value = annualRow ? (annualRow.premium_target || '') : '';
+  el.annualCaseInput.value = annualRow ? (annualRow.case_target || '') : '';
+  el.annualStatus.textContent = '';
+}
+
+async function saveAnnual(){
+  if(!client || !user) return;
+
+  const year = selectedYear();
+  el.yearInput.value = year;
+
+  const payload = {
+    user_id: user.id,
+    target_year: year,
+    fyc_target: Math.max(0, Math.round(Number(el.annualFycInput.value) || 0)),
+    premium_target: Math.max(0, Math.round(Number(el.annualPremiumInput.value) || 0)),
+    case_target: Math.max(0, Math.round(Number(el.annualCaseInput.value) || 0))
+  };
+
+  el.saveAnnualBtn.disabled = true;
+  el.saveAnnualBtn.textContent = '儲存中…';
+
+  const { error } = await client.from('goal_annual_targets')
+    .upsert(payload, { onConflict: 'user_id,target_year' });
+
+  el.saveAnnualBtn.disabled = false;
+  el.saveAnnualBtn.textContent = '儲存年度目標';
+
+  if(error){
+    showMsg('儲存年度目標失敗：' + error.message
+      + '（若尚未建立資料表，請先執行 supabase-schema-goal-annual.sql）', false);
+    return;
+  }
+
+  annualRow = {
+    fyc_target: payload.fyc_target,
+    premium_target: payload.premium_target,
+    case_target: payload.case_target
+  };
+  el.annualStatus.textContent = '上次儲存：' + new Date().toLocaleTimeString('zh-TW',
+    { hour: '2-digit', minute: '2-digit' });
+  showMsg('已儲存 ' + year + ' 年度目標 ✓', true);
+  await loadMatrix(year);
+}
+
+async function fillMonths(){
+  if(!client || !user) return;
+
+  const year = selectedYear();
+  if(!annualRow){
+    showMsg('請先按「儲存年度目標」，再使用「平均帶入 12 個月」。', false);
+    return;
+  }
+
+  const { data: existing, error } = await client.from('goal_targets')
+    .select('period_month')
+    .eq('user_id', user.id)
+    .gte('period_month', year + '-01-01')
+    .lte('period_month', year + '-12-01');
+
+  if(error){
+    showMsg('讀取既有月份失敗：' + error.message, false);
+    return;
+  }
+
+  const has = {};
+  (existing || []).forEach(function(r){
+    has[Number(String(r.period_month).slice(5, 7))] = true;
+  });
+
+  const rows = [];
+  for(let m = 1; m <= 12; m++){
+    if(has[m]) continue;
+    rows.push({
+      user_id: user.id,
+      period_month: year + '-' + String(m).padStart(2, '0') + '-01',
+      fyc_target: splitAnnual(annualRow.fyc_target, m - 1),
+      premium_target: splitAnnual(annualRow.premium_target, m - 1),
+      case_target: splitAnnual(annualRow.case_target, m - 1)
+    });
+  }
+
+  if(!rows.length){
+    showMsg(year + ' 年的 12 個月都已設定，未做任何變更。', true);
+    return;
+  }
+
+  el.fillMonthsBtn.disabled = true;
+  el.fillMonthsBtn.textContent = '帶入中…';
+
+  const { error: upErr } = await client.from('goal_targets')
+    .upsert(rows, { onConflict: 'user_id,period_month' });
+
+  el.fillMonthsBtn.disabled = false;
+  el.fillMonthsBtn.textContent = '平均帶入 12 個月';
+
+  if(upErr){
+    showMsg('帶入失敗：' + upErr.message, false);
+    return;
+  }
+
+  showMsg('已帶入 ' + rows.length + ' 個月（既有 ' + (12 - rows.length) + ' 個月未覆蓋）', true);
+  await loadMatrix(year);
+
+  if(String(el.monthInput.value).slice(0, 4) === String(year)){
+    await loadMonth(el.monthInput.value);
+  }
+}
+
+async function loadMatrix(year){
+  el.matrixYearLabel.textContent = year + ' 年';
+
+  const { data, error } = await client.from('goal_targets')
+    .select('period_month, fyc_target, premium_target, case_target')
+    .eq('user_id', user.id)
+    .gte('period_month', year + '-01-01')
+    .lte('period_month', year + '-12-01')
+    .order('period_month', { ascending: true });
+
+  if(error){
+    el.matrixBody.innerHTML = '<tr><td colspan="5">讀取失敗</td></tr>';
+    el.matrixHint.textContent = '讀取 12 個月目標失敗：' + error.message;
+    return;
+  }
+
+  renderMatrix(Array.isArray(data) ? data : [], year);
+}
+
+function renderMatrix(rows, year){
+  const map = {};
+  rows.forEach(function(r){
+    map[Number(String(r.period_month).slice(5, 7))] = r;
+  });
+
+  let tf = 0, tp = 0, tc = 0, set = 0;
+  const html = [];
+
+  for(let m = 1; m <= 12; m++){
+    const r = map[m];
+    if(r){
+      tf += Number(r.fyc_target) || 0;
+      tp += Number(r.premium_target) || 0;
+      tc += Number(r.case_target) || 0;
+      set++;
+    }
+    html.push('<tr>'
+      + '<th>' + m + ' 月</th>'
+      + '<td>' + (r ? money(r.fyc_target) : '—') + '</td>'
+      + '<td>' + (r ? money(r.premium_target) : '—') + '</td>'
+      + '<td>' + (r ? money(r.case_target) : '—') + '</td>'
+      + '<td>' + (r ? '已設定' : '未設定') + '</td>'
+      + '</tr>');
+  }
+
+  el.matrixBody.innerHTML = html.join('');
+  el.matrixFyc.textContent = money(tf);
+  el.matrixPremium.textContent = money(tp);
+  el.matrixCases.textContent = money(tc);
+  el.matrixSet.textContent = set + ' / 12';
+
+  let hint = '已設定 ' + set + ' / 12 個月。';
+  if(annualRow){
+    const dFyc = tf - annualRow.fyc_target;
+    const dCase = tc - annualRow.case_target;
+    hint += ' 每月合計 FYC ' + money(tf) + '（年度 ' + money(annualRow.fyc_target)
+      + '，差 ' + signedMoney(dFyc) + '）、件數 ' + money(tc)
+      + '（年度 ' + money(annualRow.case_target) + '，差 ' + signedMoney(dCase) + '）。';
+  } else {
+    hint += ' 尚未設定 ' + year + ' 年度目標；可先填年度值再按「平均帶入 12 個月」。';
+  }
+  el.matrixHint.textContent = hint;
 }
 
 /* ---------- 分區切換（個人專區 / 通訊處專區 / 通訊處排行） ---------- */
@@ -1554,8 +1850,28 @@ window.addEventListener('hashchange', function(){
 
 /* ---------- 事件 ---------- */
 [el.fycInput, el.premiumInput, el.caseInput].forEach(function(i){ i.addEventListener('input', recalc); });
-el.monthInput.addEventListener('change', function(){ clearMsg(); loadMonth(el.monthInput.value); });
+el.monthInput.addEventListener('change', async function(){
+  clearMsg();
+  const y = Number(String(el.monthInput.value || '').slice(0, 4)) || currentYear();
+  if(String(y) !== String(el.yearInput.value)){
+    el.yearInput.value = y;
+    await loadAnnual(y);
+    await loadMatrix(y);
+  }
+  await loadMonth(el.monthInput.value);
+});
 el.saveBtn.addEventListener('click', save);
+
+/* 年度目標 */
+el.saveAnnualBtn.addEventListener('click', saveAnnual);
+el.fillMonthsBtn.addEventListener('click', fillMonths);
+el.yearInput.addEventListener('change', async function(){
+  const y = selectedYear();
+  el.yearInput.value = y;
+  clearMsg();
+  await loadAnnual(y);
+  await loadMatrix(y);
+});
 
 /* 通訊處排行：指標 chips 與月份 */
 el.rankChips.querySelectorAll('.rank-chip').forEach(function(b){
@@ -1606,6 +1922,7 @@ el.logoutBtn.addEventListener('click', async function(){
 (async function boot(){
   el.monthInput.value = currentMonth();
   el.rankMonth.value = currentMonth();
+  el.yearInput.value = currentYear();
   initHistRankChips();
   setHistRankMetric(histRankMetric);
   showZone((location.hash || '').replace('#', ''));
@@ -1629,6 +1946,8 @@ el.logoutBtn.addEventListener('click', async function(){
   } catch(e){ el.whoami.textContent = user.email || '同仁'; }
 
   await loadMonth(el.monthInput.value);
+  await loadAnnual(currentYear());
+  await loadMatrix(currentYear());
 
   // 若網址直接帶 #ranking／#history，登入與資料表就緒後補載
   const initialHash = (location.hash || '').replace('#', '');

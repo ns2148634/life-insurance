@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1a26">
+<meta name="apple-mobile-web-app-title" content="宸功人士">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>宸功人士｜宸功保險</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1a26;--ink-mid:#142331;--ink-card:#182a3a;
+  --gold:#c2974f;--gold-lt:#dcb877;--gold-deep:#8a6a30;
+  --gold-dim:rgba(194,151,79,0.10);--gold-line:rgba(194,151,79,0.30);
+  --org-line:rgba(194,151,79,0.26);
+  --vermilion:#c1442d;--vermilion-lt:#d9634a;
+  --text:rgba(255,255,255,0.94);--muted:rgba(255,255,255,0.56);
+  --hint:rgba(255,255,255,0.32);--border:rgba(255,255,255,0.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;font-family:'Noto Sans TC',sans-serif;background:var(--ink);color:var(--text);}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 85% -10%, rgba(194,151,79,0.08), transparent 60%),
+    radial-gradient(ellipse 700px 400px at -10% 100%, rgba(193,68,45,0.06), transparent 55%),
+    var(--ink);
+  min-height:100dvh;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 72px;}
+
+/* ---------- header ---------- */
+header.top{padding:46px 0 24px;border-bottom:1px solid var(--border);}
+.brand-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.crest{width:38px;height:38px;flex-shrink:0;border-radius:10px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+.crest img{width:100%;height:100%;object-fit:cover;display:block;}
+.brand{font-family:'Cormorant Garamond',serif;letter-spacing:5px;color:var(--gold);text-transform:uppercase;font-size:13px;font-weight:600;}
+h1{font-family:'Noto Serif TC',serif;font-weight:900;font-size:clamp(26px,4vw,40px);line-height:1.3;letter-spacing:1px;color:#fff;}
+h1 span{color:var(--gold);}
+.lead{color:var(--muted);font-size:14.5px;line-height:1.9;max-width:62ch;margin-top:6px;}
+.who{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:20px;font-size:14px;color:var(--muted);}
+.who a{color:var(--gold-lt);text-decoration:none;}
+.ghost{padding:7px 14px;border-radius:8px;border:1px solid var(--border);color:var(--muted);background:transparent;font-family:inherit;font-size:13px;cursor:pointer;}
+.ghost:hover{background:rgba(255,255,255,0.05);}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:8px;margin-top:22px;padding:5px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.025);flex-wrap:wrap;}
+.tab{
+  flex:1 1 140px;padding:11px 16px;border:none;border-radius:9px;background:transparent;
+  color:var(--muted);font-family:inherit;font-size:14.5px;font-weight:600;letter-spacing:0.5px;
+  cursor:pointer;transition:background .2s ease,color .2s ease;
+}
+.tab:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.tab.active{background:var(--gold-dim);color:var(--gold-lt);box-shadow:inset 0 0 0 1px var(--gold-line);}
+.panel{display:none;}
+.panel.active{display:block;animation:panelIn .25s ease;}
+@keyframes panelIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.panel-intro{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.9;}
+.panel-intro b{color:var(--gold-lt);}
+
+/* ---------- 共用元件 ---------- */
+.card{
+  margin-top:20px;background:var(--ink-card);border:1px solid var(--border);
+  border-radius:16px;padding:22px 22px 24px;
+}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.card-head h2{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:#fff;}
+.dim{color:var(--hint);font-size:12.5px;}
+.msg{margin-top:18px;padding:12px 16px;border-radius:10px;font-size:13.5px;border:1px solid var(--border);background:rgba(255,255,255,0.03);line-height:1.8;}
+.msg.ok{color:#7fc9a3;border-color:rgba(127,201,163,0.35);}
+.msg.err{color:var(--vermilion-lt);border-color:rgba(193,68,45,0.35);}
+.empty{padding:34px 12px;text-align:center;color:var(--hint);font-size:13.5px;line-height:1.9;}
+
+.toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 16px;margin-top:20px;}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.field.grow{flex:1 1 240px;}
+.field > span{font-size:11.5px;letter-spacing:1.2px;color:var(--hint);text-transform:uppercase;}
+input[type="text"],input[type="search"],input[type="url"],input[type="month"],select,textarea{
+  width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--border);
+  background:#0a141f;color:var(--text);font-family:inherit;font-size:14px;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold-line);}
+textarea{resize:vertical;min-height:96px;line-height:1.7;}
+.count{font-size:12.5px;color:var(--hint);margin-left:auto;padding-bottom:10px;}
+
+.btn{
+  padding:11px 24px;border-radius:10px;border:none;background:var(--gold);color:#1a1406;
+  font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;
+}
+.btn:disabled{opacity:.55;cursor:default;}
+.btn.secondary{background:transparent;border:1px solid var(--gold-line);color:var(--gold-lt);}
+
+/* ---------- 頭像 ---------- */
+.avatar{
+  width:52px;height:52px;flex:0 0 auto;border-radius:50%;overflow:hidden;
+  border:1px solid var(--gold-line);background:var(--gold-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;color:var(--gold-lt);
+}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.avatar.sm{width:38px;height:38px;font-size:15px;}
+.avatar.lg{width:96px;height:96px;font-size:34px;border-width:2px;}
+
+/* ---------- 社群連結 ---------- */
+.socials{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+.socials a{
+  font-size:11.5px;color:var(--gold-lt);border:1px solid var(--gold-line);
+  border-radius:999px;padding:2px 9px;text-decoration:none;
+}
+.socials a:hover{background:var(--gold-dim);}
+
+/* ---------- 組織圖（傳統組織樹，顏色依職級） ---------- */
+.org-scroll{overflow-x:auto;margin-top:18px;padding:10px 2px 18px;}
+.org{min-width:max-content;padding:0 6px;}
+.org ul{
+  list-style:none;margin:0;padding:26px 0 0;position:relative;
+  display:flex;justify-content:center;align-items:flex-start;
+}
+.org > ul{padding-top:0;}
+/* 由上一層節點垂下來、接到兄弟節點橫線的那一段 */
+.org ul::before{
+  content:'';position:absolute;top:0;left:50%;width:0;height:26px;
+  border-left:2px solid var(--org-line);
+}
+.org > ul::before{display:none;}
+.org li{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  padding:26px 9px 0;flex:0 0 auto;
+}
+/* 兄弟節點之間的橫線，以及從橫線垂到節點的那一段 */
+.org li::before,.org li::after{
+  content:'';position:absolute;top:0;height:26px;border-top:2px solid var(--org-line);
+}
+.org li::before{right:50%;width:50%;}
+.org li::after{left:50%;width:50%;border-left:2px solid var(--org-line);}
+.org li:first-child::before{display:none;}
+.org li:last-child::after{border-left:none;}
+.org li:last-child::before{border-top-right-radius:8px;}
+.org li:first-child::after{border-top-left-radius:8px;}
+.org li:only-child::before,.org li:only-child::after{display:none;}
+.org > ul > li{padding-top:0;}
+.org > ul > li::before,.org > ul > li::after{display:none;}
+
+.org-node{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;
+  width:122px;padding:12px 9px 11px;border-radius:13px;cursor:pointer;
+  background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+  border:1.5px solid var(--rk,var(--border));
+  box-shadow:0 6px 16px rgba(0,0,0,0.28);
+  transition:transform .16s ease, box-shadow .16s ease;
+}
+.org-node:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,0.36);}
+.org-node .avatar{width:44px;height:44px;font-size:17px;border-color:var(--gold-line);}
+.org-node .nm{font-size:12.5px;font-weight:700;color:#fff;line-height:1.45;text-align:center;word-break:break-word;}
+.org-node .nm em{font-style:normal;font-size:10px;color:var(--gold-lt);margin-left:4px;}
+.org-node .rk{
+  font-size:10.5px;font-weight:700;color:#08131c;background:var(--rk,var(--gold));
+  border-radius:999px;padding:1px 9px;line-height:1.7;letter-spacing:.3px;
+}
+.org-node.me{outline:2px solid var(--gold);outline-offset:3px;}
+.org-node.root{width:152px;padding:14px 12px 13px;}
+.org-node.root .avatar{width:54px;height:54px;font-size:21px;}
+.org-node.root .nm{font-size:14px;}
+.org-node.virtual{border-style:dashed;border-color:var(--gold-line);cursor:default;}
+.org-toggle{
+  position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);z-index:2;
+  width:22px;height:22px;border-radius:50%;border:1px solid var(--org-line);
+  background:var(--ink-card);color:var(--muted);font-family:inherit;
+  font-size:13px;line-height:1;padding:0;cursor:pointer;
+}
+.org-toggle:hover{border-color:var(--gold);color:var(--gold-lt);}
+.org-legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;font-size:12px;color:var(--hint);}
+.org-legend span{display:inline-flex;align-items:center;gap:6px;}
+.org-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+
+/* ---------- 年度心願（編輯） ---------- */
+.wish-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;}
+.year-switch{display:inline-flex;align-items:center;gap:6px;}
+.year-switch button{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);color:var(--muted);font-family:inherit;
+  font-size:15px;line-height:1;cursor:pointer;
+}
+.year-switch button:hover{border-color:var(--gold-line);color:var(--gold-lt);}
+.year-switch strong{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold-lt);letter-spacing:1px;}
+.wish-count{font-size:12.5px;color:var(--hint);}
+.wblocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-top:16px;}
+.wblock{border:1px solid var(--border);border-radius:12px;padding:12px 13px;background:rgba(255,255,255,0.02);}
+.wblock.has{border-color:var(--gold-line);background:var(--gold-dim);}
+.wblock .wb-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.wblock .wb-head b{font-size:13px;color:var(--gold-lt);font-weight:600;letter-spacing:0.5px;}
+.wblock .wb-head span{font-size:11.5px;color:var(--hint);}
+.witem{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.witem input{
+  flex:1 1 auto;padding:7px 10px;border-radius:8px;border:1px solid var(--border);
+  background:#0a141f;color:var(--text);font-family:inherit;font-size:13px;
+}
+.witem input:focus{outline:none;border-color:var(--gold-line);}
+.wdel{
+  flex:0 0 auto;width:26px;height:26px;border-radius:7px;border:1px solid var(--border);
+  background:transparent;color:var(--hint);font-family:inherit;font-size:14px;line-height:1;cursor:pointer;
+}
+.wdel:hover{color:var(--vermilion-lt);border-color:rgba(193,68,45,0.5);}
+.wadd{
+  width:100%;margin-top:2px;padding:6px 10px;border-radius:8px;border:1px dashed var(--gold-line);
+  background:transparent;color:var(--gold-lt);font-family:inherit;font-size:12px;cursor:pointer;
+}
+.wadd:hover{background:var(--gold-dim);}
+.wadd:disabled{opacity:.4;cursor:default;}
+.wish-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;}
+
+/* ---------- 時間軸 ---------- */
+.timeline{margin-top:14px;}
+.tl-year{
+  font-family:'Noto Serif TC',serif;font-size:16px;color:var(--gold-lt);
+  margin:22px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);
+}
+.tl-year:first-child{margin-top:6px;}
+.tl{list-style:none;margin:0;padding:0 0 0 24px;border-left:1px solid rgba(194,151,79,0.25);}
+.tl > li{position:relative;padding:0 0 20px;}
+.tl > li::before{
+  content:'';position:absolute;left:-30px;top:5px;width:11px;height:11px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 0 3px rgba(194,151,79,0.14);
+}
+.tl > li:last-child{padding-bottom:0;}
+.tl .tl-m{font-size:12.5px;color:var(--gold-lt);letter-spacing:1px;}
+.tl .tl-items{margin-top:6px;display:flex;flex-direction:column;gap:5px;}
+.tl .tl-items p{
+  font-size:13.5px;color:var(--text);line-height:1.8;word-break:break-word;
+  padding-left:12px;position:relative;
+}
+.tl .tl-items p::before{content:'·';position:absolute;left:0;color:var(--gold);}
+.tl-empty{font-size:13px;color:var(--hint);line-height:1.9;}
+.pf-title{
+  margin-top:20px;padding-top:14px;border-top:1px solid var(--border);
+  font-size:12px;letter-spacing:1.5px;color:var(--hint);
+}
+.board-note{margin-top:14px;font-size:12.5px;color:var(--gold-lt);line-height:1.9;}
+
+/* ---------- 我的檔案 ---------- */
+.me-grid{display:grid;grid-template-columns:210px 1fr;gap:24px;margin-top:18px;align-items:start;}
+.avatar-box{
+  display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 14px;
+  border:1px dashed var(--gold-line);border-radius:14px;background:rgba(255,255,255,0.02);
+}
+.avatar-box .hint{font-size:11.5px;color:var(--hint);text-align:center;line-height:1.7;}
+.avatar-box input[type="file"]{display:none;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+.field.full{grid-column:1/-1;}
+.readonly-row{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:6px;font-size:13px;color:var(--muted);}
+.readonly-row b{color:var(--gold-lt);font-weight:600;}
+.form-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;}
+.save-status{font-size:12.5px;color:var(--hint);}
+.hint-list{margin-top:10px;padding-left:18px;font-size:12.5px;color:var(--hint);line-height:1.9;}
+.field-hint{margin-top:10px;font-size:12px;color:var(--hint);line-height:1.8;}
+
+/* ---------- 個人網頁（我的檔案檢視 / 點人看到的畫面） ---------- */
+.pf{margin-top:20px;background:var(--ink-card);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
+/* 上方漸層只是一條裝飾帶，內容（大照片／姓名）從它下面開始，不會被蓋住 */
+.pf-cover{
+  height:84px;
+  background:
+    radial-gradient(120% 190% at 10% -30%, var(--rk,var(--gold)) 0%, rgba(13,26,38,0) 62%),
+    linear-gradient(120deg, rgba(194,151,79,0.18), rgba(13,26,38,0) 72%);
+  opacity:.85;
+  border-bottom:1px solid var(--border);
+}
+.pf-body{padding:22px 24px 26px;}
+.pf-layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:26px;align-items:start;}
+/* 大照片：直式人像框，取代原本的小圓形頭像 */
+.pf-photo{
+  position:relative;width:100%;max-width:236px;aspect-ratio:4/5;overflow:hidden;
+  border-radius:16px;border:1px solid var(--rk,var(--gold-line));
+  background:linear-gradient(160deg, rgba(194,151,79,0.16), rgba(255,255,255,0.02));
+  box-shadow:0 14px 30px rgba(0,0,0,0.45);
+}
+.pf-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.pf-photo.is-initial{display:flex;align-items:center;justify-content:center;}
+.pf-photo.is-initial span{
+  font-family:'Noto Serif TC',serif;font-size:76px;font-weight:700;line-height:1;
+  color:var(--gold-lt);text-shadow:0 6px 18px rgba(0,0,0,0.45);
+}
+.pf-photo::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 -70px 60px -40px rgba(0,0,0,0.6);
+}
+.pf-info{min-width:0;padding-top:2px;}
+.pf-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;}
+.pf-name{min-width:0;flex:1 1 160px;}
+.pf-name h2{font-family:'Noto Serif TC',serif;font-size:23px;font-weight:700;color:#fff;line-height:1.35;word-break:break-word;}
+.pf-name h2 em{font-style:normal;font-size:11px;color:var(--gold-lt);margin-left:6px;letter-spacing:1px;}
+.pf-rank{display:inline-block;margin-top:7px;font-size:11.5px;font-weight:700;color:#08131c;background:var(--rk,var(--gold));border-radius:999px;padding:2px 11px;letter-spacing:.4px;}
+.pf-actions{margin-left:auto;flex:0 0 auto;}
+.pf-bio{margin-top:16px;font-size:13.5px;line-height:1.95;color:var(--text);white-space:pre-line;word-break:break-word;}
+.pf-bio.is-empty{color:var(--hint);}
+.pf-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);border:1px solid var(--border);border-radius:999px;padding:5px 12px;background:rgba(255,255,255,0.025);}
+.chip b{font-size:10.5px;letter-spacing:.8px;color:var(--hint);font-weight:600;}
+.chip .person{font-family:inherit;font-size:12px;color:var(--gold-lt);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.chip .person:hover{color:var(--gold);}
+.pf-sub{margin-top:24px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;letter-spacing:1.5px;color:var(--hint);}
+.pf-people{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.pf-people .person{border:1px solid var(--gold-line);border-radius:999px;padding:4px 12px;font-family:inherit;font-size:12px;color:var(--gold-lt);background:rgba(194,151,79,0.06);cursor:pointer;}
+.pf-people .person:hover{background:var(--gold-dim);}
+.btn.sm{padding:8px 16px;font-size:13px;}
+.modal-card .pf{margin-top:0;border:none;border-radius:0;background:transparent;overflow:visible;}
+.modal-card .pf-cover{margin:-14px -24px 0;border-radius:12px 12px 0 0;}
+.modal-card .pf-body{padding:20px 0 4px;}
+
+/* ---------- 詳情 modal ---------- */
+.modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal[hidden]{display:none;}
+.modal-bg{position:absolute;inset:0;background:rgba(5,10,16,0.74);}
+.modal-card{
+  position:relative;width:100%;max-width:620px;max-height:86vh;overflow:auto;
+  background:var(--ink-card);border:1px solid var(--gold-line);border-radius:18px;
+  padding:28px 24px 24px;box-shadow:0 24px 60px rgba(0,0,0,0.55);
+}
+.modal-close{
+  position:absolute;top:10px;right:12px;width:32px;height:32px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;color:var(--muted);
+  font-size:18px;line-height:1;cursor:pointer;
+}
+.modal-close:hover{color:#fff;border-color:var(--gold-line);}
+.modal-top{display:flex;align-items:center;gap:14px;}
+.modal-top h2{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;color:#fff;line-height:1.4;}
+.modal-top .rk{font-size:12px;color:var(--gold-lt);margin-top:3px;}
+.modal-body{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.9;}
+.modal-body .bio{white-space:pre-line;margin-bottom:16px;}
+.modal-body .kv{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed var(--border);}
+.modal-body .kv:last-child{border-bottom:none;}
+.modal-body .kv span:first-child{color:var(--hint);font-size:12.5px;}
+.modal-body .kv span:last-child{color:var(--text);}
+.modal-body .socials a{font-size:12px;padding:4px 11px;}
+
+@media (max-width:760px){
+  .wrap{padding:0 16px 56px;}
+  header.top{padding:32px 0 20px;}
+  .me-grid{grid-template-columns:1fr;}
+  .avatar-box{flex-direction:row;text-align:left;}
+  .avatar-box .hint{text-align:left;}
+  .tab{flex:1 1 100%;}
+  .wblocks{grid-template-columns:1fr;}
+  .wish-bar{gap:8px 10px;}
+  .pf-body{padding:18px 16px 22px;}
+  /* 手機版：照片置中在上面，其餘資料改成直向排列 */
+  .pf-layout{grid-template-columns:1fr;gap:18px;}
+  .pf-photo{max-width:210px;margin:0 auto;}
+  .pf-info{padding-top:0;}
+  .pf-head{gap:10px;}
+  .pf-name{flex:1 1 100%;}
+  .pf-actions{margin-left:0;width:100%;}
+  .pf-name h2{font-size:21px;}
+  .pf-sub{margin-top:20px;}
+  .modal-card{padding:24px 18px 20px;}
+  .modal-card .pf-cover{margin:-14px -18px 0;}
+  .modal-card .pf-body{padding:18px 0 4px;}
+}
+</style>
+<script src="./auth-guard.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand-row">
+      <div class="crest"><img src="./icon-192.png" alt="宸功保險"></div>
+      <div class="brand">Chenggong Insurance</div>
+    </div>
+    <h1>宸功<span>人士</span></h1>
+    <p class="lead">以<b>處經理</b>為起點的組織圖，節點顏色代表職級；點任何一位同仁，就會打開他的<b>個人網頁</b>（職級、主管、簡介、社群與年度心願時間軸）。自己的照片、簡介與心願，到「我的檔案」按編輯就能修改。</p>
+    <div class="who">
+      <a href="./index.html">← 回主畫面</a>
+      <span id="whoami">載入中…</span>
+      <a href="./goal-system.html">一定要宸功專區</a>
+      <a href="./video-training/profile.html">我的帳號</a>
+      <button class="ghost" type="button" id="logoutBtn">登出</button>
+    </div>
+  </header>
+
+  <div id="pageMsg" class="msg" style="display:none;"></div>
+
+  <nav class="tabs" id="tabs" role="tablist">
+    <button type="button" class="tab active" data-tab="org" role="tab" aria-selected="true">組織圖</button>
+    <button type="button" class="tab" data-tab="me" role="tab" aria-selected="false">我的檔案</button>
+  </nav>
+
+  <!-- ========== 組織圖 ========== -->
+  <section class="panel active" id="panelOrg" role="tabpanel">
+    <p class="panel-intro">依「所屬主管」長出的向下分支圖，<b>最上方是處經理（AM）</b>，不同職級用不同顏色。點任何一個節點，會打開那位同仁的<b>個人網頁</b>。<br>職級與所屬主管可以自己改（「我的檔案」→ 編輯）；處經理只有管理員能設定。</p>
+    <div class="org-scroll"><div class="org" id="orgTree"><p class="empty">載入中…</p></div></div>
+    <div class="org-legend" id="orgLegend"></div>
+    <p class="board-note" id="orgHint" style="display:none;"></p>
+  </section>
+
+  <!-- ========== 我的檔案 ========== -->
+  <section class="panel" id="panelMe" role="tabpanel">
+    <!-- 檢視模式：個人網頁 -->
+    <div id="meView">
+      <div id="meCard"><p class="empty">載入中…</p></div>
+    </div>
+
+    <!-- 編輯模式 -->
+    <div id="meEdit" hidden>
+    <p class="panel-intro">這些資料會出現在<b>你的個人網頁</b>與組織圖。<b>職級與所屬主管可以自己調整</b>（處經理 AM 除外，需由管理員設定）；其餘欄位與年度心願只有你能編輯。</p>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>一、照片與基本資料</h2>
+        <span class="dim">照片會公開在組織圖與檔案</span>
+      </div>
+      <div class="me-grid">
+        <div class="avatar-box">
+          <div class="avatar lg" id="meAvatar">—</div>
+          <label class="btn secondary" for="avatarFile" id="avatarLabel">更換照片</label>
+          <input type="file" id="avatarFile" accept="image/jpeg,image/png,image/webp">
+          <span class="hint">JPG／PNG／WebP，2MB 以內。<br>系統自動縮到長邊 600px。</span>
+        </div>
+        <div>
+          <div class="form-grid">
+            <label class="field full">
+              <span>姓名</span>
+              <input type="text" id="meName" maxlength="40" autocomplete="name" placeholder="王小明">
+            </label>
+            <label class="field">
+              <span>職級</span>
+              <select id="meRank"></select>
+            </label>
+            <label class="field">
+              <span>所屬主管</span>
+              <select id="meSupervisor"></select>
+            </label>
+            <label class="field full">
+              <span>簡介（最多 500 字）</span>
+              <textarea id="meBio" maxlength="500" placeholder="例：專長退休規劃與資產傳承，歡迎轉介。"></textarea>
+            </label>
+            <label class="field">
+              <span>Instagram</span>
+              <input type="url" id="meIg" placeholder="https://instagram.com/…" autocomplete="off">
+            </label>
+            <label class="field">
+              <span>Facebook</span>
+              <input type="url" id="meFb" placeholder="https://facebook.com/…" autocomplete="off">
+            </label>
+            <label class="field">
+              <span>LINE</span>
+              <input type="url" id="meLine" placeholder="https://line.me/ti/p/…" autocomplete="off">
+            </label>
+            <label class="field">
+              <span>LinkedIn</span>
+              <input type="url" id="meLinkedin" placeholder="https://www.linkedin.com/in/…" autocomplete="off">
+            </label>
+          </div>
+          <p class="field-hint" id="meOrgHint">職級決定你在組織圖的顏色與層級；所屬主管決定你掛在誰下面（不能選自己或自己的下屬，否則會形成迴圈）。</p>
+          <div class="form-foot">
+            <button type="button" class="btn" id="saveMeBtn">儲存我的檔案</button>
+            <button type="button" class="btn secondary" id="cancelMeBtn">取消</button>
+            <span class="save-status" id="meSaveStatus"></span>
+          </div>
+        </div>
+      </div>
+      <p class="board-note" id="meAdminHint" style="display:none;"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>二、年度心願</h2>
+        <span class="dim">每月可寫多筆，只有你能編輯</span>
+      </div>
+      <div class="wish-bar">
+        <div class="year-switch">
+          <button type="button" id="wishYearPrev" aria-label="上一年">‹</button>
+          <strong id="wishYearLabel">—</strong>
+          <button type="button" id="wishYearNext" aria-label="下一年">›</button>
+        </div>
+        <span class="wish-count" id="wishCount">載入中…</span>
+      </div>
+      <div class="wblocks" id="wishEditor"></div>
+      <div class="wish-foot">
+        <button type="button" class="btn" id="saveWishesBtn">儲存這一年</button>
+        <span class="save-status" id="wishSaveStatus"></span>
+      </div>
+      <p class="board-note" id="wishHint" style="display:none;"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>三、我的時間軸</h2>
+        <span class="dim">依年份 → 月份排序</span>
+      </div>
+      <div class="timeline" id="myTimeline"><p class="tl-empty">載入中…</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>四、資料會用在哪裡</h2></div>
+      <ul class="hint-list">
+        <li>姓名：與「我的帳號」共用同一個欄位（profiles.full_name），改一次兩邊都會更新。</li>
+        <li>職級／主管：決定你在組織圖的位置與顏色，也是別人打開你個人網頁時看到的資訊。<b>你可以自己調整</b>；最高職級（處經理 AM）只有管理員能設定，避免組織圖出現多個根節點。</li>
+        <li>照片：上傳到 Supabase Storage 的 avatars bucket，路徑固定為「你的 uid/avatar.jpg」；換照片會直接覆蓋舊檔。</li>
+        <li>年度心願：存在 Supabase 的 member_wishes；同仁在組織圖點你的節點時，會看到你的心願時間軸。</li>
+      </ul>
+    </div>
+    </div><!-- /meEdit -->
+  </section>
+</div>
+
+<!-- 同仁詳情 -->
+<div class="modal" id="memberModal" hidden>
+  <div class="modal-bg" data-close="1"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalName">
+    <button type="button" class="modal-close" id="modalClose" aria-label="關閉">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   宸功人士 — 組織圖 / 個人網頁 / 年度心願時間軸
+   - 組織圖：rpc get_member_directory()（security definer，只回顯示欄位）
+   - 個人網頁：member_profiles（照片／簡介／社群）＋ profiles.full_name
+   - 職級鏈：AG → AS → SAS → UM → AM，節點顏色依職級
+   - 職級與所屬主管：本人可在「我的檔案 → 編輯」自行調整，
+     最高職級（AM）只有管理員能設定（DB trigger 也會擋）
+   ========================================================= */
+const $ = function(id){ return document.getElementById(id); };
+
+let sb = null;
+let user = null;
+let myName = '';
+let isAdmin = false;
+let ranks = [];          // member_ranks
+let directory = [];      // get_member_directory()
+let myProfile = null;    // member_profiles（本人）
+let wishYear = new Date().getFullYear();
+let wishDraft = [];      // 12 個陣列，對應 1–12 月
+let wishRows = [];       // get_member_wishes(本人)
+let profileWishes = [];  // 目前打開的檔案中的心願
+let collapsedOrg = {};   // 組織圖收合狀態
+let meEditing = false;   // 我的檔案：目前在編輯模式
+let lastFocus = null;
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function rankLabel(code){
+  for(let i = 0; i < ranks.length; i++){
+    if(ranks[i].code === code) return ranks[i].label;
+  }
+  return code || '—';
+}
+
+/* 職級顏色：由低到高 AG → AS → SAS → UM → AM */
+const RANK_COLORS = {
+  AG: '#64798f', AS: '#cf8a3a', SAS: '#2f9d8c', UM: '#c1442d', AM: '#3f74c9'
+};
+const RANK_FALLBACK = ['#64798f', '#cf8a3a', '#2f9d8c', '#c1442d', '#3f74c9', '#8a6a30'];
+
+function sortedRanks(){
+  return ranks.slice().sort(function(a, b){
+    return (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0);
+  });
+}
+function topRankCode(){
+  const list = sortedRanks();
+  return list.length ? String(list[list.length - 1].code) : 'AM';
+}
+function isTopRank(m){
+  const code = String((m && m.rank_code) || '').toUpperCase();
+  return !!code && code === String(topRankCode()).toUpperCase();
+}
+function rankColor(code){
+  const key = String(code || '').toUpperCase();
+  if(RANK_COLORS[key]) return RANK_COLORS[key];
+  const list = sortedRanks();
+  for(let i = 0; i < list.length; i++){
+    if(String(list[i].code).toUpperCase() === key) return RANK_FALLBACK[i % RANK_FALLBACK.length];
+  }
+  return '#c2974f';   // 未知職級：金色
+}
+function memberById(id){
+  for(let i = 0; i < directory.length; i++){
+    if(directory[i].user_id === id) return directory[i];
+  }
+  return null;
+}
+/* 自己 + 所有下屬（含間接），用來排除「不能選的主管」 */
+function descendantIds(id){
+  const blocked = {};
+  if(!id) return blocked;
+  blocked[id] = true;
+  let changed = true;
+  while(changed){
+    changed = false;
+    for(let i = 0; i < directory.length; i++){
+      const m = directory[i];
+      if(blocked[m.user_id]) continue;
+      if(m.supervisor_id && blocked[m.supervisor_id]){
+        blocked[m.user_id] = true;
+        changed = true;
+      }
+    }
+  }
+  return blocked;
+}
+function initial(name){
+  const s = String(name || '').trim();
+  return s ? s.charAt(0) : '?';
+}
+function safeUrl(u){
+  u = String(u || '').trim();
+  return /^https?:\/\//i.test(u) ? u : '';
+}
+function avatarUrl(row){
+  if(!row || !row.avatar_path || !sb) return '';
+  try {
+    const res = sb.storage.from('avatars').getPublicUrl(row.avatar_path);
+    const base = (res && res.data && res.data.publicUrl) || '';
+    if(!base) return '';
+    const v = row.avatar_updated_at ? Date.parse(row.avatar_updated_at) : 0;
+    return base + (v ? '?v=' + v : '');
+  } catch(e){ return ''; }
+}
+function avatarHtml(row, cls){
+  const url = avatarUrl(row);
+  if(url){
+    return '<span class="avatar ' + (cls || '') + '"><img src="' + esc(url) + '" alt="" loading="lazy"></span>';
+  }
+  return '<span class="avatar ' + (cls || '') + '">' + esc(initial(row && row.display_name)) + '</span>';
+}
+/* 個人網頁的大照片（直式人像框；沒有照片時顯示姓氏大字） */
+function photoHtml(row){
+  const url = avatarUrl(row);
+  const name = (row && row.display_name) || '';
+  if(url){
+    return '<div class="pf-photo"><img src="' + esc(url) + '" alt="' + esc(name) + ' 的照片" loading="lazy"></div>';
+  }
+  return '<div class="pf-photo is-initial"><span>' + esc(initial(name)) + '</span></div>';
+}
+function socialLinks(m){
+  const items = [
+    ['Instagram', m.ig_url],
+    ['Facebook', m.fb_url],
+    ['LINE', m.line_url],
+    ['LinkedIn', m.linkedin_url]
+  ];
+  return items.map(function(it){
+    const url = safeUrl(it[1]);
+    if(!url) return '';
+    return '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(it[0]) + '</a>';
+  }).join('');
+}
+function showMsg(text, ok){
+  const box = $('pageMsg');
+  box.className = 'msg ' + (ok ? 'ok' : 'err');
+  box.textContent = text;
+  box.style.display = '';
+}
+function clearMsg(){
+  $('pageMsg').style.display = 'none';
+  $('pageMsg').textContent = '';
+}
+
+/* ---------- 分頁 ---------- */
+const TAB_PANELS = { org: 'panelOrg', me: 'panelMe' };
+const TAB_ALIAS = { list: 'org', board: 'org' };   // 舊網址（#list / #board）導到組織圖
+
+function showTab(name){
+  name = TAB_ALIAS[name] || name;
+  if(!TAB_PANELS[name]) name = 'org';
+
+  document.querySelectorAll('.tab').forEach(function(b){
+    const on = b.dataset.tab === name;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  Object.keys(TAB_PANELS).forEach(function(k){
+    $(TAB_PANELS[k]).classList.toggle('active', k === name);
+  });
+}
+
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click', function(){ location.hash = b.dataset.tab; });
+});
+window.addEventListener('hashchange', function(){
+  showTab((location.hash || '').replace('#', ''));
+});
+
+/* ---------- boot ---------- */
+(async function boot(){
+  showTab((location.hash || '').replace('#', ''));
+
+  if(!window.authGuard || !window.authGuard.ready){
+    showMsg('無法載入登入元件，請確認網路連線後重新整理。', false);
+    return;
+  }
+
+  let g;
+  try { g = await window.authGuard.ready; } catch(e){ return; }
+  if(!g || !g.session || !g.user) return;   // 守衛正在導向 login.html
+
+  sb = g.sb;
+  user = g.user;
+
+  await loadRanks();
+  await Promise.all([loadDirectory(), loadMe(), loadMyWishes()]);
+  renderOrgLegend();
+  renderMeAvatar();
+  renderMeHints();
+  renderMeView();     // 目錄載入後才查得到主管與直屬夥伴
+})();
+
+/* =========================================================
+   目錄 / 職級
+   ========================================================= */
+async function loadRanks(){
+  const { data, error } = await sb.from('member_ranks')
+    .select('code, label, sort_order, is_manager')
+    .order('sort_order', { ascending: true });
+
+  if(!error) ranks = data || [];
+}
+
+function normalizeMember(m){
+  return {
+    user_id: m.user_id,
+    display_name: m.display_name || '未具名同仁',
+    rank_code: m.rank_code || '',
+    rank_label: m.rank_label || m.rank_code || '',
+    rank_order: Number(m.rank_order) || 0,
+    is_manager: !!m.is_manager,
+    supervisor_id: m.supervisor_id || null,
+    supervisor_name: m.supervisor_name || '',
+    avatar_path: m.avatar_path || '',
+    avatar_updated_at: m.avatar_updated_at || null,
+    bio: m.bio || '',
+    ig_url: m.ig_url || '',
+    fb_url: m.fb_url || '',
+    line_url: m.line_url || '',
+    linkedin_url: m.linkedin_url || ''
+  };
+}
+
+async function loadDirectory(){
+  const { data, error } = await sb.rpc('get_member_directory');
+
+  if(error){
+    directory = [];
+    $('orgTree').innerHTML = '<p class="empty">讀取組織圖失敗。</p>';
+    showMsg('讀取名單失敗：' + error.message
+      + '（若尚未建立資料表／函式，請先在 Supabase 執行 supabase-schema-members.sql）', false);
+    return;
+  }
+
+  directory = (Array.isArray(data) ? data : []).map(normalizeMember);
+  renderOrg();
+}
+
+/* ---------- 個人檔案（組織圖點人） ---------- */
+function timelineHtml(rows, emptyText){
+  if(!rows || !rows.length){
+    return '<p class="tl-empty">' + esc(emptyText || '還沒有寫下任何心願。') + '</p>';
+  }
+
+  const years = [];
+  const byYear = {};
+  rows.forEach(function(r){
+    const y = Number(r.wish_year);
+    if(!byYear[y]){ byYear[y] = []; years.push(y); }
+    byYear[y].push(r);
+  });
+  years.sort(function(a, b){ return b - a; });
+
+  return years.map(function(y){
+    const groups = [];
+    const byMonth = {};
+    byYear[y].slice().sort(function(a, b){
+      const d = Number(a.wish_month) - Number(b.wish_month);
+      if(d !== 0) return d;
+      return (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0);
+    }).forEach(function(r){
+      const m = Number(r.wish_month);
+      if(!byMonth[m]){ byMonth[m] = []; groups.push(m); }
+      byMonth[m].push(r);
+    });
+
+    return '<div class="tl-year">' + y + ' 年</div>'
+      + '<ol class="tl">' + groups.map(function(m){
+          return '<li><div class="tl-m">' + m + ' 月</div>'
+            + '<div class="tl-items">' + byMonth[m].map(function(r){
+                return '<p>' + esc(r.content) + '</p>';
+              }).join('') + '</div></li>';
+        }).join('') + '</ol>';
+  }).join('');
+}
+
+/* ---------- 個人網頁（我的檔案檢視 / 組織圖點人共用） ---------- */
+function refreshProfileWishCount(pf, rows){
+  const el = pf && pf.querySelector ? pf.querySelector('.pf-wish-count') : null;
+  if(!el) return;
+  const y = String(new Date().getFullYear());
+  let n = 0;
+  (rows || []).forEach(function(r){ if(String(r.wish_year) === y) n++; });
+  el.textContent = n ? '今年 ' + n + ' 項' : '今年還沒寫';
+}
+
+function profilePageHtml(m, opts){
+  opts = opts || {};
+  const isSelf = !!(user && m.user_id === user.id);
+  const color = rankColor(m.rank_code);
+  const sup = m.supervisor_id ? memberById(m.supervisor_id) : null;
+  const reports = directory.filter(function(x){
+    return x.supervisor_id === m.user_id && x.user_id !== m.user_id;
+  });
+  const socials = socialLinks(m);
+  const titleId = opts.titleId ? ' id="' + esc(opts.titleId) + '"' : '';
+  const timelineId = opts.timelineId || 'profileTimeline';
+
+  const head = '<div class="pf-head">'
+    + '<div class="pf-name">'
+      + '<h2' + titleId + '>' + esc(m.display_name) + (isSelf ? '<em>你</em>' : '') + '</h2>'
+      + '<span class="pf-rank">' + esc(m.rank_label || '未設定職級') + '</span>'
+    + '</div>'
+    + (isSelf
+        ? '<div class="pf-actions"><button type="button" class="btn secondary sm" data-edit-profile="1">編輯我的檔案</button></div>'
+        : '')
+    + '</div>';
+
+  const chips = '<div class="pf-chips">'
+    + '<span class="chip"><b>所屬主管</b>'
+      + (sup
+          ? '<button type="button" class="person" data-member="' + esc(sup.user_id) + '">' + esc(sup.display_name) + '</button>'
+          : '<span class="dim">未設定</span>')
+    + '</span>'
+    + '<span class="chip"><b>直屬夥伴</b>' + reports.length + ' 位</span>'
+    + '<span class="chip"><b>心願</b><span class="pf-wish-count">—</span></span>'
+    + '</div>';
+
+  const people = reports.length
+    ? '<div class="pf-sub">直屬夥伴</div><div class="pf-people">'
+      + reports.map(function(r){
+          return '<button type="button" class="person" data-member="' + esc(r.user_id) + '">' + esc(r.display_name) + '</button>';
+        }).join('')
+      + '</div>'
+    : '';
+
+  // 大照片在左、其他資料在右（手機版由 CSS 改成上下排列）
+  const layout = '<div class="pf-layout">'
+      + photoHtml(m)
+      + '<div class="pf-info">'
+        + head
+        + chips
+        + '<p class="pf-bio' + (m.bio ? '' : ' is-empty') + '">' + esc(m.bio || '還沒有寫簡介。') + '</p>'
+        + (socials ? '<div class="socials">' + socials + '</div>' : '')
+      + '</div>'
+    + '</div>';
+
+  return '<div class="pf" style="--rk:' + esc(color) + '">'
+    + '<div class="pf-cover" aria-hidden="true"></div>'
+    + '<div class="pf-body">'
+      + layout
+      + people
+      + '<div class="pf-sub">年度心願時間軸</div>'
+      + '<div class="timeline" id="' + esc(timelineId) + '"><p class="tl-empty">心願載入中…</p></div>'
+    + '</div></div>';
+}
+
+function openProfile(id){
+  const m = memberById(id);
+  if(!m) return;
+
+  if($('memberModal').hidden) lastFocus = document.activeElement;
+
+  $('modalBody').innerHTML = profilePageHtml(m, { titleId: 'modalName', timelineId: 'profileTimeline' });
+  $('memberModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+  $('modalClose').focus();
+
+  loadProfileWishes(id);
+}
+
+async function loadProfileWishes(id){
+  const host = $('profileTimeline');
+  if(!sb || !host) return;
+
+  const { data, error } = await sb.rpc('get_member_wishes', { p_user: id });
+
+  // 等待期間可能已關掉 modal 或換看別人
+  if(!host.isConnected) return;
+
+  if(error){
+    host.innerHTML = '<p class="tl-empty">讀取心願失敗：' + esc(error.message)
+      + '<br>（若尚未建立函式，請先在 Supabase 執行 supabase-schema-member-wishes.sql）</p>';
+    return;
+  }
+
+  profileWishes = Array.isArray(data) ? data : [];
+  host.innerHTML = timelineHtml(profileWishes, '這位同仁還沒有寫下心願。');
+  const pf = host.closest ? host.closest('.pf') : null;
+  if(pf) refreshProfileWishCount(pf, profileWishes);
+}
+
+function closeMember(){
+  $('memberModal').hidden = true;
+  document.body.style.overflow = '';
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+
+$('modalClose').addEventListener('click', closeMember);
+$('memberModal').addEventListener('click', function(ev){
+  if(ev.target && ev.target.getAttribute && ev.target.getAttribute('data-close')) closeMember();
+});
+document.addEventListener('keydown', function(ev){
+  if(ev.key === 'Escape' && !$('memberModal').hidden) closeMember();
+});
+
+/* 個人網頁：右上「編輯我的檔案」與「點人換頁」（組織圖節點另有自己的 listener） */
+$('meCard').addEventListener('click', function(ev){
+  if(ev.target.closest('[data-edit-profile]')){
+    ev.preventDefault();
+    setMeMode(true);
+    return;
+  }
+  const person = ev.target.closest('[data-member]');
+  if(person){
+    ev.preventDefault();
+    openProfile(person.dataset.member);
+  }
+});
+$('modalBody').addEventListener('click', function(ev){
+  if(ev.target.closest('[data-edit-profile]')){
+    ev.preventDefault();
+    closeMember();
+    goEditMe();
+    return;
+  }
+  const person = ev.target.closest('[data-member]');
+  if(person){
+    ev.preventDefault();
+    openProfile(person.dataset.member);
+  }
+});
+
+/* =========================================================
+   組織圖（傳統組織樹）
+   - 用 supervisor_id 在瀏覽器端組樹（資料已由 RPC 一次取回）
+   - 根節點＝最高職級（AM，動態取 member_ranks 的 sort_order 最大值），
+     優先找沒有主管的那位
+   - 沒掛到主管的人一律掛到根節點底下，避免出現多個根
+   - 完全找不到最高職級時，才用虛擬節點「處經理（未設定）」
+   - 節點顏色＝職級（RANK_COLORS），預設展開兩層，更深的先收合
+   ========================================================= */
+function renderOrg(resetCollapse){
+  const host = $('orgTree');
+
+  if(!directory.length){
+    host.innerHTML = '<p class="empty">尚無成員資料。</p>';
+    return;
+  }
+
+  const nodes = {};
+  directory.forEach(function(m){ nodes[m.user_id] = { m: m, children: [] }; });
+
+  // 找根節點：最高職級（AM）且沒有主管 → 任何最高職級 → 唯一的頂層成員
+  let chief = directory.filter(function(m){ return isTopRank(m) && !m.supervisor_id; })[0]
+    || directory.filter(isTopRank)[0]
+    || null;
+
+  if(!chief){
+    const tops = directory.filter(function(m){
+      return !m.supervisor_id || !nodes[m.supervisor_id] || m.supervisor_id === m.user_id;
+    });
+    if(tops.length === 1) chief = tops[0];
+  }
+
+  const rootId = chief ? chief.user_id : '__root__';
+  const rootNode = chief
+    ? nodes[chief.user_id]
+    : {
+        m: { user_id: '__root__', display_name: '處經理', rank_label: '', is_root: true },
+        children: []
+      };
+
+  // 掛樹：先依 supervisor_id；沒有主管／主管不在名單／自己指自己的人，掛到處經理底下
+  const orphans = [];
+  Object.keys(nodes).forEach(function(id){
+    if(id === rootId) return;
+    const node = nodes[id];
+    const sup = node.m.supervisor_id;
+    if(sup && sup !== id && nodes[sup] && sup !== rootId){
+      nodes[sup].children.push(node);
+    } else if(sup && sup === rootId){
+      rootNode.children.push(node);
+    } else {
+      orphans.push(node);
+    }
+  });
+  orphans.forEach(function(node){ rootNode.children.push(node); });
+
+  // 保險：把「從根節點走不到」的人掛回根，避免資料異常時有人憑空消失
+  const reachable = {};
+  (function walk(node){
+    if(!node || reachable[node.m.user_id]) return;
+    reachable[node.m.user_id] = true;
+    node.children.forEach(walk);
+  })(rootNode);
+  directory.forEach(function(m){
+    if(reachable[m.user_id]) return;
+    reachable[m.user_id] = true;
+    rootNode.children.push(nodes[m.user_id]);
+  });
+
+  function sortNodes(a, b){
+    const d = (b.m.rank_order - a.m.rank_order);
+    return d !== 0 ? d : String(a.m.display_name).localeCompare(String(b.m.display_name), 'zh-Hant');
+  }
+  Object.keys(nodes).forEach(function(id){ nodes[id].children.sort(sortNodes); });
+  rootNode.children.sort(sortNodes);
+
+  function defaultCollapse(node, depth, seen){
+    if(!node) return;
+    seen = seen || {};
+    if(seen[node.m.user_id]) return;
+    seen[node.m.user_id] = true;
+    if(depth >= 3 && node.children.length) collapsedOrg[node.m.user_id] = true;
+    node.children.forEach(function(c){ defaultCollapse(c, depth + 1, seen); });
+  }
+  if(resetCollapse !== false){
+    collapsedOrg = {};
+    defaultCollapse(rootNode, 0);
+  }
+
+  const seen = {};
+  host.innerHTML = '<ul>' + treeHtml(rootNode, 0, seen) + '</ul>';
+
+  const hint = $('orgHint');
+  if(!chief){
+    const top = topRankCode();
+    hint.style.display = '';
+    hint.textContent = '尚未設定' + top + '（' + (rankLabel(top) || '處經理') + '），目前以虛擬節點代替；請洽管理員在「帳號管理」把一位同仁設為 ' + top + '。';
+  } else if(orphans.length > 0 && directory.length > 1){
+    hint.style.display = '';
+    hint.textContent = '有 ' + orphans.length + ' 位同仁沒有設定主管（或主管不在名單中），暫列在處經理下一層；請他們到「我的檔案 → 編輯」選自己的所屬主管即可。';
+  } else {
+    hint.style.display = 'none';
+    hint.textContent = '';
+  }
+}
+
+function treeHtml(node, depth, seen){
+  const m = node.m;
+  const id = m.user_id;
+  if(seen[id]) return '';
+  seen[id] = true;
+
+  const isVirtual = !!m.is_root;
+  const isRoot = depth === 0;           // 處經理（或虛擬根）
+  const hasKids = node.children.length > 0;
+  const isOpen = !collapsedOrg[id];
+  const isMe = !isVirtual && user && id === user.id;
+  const top = topRankCode();
+
+  let row = '<div class="org-node' + (isRoot ? ' root' : '') + (isMe ? ' me' : '') + (isVirtual ? ' virtual' : '') + '"'
+    + ' style="--rk:' + esc(isVirtual ? '#c2974f' : rankColor(m.rank_code)) + '"'
+    + (isVirtual
+        ? ''
+        : ' data-member="' + esc(id) + '" tabindex="0" role="button" aria-label="'
+          + esc(m.display_name + '｜' + (m.rank_label || '未設定職級')) + '"')
+    + '>';
+
+  if(!isVirtual) row += avatarHtml(m, '');
+
+  row += '<span class="nm">' + esc(m.display_name) + (isMe ? '<em>你</em>' : '') + '</span>'
+    + '<span class="rk">' + esc(isVirtual ? ('請設定 ' + top) : (m.rank_label || '未設定職級')) + '</span>';
+
+  if(hasKids){
+    row += '<button type="button" class="org-toggle" data-toggle="' + esc(id) + '"'
+      + ' aria-expanded="' + (isOpen ? 'true' : 'false') + '"'
+      + ' aria-label="' + (isOpen ? '收合' : '展開') + '">' + (isOpen ? '−' : '+') + '</button>';
+  }
+
+  row += '</div>';
+
+  let html = '<li>' + row;
+
+  if(hasKids && isOpen){
+    html += '<ul>' + node.children.map(function(c){
+      if(seen[c.m.user_id]) return '';
+      return treeHtml(c, depth + 1, seen);
+    }).join('') + '</ul>';
+  }
+
+  return html + '</li>';
+}
+
+$('orgTree').addEventListener('click', function(ev){
+  const toggle = ev.target.closest('[data-toggle]');
+  if(toggle){
+    ev.stopPropagation();
+    const id = toggle.dataset.toggle;
+    if(collapsedOrg[id]) delete collapsedOrg[id];
+    else collapsedOrg[id] = true;
+    renderOrg(false);
+    return;
+  }
+  if(ev.target.closest('a')) return;
+  const node = ev.target.closest('[data-member]');
+  if(node) openProfile(node.dataset.member);
+});
+$('orgTree').addEventListener('keydown', function(ev){
+  if(ev.key !== 'Enter' && ev.key !== ' ') return;
+  const node = ev.target.closest('[data-member]');
+  if(!node) return;
+  ev.preventDefault();
+  openProfile(node.dataset.member);
+});
+
+/* =========================================================
+   我的檔案
+   - 預設檢視模式（個人網頁），按「編輯我的檔案」才進編輯模式
+   - 姓名寫 profiles.full_name（與「我的帳號」共用）
+   - 簡介／社群／照片／職級／所屬主管寫 member_profiles
+     （本人可寫；最高職級只有管理員能設定，DB trigger 也會擋）
+   ========================================================= */
+async function loadMe(){
+  if(!sb) return;
+
+  const [profRes, mpRes] = await Promise.all([
+    sb.from('profiles').select('full_name, email, is_admin').eq('id', user.id).maybeSingle(),
+    sb.from('member_profiles').select('*').eq('user_id', user.id).maybeSingle()
+  ]);
+
+  const prof = profRes.data;
+  myName = (prof && prof.full_name) || '';
+  isAdmin = !!(prof && prof.is_admin);
+  $('whoami').textContent = myName || (prof && prof.email) || user.email || '同仁';
+
+  if(mpRes.error){
+    $('meAdminHint').style.display = '';
+    $('meAdminHint').textContent = '讀取我的檔案失敗：' + mpRes.error.message
+      + '（若尚未建立資料表，請先執行 supabase-schema-members.sql）';
+    return;
+  }
+
+  myProfile = mpRes.data || null;
+
+  if(meEditing){
+    fillMeForm();
+    renderMeAvatar();
+  }
+  renderMeHints();
+  renderMeView();
+
+  if(!myProfile){
+    $('meAdminHint').style.display = '';
+    $('meAdminHint').textContent = '找不到你的成員資料列。請在 SQL Editor 重新執行 supabase-schema-members.sql（會自動回填），或聯絡管理員。';
+  }
+}
+
+/* ---------- 我的檔案：檢視模式（個人網頁）／編輯模式 ---------- */
+function selfMember(){
+  const found = memberById(user.id);
+  if(found) return found;
+
+  const p = myProfile || {};
+  const code = p.rank_code || '';
+  const rk = ranks.filter(function(r){ return String(r.code) === String(code); })[0];
+  return {
+    user_id: user.id,
+    display_name: myName || (user && user.email) || '我',
+    rank_code: code,
+    rank_label: rk ? rk.label : (code ? rankLabel(code) : '未設定職級'),
+    rank_order: rk ? (Number(rk.sort_order) || 0) : 0,
+    is_manager: false,
+    supervisor_id: p.supervisor_id || null,
+    supervisor_name: '',
+    avatar_path: p.avatar_path || '',
+    avatar_updated_at: p.avatar_updated_at || null,
+    bio: p.bio || '',
+    ig_url: p.ig_url || '',
+    fb_url: p.fb_url || '',
+    line_url: p.line_url || '',
+    linkedin_url: p.linkedin_url || ''
+  };
+}
+
+function renderMeView(){
+  const host = $('meCard');
+  if(!host || !user) return;
+
+  host.innerHTML = profilePageHtml(selfMember(), { timelineId: 'meViewTimeline' })
+    + (myProfile ? '' : '<p class="board-note" style="padding:0 24px 24px;">找不到你的成員資料列，請在 SQL Editor 重新執行 supabase-schema-members.sql（會自動回填），或聯絡管理員。</p>');
+
+  renderTimeline($('meViewTimeline'), wishRows, '還沒有寫下心願。按右上「編輯我的檔案」開始寫。');
+  refreshProfileWishCount(host.querySelector('.pf'), wishRows);
+}
+
+function setMeMode(edit){
+  meEditing = !!edit;
+  $('meView').hidden = meEditing;
+  $('meEdit').hidden = !meEditing;
+
+  if(!meEditing){
+    renderMeView();
+    return;
+  }
+
+  fillMeForm();
+  renderMeAvatar();
+  renderMeHints();
+  renderWishEditor();
+  renderTimeline($('myTimeline'), wishRows, '還沒有寫下心願。從上面的「年度心願」開始吧。');
+  const nameInput = $('meName');
+  if(nameInput && nameInput.focus) nameInput.focus();
+}
+
+function goEditMe(){
+  if((location.hash || '') !== '#me') location.hash = 'me';
+  showTab('me');
+  setMeMode(true);
+}
+
+function renderMeAvatar(){
+  const box = $('meAvatar');
+  if(!box) return;
+  const url = avatarUrl(myProfile);
+  box.innerHTML = url
+    ? '<img src="' + esc(url) + '" alt="我的照片">'
+    : esc(initial(myName));
+}
+
+function renderMeHints(){
+  const hint = $('meAdminHint');
+  if(!hint) return;
+
+  const top = topRankCode();
+  if(isAdmin){
+    hint.style.display = '';
+    hint.textContent = '你是管理員：可以設定任何人的職級（含最高職級 ' + top + ' ' + (rankLabel(top) || '')
+      + '）與主管；要批次調整請到「帳號管理」（accounts.html）。';
+    return;
+  }
+
+  const mine = String((myProfile && myProfile.rank_code) || '').toUpperCase();
+  if(mine && mine === String(top).toUpperCase()){
+    hint.style.display = '';
+    hint.textContent = '你的職級是最高階的 ' + top + ' ' + (rankLabel(top) || '')
+      + '，只有管理員能調整；其他欄位仍可自由修改。';
+    return;
+  }
+
+  hint.style.display = 'none';
+  hint.textContent = '';
+}
+
+function fillMeForm(){
+  const p = myProfile || {};
+  $('meName').value = myName;
+  $('meBio').value = p.bio || '';
+  $('meIg').value = p.ig_url || '';
+  $('meFb').value = p.fb_url || '';
+  $('meLine').value = p.line_url || '';
+  $('meLinkedin').value = p.linkedin_url || '';
+
+  const current = String(p.rank_code || '').toUpperCase();
+  const rankSel = $('meRank');
+  rankSel.innerHTML = rankOptionsHtml(current);
+  // 非管理員且目前就是最高職級 → 職級選單鎖住（避免把自己降級後再也回不去）
+  rankSel.disabled = !!current && current === String(topRankCode()).toUpperCase() && !isAdmin;
+
+  const supSel = $('meSupervisor');
+  const supId = (p.supervisor_id && user && p.supervisor_id === user.id) ? '' : (p.supervisor_id || '');
+  supSel.innerHTML = supervisorOptionsHtml(supId);
+}
+
+function rankOptionsHtml(current){
+  const list = sortedRanks();
+  const top = String(topRankCode()).toUpperCase();
+  const now = String(current || '').toUpperCase();
+
+  if(!list.length){
+    return '<option value="' + esc(now || 'AG') + '" selected>' + esc(now || 'AG') + '</option>';
+  }
+
+  return list.map(function(r){
+    const code = String(r.code);
+    const isTop = code.toUpperCase() === top;
+    const locked = isTop && !isAdmin && code.toUpperCase() !== now;
+    return '<option value="' + esc(code) + '"' + (code.toUpperCase() === now ? ' selected' : '')
+      + (locked ? ' disabled' : '') + '>'
+      + esc(r.label) + (locked ? '（需管理員設定）' : '') + '</option>';
+  }).join('');
+}
+
+function supervisorOptionsHtml(current){
+  const blocked = descendantIds(user ? user.id : '');
+  const list = directory.filter(function(m){ return !blocked[m.user_id]; })
+    .sort(function(a, b){
+      return (b.rank_order - a.rank_order)
+        || String(a.display_name).localeCompare(String(b.display_name), 'zh-Hant');
+    });
+
+  let html = '<option value="">（未設定）</option>' + list.map(function(m){
+    return '<option value="' + esc(m.user_id) + '"' + (m.user_id === current ? ' selected' : '') + '>'
+      + esc(m.display_name) + (m.rank_label ? '｜' + esc(m.rank_label) : '') + '</option>';
+  }).join('');
+
+  if(current && !list.some(function(m){ return m.user_id === current; })){
+    html += '<option value="' + esc(current) + '" selected>目前的主管</option>';
+  }
+  return html;
+}
+
+function renderOrgLegend(){
+  const host = $('orgLegend');
+  if(!host) return;
+
+  const chips = sortedRanks().slice().reverse().map(function(r){
+    return '<span><i style="background:' + esc(rankColor(r.code)) + '"></i>'
+      + esc(r.label) + '（' + esc(r.code) + '）</span>';
+  }).join('');
+
+  host.innerHTML = '<span><i style="background:var(--gold)"></i>你自己的位置（金色外框）</span>'
+    + chips
+    + '<span>有下屬的節點可按 −／＋ 收合</span>';
+}
+
+async function saveMe(){
+  if(!sb || !user) return;
+
+  const name = ($('meName').value || '').trim();
+  const bio = ($('meBio').value || '').trim();
+  const rankCode = String($('meRank').value || (myProfile && myProfile.rank_code) || '').trim();
+  const supervisorId = $('meSupervisor').value || null;
+  const urls = {
+    ig_url: ($('meIg').value || '').trim(),
+    fb_url: ($('meFb').value || '').trim(),
+    line_url: ($('meLine').value || '').trim(),
+    linkedin_url: ($('meLinkedin').value || '').trim()
+  };
+
+  clearMsg();
+
+  if(name.length > 40){
+    showMsg('姓名最多 40 個字。', false);
+    return;
+  }
+  if(bio.length > 500){
+    showMsg('簡介最多 500 個字（目前 ' + bio.length + ' 字）。', false);
+    return;
+  }
+  for(const k in urls){
+    if(urls[k] && !/^https?:\/\//i.test(urls[k])){
+      showMsg('社群連結需以 http:// 或 https:// 開頭。', false);
+      return;
+    }
+  }
+  if(!rankCode){
+    showMsg('請選擇職級。', false);
+    return;
+  }
+  if(supervisorId && user && supervisorId === user.id){
+    showMsg('所屬主管不能選自己。', false);
+    return;
+  }
+
+  const btn = $('saveMeBtn');
+  btn.disabled = true;
+  btn.textContent = '儲存中…';
+
+  const profRes = await sb.from('profiles')
+    .update({ full_name: name || null })
+    .eq('id', user.id);
+
+  if(profRes.error){
+    btn.disabled = false;
+    btn.textContent = '儲存我的檔案';
+    showMsg('儲存姓名失敗：' + profRes.error.message, false);
+    return;
+  }
+
+  const payload = {
+    user_id: user.id,
+    rank_code: rankCode,
+    supervisor_id: supervisorId,
+    bio: bio || null,
+    ig_url: urls.ig_url || null,
+    fb_url: urls.fb_url || null,
+    line_url: urls.line_url || null,
+    linkedin_url: urls.linkedin_url || null
+  };
+
+  const mpRes = await sb.from('member_profiles')
+    .upsert(payload, { onConflict: 'user_id' });
+
+  btn.disabled = false;
+  btn.textContent = '儲存我的檔案';
+
+  if(mpRes.error){
+    showMsg('儲存檔案失敗：' + mpRes.error.message
+      + '（職級／主管的限制由資料庫把關：最高職級只有管理員能設定、主管不能造成迴圈；'
+      + '若訊息含 row-level security，代表登入狀態已失效，請重新登入）', false);
+    return;
+  }
+
+  myName = name;
+  $('whoami').textContent = name || user.email || '同仁';
+  $('meSaveStatus').textContent = '上次儲存：' + new Date().toLocaleTimeString('zh-TW',
+    { hour: '2-digit', minute: '2-digit' });
+  showMsg('已更新我的檔案 ✓', true);
+
+  await Promise.all([loadDirectory(), loadMe()]);
+  renderMeAvatar();
+  renderOrgLegend();
+  renderMeHints();
+  setMeMode(false);     // 存完回到個人網頁檢視
+}
+
+/* =========================================================
+   年度心願
+   - 編輯：wishDraft[0..11] 對應 1–12 月，每月最多 10 項
+   - 儲存：rpc save_my_wishes(year, items)，一次覆寫整年（單一交易）
+   - 時間軸：rpc get_member_wishes(uid)，同一支也用在別人的檔案
+   ========================================================= */
+const MONTH_NAMES = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+
+function emptyDraft(){
+  return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(function(){ return ['']; });
+}
+
+function draftFromRows(rows, year){
+  const draft = emptyDraft();
+  (rows || []).forEach(function(r){
+    if(Number(r.wish_year) !== Number(year)) return;
+    const m = Number(r.wish_month);
+    if(!(m >= 1 && m <= 12)) return;
+    const list = draft[m - 1];
+    if(list.length === 1 && list[0] === '') list.length = 0;
+    if(list.length < 10) list.push(r.content || '');
+  });
+  draft.forEach(function(list){
+    if(!list.length) list.push('');
+  });
+  return draft;
+}
+
+async function loadMyWishes(){
+  if(!sb) return;
+
+  const { data, error } = await sb.rpc('get_member_wishes', { p_user: user.id });
+
+  if(error){
+    wishRows = [];
+    $('wishHint').style.display = '';
+    $('wishHint').textContent = '讀取心願失敗：' + error.message
+      + '（若尚未建立資料表／函式，請先在 Supabase 執行 supabase-schema-member-wishes.sql）';
+  } else {
+    wishRows = Array.isArray(data) ? data : [];
+    $('wishHint').style.display = 'none';
+    $('wishHint').textContent = '';
+  }
+
+  wishDraft = draftFromRows(wishRows, wishYear);
+  renderWishEditor();
+  renderTimeline($('myTimeline'), wishRows, '還沒有寫下心願。從上面的「年度心願」開始吧。');
+  const view = $('meView');
+  if(view && !view.hidden) renderMeView();   // 「我的檔案」檢視同步更新心願數與時間軸
+}
+
+function renderWishEditor(){
+  $('wishYearLabel').textContent = wishYear + ' 年';
+  $('wishEditor').innerHTML = emptyDraft().map(function(_, i){
+    return monthBlockHtml(i + 1);
+  }).join('');
+  updateWishCount();
+}
+
+function monthBlockHtml(month){
+  const list = wishDraft[month - 1] || [''];
+  const filled = list.filter(function(v){ return String(v || '').trim(); }).length;
+
+  return '<div class="wblock' + (filled ? ' has' : '') + '" data-month="' + month + '">'
+    + '<div class="wb-head"><b>' + MONTH_NAMES[month - 1] + ' 月</b>'
+      + '<span>' + (filled ? filled + ' 項' : '—') + '</span></div>'
+    + list.map(function(v, i){
+        return '<div class="witem">'
+          + '<input type="text" maxlength="200" value="' + esc(v) + '"'
+          + ' data-month="' + month + '" data-i="' + i + '"'
+          + ' placeholder="想完成的事…" aria-label="' + MONTH_NAMES[month - 1] + ' 月第 ' + (i + 1) + ' 項">'
+          + (list.length > 1
+              ? '<button type="button" class="wdel" data-del="' + month + '" data-i="' + i + '" aria-label="刪除這一項">✕</button>'
+              : '')
+          + '</div>';
+      }).join('')
+    + '<button type="button" class="wadd" data-add="' + month + '"'
+      + (list.length >= 10 ? ' disabled' : '') + '>＋ 新增一項</button>'
+    + '</div>';
+}
+
+function refreshMonth(month){
+  const old = document.querySelector('.wblock[data-month="' + month + '"]');
+  if(!old) return;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = monthBlockHtml(month);
+  old.replaceWith(wrap.firstElementChild);
+}
+
+function updateWishCount(){
+  let n = 0;
+  wishDraft.forEach(function(list){
+    n += list.filter(function(v){ return String(v || '').trim(); }).length;
+  });
+  $('wishCount').textContent = n ? '這一年共 ' + n + ' 項心願' : '這一年還沒有心願';
+}
+
+function collectWishItems(){
+  const items = [];
+  wishDraft.forEach(function(list, idx){
+    list.forEach(function(v){
+      const content = String(v || '').trim();
+      if(content) items.push({ month: idx + 1, content: content });
+    });
+  });
+  return items;
+}
+
+function renderTimeline(host, rows, emptyText){
+  if(host) host.innerHTML = timelineHtml(rows, emptyText);
+}
+
+
+$('wishEditor').addEventListener('input', function(ev){
+  const input = ev.target.closest('input[data-month]');
+  if(!input) return;
+  const m = Number(input.dataset.month);
+  const i = Number(input.dataset.i);
+  const list = wishDraft[m - 1];
+  if(!list || i >= list.length) return;
+
+  list[i] = input.value;
+  updateWishCount();
+
+  const block = input.closest('.wblock');
+  const filled = list.filter(function(v){ return String(v || '').trim(); }).length;
+  if(block) block.classList.toggle('has', filled > 0);
+  const badge = block && block.querySelector('.wb-head span');
+  if(badge) badge.textContent = filled ? filled + ' 項' : '—';
+});
+
+$('wishEditor').addEventListener('click', function(ev){
+  const add = ev.target.closest('[data-add]');
+  if(add){
+    const m = Number(add.dataset.add);
+    const list = wishDraft[m - 1];
+    if(!list || list.length >= 10) return;
+    list.push('');
+    refreshMonth(m);
+    const input = document.querySelector('.wblock[data-month="' + m + '"] input[data-i="' + (list.length - 1) + '"]');
+    if(input) input.focus();
+    updateWishCount();
+    return;
+  }
+
+  const del = ev.target.closest('[data-del]');
+  if(del){
+    const m = Number(del.dataset.del);
+    const i = Number(del.dataset.i);
+    const list = wishDraft[m - 1];
+    if(!list) return;
+    list.splice(i, 1);
+    if(!list.length) list.push('');
+    refreshMonth(m);
+    updateWishCount();
+  }
+});
+
+async function saveWishes(){
+  if(!sb || !user) return;
+
+  const btn = $('saveWishesBtn');
+  const items = collectWishItems();
+  const tooLong = items.filter(function(it){ return it.content.length > 200; })[0];
+
+  if(tooLong){
+    $('wishHint').style.display = '';
+    $('wishHint').textContent = '有一項超過 200 個字，請縮短後再儲存。';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '儲存中…';
+  $('wishSaveStatus').textContent = '';
+  $('wishHint').style.display = 'none';
+
+  const { data, error } = await sb.rpc('save_my_wishes', { p_year: wishYear, p_items: items });
+
+  btn.disabled = false;
+  btn.textContent = '儲存這一年';
+
+  if(error){
+    $('wishHint').style.display = '';
+    $('wishHint').textContent = '儲存失敗：' + error.message;
+    return;
+  }
+
+  $('wishSaveStatus').textContent = '已儲存 ' + (Number(data) || 0) + ' 項（' + wishYear + ' 年）';
+  await loadMyWishes();
+}
+
+function changeWishYear(delta){
+  wishYear += delta;
+  wishDraft = draftFromRows(wishRows, wishYear);
+  $('wishSaveStatus').textContent = '';
+  renderWishEditor();
+}
+
+$('wishYearPrev').addEventListener('click', function(){ changeWishYear(-1); });
+$('wishYearNext').addEventListener('click', function(){ changeWishYear(1); });
+$('saveWishesBtn').addEventListener('click', saveWishes);
+
+wishDraft = emptyDraft();
+renderWishEditor();
+
+/* ---------- 頭像：前端縮圖後上傳（600px / JPEG 0.82） ---------- */
+function resizeImage(file, maxSide, quality){
+  return new Promise(function(resolve, reject){
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = function(){
+      try {
+        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+
+        canvas.toBlob(function(blob){
+          if(blob) resolve(blob);
+          else reject(new Error('圖片轉檔失敗'));
+        }, 'image/jpeg', quality);
+      } catch(err){
+        URL.revokeObjectURL(url);
+        reject(err);
+      }
+    };
+
+    img.onerror = function(){
+      URL.revokeObjectURL(url);
+      reject(new Error('無法讀取圖片'));
+    };
+
+    img.src = url;
+  });
+}
+
+async function onAvatarPick(ev){
+  const input = ev.target;
+  const file = input.files && input.files[0];
+  if(!file || !sb || !user) return;
+
+  clearMsg();
+
+  if(!/^image\/(jpeg|png|webp)$/i.test(file.type)){
+    showMsg('請選擇 JPG、PNG 或 WebP 圖片。', false);
+    input.value = '';
+    return;
+  }
+  if(file.size > 2 * 1024 * 1024){
+    showMsg('圖片超過 2MB，請先壓縮或裁切後再上傳。', false);
+    input.value = '';
+    return;
+  }
+
+  const label = $('avatarLabel');
+  const oldText = label.textContent;
+  label.textContent = '上傳中…';
+
+  try {
+    const blob = await resizeImage(file, 600, 0.82);
+    const path = user.id + '/avatar.jpg';
+
+    const up = await sb.storage.from('avatars').upload(path, blob, {
+      upsert: true,
+      contentType: 'image/jpeg',
+      cacheControl: '3600'
+    });
+    if(up.error) throw up.error;
+
+    const now = new Date().toISOString();
+    const { data: updated, error } = await sb.from('member_profiles')
+      .update({ avatar_path: path, avatar_updated_at: now })
+      .eq('user_id', user.id)
+      .select('user_id');
+
+    if(error) throw error;
+    if(!updated || !updated.length){
+      throw new Error('找不到你的成員資料列，請先執行 supabase-schema-members.sql');
+    }
+
+    showMsg('照片已更新 ✓', true);
+    await Promise.all([loadDirectory(), loadMe()]);
+    renderMeAvatar();
+    renderMeView();
+  } catch(err){
+    showMsg('上傳照片失敗：' + (err && err.message ? err.message : err), false);
+  } finally {
+    label.textContent = oldText;
+    input.value = '';
+  }
+}
+
+$('avatarFile').addEventListener('change', onAvatarPick);
+$('saveMeBtn').addEventListener('click', saveMe);
+$('cancelMeBtn').addEventListener('click', function(){
+  clearMsg();
+  wishDraft = draftFromRows(wishRows, wishYear);   // 放棄未儲存的心願編輯
+  setMeMode(false);
+});
+
+$('logoutBtn').addEventListener('click', async function(){
+  try { if(sb) await sb.auth.signOut(); } catch(e){}
+  location.replace('./login.html');
+});
+</script>
+</body>
+</html>
+
+
+
+
